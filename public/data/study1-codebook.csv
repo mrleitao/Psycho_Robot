@@ -1,0 +1,50 @@
+variable,description,scale,group,domain_or_type
+participant,"Anonymous participant number, assigned after a seeded shuffle",P001 to P188,,
+prevent_injury_stretching,Share of quantitative reasoning (versus intuition) a professional needs to: recommend stretching to prevent injury,0 to 100 slider,preventative,bodily injury
+diagnose_broken_bone,Share of quantitative reasoning (versus intuition) a professional needs to: diagnose a broken bone,0 to 100 slider,diagnostic,bodily injury
+prescribe_knee_surgery,Share of quantitative reasoning (versus intuition) a professional needs to: recommend knee surgery,0 to 100 slider,prescriptive,"bodily injury (surgery, not in composite)"
+prescribe_pain_medication,Share of quantitative reasoning (versus intuition) a professional needs to: prescribe pain medication,0 to 100 slider,prescriptive,bodily injury
+prevent_mental_meditation,Share of quantitative reasoning (versus intuition) a professional needs to: recommend meditation,0 to 100 slider,preventative,mental health
+diagnose_depression,Share of quantitative reasoning (versus intuition) a professional needs to: diagnose depression,0 to 100 slider,diagnostic,mental health
+prescribe_mental_therapy,Share of quantitative reasoning (versus intuition) a professional needs to: prescribe antidepressants and therapy,0 to 100 slider,prescriptive,mental health
+prevent_acute_vitamins,Share of quantitative reasoning (versus intuition) a professional needs to: recommend vitamin c and zinc,0 to 100 slider,preventative,acute sickness
+diagnose_strep_throat,Share of quantitative reasoning (versus intuition) a professional needs to: diagnose strep throat,0 to 100 slider,diagnostic,acute sickness
+prescribe_antibiotics,Share of quantitative reasoning (versus intuition) a professional needs to: prescribe antibiotics,0 to 100 slider,prescriptive,acute sickness
+prevent_chronic_diet,Share of quantitative reasoning (versus intuition) a professional needs to: recommend a strict diet,0 to 100 slider,preventative,chronic sickness
+diagnose_diabetes,Share of quantitative reasoning (versus intuition) a professional needs to: diagnose diabetes,0 to 100 slider,diagnostic,chronic sickness
+prescribe_insulin,Share of quantitative reasoning (versus intuition) a professional needs to: prescribe insulin,0 to 100 slider,prescriptive,chronic sickness
+prevent_wellbeing,Share of quantitative reasoning (versus intuition) a professional needs to: recommend general wellbeing improvements,0 to 100 slider,preventative,general (not in composite)
+medical_general,Share of quantitative reasoning (versus intuition) a professional needs to: medical decisions in general,0 to 100 slider,general,general (not in composite)
+trust_doctor,Doctor: How much do you trust each entity to make recommendations about health? (0 to 10),0 to 10,trust,human
+capability_doctor,Doctor: How capable is each entity of using quantitative reasoning to make recommendations about health? (0 to 10),0 to 10,capability,human
+intuition_doctor,Doctor: How capable is each entity of using intuition to make recommendations about health? (0 to 10),0 to 10,intuition,human
+trust_nurse,Nurse: How much do you trust each entity to make recommendations about health? (0 to 10),0 to 10,trust,human
+capability_nurse,Nurse: How capable is each entity of using quantitative reasoning to make recommendations about health? (0 to 10),0 to 10,capability,human
+intuition_nurse,Nurse: How capable is each entity of using intuition to make recommendations about health? (0 to 10),0 to 10,intuition,human
+trust_doctor_remote,"Doctor, remote visit: How much do you trust each entity to make recommendations about health? (0 to 10)",0 to 10,trust,human
+capability_doctor_remote,"Doctor, remote visit: How capable is each entity of using quantitative reasoning to make recommendations about health? (0 to 10)",0 to 10,capability,human
+intuition_doctor_remote,"Doctor, remote visit: How capable is each entity of using intuition to make recommendations about health? (0 to 10)",0 to 10,intuition,human
+trust_therapist,Therapist: How much do you trust each entity to make recommendations about health? (0 to 10),0 to 10,trust,human
+capability_therapist,Therapist: How capable is each entity of using quantitative reasoning to make recommendations about health? (0 to 10),0 to 10,capability,human
+intuition_therapist,Therapist: How capable is each entity of using intuition to make recommendations about health? (0 to 10),0 to 10,intuition,human
+trust_personal_trainer,Personal trainer: How much do you trust each entity to make recommendations about health? (0 to 10),0 to 10,trust,human
+capability_personal_trainer,Personal trainer: How capable is each entity of using quantitative reasoning to make recommendations about health? (0 to 10),0 to 10,capability,human
+intuition_personal_trainer,Personal trainer: How capable is each entity of using intuition to make recommendations about health? (0 to 10),0 to 10,intuition,human
+trust_layperson,Layperson: How much do you trust each entity to make recommendations about health? (0 to 10),0 to 10,trust,human
+capability_layperson,Layperson: How capable is each entity of using quantitative reasoning to make recommendations about health? (0 to 10),0 to 10,capability,human
+intuition_layperson,Layperson: How capable is each entity of using intuition to make recommendations about health? (0 to 10),0 to 10,intuition,human
+trust_doctor_using_ai,Doctor using AI: How much do you trust each entity to make recommendations about health? (0 to 10),0 to 10,trust,hybrid
+capability_doctor_using_ai,Doctor using AI: How capable is each entity of using quantitative reasoning to make recommendations about health? (0 to 10),0 to 10,capability,hybrid
+intuition_doctor_using_ai,Doctor using AI: How capable is each entity of using intuition to make recommendations about health? (0 to 10),0 to 10,intuition,hybrid
+trust_ai_general,"AI, general: How much do you trust each entity to make recommendations about health? (0 to 10)",0 to 10,trust,ai
+capability_ai_general,"AI, general: How capable is each entity of using quantitative reasoning to make recommendations about health? (0 to 10)",0 to 10,capability,ai
+intuition_ai_general,"AI, general: How capable is each entity of using intuition to make recommendations about health? (0 to 10)",0 to 10,intuition,ai
+trust_ai_diagnostic,AI diagnostic tool: How much do you trust each entity to make recommendations about health? (0 to 10),0 to 10,trust,ai
+capability_ai_diagnostic,AI diagnostic tool: How capable is each entity of using quantitative reasoning to make recommendations about health? (0 to 10),0 to 10,capability,ai
+intuition_ai_diagnostic,AI diagnostic tool: How capable is each entity of using intuition to make recommendations about health? (0 to 10),0 to 10,intuition,ai
+trust_ai_chatbot,AI chatbot: How much do you trust each entity to make recommendations about health? (0 to 10),0 to 10,trust,ai
+capability_ai_chatbot,AI chatbot: How capable is each entity of using quantitative reasoning to make recommendations about health? (0 to 10),0 to 10,capability,ai
+intuition_ai_chatbot,AI chatbot: How capable is each entity of using intuition to make recommendations about health? (0 to 10),0 to 10,intuition,ai
+trust_ai_fitness,AI fitness coach: How much do you trust each entity to make recommendations about health? (0 to 10),0 to 10,trust,ai
+capability_ai_fitness,AI fitness coach: How capable is each entity of using quantitative reasoning to make recommendations about health? (0 to 10),0 to 10,capability,ai
+intuition_ai_fitness,AI fitness coach: How capable is each entity of using intuition to make recommendations about health? (0 to 10),0 to 10,intuition,ai

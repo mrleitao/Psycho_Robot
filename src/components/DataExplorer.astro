@@ -1,0 +1,223 @@
+---
+import { href } from '../utils/url';
+
+interface Props {
+  rec: { id: string; label: string; kind: string }[];
+}
+const { rec } = Astro.props;
+const csv = href('/data/study1-ratings.csv');
+---
+
+<div class="explorer" data-explorer data-csv={csv}>
+  <div class="controls">
+    <fieldset class="measure">
+      <legend>Rating</legend>
+      <label><input type="radio" name="measure" value="trust" checked /> Trust</label>
+      <label><input type="radio" name="measure" value="capability" /> Quantitative reasoning</label>
+      <label><input type="radio" name="measure" value="intuition" /> Intuition</label>
+    </fieldset>
+    <label class="pick">
+      <span>Compare</span>
+      <select data-a>
+        {rec.map((r) => <option value={r.id} selected={r.id === 'doctor'}>{r.label}</option>)}
+      </select>
+    </label>
+    <label class="pick">
+      <span>with</span>
+      <select data-b>
+        {rec.map((r) => <option value={r.id} selected={r.id === 'ai_general'}>{r.label}</option>)}
+      </select>
+    </label>
+  </div>
+
+  <p class="status small muted" data-status>Loading the data.</p>
+
+  <figure class="plot" hidden data-plot>
+    <svg data-svg role="group" aria-label="Histograms of the two selected ratings"></svg>
+    <div class="tip" hidden></div>
+    <div class="split" data-split></div>
+    <dl class="stats" data-stats></dl>
+  </figure>
+
+  <p class="small muted">
+    Each bar counts people who gave that rating. Hover over, or tab to, a bar for the count. The strip under the charts
+    shows how many people trusted the first option more, the same, or less.
+  </p>
+
+  <p class="downloads">
+    <a class="btn" href={href('/data/study1-ratings.csv')} download>Download the data (CSV)</a>
+    <a class="btn" href={href('/data/study1-codebook.csv')} download>Codebook (CSV)</a>
+    <a class="btn" href={href('/code/study1-analysis.R')} download>Analysis code (R)</a>
+  </p>
+</div>
+
+<script>
+  const NAMES: Record<string, string> = {
+    doctor: 'Doctor', nurse: 'Nurse', doctor_remote: 'Doctor, remote visit', therapist: 'Therapist',
+    personal_trainer: 'Personal trainer', layperson: 'Layperson', doctor_using_ai: 'Doctor using AI',
+    ai_general: 'AI, general', ai_diagnostic: 'AI diagnostic tool', ai_chatbot: 'AI chatbot', ai_fitness: 'AI fitness coach',
+  };
+  const kindOf = (id: string) => (id.startsWith('ai_') ? 'ai' : id === 'doctor_using_ai' ? 'hybrid' : 'human');
+  const WORD: Record<string, [string, string, string]> = {
+    trust: ['trusted more', 'gave the same trust', 'trusted less'],
+    capability: ['rated more capable', 'rated the same', 'rated less capable'],
+    intuition: ['rated more capable', 'rated the same', 'rated less capable'],
+  };
+
+  const parse = (text: string) => {
+    const [head, ...lines] = text.trim().split(/\r?\n/);
+    const cols = head.split(',');
+    return lines.map((l) => {
+      const v = l.split(',');
+      const o: Record<string, number | null> = {};
+      cols.forEach((c, i) => (o[c] = c === 'participant' ? null : v[i] === '' ? null : Number(v[i])));
+      return o;
+    });
+  };
+
+  document.querySelectorAll<HTMLElement>('[data-explorer]').forEach(async (root) => {
+    const status = root.querySelector<HTMLElement>('[data-status]')!;
+    const plot = root.querySelector<HTMLElement>('[data-plot]')!;
+    const svg = root.querySelector<SVGSVGElement>('[data-svg]')!;
+    const tip = root.querySelector<HTMLElement>('.tip')!;
+    const split = root.querySelector<HTMLElement>('[data-split]')!;
+    const stats = root.querySelector<HTMLElement>('[data-stats]')!;
+    const selA = root.querySelector<HTMLSelectElement>('[data-a]')!;
+    const selB = root.querySelector<HTMLSelectElement>('[data-b]')!;
+
+    let rows: Record<string, number | null>[] = [];
+    try {
+      const res = await fetch(root.dataset.csv!);
+      if (!res.ok) throw new Error(String(res.status));
+      rows = parse(await res.text());
+    } catch {
+      status.textContent = 'The data could not load. Use the download links below.';
+      return;
+    }
+    status.hidden = true;
+    plot.hidden = false;
+
+    const mean = (a: number[]) => a.reduce((s, x) => s + x, 0) / a.length;
+    const sd = (a: number[]) => { const m = mean(a); return Math.sqrt(a.reduce((s, x) => s + (x - m) ** 2, 0) / (a.length - 1)); };
+
+    const W = 440, padL = 16, padR = 16, plotH = 120, gap = 40;
+    const bw = (W - padL - padR) / 11;
+    const showTip = (el: Element) => {
+      const d = (el as SVGElement).dataset;
+      tip.innerHTML = `<strong>${d.who}</strong><span>Rating ${d.val}: ${d.count} ${d.count === '1' ? 'person' : 'people'} (${d.pct}%)</span>`;
+      tip.hidden = false;
+      const fr = root.querySelector('figure')!.getBoundingClientRect();
+      const r = el.getBoundingClientRect();
+      const half = tip.offsetWidth / 2;
+      tip.style.left = `${Math.max(half, Math.min(fr.width - half, r.left - fr.left + r.width / 2))}px`;
+      tip.style.top = `${r.top - fr.top - 4}px`;
+    };
+
+    const draw = () => {
+      const m = (root.querySelector<HTMLInputElement>('input[name=measure]:checked')!).value;
+      const ids = [selA.value, selB.value];
+      const series = ids.map((id) => rows.map((r) => r[`${m}_${id}`]).filter((v): v is number => v !== null));
+      const paired = rows
+        .map((r) => [r[`${m}_${ids[0]}`], r[`${m}_${ids[1]}`]] as const)
+        .filter((p): p is [number, number] => p[0] !== null && p[1] !== null);
+
+      const counts = series.map((s) => Array.from({ length: 11 }, (_, v) => s.filter((x) => x === v).length));
+      const maxC = Math.max(...counts.flat(), 1);
+      const H = 2 * plotH + gap + 60;
+      svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+      let out = '';
+      series.forEach((s, k) => {
+        const y0 = k * (plotH + gap) + 28;
+        const kind = kindOf(ids[k]);
+        out += `<text class="title" x="${padL}" y="${y0 - 12}">${NAMES[ids[k]]}</text>`;
+        out += `<text class="sub" x="${W - padR}" y="${y0 - 12}" text-anchor="end">mean ${mean(s).toFixed(2)}, n = ${s.length}</text>`;
+        out += `<line class="base" x1="${padL}" x2="${W - padR}" y1="${y0 + plotH}" y2="${y0 + plotH}"/>`;
+        counts[k].forEach((c, v) => {
+          const h = (c / maxC) * (plotH - 4);
+          const pct = ((c / s.length) * 100).toFixed(0);
+          out += `<g tabindex="0" class="bar ${kind}" data-who="${NAMES[ids[k]]}" data-val="${v}" data-count="${c}" data-pct="${pct}" aria-label="${NAMES[ids[k]]}, rating ${v}, ${c} people">` +
+            `<rect class="hit" x="${padL + v * bw}" y="${y0}" width="${bw}" height="${plotH}"/>` +
+            `<rect class="fill" x="${padL + v * bw + 3}" y="${y0 + plotH - h}" width="${bw - 6}" height="${Math.max(h, c ? 2 : 0)}" rx="3"/></g>`;
+        });
+        out += `<line class="mean ${kind}" x1="${padL + (mean(s) + 0.5) * bw}" x2="${padL + (mean(s) + 0.5) * bw}" y1="${y0}" y2="${y0 + plotH}"/>`;
+      });
+      const ay = 2 * plotH + gap + 28 + 10;
+      out += `<g class="axis">`;
+      for (let v = 0; v <= 10; v++) out += `<text x="${padL + (v + 0.5) * bw}" y="${ay + 12}" text-anchor="middle">${v}</text>`;
+      out += `<text class="axis-title" x="${W / 2}" y="${ay + 36}" text-anchor="middle">Rating, 0 to 10</text></g>`;
+      svg.innerHTML = out;
+
+      svg.querySelectorAll('.bar').forEach((b) => {
+        b.addEventListener('pointerenter', () => showTip(b));
+        b.addEventListener('pointerleave', () => (tip.hidden = true));
+        b.addEventListener('focus', () => showTip(b));
+        b.addEventListener('blur', () => (tip.hidden = true));
+      });
+
+      const diffs = paired.map(([a, b]) => a - b);
+      const up = diffs.filter((x) => x > 0).length, same = diffs.filter((x) => x === 0).length, down = diffs.filter((x) => x < 0).length;
+      const n = diffs.length;
+      const pc = (x: number) => ((x / n) * 100).toFixed(0);
+      const w = WORD[m];
+      split.innerHTML =
+        `<p class="split-title">Of ${n} people who rated both, ${NAMES[ids[0]]} was…</p>` +
+        `<div class="strip" role="img" aria-label="${pc(up)}% ${w[0]}, ${pc(same)}% ${w[1]}, ${pc(down)}% ${w[2]}">` +
+        `<span class="seg a ${kindOf(ids[0])}" style="flex:${up}" title="${up} people"></span>` +
+        `<span class="seg s" style="flex:${same}" title="${same} people"></span>` +
+        `<span class="seg b ${kindOf(ids[1])}" style="flex:${down}" title="${down} people"></span></div>` +
+        `<div class="strip-key"><span><b>${pc(up)}%</b> ${w[0]}</span><span><b>${pc(same)}%</b> ${w[1]}</span><span><b>${pc(down)}%</b> ${w[2]}</span></div>`;
+
+      const md = mean(diffs);
+      const dz = sd(diffs) > 0 ? md / sd(diffs) : 0;
+      stats.innerHTML =
+        `<div><dt>Mean difference</dt><dd>${md >= 0 ? '+' : ''}${md.toFixed(2)}</dd></div>` +
+        `<div><dt><abbr title="Cohen's d for paired ratings: the mean difference divided by the standard deviation of the differences. About 0.2 is small, 0.5 medium, 0.8 large.">Effect size (d)</abbr></dt><dd>${dz.toFixed(2)}</dd></div>` +
+        `<div><dt>People</dt><dd>${n}</dd></div>`;
+    };
+
+    root.addEventListener('change', draw);
+    draw();
+  });
+</script>
+
+<style>
+  .explorer { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+  .explorer > * { min-width: 0; }
+  .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(11rem, 100%), 1fr)); gap: 0.75rem 1.5rem; align-items: end; font-family: var(--display); max-width: 560px; }
+  fieldset.measure { grid-column: 1 / -1; }
+  fieldset.measure { min-width: 0; border: 0; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; }
+  fieldset.measure legend { padding: 0; margin-bottom: 0.25rem; color: var(--muted); font-size: 0.9rem; }
+  .pick { display: grid; gap: 0.25rem; font-size: 0.9rem; color: var(--muted); }
+  select { font: inherit; font-size: 1rem; color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 0.4rem 0.6rem; }
+  select:focus-visible, input:focus-visible { outline: 2px solid var(--doctor); outline-offset: 2px; }
+  .plot { margin: 0; position: relative; max-width: 480px; }
+  svg { display: block; width: 100%; height: auto; overflow: visible; }
+  svg :global(.title) { fill: var(--ink); font-family: var(--display); font-weight: 600; font-size: 16px; }
+  svg :global(.sub), svg :global(.axis text) { fill: var(--muted); font-family: var(--display); font-size: 13px; }
+  svg :global(.base) { stroke: var(--muted); stroke-width: 1; }
+  svg :global(.hit) { fill: transparent; }
+  svg :global(.bar:hover .hit), svg :global(.bar:focus .hit) { fill: var(--wash); }
+  svg :global(.bar) { outline: none; }
+  svg :global(.bar:focus-visible .hit) { stroke: var(--doctor); stroke-width: 2; }
+  svg :global(.human .fill) { fill: var(--doctor); }
+  svg :global(.ai .fill) { fill: var(--ai); }
+  svg :global(.hybrid .fill) { fill: var(--muted); }
+  svg :global(.mean) { stroke-width: 2; stroke-dasharray: 4 3; pointer-events: none; }
+  svg :global(.mean.human) { stroke: var(--doctor); } svg :global(.mean.ai) { stroke: var(--ai); } svg :global(.mean.hybrid) { stroke: var(--muted); }
+  .tip { position: absolute; transform: translate(-50%, -100%); display: grid; gap: 0.1rem; padding: 0.5rem 0.75rem; background: var(--ink); color: var(--paper); border-radius: 6px; font-family: var(--display); font-size: 0.85rem; line-height: 1.35; white-space: nowrap; pointer-events: none; z-index: 2; }
+  .tip[hidden] { display: none; }
+  .split { margin-top: 1.25rem; font-family: var(--display); }
+  .split :global(.split-title) { margin: 0 0 0.4rem; font-size: 0.95rem; color: var(--muted); }
+  .split :global(.strip) { display: flex; height: 0.9rem; gap: 2px; }
+  .split :global(.seg) { border-radius: 3px; min-width: 0; }
+  .split :global(.seg.human) { background: var(--doctor); } .split :global(.seg.ai) { background: var(--ai); } .split :global(.seg.hybrid) { background: var(--muted); }
+  .split :global(.seg.s) { background: var(--rule); }
+  .split :global(.strip-key) { display: flex; justify-content: space-between; gap: 1rem; margin-top: 0.4rem; font-size: 0.9rem; }
+  .stats { display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; margin: 1.25rem 0 0; font-family: var(--display); }
+  .stats :global(dt) { color: var(--muted); font-size: 0.9rem; }
+  .stats :global(dd) { margin: 0; font-size: 1.5rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .stats :global(abbr) { text-decoration: underline dotted; text-underline-offset: 3px; cursor: help; }
+  .downloads { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 0.5rem 0 0; }
+  .btn { display: inline-block; padding: 0.55rem 0.95rem; border: 1px solid var(--ink); border-radius: 6px; font-family: var(--display); font-size: 0.95rem; color: var(--ink); text-decoration: none; }
+  .btn:hover { background: var(--ink); color: var(--paper); }
+</style>

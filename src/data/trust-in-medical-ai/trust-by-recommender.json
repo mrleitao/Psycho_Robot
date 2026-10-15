@@ -1,119 +1,119 @@
 {
-  "source": "Study 1 of the dissertation (N = 188). Trust in each recommender, rated from 0 (not at all) to 10 (completely). Means with 95% confidence intervals, computed from the study data.",
+  "source": "Study 1 of the dissertation (N = 188). Trust in each recommender, rated from 0 (not at all) to 10 (completely). Means with 95% confidence intervals, computed from the released study data.",
   "scale": [
     0,
     10
   ],
   "rows": [
     {
-      "id": "Doctor_General",
+      "id": "doctor",
       "label": "Doctor",
       "kind": "human",
       "n": 188,
-      "mean": 8.45,
+      "mean": 7.45,
       "sd": 2.6,
-      "lo": 8.07,
-      "hi": 8.82
+      "lo": 7.07,
+      "hi": 7.82
     },
     {
-      "id": "Nurse",
+      "id": "nurse",
       "label": "Nurse",
       "kind": "human",
       "n": 188,
-      "mean": 7.85,
+      "mean": 6.85,
       "sd": 2.62,
-      "lo": 7.47,
-      "hi": 8.22
+      "lo": 6.47,
+      "hi": 7.22
     },
     {
-      "id": "Doctor_Remote",
+      "id": "doctor_remote",
       "label": "Doctor, remote visit",
       "kind": "human",
       "n": 187,
-      "mean": 7.14,
+      "mean": 6.14,
       "sd": 2.8,
-      "lo": 6.73,
-      "hi": 7.54
+      "lo": 5.73,
+      "hi": 6.54
     },
     {
-      "id": "Therapist",
+      "id": "therapist",
       "label": "Therapist",
       "kind": "human",
       "n": 188,
-      "mean": 7.03,
+      "mean": 6.03,
       "sd": 2.85,
-      "lo": 6.62,
-      "hi": 7.44
+      "lo": 5.62,
+      "hi": 6.44
     },
     {
-      "id": "Doctor_AI",
+      "id": "doctor_using_ai",
       "label": "Doctor using AI",
       "kind": "hybrid",
       "n": 187,
-      "mean": 6.65,
+      "mean": 5.65,
       "sd": 3.07,
-      "lo": 6.2,
-      "hi": 7.09
+      "lo": 5.2,
+      "hi": 6.09
     },
     {
-      "id": "PersonalTrainer",
+      "id": "personal_trainer",
       "label": "Personal trainer",
       "kind": "human",
       "n": 187,
-      "mean": 6.32,
+      "mean": 5.32,
       "sd": 2.71,
-      "lo": 5.92,
-      "hi": 6.71
+      "lo": 4.92,
+      "hi": 5.71
     },
     {
-      "id": "AI_General",
+      "id": "ai_general",
       "label": "AI, general",
       "kind": "ai",
       "n": 185,
-      "mean": 5.69,
+      "mean": 4.69,
       "sd": 3.06,
-      "lo": 5.24,
-      "hi": 6.13
+      "lo": 4.24,
+      "hi": 5.13
     },
     {
-      "id": "AI_Diagonostic",
+      "id": "ai_diagnostic",
       "label": "AI diagnostic tool",
       "kind": "ai",
       "n": 184,
-      "mean": 5.42,
+      "mean": 4.42,
       "sd": 3.01,
-      "lo": 4.99,
-      "hi": 5.86
+      "lo": 3.99,
+      "hi": 4.86
     },
     {
-      "id": "Lay",
+      "id": "layperson",
       "label": "Layperson",
       "kind": "human",
       "n": 186,
-      "mean": 5.34,
+      "mean": 4.34,
       "sd": 3.11,
-      "lo": 4.89,
-      "hi": 5.79
+      "lo": 3.89,
+      "hi": 4.79
     },
     {
-      "id": "AI_Fitness",
+      "id": "ai_fitness",
       "label": "AI fitness coach",
       "kind": "ai",
       "n": 187,
-      "mean": 5.3,
+      "mean": 4.3,
       "sd": 3.07,
-      "lo": 4.86,
-      "hi": 5.75
+      "lo": 3.86,
+      "hi": 4.75
     },
     {
-      "id": "AI_Chatbot",
+      "id": "ai_chatbot",
       "label": "AI chatbot",
       "kind": "ai",
       "n": 186,
-      "mean": 5.25,
+      "mean": 4.25,
       "sd": 3.12,
-      "lo": 4.8,
-      "hi": 5.7
+      "lo": 3.8,
+      "hi": 4.7
     }
   ]
 }

@@ -4,9 +4,11 @@
   "files": {
     "trust-by-domain.json": "Study 2 (N = 106), Table 7: Doctor minus AI trust difference by medical-decision domain. Transcribed from the dissertation.",
     "effects-by-study.json": "Cohen's d by study, as reported in the dissertation text.",
-    "trust-by-recommender.json": "Study 1 (N = 188): mean trust (0 to 10) in each of eleven recommenders, with 95% confidence intervals computed from the study data. Summary statistics only."
+    "trust-by-recommender.json": "Study 1 (N = 188): mean trust (0 to 10) in each of eleven recommenders with 95% confidence intervals. Computed by analysis/study1-summaries.py from public/data/study1-ratings.csv.",
+    "study1-tests.json": "Study 1 paired tests: the seven preregistered hypotheses plus one exploratory test, computed by analysis/study1-summaries.py.",
+    "public/data/study1-ratings.csv": "Study 1 participant-level ratings, de-identified (see analysis/study1-deidentify.py). Released by the author."
   },
-  "sharing": "Published summary statistics only. No raw participant data in this repository.",
+  "sharing": "Published summary statistics, plus the de-identified Study 1 ratings file released by the author (public/data/). No raw files, IDs, IP addresses, locations, timestamps or demographics.",
   "publicLinks": {
     "study2Preregistration": "https://osf.io/k25g8",
     "study2DataAndAnalysis": "https://osf.io/7png8"
