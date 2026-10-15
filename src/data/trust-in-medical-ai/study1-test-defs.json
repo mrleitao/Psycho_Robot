@@ -1,0 +1,27 @@
+{
+  "note": "Definitions of the Study 1 tests, shared by analysis/study1-summaries.py and the live results table on the site. A composite is the mean of its items and is missing if any item is missing, as in the original analysis script. Numbering follows the dissertation (H1 to H7, then the exploratory test).",
+  "composites": {
+    "q_diagnosis": ["diagnose_broken_bone", "diagnose_depression", "diagnose_strep_throat", "diagnose_diabetes"],
+    "q_prescription": ["prescribe_pain_medication", "prescribe_mental_therapy", "prescribe_antibiotics", "prescribe_insulin"],
+    "q_preventative": ["prevent_injury_stretching", "prevent_mental_meditation", "prevent_acute_vitamins", "prevent_chronic_diet"],
+    "q_physical": ["diagnose_broken_bone", "diagnose_strep_throat", "diagnose_diabetes", "prevent_injury_stretching", "prevent_acute_vitamins", "prevent_chronic_diet", "prescribe_pain_medication", "prescribe_antibiotics", "prescribe_insulin"],
+    "q_mental": ["diagnose_depression", "prevent_mental_meditation", "prescribe_mental_therapy"],
+    "q_injury": ["diagnose_broken_bone", "prevent_injury_stretching", "prescribe_pain_medication"],
+    "q_acute": ["diagnose_strep_throat", "prevent_acute_vitamins", "prescribe_antibiotics"]
+  },
+  "tests": [
+    { "id": "H1", "text": "Diagnostic decisions need more quantitative reasoning than prescriptive ones", "a": "q_diagnosis", "b": "q_prescription", "aLabel": "Diagnostic", "bLabel": "Prescriptive", "scale": "0 to 100", "preregistered": true },
+    { "id": "H2", "text": "Diagnostic decisions need more quantitative reasoning than preventative ones", "a": "q_diagnosis", "b": "q_preventative", "aLabel": "Diagnostic", "bLabel": "Preventative", "scale": "0 to 100", "preregistered": true },
+    { "id": "H3", "text": "Prescriptive decisions need more quantitative reasoning than preventative ones", "a": "q_prescription", "b": "q_preventative", "aLabel": "Prescriptive", "bLabel": "Preventative", "scale": "0 to 100", "preregistered": true },
+    { "id": "H4", "text": "Physical health decisions need more quantitative reasoning than mental health ones", "a": "q_physical", "b": "q_mental", "aLabel": "Physical health", "bLabel": "Mental health", "scale": "0 to 100", "preregistered": true },
+    { "id": "H5", "text": "Bodily injury decisions need more quantitative reasoning than acute sickness ones", "a": "q_injury", "b": "q_acute", "aLabel": "Bodily injury", "bLabel": "Acute sickness", "scale": "0 to 100", "preregistered": true },
+    { "id": "H6", "text": "A doctor is seen as more capable of intuition than an AI", "a": "intuition_doctor", "b": "intuition_ai_general", "aLabel": "Doctor", "bLabel": "AI", "scale": "0 to 10", "preregistered": true },
+    { "id": "H7", "text": "Doctors are judged more trustworthy than medical AI", "a": "trust_doctor", "b": "trust_ai_general", "aLabel": "Doctor", "bLabel": "AI", "scale": "0 to 10", "preregistered": true },
+    { "id": "E", "text": "A doctor is seen as more capable of quantitative reasoning than an AI (exploratory)", "a": "capability_doctor", "b": "capability_ai_general", "aLabel": "Doctor", "bLabel": "AI", "scale": "0 to 10", "preregistered": false }
+  ],
+  "outcomes": [
+    { "id": "trust", "label": "Trust", "doctor": "trust_doctor", "ai": "trust_ai_general" },
+    { "id": "capability", "label": "Quantitative reasoning", "doctor": "capability_doctor", "ai": "capability_ai_general" },
+    { "id": "intuition", "label": "Intuition", "doctor": "intuition_doctor", "ai": "intuition_ai_general" }
+  ]
+}

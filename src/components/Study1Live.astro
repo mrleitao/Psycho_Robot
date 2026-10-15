@@ -1,0 +1,487 @@
+---
+import { href } from '../utils/url';
+import defs from '../data/trust-in-medical-ai/study1-test-defs.json';
+
+interface Props {
+  rec: { id: string; label: string; kind: string }[];
+}
+const { rec } = Astro.props;
+
+// Must match the categories written by analysis/study1-deidentify.py.
+const filters = [
+  { key: 'age_group', label: 'Age', cats: ['18-29', '30-44', '45-59', '60+'] },
+  { key: 'gender', label: 'Gender', cats: ['Woman', 'Man'] },
+  { key: 'race', label: 'Race', cats: ['White', 'Black', 'Another or multiple'] },
+  { key: 'education', label: 'Education', cats: ['No college degree', 'College degree or more'] },
+  { key: 'politics', label: 'Politics (social issues)', cats: ['Liberal', 'Moderate', 'Conservative'] },
+  { key: 'ai_experience', label: 'Experience with AI', cats: ['None or a little', 'Moderate or more'] },
+];
+---
+
+<div class="live" data-live data-csv={href('/data/study1-ratings.csv')} data-defs={JSON.stringify(defs)}>
+  <div class="filters" role="group" aria-label="Choose who to include">
+    {
+      filters.map((g) => (
+        <fieldset data-group={g.key}>
+          <legend>{g.label}</legend>
+          {g.cats.map((c) => (
+            <label class="chip">
+              <input type="checkbox" value={c} />
+              <span>{c}</span>
+            </label>
+          ))}
+        </fieldset>
+      ))
+    }
+  </div>
+  <div class="bar-row">
+    <p class="match" aria-live="polite" data-match>Loading the data.</p>
+    <button type="button" class="reset" data-reset hidden>Clear filters</button>
+  </div>
+  <p class="small muted">
+    Pick more than one option in a row to include both. Choices in different rows combine, so Woman and 60+ means women
+    aged 60 and over. Results appear only when at least 10 people match.
+  </p>
+
+  <div data-results hidden>
+    <figure class="plot" data-pairs-live>
+      <svg data-pairs-svg role="group" aria-label="Doctor and AI ratings for the chosen group"></svg>
+      <ul class="key">
+        <li><span class="sw doctor"></span>Doctor</li>
+        <li><span class="sw ai"></span>AI</li>
+        <li class="muted">Bars are 95% confidence intervals</li>
+      </ul>
+      <div class="tip" hidden data-tip-pairs></div>
+    </figure>
+
+    <p class="caution small" data-caution hidden>
+      Subgroup results are exploratory. These tests were not planned for subgroups, and smaller groups give wider
+      intervals, so differences can appear or vanish by chance. Do not read a change from the full sample as a finding.
+    </p>
+
+    <h3 class="sub-title">The tests, rerun for this group</h3>
+    <div class="table-wrap">
+      <table class="tests">
+        <thead>
+          <tr>
+            <th scope="col">Hypothesis</th>
+            <th scope="col">Means</th>
+            <th scope="col">Difference</th>
+            <th scope="col"><abbr title="Paired t test: compares two ratings given by the same people. Larger values mean a bigger difference relative to the noise.">t (df)</abbr></th>
+            <th scope="col"><abbr title="Probability of a difference this large if there were no real difference. Below .05 is called significant.">p</abbr></th>
+            <th scope="col"><abbr title="Cohen's d for paired ratings: mean difference over the SD of the differences. About 0.2 is small, 0.5 medium, 0.8 large.">d</abbr></th>
+          </tr>
+        </thead>
+        <tbody data-tests></tbody>
+      </table>
+    </div>
+
+    <h3 class="sub-title">How this group rated each recommender</h3>
+    <div class="controls">
+      <fieldset class="measure">
+        <legend>Rating</legend>
+        <label><input type="radio" name="measure" value="trust" checked /> Trust</label>
+        <label><input type="radio" name="measure" value="capability" /> Quantitative reasoning</label>
+        <label><input type="radio" name="measure" value="intuition" /> Intuition</label>
+      </fieldset>
+      <label class="pick">
+        <span>Compare</span>
+        <select data-a>
+          {rec.map((r) => <option value={r.id} selected={r.id === 'doctor'}>{r.label}</option>)}
+        </select>
+      </label>
+      <label class="pick">
+        <span>with</span>
+        <select data-b>
+          {rec.map((r) => <option value={r.id} selected={r.id === 'ai_general'}>{r.label}</option>)}
+        </select>
+      </label>
+    </div>
+    <figure class="plot" data-hist-fig>
+      <svg data-hist role="group" aria-label="Histograms of the two selected ratings"></svg>
+      <div class="tip" hidden data-tip-hist></div>
+      <div class="split" data-split></div>
+      <dl class="stats" data-stats></dl>
+    </figure>
+    <p class="small muted">
+      Each bar counts people who gave that rating. Hover over, or tab to, a bar for the count. The strip shows how many
+      people rated the first option higher, the same, or lower.
+    </p>
+  </div>
+
+  <p class="downloads">
+    <a class="btn" href={href('/data/study1-ratings.csv')} download>Download the data (CSV)</a>
+    <a class="btn" href={href('/data/study1-codebook.csv')} download>Codebook (CSV)</a>
+    <a class="btn" href={href('/code/study1-analysis.R')} download>Analysis code (R)</a>
+  </p>
+</div>
+
+<script>
+  type Row = Record<string, number | string | null>;
+  type Def = { id: string; text: string; a: string; b: string; aLabel: string; bLabel: string; scale: string; preregistered: boolean };
+
+  // ---- statistics: paired t test, p value and confidence intervals (no libraries) ----
+  const lgamma = (x: number): number => {
+    const c = [76.18009172947146, -86.50532032941677, 24.01409824083091, -1.231739572450155, 0.1208650973866179e-2, -0.5395239384953e-5];
+    let y = x, t = x + 5.5;
+    t -= (x + 0.5) * Math.log(t);
+    let s = 1.000000000190015;
+    for (const k of c) s += k / ++y;
+    return -t + Math.log((2.5066282746310005 * s) / x);
+  };
+  const betacf = (a: number, b: number, x: number) => {
+    const tiny = 1e-30;
+    let c = 1, d = 1 - ((a + b) * x) / (a + 1);
+    if (Math.abs(d) < tiny) d = tiny;
+    d = 1 / d;
+    let h = d;
+    for (let m = 1; m <= 300; m++) {
+      const m2 = 2 * m;
+      let aa = (m * (b - m) * x) / ((a + m2 - 1) * (a + m2));
+      d = 1 + aa * d; if (Math.abs(d) < tiny) d = tiny;
+      c = 1 + aa / c; if (Math.abs(c) < tiny) c = tiny;
+      d = 1 / d; h *= d * c;
+      aa = (-(a + m) * (a + b + m) * x) / ((a + m2) * (a + m2 + 1));
+      d = 1 + aa * d; if (Math.abs(d) < tiny) d = tiny;
+      c = 1 + aa / c; if (Math.abs(c) < tiny) c = tiny;
+      d = 1 / d;
+      const del = d * c;
+      h *= del;
+      if (Math.abs(del - 1) < 1e-12) break;
+    }
+    return h;
+  };
+  const ibeta = (x: number, a: number, b: number) => {
+    if (x <= 0) return 0;
+    if (x >= 1) return 1;
+    const bt = Math.exp(lgamma(a + b) - lgamma(a) - lgamma(b) + a * Math.log(x) + b * Math.log(1 - x));
+    return x < (a + 1) / (a + b + 2) ? (bt * betacf(a, b, x)) / a : 1 - (bt * betacf(b, a, 1 - x)) / b;
+  };
+  const pTwoSided = (t: number, df: number) => ibeta(df / (df + t * t), df / 2, 0.5);
+  const tCrit = (df: number) => {
+    let lo = 0, hi = 60;
+    for (let i = 0; i < 80; i++) {
+      const mid = (lo + hi) / 2;
+      (1 - pTwoSided(mid, df) / 2 < 0.975 ? (lo = mid) : (hi = mid));
+    }
+    return (lo + hi) / 2;
+  };
+  const mean = (a: number[]) => a.reduce((s, x) => s + x, 0) / a.length;
+  const sd = (a: number[]) => { const m = mean(a); return Math.sqrt(a.reduce((s, x) => s + (x - m) ** 2, 0) / (a.length - 1)); };
+  const fmtP = (p: number) => (p < 0.001 ? '< .001' : p.toFixed(3).replace(/^0/, ''));
+  const kindOf = (id: string) => (id.startsWith('ai_') ? 'ai' : id === 'doctor_using_ai' ? 'hybrid' : 'human');
+  const NAMES: Record<string, string> = {
+    doctor: 'Doctor', nurse: 'Nurse', doctor_remote: 'Doctor, remote visit', therapist: 'Therapist', personal_trainer: 'Personal trainer',
+    layperson: 'Layperson', doctor_using_ai: 'Doctor using AI', ai_general: 'AI, general', ai_diagnostic: 'AI diagnostic tool',
+    ai_chatbot: 'AI chatbot', ai_fitness: 'AI fitness coach',
+  };
+  const WORD: Record<string, [string, string, string]> = {
+    trust: ['trusted more', 'gave the same trust', 'trusted less'],
+    capability: ['rated more capable', 'rated the same', 'rated less capable'],
+    intuition: ['rated more capable', 'rated the same', 'rated less capable'],
+  };
+  const MIN_N = 10;
+
+  const parseCsv = (text: string): Row[] => {
+    const [head, ...lines] = text.trim().split(/\r?\n/);
+    const cols = head.split(',');
+    return lines.map((l) => {
+      const v = l.split(',');
+      const o: Row = {};
+      cols.forEach((c, i) => {
+        const raw = v[i] ?? '';
+        o[c] = raw === '' ? null : raw !== '' && !isNaN(Number(raw)) ? Number(raw) : raw;
+      });
+      return o;
+    });
+  };
+
+  document.querySelectorAll<HTMLElement>('[data-live]').forEach(async (root) => {
+    const $ = <T extends Element>(s: string) => root.querySelector<T>(s)!;
+    const matchEl = $<HTMLElement>('[data-match]');
+    const results = $<HTMLElement>('[data-results]');
+    const resetBtn = $<HTMLButtonElement>('[data-reset]');
+    const caution = $<HTMLElement>('[data-caution]');
+    const defs = JSON.parse(root.dataset.defs!) as { composites: Record<string, string[]>; tests: Def[]; outcomes: { id: string; label: string; doctor: string; ai: string }[] };
+
+    let rows: Row[] = [];
+    try {
+      const res = await fetch(root.dataset.csv!);
+      if (!res.ok) throw new Error(String(res.status));
+      rows = parseCsv(await res.text());
+    } catch {
+      matchEl.textContent = 'The data could not load. Use the download links below.';
+      return;
+    }
+
+    const val = (r: Row, col: string): number | null => {
+      const comp = defs.composites[col];
+      if (comp) {
+        const xs = comp.map((c) => r[c]);
+        return xs.some((x) => x === null || typeof x !== 'number') ? null : mean(xs as number[]);
+      }
+      const x = r[col];
+      return typeof x === 'number' ? x : null;
+    };
+
+    const pair = (rs: Row[], a: string, b: string) => {
+      const d: number[] = [], xa: number[] = [], xb: number[] = [];
+      rs.forEach((r) => {
+        const x = val(r, a), y = val(r, b);
+        if (x !== null && y !== null) { xa.push(x); xb.push(y); d.push(x - y); }
+      });
+      const n = d.length;
+      if (n < MIN_N) return null;
+      const md = mean(d), s = sd(d);
+      const t = s > 0 ? md / (s / Math.sqrt(n)) : 0;
+      return { n, ma: mean(xa), mb: mean(xb), diff: md, t, df: n - 1, p: s > 0 ? pTwoSided(t, n - 1) : 1, d: s > 0 ? md / s : 0 };
+    };
+    const side = (rs: Row[], col: string) => {
+      const x = rs.map((r) => val(r, col)).filter((v): v is number => v !== null);
+      if (x.length < MIN_N) return null;
+      const h = (tCrit(x.length - 1) * sd(x)) / Math.sqrt(x.length);
+      return { mean: mean(x), lo: mean(x) - h, hi: mean(x) + h, n: x.length };
+    };
+
+    // ---- filters ----
+    const groups = [...root.querySelectorAll<HTMLElement>('[data-group]')];
+    const selected = () => {
+      const o: Record<string, Set<string>> = {};
+      groups.forEach((g) => {
+        const s = new Set<string>();
+        g.querySelectorAll<HTMLInputElement>('input:checked').forEach((i) => s.add(i.value));
+        o[g.dataset.group!] = s;
+      });
+      return o;
+    };
+
+    // ---- chart: doctor and AI by outcome ----
+    const pairsSvg = $<SVGSVGElement>('[data-pairs-svg]');
+    const tipP = $<HTMLElement>('[data-tip-pairs]');
+    const W = 440, padL = 16, padR = 16;
+    const f2 = (n: number) => n.toFixed(2);
+    const drawPairs = (rs: Row[]) => {
+      const rowH = 78, top = 8, axisY = top + defs.outcomes.length * rowH + 4, H = axisY + 56;
+      const x = (v: number) => padL + (v / 10) * (W - padL - padR);
+      pairsSvg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+      let out = '<g class="grid">' + [0, 2, 4, 6, 8, 10].map((t) => `<line x1="${x(t)}" x2="${x(t)}" y1="${top}" y2="${axisY}"/>`).join('') + '</g>';
+      defs.outcomes.forEach((o, i) => {
+        const y0 = top + i * rowH, yd = y0 + 36, ya = y0 + 58;
+        const D = side(rs, o.doctor), A = side(rs, o.ai), P = pair(rs, o.doctor, o.ai);
+        if (!D || !A || !P) return;
+        out += `<g class="row" tabindex="0" role="group" aria-label="${o.label}. Doctor ${f2(D.mean)}, AI ${f2(A.mean)}, difference ${f2(P.diff)}, d ${f2(P.d)}"` +
+          ` data-label="${o.label}" data-doctor="Doctor: ${f2(D.mean)} (95% CI ${f2(D.lo)} to ${f2(D.hi)}, n = ${D.n})" data-ai="AI: ${f2(A.mean)} (95% CI ${f2(A.lo)} to ${f2(A.hi)}, n = ${A.n})"` +
+          ` data-diff="Difference ${f2(P.diff)}, d = ${f2(P.d)}, t(${P.df}) = ${f2(P.t)}">` +
+          `<rect class="hit" x="0" y="${y0}" width="${W}" height="${rowH}"/>` +
+          `<text class="name" x="${padL}" y="${y0 + 20}">${o.label}</text><text class="dval" x="${W - padR}" y="${y0 + 20}" text-anchor="end">d = ${f2(P.d)}</text>` +
+          `<line class="ci doctor" x1="${x(D.lo)}" x2="${x(D.hi)}" y1="${yd}" y2="${yd}"/><circle class="dot doctor" cx="${x(D.mean)}" cy="${yd}" r="6"/>` +
+          `<line class="ci ai" x1="${x(A.lo)}" x2="${x(A.hi)}" y1="${ya}" y2="${ya}"/><circle class="dot ai" cx="${x(A.mean)}" cy="${ya}" r="6"/></g>`;
+      });
+      out += `<g class="axis"><line x1="${padL}" x2="${W - padR}" y1="${axisY}" y2="${axisY}"/>` +
+        [0, 2, 4, 6, 8, 10].map((t) => `<text x="${x(t)}" y="${axisY + 22}" text-anchor="middle">${t}</text>`).join('') +
+        `<text class="axis-title" x="${W / 2}" y="${axisY + 46}" text-anchor="middle">Rating, 0 to 10</text></g>`;
+      pairsSvg.innerHTML = out;
+      const fig = $<HTMLElement>('[data-pairs-live]');
+      const show = (row: Element) => {
+        const d = (row as SVGElement).dataset;
+        tipP.innerHTML = `<strong>${d.label}</strong><span>${d.doctor}</span><span>${d.ai}</span><span>${d.diff}</span>`;
+        tipP.hidden = false;
+        const fr = fig.getBoundingClientRect(), r = row.getBoundingClientRect(), half = tipP.offsetWidth / 2;
+        tipP.style.left = `${Math.max(half, Math.min(fr.width - half, r.left - fr.left + r.width / 2))}px`;
+        tipP.style.top = `${r.top - fr.top + 4}px`;
+      };
+      pairsSvg.querySelectorAll('.row').forEach((row) => {
+        row.addEventListener('pointerenter', () => show(row));
+        row.addEventListener('pointerleave', () => (tipP.hidden = true));
+        row.addEventListener('focus', () => show(row));
+        row.addEventListener('blur', () => (tipP.hidden = true));
+      });
+    };
+
+    // ---- table: the tests, rerun ----
+    const tbody = $<HTMLElement>('[data-tests]');
+    const drawTests = (rs: Row[]) => {
+      tbody.innerHTML = defs.tests.map((t) => {
+        const r = pair(rs, t.a, t.b);
+        const head = `<th scope="row"><span class="hid">${t.id}</span> ${t.text}${t.preregistered ? '' : ''}</th>`;
+        if (!r) return `<tr class="no">${head}<td colspan="5">Fewer than ${MIN_N} people</td></tr>`;
+        const sig = r.p < 0.05 && r.diff > 0;
+        const dec = t.scale === '0 to 100' ? 1 : 2;
+        return `<tr class="${sig ? 'yes' : 'no'}">${head}` +
+          `<td>${t.aLabel} ${r.ma.toFixed(dec)} v ${t.bLabel} ${r.mb.toFixed(dec)}</td>` +
+          `<td>${r.diff >= 0 ? '+' : ''}${r.diff.toFixed(2)}</td>` +
+          `<td>${r.t.toFixed(2)} (${r.df})</td><td>${fmtP(r.p)}</td><td>${r.d.toFixed(2)}</td></tr>`;
+      }).join('');
+    };
+
+    // ---- histograms ----
+    const hist = $<SVGSVGElement>('[data-hist]');
+    const tipH = $<HTMLElement>('[data-tip-hist]');
+    const split = $<HTMLElement>('[data-split]');
+    const stats = $<HTMLElement>('[data-stats]');
+    const selA = $<HTMLSelectElement>('[data-a]');
+    const selB = $<HTMLSelectElement>('[data-b]');
+    const drawHist = (rs: Row[]) => {
+      const m = root.querySelector<HTMLInputElement>('input[name=measure]:checked')!.value;
+      const ids = [selA.value, selB.value];
+      const series = ids.map((id) => rs.map((r) => r[`${m}_${id}`]).filter((v): v is number => typeof v === 'number'));
+      const plotH = 120, gap = 40, bw = (W - padL - padR) / 11;
+      const counts = series.map((s) => Array.from({ length: 11 }, (_, v) => s.filter((x) => x === v).length));
+      const maxC = Math.max(...counts.flat(), 1);
+      hist.setAttribute('viewBox', `0 0 ${W} ${2 * plotH + gap + 90}`);
+      let out = '';
+      series.forEach((s, k) => {
+        const y0 = k * (plotH + gap) + 28, kind = kindOf(ids[k]);
+        out += `<text class="title" x="${padL}" y="${y0 - 12}">${NAMES[ids[k]]}</text>`;
+        out += `<text class="subt" x="${W - padR}" y="${y0 - 12}" text-anchor="end">${s.length ? `mean ${mean(s).toFixed(2)}, ` : ''}n = ${s.length}</text>`;
+        out += `<line class="base" x1="${padL}" x2="${W - padR}" y1="${y0 + plotH}" y2="${y0 + plotH}"/>`;
+        counts[k].forEach((c, v) => {
+          const h = (c / maxC) * (plotH - 4), pct = s.length ? ((c / s.length) * 100).toFixed(0) : '0';
+          out += `<g tabindex="0" class="bar ${kind}" data-who="${NAMES[ids[k]]}" data-val="${v}" data-count="${c}" data-pct="${pct}" aria-label="${NAMES[ids[k]]}, rating ${v}, ${c} people">` +
+            `<rect class="hit" x="${padL + v * bw}" y="${y0}" width="${bw}" height="${plotH}"/>` +
+            `<rect class="fill" x="${padL + v * bw + 3}" y="${y0 + plotH - h}" width="${bw - 6}" height="${Math.max(h, c ? 2 : 0)}" rx="3"/></g>`;
+        });
+        if (s.length) out += `<line class="mean ${kind}" x1="${padL + (mean(s) + 0.5) * bw}" x2="${padL + (mean(s) + 0.5) * bw}" y1="${y0}" y2="${y0 + plotH}"/>`;
+      });
+      const ay = 2 * plotH + gap + 38;
+      out += '<g class="axis">';
+      for (let v = 0; v <= 10; v++) out += `<text x="${padL + (v + 0.5) * bw}" y="${ay + 12}" text-anchor="middle">${v}</text>`;
+      out += `<text class="axis-title" x="${W / 2}" y="${ay + 36}" text-anchor="middle">Rating, 0 to 10</text></g>`;
+      hist.innerHTML = out;
+      const fig = $<HTMLElement>('[data-hist-fig]');
+      hist.querySelectorAll('.bar').forEach((b) => {
+        const show = () => {
+          const d = (b as SVGElement).dataset;
+          tipH.innerHTML = `<strong>${d.who}</strong><span>Rating ${d.val}: ${d.count} ${d.count === '1' ? 'person' : 'people'} (${d.pct}%)</span>`;
+          tipH.hidden = false;
+          const fr = fig.getBoundingClientRect(), r = b.getBoundingClientRect(), half = tipH.offsetWidth / 2;
+          tipH.style.left = `${Math.max(half, Math.min(fr.width - half, r.left - fr.left + r.width / 2))}px`;
+          tipH.style.top = `${r.top - fr.top - 4}px`;
+        };
+        b.addEventListener('pointerenter', show);
+        b.addEventListener('pointerleave', () => (tipH.hidden = true));
+        b.addEventListener('focus', show);
+        b.addEventListener('blur', () => (tipH.hidden = true));
+      });
+
+      const diffs: number[] = [];
+      rs.forEach((r) => {
+        const a = r[`${m}_${ids[0]}`], b = r[`${m}_${ids[1]}`];
+        if (typeof a === 'number' && typeof b === 'number') diffs.push(a - b);
+      });
+      const n = diffs.length;
+      if (n < MIN_N) { split.innerHTML = `<p class="split-title">Fewer than ${MIN_N} people rated both.</p>`; stats.innerHTML = ''; return; }
+      const up = diffs.filter((x) => x > 0).length, same = diffs.filter((x) => x === 0).length, down = n - up - same;
+      const pc = (x: number) => ((x / n) * 100).toFixed(0), w = WORD[m];
+      split.innerHTML =
+        `<p class="split-title">Of ${n} people who rated both, ${NAMES[ids[0]]} was…</p>` +
+        `<div class="strip" role="img" aria-label="${pc(up)}% ${w[0]}, ${pc(same)}% ${w[1]}, ${pc(down)}% ${w[2]}">` +
+        `<span class="seg ${kindOf(ids[0])}" style="flex:${up}" title="${up} people"></span><span class="seg s" style="flex:${same}" title="${same} people"></span>` +
+        `<span class="seg ${kindOf(ids[1])}" style="flex:${down}" title="${down} people"></span></div>` +
+        `<div class="strip-key"><span><b>${pc(up)}%</b> ${w[0]}</span><span><b>${pc(same)}%</b> ${w[1]}</span><span><b>${pc(down)}%</b> ${w[2]}</span></div>`;
+      const md = mean(diffs), s = sd(diffs);
+      stats.innerHTML =
+        `<div><dt>Mean difference</dt><dd>${md >= 0 ? '+' : ''}${md.toFixed(2)}</dd></div>` +
+        `<div><dt><abbr title="Cohen's d for paired ratings: the mean difference divided by the standard deviation of the differences. About 0.2 is small, 0.5 medium, 0.8 large.">Effect size (d)</abbr></dt><dd>${(s > 0 ? md / s : 0).toFixed(2)}</dd></div>` +
+        `<div><dt>People</dt><dd>${n}</dd></div>`;
+    };
+
+    const update = () => {
+      const sel = selected();
+      const active = Object.values(sel).some((s) => s.size);
+      const rs = rows.filter((r) => Object.entries(sel).every(([k, s]) => !s.size || (typeof r[k] === 'string' && s.has(r[k] as string))));
+      resetBtn.hidden = !active;
+      caution.hidden = !active;
+      if (rs.length < MIN_N) {
+        matchEl.textContent = `${rs.length} of ${rows.length} people match. Too few to show results, so widen the filters.`;
+        results.hidden = true;
+        return;
+      }
+      matchEl.textContent = active ? `${rs.length} of ${rows.length} people match` : `All ${rows.length} people`;
+      results.hidden = false;
+      drawPairs(rs);
+      drawTests(rs);
+      drawHist(rs);
+    };
+
+    root.addEventListener('change', update);
+    resetBtn.addEventListener('click', () => {
+      root.querySelectorAll<HTMLInputElement>('[data-group] input').forEach((i) => (i.checked = false));
+      update();
+    });
+    update();
+  });
+</script>
+
+<style>
+  .live { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+  .live > * { min-width: 0; }
+  .filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr)); gap: 0.9rem 1.5rem; font-family: var(--display); max-width: 720px; }
+  .filters fieldset { border: 0; padding: 0; margin: 0; min-width: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .filters legend { padding: 0; margin-bottom: 0.35rem; color: var(--muted); font-size: 0.9rem; }
+  .chip { position: relative; }
+  .chip input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+  .chip span { display: inline-block; padding: 0.35rem 0.8rem; border: 1px solid var(--rule); border-radius: 999px; font-size: 0.92rem; background: var(--paper); }
+  .chip:hover span { border-color: var(--muted); }
+  .chip input:checked + span { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .chip input:focus-visible + span { outline: 2px solid var(--doctor); outline-offset: 2px; }
+  .bar-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1.25rem; }
+  .match { margin: 0; font-family: var(--display); font-weight: 600; font-size: 1.05rem; }
+  .reset { padding: 0; border: 0; background: none; font: inherit; font-family: var(--display); color: var(--doctor); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+  .reset[hidden] { display: none; }
+  .caution { max-width: 60ch; border-left: 3px solid var(--ai); padding-left: 0.8rem; margin: 0.5rem 0; }
+  .sub-title { margin: 2rem 0 0.75rem; font-size: 1.15rem; }
+  .plot { margin: 1.25rem 0 0; position: relative; max-width: 480px; }
+  svg { display: block; width: 100%; height: auto; overflow: visible; }
+  svg :global(.grid line) { stroke: var(--rule); stroke-width: 1; }
+  svg :global(.axis line), svg :global(.base) { stroke: var(--muted); stroke-width: 1; }
+  svg :global(.axis text), svg :global(.subt), svg :global(.dval) { fill: var(--muted); font-family: var(--display); font-size: 13px; }
+  svg :global(.name), svg :global(.title) { fill: var(--ink); font-family: var(--display); font-weight: 600; font-size: 16px; }
+  svg :global(.name), svg :global(.dval) { paint-order: stroke; stroke: var(--paper); stroke-width: 6px; stroke-linejoin: round; }
+  svg :global(.hit) { fill: transparent; }
+  svg :global(.row:hover .hit), svg :global(.row:focus .hit), svg :global(.bar:hover .hit), svg :global(.bar:focus .hit) { fill: var(--wash); }
+  svg :global(.row), svg :global(.bar) { outline: none; }
+  svg :global(.row:focus-visible .hit), svg :global(.bar:focus-visible .hit) { stroke: var(--doctor); stroke-width: 2; }
+  svg :global(.ci) { stroke-width: 2.5; stroke-linecap: round; opacity: 0.55; }
+  svg :global(.ci.doctor) { stroke: var(--doctor); } svg :global(.ci.ai) { stroke: var(--ai); }
+  svg :global(.dot) { stroke: var(--paper); stroke-width: 2; }
+  svg :global(.dot.doctor) { fill: var(--doctor); } svg :global(.dot.ai) { fill: var(--ai); }
+  svg :global(.human .fill) { fill: var(--doctor); } svg :global(.ai .fill) { fill: var(--ai); } svg :global(.hybrid .fill) { fill: var(--muted); }
+  svg :global(.mean) { stroke-width: 2; stroke-dasharray: 4 3; pointer-events: none; }
+  svg :global(.mean.human) { stroke: var(--doctor); } svg :global(.mean.ai) { stroke: var(--ai); } svg :global(.mean.hybrid) { stroke: var(--muted); }
+  .key { list-style: none; margin: 0.5rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.35rem 1.25rem; font-family: var(--display); font-size: 0.92rem; }
+  .key li { display: inline-flex; align-items: center; gap: 0.5rem; }
+  .key .muted { color: var(--muted); }
+  .sw { width: 0.8rem; height: 0.8rem; border-radius: 50%; flex: none; }
+  .sw.doctor { background: var(--doctor); } .sw.ai { background: var(--ai); }
+  .tip { position: absolute; transform: translate(-50%, -100%); display: grid; gap: 0.1rem; padding: 0.55rem 0.8rem; background: var(--ink); color: var(--paper); border-radius: 6px; font-family: var(--display); font-size: 0.85rem; line-height: 1.35; white-space: nowrap; pointer-events: none; z-index: 2; }
+  .tip[hidden] { display: none; }
+  .table-wrap { overflow-x: auto; }
+  .tests { width: 100%; border-collapse: collapse; font-family: var(--display); font-size: 0.92rem; font-variant-numeric: tabular-nums; }
+  .tests :global(th), .tests :global(td) { padding: 0.5rem 0.6rem; text-align: left; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  .tests thead :global(th) { color: var(--muted); font-weight: 500; }
+  .tests :global(tbody th) { font-weight: 400; min-width: 15rem; }
+  .tests :global(.hid) { font-weight: 600; margin-right: 0.35rem; }
+  .tests :global(tr.no td) { color: var(--muted); }
+  .tests :global(td:nth-child(5)) { white-space: nowrap; }
+  .tests :global(abbr), .stats :global(abbr) { text-decoration: underline dotted; text-underline-offset: 3px; cursor: help; }
+  .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(11rem, 100%), 1fr)); gap: 0.75rem 1.5rem; align-items: end; font-family: var(--display); max-width: 560px; }
+  fieldset.measure { grid-column: 1 / -1; min-width: 0; border: 0; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; }
+  fieldset.measure legend { padding: 0; margin-bottom: 0.25rem; color: var(--muted); font-size: 0.9rem; }
+  .pick { display: grid; gap: 0.25rem; font-size: 0.9rem; color: var(--muted); }
+  select { font: inherit; font-size: 1rem; color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 0.4rem 0.6rem; }
+  select:focus-visible, input:focus-visible { outline: 2px solid var(--doctor); outline-offset: 2px; }
+  .split { margin-top: 1.25rem; font-family: var(--display); }
+  .split :global(.split-title) { margin: 0 0 0.4rem; font-size: 0.95rem; color: var(--muted); }
+  .split :global(.strip) { display: flex; height: 0.9rem; gap: 2px; }
+  .split :global(.seg) { border-radius: 3px; min-width: 0; }
+  .split :global(.seg.human) { background: var(--doctor); } .split :global(.seg.ai) { background: var(--ai); } .split :global(.seg.hybrid) { background: var(--muted); }
+  .split :global(.seg.s) { background: var(--rule); }
+  .split :global(.strip-key) { display: flex; justify-content: space-between; gap: 1rem; margin-top: 0.4rem; font-size: 0.9rem; }
+  .stats { display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; margin: 1.25rem 0 0; font-family: var(--display); }
+  .stats :global(dt) { color: var(--muted); font-size: 0.9rem; }
+  .stats :global(dd) { margin: 0; font-size: 1.5rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .downloads { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1.5rem 0 0; }
+  .btn { display: inline-block; padding: 0.55rem 0.95rem; border: 1px solid var(--ink); border-radius: 6px; font-family: var(--display); font-size: 0.95rem; color: var(--ink); text-decoration: none; }
+  .btn:hover { background: var(--ink); color: var(--paper); }
+</style>

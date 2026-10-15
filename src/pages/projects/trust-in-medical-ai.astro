@@ -3,12 +3,13 @@ import Base from '../../layouts/Base.astro';
 import ForestPlot from '../../components/ForestPlot.astro';
 import EffectDots from '../../components/EffectDots.astro';
 import RankDots from '../../components/RankDots.astro';
-import DataExplorer from '../../components/DataExplorer.astro';
+import OutcomePairs from '../../components/OutcomePairs.astro';
+import Study1Live from '../../components/Study1Live.astro';
 import Placeholder from '../../components/Placeholder.astro';
 import data from '../../data/trust-in-medical-ai/trust-by-domain.json';
 import effects from '../../data/trust-in-medical-ai/effects-by-study.json';
 import ranked from '../../data/trust-in-medical-ai/trust-by-recommender.json';
-import study1 from '../../data/trust-in-medical-ai/study1-tests.json';
+import outcomes from '../../data/trust-in-medical-ai/study1-outcomes.json';
 import meta from '../../data/trust-in-medical-ai/meta.json';
 import { href } from '../../utils/url';
 ---
@@ -127,50 +128,34 @@ import { href } from '../../utils/url';
       </section>
     </div>
 
-    <section class="section chart" id="study1-data" aria-labelledby="data-title">
-      <h2 id="data-title">Explore the Study 1 data</h2>
+    <section class="section chart" aria-labelledby="pairs-title">
+      <h2 id="pairs-title">Doctors beat AI on trust, intuition and quantitative reasoning</h2>
       <p class="sub">
-        The cleaned data and the analysis code are public. Pick any two recommenders and a rating to see how the 188
-        people answered. Nothing here identifies a participant: I dropped IP addresses, locations, timestamps, IDs and
-        all demographic questions, and shuffled the participant numbers.
+        Study 1 asked {outcomes.outcomes[0].n} people to rate a doctor and an AI on three things: how much they trust each to make
+        health recommendations, and how capable each is of using quantitative reasoning and of using intuition. The doctor
+        came out ahead on all three. The largest gap is trust (d = {outcomes.outcomes[0].d.toFixed(2)}).
       </p>
-      <DataExplorer rec={ranked.rows} />
-
-      <h3 class="tests-title">The preregistered tests</h3>
-      <div class="table-wrap">
-        <table class="tests">
-          <thead>
-            <tr>
-              <th scope="col">Hypothesis</th>
-              <th scope="col">First minus second</th>
-              <th scope="col">Means</th>
-              <th scope="col"><abbr title="Paired t test: compares two ratings given by the same people. Larger values mean a bigger difference relative to the noise.">t</abbr></th>
-              <th scope="col"><abbr title="Probability of a difference this large if there were no real difference. Below .05 is called significant.">p</abbr></th>
-              <th scope="col"><abbr title="Cohen's d for paired ratings: mean difference over the SD of the differences. About 0.2 is small, 0.5 medium, 0.8 large.">d</abbr></th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              study1.tests.map((t) => (
-                <tr class={t.supported ? 'yes' : 'no'}>
-                  <th scope="row">
-                    <span class="hid">{t.id}</span> {t.text}
-                  </th>
-                  <td>{t.a} minus {t.b}</td>
-                  <td>{t.meanA.toFixed(1)} v {t.meanB.toFixed(1)}</td>
-                  <td>{t.t.toFixed(2)}</td>
-                  <td>{t.p < 0.001 ? '< .001' : t.p.toFixed(3).replace(/^0/, '')}</td>
-                  <td>{t.d.toFixed(2)}</td>
-                </tr>
-              ))
-            }
-          </tbody>
-        </table>
-      </div>
+      <OutcomePairs outcomes={outcomes.outcomes} scale={outcomes.scale} xLabel="Rating, from 0 to 10" />
       <p class="small muted source">
-        Paired t tests on the released data, N = 185 to 188 depending on missing ratings. Decision items are on a 0 to 100
-        scale, recommender ratings on 0 to 10. Hypothesis 1.b.2 was marginal (p = .061) and 1.a.1 showed no difference.
-        Hypothesis 2.a.2 was not preregistered. How the file was cleaned is in <a href="https://github.com/mrleitao/Psycho_Robot#study-1-data-release">the project README</a>.
+        Source: {outcomes.source} The statistics match the dissertation (Hypotheses 6 and 7 and the exploratory test).
+        Hover over a row or tab to it for the details.
+      </p>
+    </section>
+
+    <section class="section chart" id="study1-data" aria-labelledby="data-title">
+      <h2 id="data-title">Filter the data and rerun the results</h2>
+      <p class="sub">
+        The cleaned Study 1 data and the analysis code are public, as part of my commitment to open science. Choose who to
+        include and the chart and tests below update on the spot, using the same tests as the paper. With no filters, the
+        table reproduces the dissertation. Nothing here identifies a participant: I removed IP addresses, locations,
+        timestamps and IDs, left out sensitive demographics, grouped the rest into broad categories, and shuffled the
+        participant numbers.
+      </p>
+      <Study1Live rec={ranked.rows} />
+      <p class="small muted source">
+        Paired t tests on the released data. Decision items are on a 0 to 100 scale, recommender ratings on 0 to 10. The
+        paper's hypothesis numbers are used; the exploratory test (E) was not preregistered. How the file was cleaned is in
+        <a href="https://github.com/mrleitao/Psycho_Robot#study-1-data-release">the project README</a>.
       </p>
     </section>
 
@@ -197,16 +182,6 @@ import { href } from '../../utils/url';
 </Base>
 
 <style>
-  .tests-title { margin: 2.5rem 0 0.75rem; font-size: 1.15rem; }
-  .table-wrap { overflow-x: auto; }
-  .tests { width: 100%; border-collapse: collapse; font-family: var(--display); font-size: 0.92rem; font-variant-numeric: tabular-nums; }
-  .tests th, .tests td { padding: 0.5rem 0.6rem; text-align: left; border-bottom: 1px solid var(--rule); vertical-align: top; }
-  .tests thead th { color: var(--muted); font-weight: 500; }
-  .tests tbody th { font-weight: 400; min-width: 15rem; }
-  .tests .hid { font-weight: 600; margin-right: 0.35rem; }
-  .tests td:nth-child(5) { white-space: nowrap; }
-  .tests tr.no td { color: var(--muted); }
-  .tests abbr { text-decoration: underline dotted; text-underline-offset: 3px; cursor: help; }
   .back {
     margin-bottom: 1rem;
   }

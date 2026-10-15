@@ -1,0 +1,75 @@
+{
+  "source": "Study 1 (N = 188), full sample. Means and 95% confidence intervals of each rating, doctor and AI, on a 0 to 10 scale.",
+  "scale": [
+    0,
+    10
+  ],
+  "outcomes": [
+    {
+      "id": "trust",
+      "label": "Trust",
+      "doctor": {
+        "mean": 7.45,
+        "lo": 7.07,
+        "hi": 7.82,
+        "n": 188
+      },
+      "ai": {
+        "mean": 4.69,
+        "lo": 4.24,
+        "hi": 5.13,
+        "n": 185
+      },
+      "diff": 2.81,
+      "d": 0.79,
+      "t": 10.73,
+      "df": 184,
+      "p": 3.5178551324808064e-21,
+      "n": 185
+    },
+    {
+      "id": "capability",
+      "label": "Quantitative reasoning",
+      "doctor": {
+        "mean": 7.22,
+        "lo": 6.79,
+        "hi": 7.64,
+        "n": 188
+      },
+      "ai": {
+        "mean": 5.2,
+        "lo": 4.74,
+        "hi": 5.65,
+        "n": 188
+      },
+      "diff": 2.02,
+      "d": 0.56,
+      "t": 7.63,
+      "df": 187,
+      "p": 1.168739955615643e-12,
+      "n": 188
+    },
+    {
+      "id": "intuition",
+      "label": "Intuition",
+      "doctor": {
+        "mean": 6.73,
+        "lo": 6.31,
+        "hi": 7.15,
+        "n": 188
+      },
+      "ai": {
+        "mean": 4.51,
+        "lo": 4.07,
+        "hi": 4.94,
+        "n": 188
+      },
+      "diff": 2.22,
+      "d": 0.58,
+      "t": 7.92,
+      "df": 187,
+      "p": 2.0553306612852256e-13,
+      "n": 188
+    }
+  ]
+}

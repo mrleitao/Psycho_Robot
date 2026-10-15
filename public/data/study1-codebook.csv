@@ -1,5 +1,11 @@
 variable,description,scale,group,domain_or_type
 participant,"Anonymous participant number, assigned after a seeded shuffle",P001 to P188,,
+age_group,"Age group, in years. Ages outside 18 to 100 (one invalid entry) are left blank",18-29 / 30-44 / 45-59 / 60+,demographic,
+gender,"Gender, as reported. Only woman and man were reported, so smaller groups do not appear",Woman / Man,demographic,
+race,"Race, as reported. White or Black only if that is the only group selected; everyone else, including anyone selecting more than one, is combined",White / Black / Another or multiple,demographic,
+education,"Highest education completed, in two groups",No college degree / College degree or more,demographic,
+politics,"Political views on social issues, from a 7-point scale: very liberal to -1 is liberal, 0 is moderate, 1 to very conservative is conservative",Liberal / Moderate / Conservative,demographic,
+ai_experience,"Experience with AI in general, from a 5-point scale: none or a little versus moderate to all the time",None or a little / Moderate or more,demographic,
 prevent_injury_stretching,Share of quantitative reasoning (versus intuition) a professional needs to: recommend stretching to prevent injury,0 to 100 slider,preventative,bodily injury
 diagnose_broken_bone,Share of quantitative reasoning (versus intuition) a professional needs to: diagnose a broken bone,0 to 100 slider,diagnostic,bodily injury
 prescribe_knee_surgery,Share of quantitative reasoning (versus intuition) a professional needs to: recommend knee surgery,0 to 100 slider,prescriptive,"bodily injury (surgery, not in composite)"

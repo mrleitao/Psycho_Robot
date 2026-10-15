@@ -14,7 +14,10 @@ What it does
   4. Recodes the 33 recommender ratings from the export's stored codes (1 to 11) to the 0 to 10 scale
      participants saw. Qualtrics stores the scale labels "0" to "10" as codes 1 to 11. Differences and
      effect sizes are unaffected, but means shift by one point.
-  5. Replaces response IDs with participant numbers assigned after a seeded shuffle,
+  5. Adds six coarse demographic groups for filtering (see DEMOGRAPHICS below). Each is collapsed so
+     no group is small, and sensitive items (income, disability, mental health, transgender status,
+     employment, first language, birthplace and free-text answers) are not released at all.
+  6. Replaces response IDs with participant numbers assigned after a seeded shuffle,
      so row order carries no information about when someone took the survey.
 
 Usage: python3 analysis/study1-deidentify.py path/to/raw.sav
@@ -24,6 +27,7 @@ import csv
 import sys
 
 import numpy as np
+import pandas as pd
 import pyreadstat
 
 SEED = 2023
@@ -61,6 +65,34 @@ RECOMMENDERS = [
     ("ai_chatbot", "AI chatbot", "ai", "Decision_Maker_TR_AI_Chatbot", "DM_QR_AI_Chatbot", "Decision_Maker_IN_AI_Chatbot"),
     ("ai_fitness", "AI fitness coach", "ai", "Decision_Maker_TR_AI_Fitness", "Q29_AI_Fitness", "Decision_Maker_IN_AI_Fitness"),
 ]
+# Coarse demographic groups released for filtering. To release fewer, delete entries here and re-run.
+# Each is (public name, description, ordered categories).
+DEMOGRAPHICS = [
+    ("age_group", "Age group, in years. Ages outside 18 to 100 (one invalid entry) are left blank", ["18-29", "30-44", "45-59", "60+"]),
+    ("gender", "Gender, as reported. Only woman and man were reported, so smaller groups do not appear", ["Woman", "Man"]),
+    ("race", "Race, as reported. White or Black only if that is the only group selected; everyone else, including anyone selecting more than one, is combined", ["White", "Black", "Another or multiple"]),
+    ("education", "Highest education completed, in two groups", ["No college degree", "College degree or more"]),
+    ("politics", "Political views on social issues, from a 7-point scale: very liberal to -1 is liberal, 0 is moderate, 1 to very conservative is conservative", ["Liberal", "Moderate", "Conservative"]),
+    ("ai_experience", "Experience with AI in general, from a 5-point scale: none or a little versus moderate to all the time", ["None or a little", "Moderate or more"]),
+]
+
+
+def demographics(df):
+    out = pd.DataFrame(index=df.index)
+    age = df["Age"].where((df["Age"] >= 18) & (df["Age"] <= 100))
+    out["age_group"] = pd.cut(age, [17, 29, 44, 59, 200], labels=DEMOGRAPHICS[0][2]).astype(object)
+    out["gender"] = df["Gender"].map({1: "Man", 2: "Woman"})
+    n_groups = df[["Ethnicity_1", "Ethnicity_2", "Ethnicity_3", "Ethnicity_5", "Ethnicity_6", "Ethnicity_8"]].eq(1).sum(axis=1)
+    race = np.select([(n_groups == 1) & (df["Ethnicity_3"] == 1), (n_groups == 1) & (df["Ethnicity_2"] == 1)],
+                     ["White", "Black"], default="Another or multiple").astype(object)
+    race[(n_groups == 0).to_numpy()] = None
+    out["race"] = race
+    out["education"] = np.where(df["Education_Att"] >= 4, "College degree or more", "No college degree")
+    out["politics"] = pd.cut(df["Political_Social"], [-4, -1, 0, 4], labels=DEMOGRAPHICS[4][2]).astype(object)
+    out["ai_experience"] = np.where(df["Exp_AI_General"] >= 3, "Moderate or more", "None or a little")
+    return out
+
+
 MEASURES = [("trust", 3, "How much do you trust each entity to make recommendations about health? (0 to 10)"),
             ("capability", 4, "How capable is each entity of using quantitative reasoning to make recommendations about health? (0 to 10)"),
             ("intuition", 5, "How capable is each entity of using intuition to make recommendations about health? (0 to 10)")]
@@ -71,13 +103,15 @@ def main(path_in, out_dir="public/data"):
     df = df.iloc[7:]                      # step 1: preview and test rows
     df = df[df["Consent"] == 1]           # step 2: consent
     assert len(df) == 188, len(df)
-    df = df.iloc[np.random.default_rng(SEED).permutation(len(df))].reset_index(drop=True)  # step 5
+    df = df.iloc[np.random.default_rng(SEED).permutation(len(df))].reset_index(drop=True)  # step 6
 
-    header = ["participant"] + [v[0] for v in DECISIONS.values()]
+    demo = demographics(df)
+    header = ["participant"] + [d[0] for d in DEMOGRAPHICS] + [v[0] for v in DECISIONS.values()]
     header += [f"{m}_{r[0]}" for r in RECOMMENDERS for m, _, _ in MEASURES]
     rows = []
     for i, r in df.iterrows():
         row = [f"P{i + 1:03d}"]
+        row += ["" if pd.isna(demo.loc[i, d[0]]) else demo.loc[i, d[0]] for d in DEMOGRAPHICS]
         row += [fmt(r[c]) for c in DECISIONS]
         row += [fmt(r[rec[idx]] - 1) for rec in RECOMMENDERS for _, idx, _ in MEASURES]  # step 4
         rows.append(row)
@@ -90,6 +124,8 @@ def main(path_in, out_dir="public/data"):
         w = csv.writer(f)
         w.writerow(["variable", "description", "scale", "group", "domain_or_type"])
         w.writerow(["participant", "Anonymous participant number, assigned after a seeded shuffle", "P001 to P188", "", ""])
+        for name, text, cats in DEMOGRAPHICS:
+            w.writerow([name, text, " / ".join(cats), "demographic", ""])
         for name, label, kind, domain in DECISIONS.values():
             w.writerow([name, f"Share of quantitative reasoning (versus intuition) a professional needs to: {label.lower()}", "0 to 100 slider", kind, domain])
         for rec in RECOMMENDERS:

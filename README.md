@@ -63,7 +63,8 @@ Chart components so far:
 | `ForestPlot` | Differences with a zero line, one row per group |
 | `EffectDots` | Effect sizes per study, filled when significant |
 | `RankDots` | Ranked means with 95% intervals |
-| `DataExplorer` | Pick two ratings and compare the real participant data |
+| `OutcomePairs` | Doctor versus AI on several outcomes, side by side |
+| `Study1Live` | Demographic filters that rerun the chart, the tests and the histograms |
 | `EvidenceMatrix` | Skills against the evidence that supports each |
 
 ## The pages
@@ -83,32 +84,39 @@ The CV was assembled from the existing CV, a skills inventory, a record of exper
 
 ## Study 1 data release
 
-The Study 1 page includes a data explorer and the preregistered tests. This section records how the released file was made.
+The Study 1 section of the trust-in-medical-AI page has two parts. A static chart shows the main finding: doctor versus AI on trust, quantitative reasoning and intuition, side by side as in the paper. Below it, visitors can filter to a demographic group and the chart, the table of tests and the histograms rerun on the spot. This section records how the released file was made and how the live part works. The data are released as part of an open science commitment.
 
-**Source.** The raw Qualtrics export of the Study 1 survey (Chapter 1 of the dissertation). It is not in this repository: it contains IP addresses, coordinates, response IDs, panel IDs and demographic answers.
+**Source.** The raw Qualtrics export of the Study 1 survey (Chapter 1 of the dissertation). It is not in this repository: it contains IP addresses, coordinates, response IDs, panel IDs and detailed demographic answers.
 
 **Cleaning**, as implemented in [`analysis/study1-deidentify.py`](analysis/study1-deidentify.py):
 
 1. Drop Qualtrics preview and test rows.
 2. Keep participants who consented, which gives the N = 188 analyzed in the dissertation.
-3. Keep only analysis variables: 15 decision ratings (0 to 100 sliders) and 33 recommender ratings (trust, quantitative reasoning and intuition, for 11 recommenders; 0 to 10).
-4. Drop everything else: IP address, coordinates, timestamps, response, panel and device IDs, free text, and all demographic questions. Demographics were left out on purpose. With a sample this size, combinations of age, gender, ethnicity or income can single a person out.
-5. Replace response IDs with participant numbers assigned after a seeded shuffle, so row order does not reveal when someone took the survey.
+3. Keep the analysis variables: 15 decision ratings (0 to 100 sliders) and 33 recommender ratings (trust, quantitative reasoning and intuition, for 11 recommenders; 0 to 10).
+4. Recode the 0 to 10 ratings from the export's codes 1 to 11 (see Checks).
+5. Add six coarse demographic groups so visitors can filter: age group (4), gender (2), race (3), education (2), political views on social issues (3) and experience with AI (2). Each is collapsed so no group is small. Gender has two groups because only woman and man were reported. Race is White or Black only when that is the sole group selected, and everyone else is combined. One invalid age and a few missing answers are left blank.
+6. Release nothing else: no IP address, coordinates, timestamps, response, panel or device IDs, free text, and none of the sensitive items (income, disability, mental health, transgender status, employment, first language, birthplace, parents' education).
+7. Replace response IDs with participant numbers assigned after a seeded shuffle, so row order does not reveal when someone took the survey.
+
+**Re-identification risk, stated plainly.** There are no direct identifiers, and the groups are broad, but the six demographic columns together are not anonymous in the strict sense: in the released file, 77 of 188 people have a combination of the six that no one else shares. Anyone who already knew a person's age band, gender, race, education, politics and AI experience, and knew they took this survey, could find their row. The ratings are not sensitive, and the site refuses to show results for fewer than 10 people. To release less, delete entries from `DEMOGRAPHICS` in the script and rebuild.
 
 **Files** (in `public/`, so they download from the site):
 
 - `data/study1-ratings.csv`: the cleaned data, 188 rows.
 - `data/study1-codebook.csv`: every variable, what it measures and its scale.
-- `code/study1-analysis.R`: the seven preregistered tests plus one exploratory test, written to read top to bottom, translated from the original analysis script.
+- `code/study1-analysis.R`: the seven preregistered tests plus one exploratory test, written to read top to bottom, with a note on filtering to a subgroup.
 
-**Derived files** from [`analysis/study1-summaries.py`](analysis/study1-summaries.py): `trust-by-recommender.json` (means and 95% intervals) and `study1-tests.json` (the paired tests). The charts read these.
+**Derived files.** [`analysis/study1-summaries.py`](analysis/study1-summaries.py) writes `trust-by-recommender.json`, `study1-tests.json` and `study1-outcomes.json` (the static charts read these). The tests themselves are defined once, in `study1-test-defs.json`, which both the Python script and the live table read, so they cannot drift apart.
+
+**How the live part works.** [`Study1Live.astro`](src/components/Study1Live.astro) loads the CSV in the visitor's browser, filters the rows, and recomputes everything with a small statistics routine written for the page (paired t test, p value from the t distribution, confidence intervals). Nothing is sent anywhere. Choices within a demographic row combine as "or", and choices across rows combine as "and". The page shows results only when at least 10 people match, and it warns that subgroup results are exploratory.
 
 **Checks.**
 
-- The doctor-versus-AI trust test from the released file is t(184) = 10.73, d = 0.79, matching the dissertation.
-- The hypothesis pattern matches the original script's own notes: diagnostic versus prescriptive not significant; diagnostic and prescriptive each above preventative; physical above mental health; bodily injury versus acute sickness marginal (p = .061).
-- **A coding catch.** Qualtrics stored the 0 to 10 scale as codes 1 to 11. The original script analyzed the codes, which is harmless for differences, t, p and d, but means read one point high. The released file is recoded to the scale participants saw, and an early draft of the ranked chart on this site (which used the raw codes) was corrected. The R file notes this, so nobody is surprised by a one-point gap against the raw export.
-- The R script has not been run on the released file by whoever built the site (the build environment had no R). Its expected output is the `study1-tests.json` table, which was computed independently in Python. Run it and compare before relying on it.
+- With no filters, every test matches the dissertation exactly: mean difference, t, df, p and d for H1 to H7 and the exploratory test. For example H7 is t(184) = 10.73, d = 0.79.
+- The browser calculation matches an independent Python run on a test subgroup (women aged 60 and over).
+- **Missing items.** The original script averages items without ignoring missing values, so a composite is missing if any item is. An early draft of the summaries skipped missing values, which changed H1, H2 and H4 slightly (for example H2 gave t = 5.22 instead of the dissertation's 5.58). It now follows the original rule.
+- **A coding catch.** Qualtrics stored the 0 to 10 scale as codes 1 to 11. The original script analyzed the codes, which is harmless for differences, t, p and d, but means read one point high. The released file is recoded to the scale participants saw, and an early draft of the ranked chart on this site (which used the raw codes) was corrected. The R file notes this.
+- The R script has not been run by whoever built the site (the build environment had no R). Its expected output is `study1-tests.json`, which was computed independently in Python. Run it and compare before relying on it.
 
 ## Content rules
 
@@ -146,12 +154,12 @@ The site was built in conversation with Claude (Anthropic's AI model, through Cl
 3. **First real data.** The dissertation's published tables became the first charts (the domain-by-domain gap and effect sizes across studies), and each chart was checked against the dissertation text.
 4. **A second pass** on readability: chart sizes, label halos, layout on narrow screens, and screenshots at desktop and phone widths.
 5. **The live CV and publications**, from the CV and project files, then corrections from review (paper details, DOIs, spellings).
-6. **Study 1 data and code**, with a de-identified file, an interactive explorer, and this documentation.
+6. **Study 1 data and code**, with a de-identified file and this documentation, then demographic filters that rerun the paper's tests in the browser.
 
 Things that went wrong, kept here on purpose:
 
 - A source discrepancy: the dissertation text gives signs for two humanlike-AI comparisons that contradict the condition means. Those comparisons are left out of the charts instead of guessing.
-- The scale-coding offset described above: found when the released means looked one point high, fixed, and documented.
+- The scale-coding offset and the missing-item rule described above: both found by checking the released data against the dissertation, fixed, and documented.
 - Several early drafts needed checking for overclaiming (role wording, evidence levels); the evidence tags exist because of that.
 
 ## License
