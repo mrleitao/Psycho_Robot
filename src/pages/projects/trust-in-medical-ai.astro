@@ -1,8 +1,10 @@
 ---
 import Base from '../../layouts/Base.astro';
 import ForestPlot from '../../components/ForestPlot.astro';
+import EffectDots from '../../components/EffectDots.astro';
 import Placeholder from '../../components/Placeholder.astro';
 import data from '../../data/trust-in-medical-ai/trust-by-domain.json';
+import effects from '../../data/trust-in-medical-ai/effects-by-study.json';
 import meta from '../../data/trust-in-medical-ai/meta.json';
 import { href } from '../../utils/url';
 ---
@@ -53,13 +55,26 @@ import { href } from '../../utils/url';
       </p>
     </section>
 
+    <section class="section chart" aria-labelledby="human-title">
+      <h2 id="human-title">Making the AI humanlike helped only when people compared</h2>
+      <p class="sub">
+        I described one AI in a more humanlike way, with a name and human verbs (plus a voice from Study 4 on), and gave the same advice in
+        every condition. Each row is a study. When each person saw one recommender, the humanlike AI did not gain
+        significantly. When the same people judged all three side by side, it did.
+      </p>
+      <EffectDots rows={effects.rows} xMax={1} xLabel="Cohen's d versus the standard AI" />
+      <p class="small muted source">
+        Source: {effects.source} Hover over a row or tab to it for the test statistics.
+      </p>
+    </section>
+
     <div class="prose">
       <section class="section">
         <h2>What I found</h2>
         <ul class="findings">
           <li>
-            <strong>People trusted the doctor more in every study.</strong> In each of the first five studies, the doctor
-            won across medical domains, decision types and self-relevant scenarios.
+            <strong>People trusted the doctor more than a standard AI in every one of the first five studies.</strong>
+            That held across medical domains, decision types and self-relevant scenarios.
           </li>
           <li>
             <strong>People saw the doctor as more capable.</strong> They rated doctors higher on both intuition
@@ -101,10 +116,9 @@ import { href } from '../../utils/url';
       <h2 id="more-title">More charts for this page</h2>
       <div class="slot-grid">
         <Placeholder
-          title="Humanlike AI across Studies 3 to 5"
+          title="Condition means for Studies 3 to 5"
           provide={[
-            'Mean trust and 95% confidence interval for each condition in each study',
-            'The trust scale and its range',
+            'Mean trust and 95% confidence interval for each condition in each study, if you want means instead of effect sizes',
             'The figure from the dissertation, if you want the chart to match it',
           ]}
         />

@@ -1,100 +1,354 @@
 ---
+import { execSync } from 'node:child_process';
 import Base from '../layouts/Base.astro';
 import Placeholder from '../components/Placeholder.astro';
+import cv from '../data/cv/cv.json';
+import pubs from '../data/cv/publications.json';
 
-const roles = [
-  {
-    when: '2024 to now',
-    title: 'Postdoctoral research fellow',
-    where: 'National Human Genome Research Institute, National Institutes of Health',
-    detail:
-      'Manage six projects, including an FDA-regulated pharmacology trial. Run a study of how AI review changes trust in genetic risk results, under principal investigator Susan Persky. Teach R and Quarto to colleagues.',
-  },
-  {
-    when: '2019 to 2024',
-    title: 'PhD in Psychology and Master of Public Policy',
-    where: 'Georgetown University',
-    detail:
-      'Ran my dissertation, six preregistered studies on trust in medical AI. Managed five research assistants across six or seven concurrent projects. Taught Psychology of Technology as instructor of record and received the 2023 Graduate Student Teaching Award. Coordinated the department research pool, where yield rose 50% over the prior year.',
-  },
-  {
-    when: '2017 to 2019',
-    title: "Master's in Psychology, General Experimental",
-    where: 'California State University, Northridge',
-    detail:
-      'Wrote a preregistered thesis on obedience to computer authority. Worked as a data analyst in Institutional Research on more than 100,000 student records, building dashboards administrators used. Coordinated an applied social psychology lab and trained 14 lab assistants.',
-  },
-  {
-    when: '2013 to 2017',
-    title: 'Research assistant and lab manager',
-    where: 'University of California, Riverside',
-    detail:
-      'Managed the schedules and reviews of 15 research assistants as lab manager, and wrote Excel macros and Praat scripts to process speech data.',
-  },
+// "Updated" comes from the last commit that touched the CV data, so it moves on its own.
+// If git history is not available at build time, fall back to the date written in cv.json.
+let updated = cv.updated;
+try {
+  const out = execSync('git log -1 --format=%cs -- src/data/cv', { encoding: 'utf8' }).trim();
+  if (out) updated = out;
+} catch {
+  /* keep the date in cv.json */
+}
+const fmtDate = (iso: string) =>
+  new Date(iso + 'T12:00:00Z').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
+
+const byId = Object.fromEntries(cv.sections.map((s) => [s.id, s]));
+const pubCount = pubs.groups.reduce((n, g) => n + g.items.length, 0);
+
+// Page order. Publications are their own block because they come from publications.json.
+const order = [
+  'positions',
+  'education',
+  'publications',
+  'grants',
+  'honors',
+  'research-experience',
+  'professional-experience',
+  'teaching',
+  'mentorship',
+  'invited',
+  'talks',
+  'posters',
+  'intramural',
+  'skills',
+  'workshops-attended',
+  'workshops-led',
+  'service',
+  'memberships',
 ];
 
-const honors = [
-  "Graduate Student Teaching Award, Georgetown University (2023)",
-  'Fellow, Summer Institute in Social and Personality Psychology (2023)',
-  'Inside the Grant Panel Grant, Society for Personality and Social Psychology (2021)',
-  'Best Reproducible Research (2018) and Best Use of External Data (2017), CSUN Data Jam',
-];
+const sections = order.map((id) =>
+  id === 'publications'
+    ? { id, title: 'Publications', kind: 'publications', count: pubCount }
+    : { ...byId[id], count: (byId[id].items ?? byId[id].groups ?? []).length }
+);
 ---
 
-<Base title="CV" description="Where I have worked and studied, and the honors I have received.">
+<Base title="CV" description="Matthew Leitao's CV: positions, education, publications, teaching, presentations and skills, kept up to date.">
   <div class="wrap">
     <header class="page-head">
       <h1>CV</h1>
-      <p class="lede">A short version of where I have worked and studied. The full academic CV has every talk and poster.</p>
+      <p class="lede">
+        The full record, kept up to date. This page builds from a data file, so each new paper, talk or role shows here
+        as soon as it is added.
+      </p>
+      <p class="meta small muted">
+        Updated {fmtDate(updated)}.
+        <button type="button" class="print" data-print>Print or save as PDF</button>
+      </p>
     </header>
 
-    <ol class="rows timeline">
-      {
-        roles.map((r) => (
-          <li>
-            <p class="when">{r.when}</p>
-            <div>
-              <h2>{r.title}</h2>
-              <p class="where">{r.where}</p>
-              <p>{r.detail}</p>
-            </div>
-          </li>
-        ))
-      }
-    </ol>
+    <div class="layout">
+      <nav class="index" aria-label="CV sections">
+        <ul>
+          <li><a href="#glance">At a glance</a></li>
+          {sections.map((s) => <li><a href={`#${s.id}`}>{s.title}</a></li>)}
+          <li><a href="#changes">Recent changes</a></li>
+        </ul>
+      </nav>
 
-    <section class="section honors">
-      <h2>Honors and grants</h2>
-      <ul>
-        {honors.map((h) => <li>{h}</li>)}
-      </ul>
-    </section>
+      <div class="body">
+        <section id="glance" class="block" aria-labelledby="glance-h">
+          <h2 id="glance-h">At a glance</h2>
+          <ol class="rows timeline">
+            {
+              cv.summary.map((r) => (
+                <li>
+                  <p class="when">{r.when}</p>
+                  <div>
+                    <h3>{r.title}</h3>
+                    <p class="org">{r.org}</p>
+                    <p>{r.detail}</p>
+                  </div>
+                </li>
+              ))
+            }
+          </ol>
+        </section>
 
-    <section class="section">
-      <Placeholder
-        title="CV download"
-        provide={[
-          'A PDF of your CV, saved as public/Matthew_Leitao_CV.pdf. Tell me which version to link: the full academic CV, a one-page industry resume, or both.',
-        ]}
-      />
-    </section>
+        {
+          sections.map((s) => (
+            <section id={s.id} class="block" aria-labelledby={`${s.id}-h`}>
+              <h2 id={`${s.id}-h`}>{s.title}</h2>
+              {s.note && <p class="small muted note">{s.note}</p>}
+
+              {s.kind === 'publications' && (
+                <div class="pubs">
+                  {pubs.groups.map((g) => (
+                    <div class="pub-group">
+                      <h3>{g.heading}</h3>
+                      <ul class="rows">
+                        {g.items.map((item) => (
+                          <li>
+                            <p class="cite" set:html={item.html} />
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {s.kind === 'entries' && (
+                <details class="fold" open={!s.collapsed}>
+                  <summary>{s.count} entries</summary>
+                  <ul class="rows entries">
+                    {s.items.map((e) => (
+                      <li>
+                        <p class="when">{e.when}</p>
+                        <div>
+                          <p class="entry-title">{e.title}</p>
+                          {e.org && <p class="org">{e.org}</p>}
+                          {e.lines && (
+                            <ul class="lines">
+                              {e.lines.map((l) => (
+                                <li>{l}</li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              )}
+
+              {s.kind === 'html' && (
+                <details class="fold" open={!s.collapsed}>
+                  <summary>{s.count} entries</summary>
+                  <ul class="rows">
+                    {s.items.map((item) => (
+                      <li>
+                        <p class="cite" set:html={item.html} />
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              )}
+
+              {s.kind === 'groups' && (
+                <details class="fold" open={!s.collapsed}>
+                  <summary>{s.count} groups</summary>
+                  <div class="groups">
+                    {s.groups.map((g) => (
+                      <div class="group">
+                        <h3>{g.heading}</h3>
+                        {g.text && <p>{g.text}</p>}
+                        {g.items && (
+                          <ul class="rows entries">
+                            {g.items.map((i) => (
+                              <li>
+                                <p class="when">{i.when}</p>
+                                <p class="entry-title">{i.text}</p>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </details>
+              )}
+            </section>
+          ))
+        }
+
+        <section id="changes" class="block" aria-labelledby="changes-h">
+          <h2 id="changes-h">Recent changes</h2>
+          <ul class="changes">
+            {
+              cv.changes.map((c) => (
+                <li>
+                  <span class="when">{fmtDate(c.date)}</span>
+                  <span>{c.text}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+
+        <section class="block">
+          <Placeholder
+            title="CV download"
+            provide={[
+              'A PDF of your CV, saved as public/Matthew_Leitao_CV.pdf. Tell me which version to link: the full academic CV, a one-page industry resume, or both.',
+            ]}
+          />
+        </section>
+      </div>
+    </div>
   </div>
 </Base>
 
+<script>
+  document.querySelector('[data-print]')?.addEventListener('click', () => window.print());
+
+  // Open every folded list before printing so the printout is the whole CV.
+  const folds = () => document.querySelectorAll<HTMLDetailsElement>('details.fold');
+  let wasClosed: HTMLDetailsElement[] = [];
+  window.addEventListener('beforeprint', () => {
+    wasClosed = [...folds()].filter((d) => !d.open);
+    wasClosed.forEach((d) => (d.open = true));
+  });
+  window.addEventListener('afterprint', () => {
+    wasClosed.forEach((d) => (d.open = false));
+    wasClosed = [];
+  });
+
+  // Mark the section being read in the index.
+  const links = new Map<string, HTMLAnchorElement>();
+  document.querySelectorAll<HTMLAnchorElement>('.index a').forEach((a) => links.set(a.hash.slice(1), a));
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            links.forEach((a) => a.removeAttribute('aria-current'));
+            links.get(e.target.id)?.setAttribute('aria-current', 'true');
+          }
+        });
+      },
+      { rootMargin: '-15% 0px -75% 0px' }
+    );
+    document.querySelectorAll('.block[id]').forEach((el) => io.observe(el));
+  }
+</script>
+
 <style>
+  .meta {
+    margin-top: 0.75rem;
+  }
+
+  .print {
+    margin-left: 0.75rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    color: var(--doctor);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+
+  .layout {
+    display: grid;
+    gap: 2rem;
+    margin-top: clamp(24px, 4vw, 40px);
+  }
+
+  @media (min-width: 960px) {
+    .layout {
+      grid-template-columns: 13rem minmax(0, 1fr);
+      gap: 3.5rem;
+    }
+  }
+
+  /* On a phone the index is just a wrapped line of links; on a wide screen it stays in view. */
+  .index ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 1rem;
+    font-family: var(--display);
+    font-size: 0.95rem;
+  }
+
+  @media (min-width: 960px) {
+    .index {
+      position: sticky;
+      top: 1.5rem;
+      align-self: start;
+      max-height: calc(100vh - 3rem);
+      overflow: auto;
+    }
+
+    .index ul {
+      display: grid;
+      gap: 0.3rem;
+      font-size: 0.92rem;
+    }
+  }
+
+  .index a {
+    color: var(--muted);
+    text-decoration: none;
+  }
+
+  .index a:hover,
+  .index a[aria-current='true'] {
+    color: var(--ink);
+  }
+
+  .index a[aria-current='true'] {
+    text-decoration: underline;
+    text-decoration-color: var(--doctor);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+  }
+
+  .body {
+    max-width: 760px;
+  }
+
+  .block {
+    scroll-margin-top: 1.5rem;
+    margin-bottom: clamp(40px, 6vw, 64px);
+  }
+
+  .block > h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .note {
+    margin: 0 0 0.5rem;
+  }
+
   .timeline {
-    margin-top: clamp(32px, 5vw, 56px);
     list-style: none;
   }
 
-  .timeline > li {
+  .timeline > li,
+  .entries > li {
     display: grid;
-    gap: 0.35rem 2.5rem;
+    gap: 0.2rem 2rem;
   }
 
-  @media (min-width: 760px) {
+  @media (min-width: 640px) {
     .timeline > li {
-      grid-template-columns: 9rem minmax(0, 1fr);
+      grid-template-columns: 8.5rem minmax(0, 1fr);
+    }
+
+    .entries > li {
+      grid-template-columns: 11rem minmax(0, 1fr);
     }
   }
 
@@ -104,34 +358,122 @@ const honors = [
     font-weight: 500;
     color: var(--muted);
     font-variant-numeric: tabular-nums;
+    font-size: 0.95rem;
   }
 
-  h2 {
-    font-size: 1.3rem;
+  .timeline h3 {
+    font-size: 1.2rem;
   }
 
-  .where {
-    margin: 0.2rem 0 0.6rem;
+  .org {
+    margin: 0.15rem 0 0.35rem;
     font-family: var(--display);
     color: var(--muted);
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
 
   .timeline p:last-child {
     margin: 0;
-    max-width: 60ch;
   }
 
-  .honors {
-    max-width: 62ch;
+  .entry-title {
+    margin: 0;
+    font-family: var(--display);
+    font-weight: 600;
   }
 
-  .honors ul {
-    margin: 0.75rem 0 0;
-    padding-left: 1.2rem;
+  .lines {
+    margin: 0.35rem 0 0;
+    padding-left: 1.1rem;
+    font-size: 0.98rem;
   }
 
-  .honors li {
-    margin-bottom: 0.4rem;
+  .lines li {
+    margin-bottom: 0.2rem;
+  }
+
+  .cite {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.55;
+    padding-left: 1.5rem;
+    text-indent: -1.5rem;
+  }
+
+  .pub-group {
+    margin-top: 1.5rem;
+  }
+
+  .pub-group h3 {
+    font-size: 1.05rem;
+    margin-bottom: 0.15rem;
+  }
+
+  .fold > summary {
+    cursor: pointer;
+    color: var(--muted);
+    font-family: var(--display);
+    font-size: 0.92rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .fold[open] > summary {
+    display: none;
+  }
+
+  .fold:not([open]) > summary::after {
+    content: ' (select to show)';
+  }
+
+  .groups {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .group h3 {
+    font-size: 1rem;
+    margin: 0 0 0.15rem;
+  }
+
+  .group p {
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  .changes {
+    list-style: none;
+    margin: 0.5rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .changes li {
+    display: grid;
+    gap: 0.1rem 1.5rem;
+    font-size: 0.98rem;
+  }
+
+  @media (min-width: 640px) {
+    .changes li {
+      grid-template-columns: 11rem minmax(0, 1fr);
+    }
+  }
+
+  @media print {
+    .index,
+    .print,
+    .changes,
+    #changes {
+      display: none !important;
+    }
+
+    .layout {
+      display: block;
+    }
+
+    .fold > summary {
+      display: none !important;
+    }
   }
 </style>

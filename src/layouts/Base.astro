@@ -64,7 +64,8 @@ const favicon =
     <footer class="site-footer">
       <div class="wrap">
         <p class="small muted">
-          Matthew Leitao. <a href="mailto:mrleitao@me.com">mrleitao@me.com</a>
+          Matthew Leitao. <a href="mailto:mrleitao@me.com">mrleitao@me.com</a>.
+          <a href="https://www.linkedin.com/in/mrleitao/">LinkedIn</a>.
         </p>
       </div>
     </footer>
@@ -118,6 +119,14 @@ const favicon =
 
   nav a[aria-current='page'] {
     border-bottom-color: var(--doctor);
+  }
+
+  @media print {
+    .site-header,
+    .site-footer,
+    .skip {
+      display: none !important;
+    }
   }
 
   .site-footer {

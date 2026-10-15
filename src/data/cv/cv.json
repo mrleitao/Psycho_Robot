@@ -1,0 +1,682 @@
+{
+  "_note": "The live CV. Edit this file (or send changes in chat) and the CV page rebuilds from it. Publications live in publications.json. Public repo: no home address, no phone number.",
+  "updated": "2026-10-15",
+  "changes": [
+    {
+      "date": "2026-10-15",
+      "text": "Rebuilt as a data-driven page from the 2026 CV, with citation fixes: published buffet paper and DOI, published smartphone DOI, Ergonomics 2021, Persky S., Tibbetts, Parrott, and Society for Personality and Social Psychology."
+    }
+  ],
+  "summary": [
+    {
+      "when": "2024 to now",
+      "title": "Postdoctoral research fellow",
+      "org": "National Human Genome Research Institute, National Institutes of Health",
+      "detail": "Manage six projects, including an FDA-regulated pharmacology trial. Run a study of how AI review changes trust in genetic risk results, under principal investigator Susan Persky. Teach R and Quarto to colleagues."
+    },
+    {
+      "when": "2019 to 2024",
+      "title": "PhD in Psychology and Master of Public Policy",
+      "org": "Georgetown University",
+      "detail": "Ran my dissertation, six preregistered studies on trust in medical AI. Managed five research assistants across six or seven concurrent projects. Taught Psychology of Technology as instructor of record and received the 2023 Graduate Student Teaching Award. Coordinated the department research pool, where yield rose 50% over the prior year."
+    },
+    {
+      "when": "2017 to 2019",
+      "title": "Master's in Psychology, General Experimental",
+      "org": "California State University, Northridge",
+      "detail": "Wrote a preregistered thesis on obedience to computer authority. Worked as a data analyst in Institutional Research on more than 100,000 student records, building dashboards administrators used. Coordinated an applied social psychology lab and trained 14 lab assistants."
+    },
+    {
+      "when": "2013 to 2017",
+      "title": "Research assistant and lab manager",
+      "org": "University of California, Riverside",
+      "detail": "Managed the schedules and reviews of 15 research assistants as lab manager, and wrote Excel macros and Praat scripts to process speech data."
+    }
+  ],
+  "sections": [
+    {
+      "id": "positions",
+      "title": "Academic positions",
+      "kind": "entries",
+      "items": [
+        {
+          "when": "Oct 2024 to present",
+          "title": "IRTA postdoctoral researcher",
+          "org": "National Human Genome Research Institute, National Institutes of Health",
+          "lines": [
+            "Social and Behavioral Research Branch"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "education",
+      "title": "Education",
+      "kind": "entries",
+      "items": [
+        {
+          "when": "Graduated Jul 2024",
+          "title": "Ph.D., Psychology",
+          "org": "Psychology Department, Georgetown University",
+          "lines": [
+            "Concentration: Human Development and Public Policy",
+            "Research interest: human-technology interaction and wellbeing",
+            "Dissertation: trust in medical AI versus trust in doctors"
+          ]
+        },
+        {
+          "when": "Graduated May 2021",
+          "title": "M.P.P., Master of Public Policy",
+          "org": "McCourt School of Public Policy, Georgetown University",
+          "lines": [
+            "Policy interest: technology policy"
+          ]
+        },
+        {
+          "when": "Graduated May 2019",
+          "title": "M.A., General Experimental Psychology",
+          "org": "Psychology Department, California State University, Northridge",
+          "lines": [
+            "Research interest: human-technology social interaction"
+          ]
+        },
+        {
+          "when": "Graduated Jun 2015",
+          "title": "B.A., Psychology",
+          "org": "University of California, Riverside"
+        }
+      ]
+    },
+    {
+      "id": "grants",
+      "title": "Fellowships and grants",
+      "kind": "entries",
+      "items": [
+        {
+          "when": "2021",
+          "title": "Inside the Grant Panel Grant",
+          "org": "Society for Personality and Social Psychology"
+        },
+        {
+          "when": "2018",
+          "title": "Creative Endeavors Grant",
+          "org": "California State University, Northridge"
+        },
+        {
+          "when": "Jun 2014 to Jun 2015",
+          "title": "Chancellor's Research Fellowship",
+          "org": "University of California, Riverside"
+        }
+      ]
+    },
+    {
+      "id": "honors",
+      "title": "Honors and awards",
+      "kind": "entries",
+      "items": [
+        {
+          "when": "2023",
+          "title": "Fellow",
+          "org": "Summer Institute in Social and Personality Psychology, Ohio State"
+        },
+        {
+          "when": "2023",
+          "title": "Graduate Student Teaching Award",
+          "org": "Office of Graduate Student Affairs, Georgetown University"
+        },
+        {
+          "when": "2022",
+          "title": "Conference Travel Grant",
+          "org": "Office of Graduate Research and Fellowships, Georgetown University"
+        },
+        {
+          "when": "2020 to 2023",
+          "title": "Psychology Conference Travel Grant",
+          "org": "Psychology Department, Georgetown University"
+        },
+        {
+          "when": "2019",
+          "title": "Donald Butler Quantitative Research Award",
+          "org": "Psychology Department, California State University, Northridge"
+        },
+        {
+          "when": "2018 to 2019",
+          "title": "Graduate Student Travel Grant",
+          "org": "Graduate Studies, California State University, Northridge"
+        },
+        {
+          "when": "2018 to 2019",
+          "title": "Psychology Department Travel Award",
+          "org": "California State University, Northridge"
+        },
+        {
+          "when": "2018 to 2019",
+          "title": "Student Research and Travel Funding",
+          "org": "Associated Students, California State University, Northridge"
+        },
+        {
+          "when": "2018",
+          "title": "Best Reproducible Research",
+          "org": "Data Jam, California State University, Northridge"
+        },
+        {
+          "when": "2017",
+          "title": "Best Use of External Data",
+          "org": "Data Jam, California State University, Northridge"
+        },
+        {
+          "when": "2017",
+          "title": "Judges' Choice",
+          "org": "California State University, Northridge"
+        },
+        {
+          "when": "2015",
+          "title": "Best Poster",
+          "org": "Undergraduate Research Symposium, University of California, Riverside"
+        }
+      ]
+    },
+    {
+      "id": "research-experience",
+      "title": "Research experience",
+      "kind": "entries",
+      "items": [
+        {
+          "when": "May 2019 to Jul 2023",
+          "title": "Graduate researcher",
+          "org": "Digital Health and Happiness Lab, Georgetown University"
+        },
+        {
+          "when": "Aug 2018 to Aug 2019",
+          "title": "Lab coordinator",
+          "org": "Applied Social Psychology Lab, California State University, Northridge (Dr. Abraham M. Rutchick)"
+        },
+        {
+          "when": "Jun 2017 to Aug 2019",
+          "title": "Graduate researcher",
+          "org": "Applied Social Psychology Lab, California State University, Northridge (Dr. Abraham M. Rutchick)"
+        },
+        {
+          "when": "Jan 2018 to Aug 2019",
+          "title": "Graduate research assistant",
+          "org": "Psychology Law Research Lab, California State University, Northridge (Dr. Bradley D. McAuliff)"
+        },
+        {
+          "when": "May 2018 to Aug 2019",
+          "title": "Graduate research assistant",
+          "org": "VISN Lab, California State University, Northridge (Dr. Stefanie Drew)"
+        },
+        {
+          "when": "Jan 2014 to Aug 2017",
+          "title": "Research assistant",
+          "org": "OBSERVE Lab, University of California, Riverside (Dr. Megan Robbins)"
+        },
+        {
+          "when": "Jan to Dec 2014",
+          "title": "Lab manager",
+          "org": "OBSERVE Lab, University of California, Riverside (Dr. Megan Robbins)"
+        },
+        {
+          "when": "Aug 2013 to Apr 2014",
+          "title": "Research assistant",
+          "org": "African American Experience Lab, University of California, Riverside (Dr. Carolyn Murray)"
+        }
+      ]
+    },
+    {
+      "id": "professional-experience",
+      "title": "Professional experience",
+      "kind": "entries",
+      "items": [
+        {
+          "when": "Jan to Nov 2021",
+          "title": "Institutional research fellow",
+          "org": "Office of Assessment and Decision Support, Georgetown University",
+          "lines": [
+            "Compiled and cleaned longitudinal data on student and faculty outcomes and relationships.",
+            "Ran initial descriptive and inferential analyses of student scholastic outcomes.",
+            "Used multilevel modeling to evaluate longitudinal student outcomes and trajectories."
+          ]
+        },
+        {
+          "when": "May 2018 to Aug 2019",
+          "title": "Data analyst",
+          "org": "Office of Institutional Research, California State University, Northridge",
+          "lines": [
+            "Merged, cleaned and analyzed campus-wide data on more than 100,000 students to learn how student traits and choices relate to academic outcomes.",
+            "Wrote and presented internal reports on the findings to university administration.",
+            "Built Tableau worksheets and dashboards for the university to use.",
+            "Prepared manuscripts based on the reports for publication."
+          ]
+        },
+        {
+          "when": "Jan 2018 to Aug 2019",
+          "title": "Graduate research assistant, AIMS2 assessment team",
+          "org": "California State University, Northridge",
+          "lines": [
+            "Prepared, recorded and transcribed interviews for qualitative analysis.",
+            "Led focus groups on the benefit of a new student summer skills workshop.",
+            "Created and administered surveys to incoming AIMS2 students to evaluate the workshop.",
+            "Presented the research at a departmental meeting."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "teaching",
+      "title": "Teaching",
+      "kind": "groups",
+      "groups": [
+        {
+          "heading": "National Institutes of Health",
+          "items": [
+            {
+              "when": "Spring 2025",
+              "text": "Introduction to Quarto"
+            },
+            {
+              "when": "Spring 2025",
+              "text": "Introduction to R"
+            }
+          ]
+        },
+        {
+          "heading": "Georgetown University",
+          "items": [
+            {
+              "when": "Fall 2023",
+              "text": "People Analytics, guest lecturer"
+            },
+            {
+              "when": "Fall 2022",
+              "text": "Psychology of Technology, professor of record"
+            },
+            {
+              "when": "Spring 2021, Fall 2021",
+              "text": "Psychology Research Methods, recitation instructor"
+            },
+            {
+              "when": "Spring 2021",
+              "text": "Learning Analytics, guest lecturer"
+            },
+            {
+              "when": "Fall 2020, Fall 2023",
+              "text": "Introduction to Psychology, teaching fellow and guest lecturer"
+            },
+            {
+              "when": "Spring 2020",
+              "text": "Health Psychology, teaching fellow and guest lecturer"
+            }
+          ]
+        },
+        {
+          "heading": "California State University, Northridge",
+          "items": [
+            {
+              "when": "Fall 2017, Fall 2018",
+              "text": "Social Psychology, graduate teaching assistant"
+            },
+            {
+              "when": "Fall 2018",
+              "text": "Psychology Research Methods, graduate student tutor"
+            }
+          ]
+        },
+        {
+          "heading": "External lectures",
+          "items": [
+            {
+              "when": "Fall 2022",
+              "text": "Psychology Research Methods, Kaplan"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mentorship",
+      "title": "Student mentorship",
+      "kind": "entries",
+      "items": [
+        {
+          "when": "Fall 2022 to Spring 2023",
+          "title": "Honors thesis advisor, Emma Kikuchi",
+          "org": "Georgetown University"
+        },
+        {
+          "when": "Fall 2021 to Spring 2023",
+          "title": "Graduate student mentor",
+          "org": "Society for Personality and Social Psychology"
+        }
+      ]
+    },
+    {
+      "id": "invited",
+      "title": "Invited talks and chaired sessions",
+      "kind": "html",
+      "items": [
+        {
+          "html": "<strong>Leitao, M. R.</strong> (2024). <em>Mechanisms driving aversion and appreciation of AI in the digital age</em> [Chaired session]. Society for Personality and Social Psychology, San Diego, CA."
+        },
+        {
+          "html": "University of Virginia, Department of Psychology. October 2023."
+        },
+        {
+          "html": "Alexandria Film Festival, speaking on happiness. June 2023. <a href='https://alexfilmfest.com/news-1/alexandria-gets-happy-at-sold-out-film-event'>Event coverage</a>."
+        }
+      ]
+    },
+    {
+      "id": "talks",
+      "title": "Conference presentations",
+      "kind": "html",
+      "collapsed": true,
+      "items": [
+        {
+          "html": "<strong>Leitao, M. R.</strong> (2025). <em>Factors driving differences in VR food behavior and experience during a novel pharmacological trial</em> [Symposium presentation]. Virtual Medicine, Los Angeles, CA."
+        },
+        {
+          "html": "<strong>Leitao, M. R.</strong> (2024). <em>Artificial intelligence, humanization, and health beliefs</em> [Symposium presentation]. Society for Personality and Social Psychology, San Diego, CA."
+        },
+        {
+          "html": "<strong>Leitao, M. R.</strong>, Logg, J., &amp; Ulu, C. (2023). <em>The impact of choice on the utilization of AI in decision-making</em> [Symposium presentation]. INFORMS, Phoenix, AZ."
+        },
+        {
+          "html": "<strong>Leitao, M. R.</strong> (2022). <em>Information, behavior, and digital belief</em> [Symposium presentation]. Inside the Grant Panel, Society for Personality and Social Psychology, San Francisco, CA."
+        },
+        {
+          "html": "<strong>Leitao, M. R.</strong>, Proulx, J., &amp; Kushlev, K. (2021). <em>Phone interference, well-being, and gender: A mega-analysis on the impact of phone use as moderated by gender</em> [Data blitz]. Psychology of Technology Institute, Santa Barbara, CA."
+        },
+        {
+          "html": "<strong>Leitao, M. R.</strong>, Proulx, J., &amp; Kushlev, K. (2021). <em>Phone interference, well-being, and gender: A mega-analysis on the impact of phone use as moderated by gender</em> [Symposium presentation]. American Psychological Association Technology, Mind, and Society Conference, online."
+        },
+        {
+          "html": "<strong>Leitao, M. R.</strong>, &amp; Rutchick, A. M. (2019). <em>Obedience to computerized authority</em> [Symposium presentation]. Western Psychological Association, Pasadena, CA."
+        },
+        {
+          "html": "<strong>Leitao, M. R.</strong>, &amp; Rutchick, A. M. (2018). <em>The effect of personalization on connection with a robot</em> [Symposium presentation]. Western Psychological Association, Portland, OR."
+        }
+      ]
+    },
+    {
+      "id": "posters",
+      "title": "Poster presentations",
+      "kind": "html",
+      "collapsed": true,
+      "items": [
+        {
+          "html": "<strong>Leitao, M. R.</strong> (2023). <em>The role of perceived quantitative reasoning and intuition for trust in medical AI</em>. Psychology of Technology Institute Annual Conference, Los Angeles, CA."
+        },
+        {
+          "html": "Rabil, K., <strong>Leitao, M. R.</strong>, &amp; Kushlev, K. (2023). <em>Virtual learning is not associated with lower happiness in college students: The role of in-person interactions with close others</em>. Society for Personality and Social Psychology, Atlanta, GA."
+        },
+        {
+          "html": "<strong>Leitao, M. R.</strong>, Proulx, J., Singh, K., &amp; Kushlev, K. (2022). <em>The negative effects of phones during in-person interactions are larger for men: A mega-analysis of nine studies</em>. Society for Personality and Social Psychology, San Francisco, CA."
+        },
+        {
+          "html": "<strong>Leitao, M. R.</strong>, &amp; Kushlev, K. (2022). <em>The effects of humanizing health algorithms on judgements and belief</em>. Psychology and Technology Preconference, Society for Personality and Social Psychology, San Francisco, CA."
+        },
+        {
+          "html": "<strong>Leitao, M. R.</strong>, &amp; Kushlev, K. (2021). <em>Health algorithms, judgement, and behavior</em>. Association for Psychological Science, online."
+        },
+        {
+          "html": "<strong>Leitao, M. R.</strong>, &amp; Kushlev, K. (2021). <em>Screen time in bed predicts better sleep outcomes in college students</em>. Society for Personality and Social Psychology, online."
+        },
+        {
+          "html": "Slipenkyj, M., <strong>Leitao, M. R.</strong>, Stemile, S., Lyons, I. M., &amp; Moynihan, D. (2020). <em>Beyond performance and blanket recommendations: The influence of autonomy and country-level development on science attitudes and outcomes</em>. Association for Public Policy Analysis and Management, online."
+        },
+        {
+          "html": "<strong>Leitao, M. R.</strong>, &amp; Kushlev, K. (2020). <em>Those on the other side of the tech divide</em>. Society for Personality and Social Psychology, New Orleans, LA."
+        },
+        {
+          "html": "Levin, J., <strong>Leitao, M. R.</strong>, Katz, G. S., Parker, A. W., Hetzel, S. N., Khan, H., &amp; Rutchick, A. M. (2020). <em>Facial and verbal reactions to killing</em>. Society for Personality and Social Psychology, New Orleans, LA."
+        },
+        {
+          "html": "<strong>Leitao, M. R.</strong>, &amp; Rutchick, A. M. (2019). <em>All hail our robot overlords: Compliance and computerized authority</em>. Psychology of Technology Institute, Washington, DC."
+        },
+        {
+          "html": "Montgomery, R., <strong>Leitao, M. R.</strong>, &amp; Rutchick, A. M. (2019). <em>The inclusion of smartphone in the self (ISS) scale: Closeness with personal mobile devices is associated with poorer well-being</em>. Psychology of Technology Institute, Washington, DC."
+        },
+        {
+          "html": "<strong>Leitao, M. R.</strong>, Larranaga, D., Awad, M. F., Armendariz, J. A., McGinnis, C. A., Drew, S. A., &amp; Hinkel-Lipsker, J. W. (2019). <em>Hitting the virtual mark: An investigation of training effects in virtual reality</em>. Association for Psychological Science, Washington, DC."
+        },
+        {
+          "html": "Sanders, K., <strong>Leitao, M. R.</strong>, &amp; Rutchick, A. M. (2019). <em>The effect of technological sophistication and instruction on obedience</em>. Western Psychological Association, Pasadena, CA."
+        },
+        {
+          "html": "Valencia, L., Coronado, M., <strong>Leitao, M. R.</strong>, &amp; Rutchick, A. M. (2019). <em>The hex games: Does personalization of machines lead to positivity or polarization</em>. Western Psychological Association, Pasadena, CA."
+        },
+        {
+          "html": "Montgomery, R., <strong>Leitao, M. R.</strong>, &amp; Rutchick, A. M. (2019). <em>Why tap that app? Smartphone application usage predicted by personality, well-being, and attitudes towards technology</em>. Technology and Media Preconference, Society for Personality and Social Psychology, Portland, OR."
+        },
+        {
+          "html": "<strong>Leitao, M. R.</strong>, &amp; Rutchick, A. M. (2019). <em>All hail our robot overlords: Compliance and computerized authority</em>. Society for Personality and Social Psychology, Portland, OR."
+        },
+        {
+          "html": "Hetzel, S., Montgomery, R., <strong>Leitao, M. R.</strong>, &amp; Rutchick, A. M. (2019). <em>Function and effects of technology in the natural environments</em>. Society for Personality and Social Psychology, Portland, OR."
+        },
+        {
+          "html": "Coronado, M., <strong>Leitao, M. R.</strong>, &amp; Rutchick, A. M. (2019). <em>The effect of personalization on liking of and connection to robotic toys</em>. Society for Personality and Social Psychology, Portland, OR."
+        },
+        {
+          "html": "Feldman, N., Saravia, D., <strong>Leitao, M. R.</strong>, Costleigh, C., Ceroni, D., Hawley, N., &amp; McAuliff, B. D. (2019). <em>The effects of refreshing recollections on children's accuracy for different question types across repeated interviews</em> [Symposium presentation]. American Psychology-Law Society, Portland, OR."
+        },
+        {
+          "html": "<strong>Leitao, M. R.</strong>, &amp; Rutchick, A. M. (2018). <em>Effects of personalization of robotic bugs on connection and liking</em>. Association for Psychological Science, San Francisco, CA."
+        },
+        {
+          "html": "Kaur, B., McManus, R. M., Esquenazi, R., <strong>Leitao, M. R.</strong>, Melchor, Y., Parker, A. W., Ross, B., &amp; Rutchick, A. M. (2018). <em>Dark triad traits, religiosity, political conservatism, and guilt about killing</em>. Western Psychological Association, Portland, OR."
+        },
+        {
+          "html": "Coronado, M., Rutchick, A. M., <strong>Leitao, M. R.</strong>, &amp; Lugo, Y. (2018). <em>Personalization increases connection to and liking of machines</em>. Western Psychological Association, Portland, OR."
+        },
+        {
+          "html": "<strong>Leitao, M. R.</strong>, &amp; Rutchick, A. M. (2018). <em>Thin-slice perception of autonomous machines</em>. Society for Personality and Social Psychology, Atlanta, GA."
+        }
+      ]
+    },
+    {
+      "id": "intramural",
+      "title": "Intramural presentations",
+      "kind": "html",
+      "collapsed": true,
+      "items": [
+        {
+          "html": "<strong>Leitao, M. R.</strong>, &amp; Rutchick, A. M. (2019). <em>Obedience to computerized authority</em>. CSUN Symposium, Northridge, CA."
+        },
+        {
+          "html": "<strong>Leitao, M. R.</strong>, Larranaga, D., Reyna, K., &amp; Manavi, R. (2018). <em>Dear Los Angeles, get well soon</em>. CSUN Data Jam, Northridge, CA."
+        },
+        {
+          "html": "<strong>Leitao, M. R.</strong>, &amp; Rutchick, A. M. (2018). <em>Hexbugs and the effects of personalization on connection and liking</em>. CSUN Symposium, Northridge, CA."
+        },
+        {
+          "html": "<strong>Leitao, M. R.</strong> (2018). <em>Homo ex machina</em> [Colloquium talk]. Technology, Cognition, and Behavior Colloquium, California State University, Northridge."
+        },
+        {
+          "html": "<strong>Leitao, M. R.</strong>, Larranaga, D., Reyna, K., Manavi, R., &amp; Awad, J. (2017). <em>Saving our future through observing our past: A predictive model for positive youth development and outcomes</em>. CSUN Data Jam, Northridge, CA."
+        },
+        {
+          "html": "<strong>Leitao, M. R.</strong>, Karan, A., &amp; Robbins, M. (2015). <em>It's not what you say but how you say it: Vocal tone and emotion among women coping with breast cancer</em>. Undergraduate Research Symposium, University of California, Riverside."
+        }
+      ]
+    },
+    {
+      "id": "skills",
+      "title": "Skills",
+      "kind": "groups",
+      "note": "See the Skills page for how I know each one.",
+      "groups": [
+        {
+          "heading": "Research methods",
+          "text": "Experimental design; human-subjects research; survey design; behavioral interventions; vignette studies; mixed-methods research; preregistration"
+        },
+        {
+          "heading": "Analysis",
+          "text": "Statistical modeling; causal inference; longitudinal analysis; multilevel modeling; data cleaning; data management; behavioral data analysis; data visualization; dashboard development"
+        },
+        {
+          "heading": "Research platforms",
+          "text": "SONA, Qualtrics, Mechanical Turk, CloudResearch, Prolific, FDA clinical trial administration"
+        },
+        {
+          "heading": "Data visualization",
+          "text": "Tableau, ggplot"
+        },
+        {
+          "heading": "Statistics software",
+          "text": "SPSS, R and RStudio, Stata, Mplus, Jamovi, JASP, Python"
+        },
+        {
+          "heading": "Languages",
+          "text": "R, Python, HTML5, JavaScript, SQL"
+        },
+        {
+          "heading": "Productivity",
+          "text": "Excel, Word, PowerPoint and Keynote, WordPress, Canva, Quarto, LaTeX"
+        }
+      ]
+    },
+    {
+      "id": "workshops-attended",
+      "title": "Workshops attended",
+      "kind": "entries",
+      "collapsed": true,
+      "items": [
+        {
+          "when": "2026",
+          "title": "Management course",
+          "org": "Office of Intramural Training and Education, National Institutes of Health"
+        },
+        {
+          "when": "2025",
+          "title": "Team science workshop",
+          "org": "Colorado State University"
+        },
+        {
+          "when": "2023",
+          "title": "Latent profile analysis",
+          "org": "Pitt Methods (Dr. Sara K. Johnson)"
+        },
+        {
+          "when": "2023",
+          "title": "Harnessing social psychology to understand and improve health",
+          "org": "Summer Institute in Social and Personality Psychology (Dr. Lisa Jaremka and Dr. John Updegraff)"
+        },
+        {
+          "when": "2023",
+          "title": "Text analytics: Uncovering psychological insights via natural language",
+          "org": "Summer Institute in Social and Personality Psychology (Dr. Matthew Rocklage and Dr. Tessa Charlesworth)"
+        },
+        {
+          "when": "2021",
+          "title": "Longitudinal multilevel modeling",
+          "org": "Pitt Methods (Dr. Aidan Wright)"
+        },
+        {
+          "when": "2021",
+          "title": "Ambulatory assessment",
+          "org": "Pitt Methods (Dr. Aidan Wright)"
+        },
+        {
+          "when": "2021",
+          "title": "Summer Psychology Forum",
+          "org": "Society for Personality and Social Psychology"
+        },
+        {
+          "when": "2020, 2021",
+          "title": "BrainHack Global DC",
+          "org": "Georgetown University"
+        }
+      ]
+    },
+    {
+      "id": "workshops-led",
+      "title": "Workshops I have led",
+      "kind": "entries",
+      "items": [
+        {
+          "when": "Nov 2023",
+          "title": "Power analysis: How to construct a study to find an expected effect"
+        },
+        {
+          "when": "Apr 2023",
+          "title": "R from scratch: An introduction to R"
+        },
+        {
+          "when": "Dec 2022",
+          "title": "An introduction to open science"
+        }
+      ]
+    },
+    {
+      "id": "service",
+      "title": "Service and open science",
+      "kind": "entries",
+      "collapsed": true,
+      "items": [
+        {
+          "when": "Spring 2022 to Summer 2024",
+          "title": "Cofounder and administrator, Georgetown Initiative for Open Science",
+          "org": "Georgetown University"
+        },
+        {
+          "when": "Spring 2022 to Summer 2024",
+          "title": "Cofounder and administrator, Current Topics in Psychological Science journal club",
+          "org": "Georgetown University"
+        },
+        {
+          "when": "Fall 2022 to Spring 2024",
+          "title": "Campus representative",
+          "org": "Association for Psychological Science Student Caucus"
+        },
+        {
+          "when": "Fall 2022 to Spring 2023",
+          "title": "Graduate student representative to the faculty",
+          "org": "Psychology Department, Georgetown University"
+        },
+        {
+          "when": "Fall 2021 to Spring 2023",
+          "title": "SONA coordinator",
+          "org": "Psychology Department, Georgetown University"
+        },
+        {
+          "when": "Fall 2021 to Spring 2022",
+          "title": "Member, Gender Identity and Pronoun Task Force",
+          "org": "Data Governance Task Force, Georgetown University"
+        },
+        {
+          "when": "Fall 2020 to Spring 2021",
+          "title": "Graduate student liaison to visiting faculty",
+          "org": "Psychology Department, Georgetown University"
+        },
+        {
+          "when": "Spring 2020 to 2022",
+          "title": "Graduate student representative",
+          "org": "Inaugural Diversity, Equity, and Inclusion Committee, Georgetown Psychology"
+        },
+        {
+          "when": "",
+          "title": "Member, initiative that made the GRE optional",
+          "org": "Georgetown University"
+        }
+      ]
+    },
+    {
+      "id": "memberships",
+      "title": "Memberships and honor societies",
+      "kind": "groups",
+      "collapsed": true,
+      "groups": [
+        {
+          "heading": "Professional",
+          "text": "American Psychological Association; Association for Psychological Science; International Society for Developmental Psychology; Society for the Improvement of Psychological Science; Society for Personality and Social Psychology; Western Psychological Association"
+        },
+        {
+          "heading": "Honor societies",
+          "text": "Psi Chi (member since Jan 2014; secretary and treasurer, Aug 2014 to Jun 2015); Delta Epsilon Iota (member since Jan 2014; vice president, Aug 2014 to Jun 2015); Tau Sigma (member since Jan 2014)"
+        }
+      ]
+    }
+  ]
+}

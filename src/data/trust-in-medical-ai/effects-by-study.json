@@ -1,0 +1,37 @@
+{
+  "source": "Leitao (2024), Artificial Intelligence, Humanization, and Health Beliefs. Georgetown University doctoral dissertation. Cohen's d as reported in the text of Studies 1, 3, 4 and 5 (trust, or combined trust and belief in Study 5).",
+  "measure": "Cohen's d for how much more people trusted the doctor, or the humanlike AI, than the standard AI",
+  "note": "d is shown as a positive number when the doctor, or the humanlike AI, was trusted more. Filled dot: p < .05 as reported. Hollow dot: not significant. Study 1 has no humanlike AI condition.",
+  "rows": [
+    {
+      "label": "Study 1",
+      "design": "Rated in turn, abstract decisions, N = 188",
+      "doctor": { "d": 0.79, "sig": true, "stat": "t(184) = 10.73, p < .001" },
+      "humanlike": null
+    },
+    {
+      "label": "Study 3",
+      "design": "Each person saw one recommender, N = 609",
+      "doctor": { "d": 0.33, "sig": true, "stat": "t(253.27) = 2.62, p = .009" },
+      "humanlike": { "d": 0.07, "sig": false, "stat": "t(477.11) = 0.76, p = .446" }
+    },
+    {
+      "label": "Study 4, between",
+      "design": "Each person saw one recommender, N = 556",
+      "doctor": { "d": 0.34, "sig": true, "stat": "t(264.44) = 2.73, p = .007" },
+      "humanlike": { "d": 0.13, "sig": false, "stat": "t(425.02) = 1.32, p = .188" }
+    },
+    {
+      "label": "Study 4, within",
+      "design": "Same people judged all three, exploratory",
+      "doctor": { "d": 0.41, "sig": true, "stat": "t(503) = 9.28, p < .001" },
+      "humanlike": { "d": 0.36, "sig": true, "stat": "t(503) = 7.98, p < .001" }
+    },
+    {
+      "label": "Study 5, within",
+      "design": "Same people judged all three, replication",
+      "doctor": { "d": 0.5, "sig": true, "stat": "t(726) = 13.44, p < .001" },
+      "humanlike": { "d": 0.46, "sig": true, "stat": "t(726) = 12.52, p < .001" }
+    }
+  ]
+}

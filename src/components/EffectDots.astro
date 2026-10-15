@@ -1,0 +1,343 @@
+---
+interface Point {
+  d: number;
+  sig: boolean;
+  stat: string;
+}
+interface Row {
+  label: string;
+  design: string;
+  doctor: Point | null;
+  humanlike: Point | null;
+}
+
+interface Props {
+  rows: Row[];
+  xMax?: number;
+  xLabel: string;
+}
+
+const { rows, xMax = 1, xLabel } = Astro.props;
+
+const W = 440;
+const padL = 16;
+const padR = 16;
+const rowH = 64;
+const top = 8;
+const axisY = top + rows.length * rowH + 4;
+const H = axisY + 56;
+const x = (v: number) => padL + (v / xMax) * (W - padL - padR);
+const ticks = Array.from({ length: Math.round(xMax * 4) + 1 }, (_, i) => i * 0.25);
+const fmt = (n: number) => n.toFixed(2);
+---
+
+<figure class="dots" data-dots>
+  <svg
+    viewBox={`0 0 ${W} ${H}`}
+    role="group"
+    aria-label="Dot plot of Cohen's d for the doctor and the humanlike AI compared with a standard AI, one row per study design"
+  >
+    <g class="grid">
+      {ticks.map((t) => <line x1={x(t)} x2={x(t)} y1={top} y2={axisY} />)}
+    </g>
+
+    {
+      rows.map((r, i) => {
+        const y0 = top + i * rowH;
+        const cy = y0 + 46;
+        const pts = [
+          r.doctor && { key: 'doctor', name: 'Doctor', ...r.doctor },
+          r.humanlike && { key: 'humanlike', name: 'Humanlike AI', ...r.humanlike },
+        ].filter(Boolean) as (Point & { key: string; name: string })[];
+        return (
+          <g
+            class="row"
+            tabindex="0"
+            role="group"
+            style={`--i:${i}`}
+            aria-label={`${r.label}. ${pts.map((p) => `${p.name} versus standard AI, d ${fmt(p.d)}, ${p.sig ? 'significant' : 'not significant'}`).join('. ')}`}
+            data-label={r.label}
+            data-design={r.design}
+            data-points={JSON.stringify(pts)}
+          >
+            <rect class="hit" x="0" y={y0} width={W} height={rowH} />
+            <text class="name" x={padL} y={y0 + 20}>{r.label}</text>
+            <text class="design" x={W - padR} y={y0 + 20} text-anchor="end">{r.design.split(',')[0]}</text>
+            {pts.length === 2 && <line class="link" x1={x(pts[0].d)} x2={x(pts[1].d)} y1={cy} y2={cy} />}
+            {pts.map((p) => (
+              <circle
+                class={`dot ${p.key} ${p.sig ? 'sig' : 'ns'}`}
+                cx={x(p.d)}
+                cy={cy}
+                r="7"
+              />
+            ))}
+          </g>
+        );
+      })
+    }
+
+    <g class="axis">
+      <line x1={padL} x2={W - padR} y1={axisY} y2={axisY} />
+      {ticks.map((t) => <text x={x(t)} y={axisY + 22} text-anchor="middle">{t.toFixed(2).replace(/0$/, '').replace(/\.$/, '')}</text>)}
+      <text class="axis-title" x={W / 2} y={axisY + 46} text-anchor="middle">{xLabel}</text>
+    </g>
+  </svg>
+
+  <ul class="key">
+    <li><span class="sw doctor"></span>Doctor versus standard AI</li>
+    <li><span class="sw ai"></span>Humanlike AI versus standard AI</li>
+    <li><span class="sw hollow"></span>Hollow means not significant</li>
+  </ul>
+
+  <div class="tip" hidden></div>
+
+  <details class="table-view">
+    <summary>View as a table</summary>
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Study</th>
+          <th scope="col">Comparison</th>
+          <th scope="col">d</th>
+          <th scope="col">Test</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          rows.flatMap((r) =>
+            [
+              r.doctor && { name: 'Doctor v standard AI', ...r.doctor },
+              r.humanlike && { name: 'Humanlike v standard AI', ...r.humanlike },
+            ]
+              .filter(Boolean)
+              .map((p) => (
+                <tr>
+                  <th scope="row">{r.label}</th>
+                  <td>{p!.name}</td>
+                  <td>{fmt(p!.d)}</td>
+                  <td>{p!.stat}</td>
+                </tr>
+              ))
+          )
+        }
+      </tbody>
+    </table>
+  </details>
+</figure>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-dots]').forEach((fig) => {
+    const tip = fig.querySelector<HTMLElement>('.tip');
+    if (!tip) return;
+
+    const show = (row: Element) => {
+      const d = (row as SVGElement).dataset;
+      const pts = JSON.parse(d.points ?? '[]') as { name: string; d: number; sig: boolean; stat: string }[];
+      tip.innerHTML =
+        `<strong>${d.label}</strong><span>${d.design}</span>` +
+        pts.map((p) => `<span>${p.name}: d = ${p.d.toFixed(2)}, ${p.stat}</span>`).join('');
+      tip.hidden = false;
+
+      const f = fig.getBoundingClientRect();
+      const r = row.getBoundingClientRect();
+      const half = tip.offsetWidth / 2;
+      const left = Math.max(half, Math.min(f.width - half, r.left - f.left + r.width / 2));
+      tip.style.left = `${left}px`;
+      tip.style.top = `${r.top - f.top + 4}px`;
+    };
+    const hide = () => {
+      tip.hidden = true;
+    };
+
+    fig.querySelectorAll('.row').forEach((row) => {
+      row.addEventListener('pointerenter', () => show(row));
+      row.addEventListener('pointerleave', hide);
+      row.addEventListener('focus', () => show(row));
+      row.addEventListener('blur', hide);
+    });
+  });
+</script>
+
+<style>
+  .dots {
+    margin: 0;
+    position: relative;
+    max-width: 480px;
+  }
+
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .grid line {
+    stroke: var(--rule);
+    stroke-width: 1;
+  }
+
+  .axis line {
+    stroke: var(--muted);
+    stroke-width: 1;
+  }
+
+  .axis text {
+    fill: var(--muted);
+    font-family: var(--display);
+    font-size: 14px;
+  }
+
+  .name {
+    fill: var(--ink);
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 17px;
+    paint-order: stroke;
+    stroke: var(--paper);
+    stroke-width: 6px;
+    stroke-linejoin: round;
+  }
+
+  .design {
+    fill: var(--muted);
+    font-family: var(--display);
+    font-size: 13px;
+    paint-order: stroke;
+    stroke: var(--paper);
+    stroke-width: 6px;
+    stroke-linejoin: round;
+  }
+
+  .hit {
+    fill: transparent;
+  }
+
+  .row:hover .hit,
+  .row:focus .hit {
+    fill: var(--wash);
+  }
+
+  .row:focus {
+    outline: none;
+  }
+
+  .row:focus-visible .hit {
+    stroke: var(--doctor);
+    stroke-width: 2;
+  }
+
+  .link {
+    stroke: var(--muted);
+    stroke-width: 2;
+    opacity: 0.45;
+  }
+
+  .dot {
+    stroke-width: 2.5;
+  }
+
+  .dot.doctor {
+    stroke: var(--doctor);
+  }
+
+  .dot.humanlike {
+    stroke: var(--ai);
+  }
+
+  .dot.sig.doctor {
+    fill: var(--doctor);
+  }
+
+  .dot.sig.humanlike {
+    fill: var(--ai);
+  }
+
+  .dot.ns {
+    fill: var(--paper);
+  }
+
+  .key {
+    list-style: none;
+    margin: 0.5rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 1.25rem;
+    font-family: var(--display);
+    font-size: 0.92rem;
+  }
+
+  .key li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .sw {
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 50%;
+    flex: none;
+  }
+
+  .sw.doctor {
+    background: var(--doctor);
+  }
+
+  .sw.ai {
+    background: var(--ai);
+  }
+
+  .sw.hollow {
+    border: 2px solid var(--muted);
+    background: var(--paper);
+  }
+
+  .tip {
+    position: absolute;
+    transform: translate(-50%, -100%);
+    display: grid;
+    gap: 0.1rem;
+    padding: 0.55rem 0.8rem;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 6px;
+    font-family: var(--display);
+    font-size: 0.85rem;
+    line-height: 1.35;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .tip[hidden] {
+    display: none;
+  }
+
+  .table-view {
+    margin-top: 1.25rem;
+    font-family: var(--display);
+    font-size: 0.9rem;
+  }
+
+  .table-view summary {
+    cursor: pointer;
+    color: var(--muted);
+  }
+
+  .table-view table {
+    width: 100%;
+    margin-top: 0.75rem;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .table-view th,
+  .table-view td {
+    padding: 0.4rem 0.5rem;
+    text-align: left;
+    border-bottom: 1px solid var(--rule);
+  }
+</style>
