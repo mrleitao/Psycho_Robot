@@ -1,0 +1,145 @@
+---
+interface Row {
+  id: string;
+  label: string;
+  kind: 'human' | 'ai' | 'hybrid';
+  n: number;
+  mean: number;
+  sd: number;
+  lo: number;
+  hi: number;
+}
+interface Props {
+  rows: Row[];
+  scale: [number, number];
+  xLabel: string;
+}
+
+const { rows, scale, xLabel } = Astro.props;
+const [min, max] = scale;
+const W = 440;
+const padL = 16;
+const padR = 16;
+const rowH = 40;
+const top = 8;
+const axisY = top + rows.length * rowH + 4;
+const H = axisY + 56;
+const x = (v: number) => padL + ((v - min) / (max - min)) * (W - padL - padR);
+const ticks = Array.from({ length: max - min + 1 }, (_, i) => min + i).filter((t) => t % 2 === 0);
+const f = (n: number) => n.toFixed(2);
+const kindName = { human: 'Human', ai: 'AI', hybrid: 'Doctor using AI' } as const;
+---
+
+<figure class="rank" data-rank>
+  <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-label="Average trust rating for each medical recommender, with 95 percent confidence intervals, ranked from most to least trusted">
+    <g class="grid">
+      {ticks.map((t) => <line x1={x(t)} x2={x(t)} y1={top} y2={axisY} />)}
+    </g>
+    {
+      rows.map((r, i) => {
+        const y0 = top + i * rowH;
+        const cy = y0 + 28;
+        return (
+          <g
+            class={`row ${r.kind}`}
+            tabindex="0"
+            role="group"
+            aria-label={`${r.label}. Average trust ${f(r.mean)} out of 10, 95 percent interval ${f(r.lo)} to ${f(r.hi)}, ${r.n} people`}
+            data-label={r.label}
+            data-kind={kindName[r.kind]}
+            data-line={`Mean ${f(r.mean)} (SD ${f(r.sd)}), 95% CI ${f(r.lo)} to ${f(r.hi)}`}
+            data-n={`${r.n} people`}
+          >
+            <rect class="hit" x="0" y={y0} width={W} height={rowH} />
+            <text class="name" x={padL} y={y0 + 16}>{r.label}</text>
+            <line class="ci" x1={x(r.lo)} x2={x(r.hi)} y1={cy} y2={cy} />
+            <circle class="dot" cx={x(r.mean)} cy={cy} r="6" />
+            <text class="val" x={W - padR} y={y0 + 16} text-anchor="end">{f(r.mean)}</text>
+          </g>
+        );
+      })
+    }
+    <g class="axis">
+      <line x1={padL} x2={W - padR} y1={axisY} y2={axisY} />
+      {ticks.map((t) => <text x={x(t)} y={axisY + 22} text-anchor="middle">{t}</text>)}
+      <text class="axis-title" x={W / 2} y={axisY + 46} text-anchor="middle">{xLabel}</text>
+    </g>
+  </svg>
+
+  <ul class="key">
+    <li><span class="sw human"></span>Human</li>
+    <li><span class="sw hybrid"></span>Doctor using AI</li>
+    <li><span class="sw ai"></span>AI</li>
+    <li class="muted">Bars are 95% confidence intervals</li>
+  </ul>
+
+  <div class="tip" hidden></div>
+
+  <details class="table-view">
+    <summary>View as a table</summary>
+    <table>
+      <thead>
+        <tr><th scope="col">Recommender</th><th scope="col">Type</th><th scope="col">Mean</th><th scope="col">SD</th><th scope="col">95% CI</th><th scope="col">n</th></tr>
+      </thead>
+      <tbody>
+        {rows.map((r) => (
+          <tr><th scope="row">{r.label}</th><td>{kindName[r.kind]}</td><td>{f(r.mean)}</td><td>{f(r.sd)}</td><td>{f(r.lo)} to {f(r.hi)}</td><td>{r.n}</td></tr>
+        ))}
+      </tbody>
+    </table>
+  </details>
+</figure>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-rank]').forEach((fig) => {
+    const tip = fig.querySelector<HTMLElement>('.tip');
+    if (!tip) return;
+    const show = (row: Element) => {
+      const d = (row as SVGElement).dataset;
+      tip.innerHTML = `<strong>${d.label}</strong><span>${d.line}</span><span>${d.n}</span>`;
+      tip.hidden = false;
+      const fr = fig.getBoundingClientRect();
+      const r = row.getBoundingClientRect();
+      const half = tip.offsetWidth / 2;
+      tip.style.left = `${Math.max(half, Math.min(fr.width - half, r.left - fr.left + r.width / 2))}px`;
+      tip.style.top = `${r.top - fr.top + 4}px`;
+    };
+    const hide = () => (tip.hidden = true);
+    fig.querySelectorAll('.row').forEach((row) => {
+      row.addEventListener('pointerenter', () => show(row));
+      row.addEventListener('pointerleave', hide);
+      row.addEventListener('focus', () => show(row));
+      row.addEventListener('blur', hide);
+    });
+  });
+</script>
+
+<style>
+  .rank { margin: 0; position: relative; max-width: 480px; }
+  svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .grid line { stroke: var(--rule); stroke-width: 1; }
+  .axis line { stroke: var(--muted); stroke-width: 1; }
+  .axis text { fill: var(--muted); font-family: var(--display); font-size: 14px; }
+  .name { fill: var(--ink); font-family: var(--display); font-weight: 600; font-size: 15px; paint-order: stroke; stroke: var(--paper); stroke-width: 6px; stroke-linejoin: round; }
+  .val { fill: var(--muted); font-family: var(--display); font-size: 14px; font-variant-numeric: tabular-nums; paint-order: stroke; stroke: var(--paper); stroke-width: 6px; stroke-linejoin: round; }
+  .hit { fill: transparent; }
+  .row:hover .hit, .row:focus .hit { fill: var(--wash); }
+  .row:focus { outline: none; }
+  .row:focus-visible .hit { stroke: var(--doctor); stroke-width: 2; }
+  .ci { stroke-width: 2.5; stroke-linecap: round; opacity: 0.55; }
+  .dot { stroke: var(--paper); stroke-width: 2; }
+  .human .ci { stroke: var(--doctor); } .human .dot { fill: var(--doctor); }
+  .ai .ci { stroke: var(--ai); } .ai .dot { fill: var(--ai); }
+  .hybrid .ci { stroke: var(--muted); } .hybrid .dot { fill: var(--muted); }
+  .key { list-style: none; margin: 0.5rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.35rem 1.25rem; font-family: var(--display); font-size: 0.92rem; }
+  .key li { display: inline-flex; align-items: center; gap: 0.5rem; }
+  .key .muted { color: var(--muted); }
+  .sw { width: 0.8rem; height: 0.8rem; border-radius: 50%; flex: none; }
+  .sw.human { background: var(--doctor); } .sw.ai { background: var(--ai); } .sw.hybrid { background: var(--muted); }
+  .tip { position: absolute; transform: translate(-50%, -100%); display: grid; gap: 0.1rem; padding: 0.55rem 0.8rem; background: var(--ink); color: var(--paper); border-radius: 6px; font-family: var(--display); font-size: 0.85rem; line-height: 1.35; white-space: nowrap; pointer-events: none; z-index: 2; }
+  .tip[hidden] { display: none; }
+  .table-view { margin-top: 1.25rem; font-family: var(--display); font-size: 0.9rem; }
+  .table-view summary { cursor: pointer; color: var(--muted); }
+  .table-view table { width: 100%; margin-top: 0.75rem; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  .table-view th, .table-view td { padding: 0.4rem 0.5rem; text-align: left; border-bottom: 1px solid var(--rule); }
+</style>

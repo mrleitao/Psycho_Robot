@@ -2,9 +2,11 @@
 import Base from '../../layouts/Base.astro';
 import ForestPlot from '../../components/ForestPlot.astro';
 import EffectDots from '../../components/EffectDots.astro';
+import RankDots from '../../components/RankDots.astro';
 import Placeholder from '../../components/Placeholder.astro';
 import data from '../../data/trust-in-medical-ai/trust-by-domain.json';
 import effects from '../../data/trust-in-medical-ai/effects-by-study.json';
+import ranked from '../../data/trust-in-medical-ai/trust-by-recommender.json';
 import meta from '../../data/trust-in-medical-ai/meta.json';
 import { href } from '../../utils/url';
 ---
@@ -53,6 +55,17 @@ import { href } from '../../utils/url';
         <a href={meta.publicLinks.study2Preregistration}>Preregistration</a> and
         <a href={meta.publicLinks.study2DataAndAnalysis}>data and analysis</a> are on OSF.
       </p>
+    </section>
+
+    <section class="section chart" aria-labelledby="rank-title">
+      <h2 id="rank-title">Who people trust, from doctors down to chatbots</h2>
+      <p class="sub">
+        In Study 1, {ranked.rows[0].n} people rated how much they would trust each of eleven recommenders for medical decisions.
+        Doctors and nurses sit at the top. Every AI sits below the human experts, near the level people gave a layperson. A doctor
+        who uses AI lands in between.
+      </p>
+      <RankDots rows={ranked.rows} scale={ranked.scale} xLabel="Trust, from 0 (not at all) to 10 (completely)" />
+      <p class="small muted source">Source: {ranked.source} Hover over a row or tab to it for the details.</p>
     </section>
 
     <section class="section chart" aria-labelledby="human-title">
