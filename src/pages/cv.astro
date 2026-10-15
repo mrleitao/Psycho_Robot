@@ -1,0 +1,137 @@
+---
+import Base from '../layouts/Base.astro';
+import Placeholder from '../components/Placeholder.astro';
+
+const roles = [
+  {
+    when: '2024 to now',
+    title: 'Postdoctoral research fellow',
+    where: 'National Human Genome Research Institute, National Institutes of Health',
+    detail:
+      'Manage six projects, including an FDA-regulated pharmacology trial. Run a study of how AI review changes trust in genetic risk results, under principal investigator Susan Persky. Teach R and Quarto to colleagues.',
+  },
+  {
+    when: '2019 to 2024',
+    title: 'PhD in Psychology and Master of Public Policy',
+    where: 'Georgetown University',
+    detail:
+      'Ran my dissertation, six preregistered studies on trust in medical AI. Managed five research assistants across six or seven concurrent projects. Taught Psychology of Technology as instructor of record and received the 2023 Graduate Student Teaching Award. Coordinated the department research pool, where yield rose 50% over the prior year.',
+  },
+  {
+    when: '2017 to 2019',
+    title: "Master's in Psychology, General Experimental",
+    where: 'California State University, Northridge',
+    detail:
+      'Wrote a preregistered thesis on obedience to computer authority. Worked as a data analyst in Institutional Research on more than 100,000 student records, building dashboards administrators used. Coordinated an applied social psychology lab and trained 14 lab assistants.',
+  },
+  {
+    when: '2013 to 2017',
+    title: 'Research assistant and lab manager',
+    where: 'University of California, Riverside',
+    detail:
+      'Managed the schedules and reviews of 15 research assistants as lab manager, and wrote Excel macros and Praat scripts to process speech data.',
+  },
+];
+
+const honors = [
+  "Graduate Student Teaching Award, Georgetown University (2023)",
+  'Fellow, Summer Institute in Social and Personality Psychology (2023)',
+  'Inside the Grant Panel Grant, Society for Personality and Social Psychology (2021)',
+  'Best Reproducible Research (2018) and Best Use of External Data (2017), CSUN Data Jam',
+];
+---
+
+<Base title="CV" description="Where I have worked and studied, and the honors I have received.">
+  <div class="wrap">
+    <header class="page-head">
+      <h1>CV</h1>
+      <p class="lede">A short version of where I have worked and studied. The full academic CV has every talk and poster.</p>
+    </header>
+
+    <ol class="rows timeline">
+      {
+        roles.map((r) => (
+          <li>
+            <p class="when">{r.when}</p>
+            <div>
+              <h2>{r.title}</h2>
+              <p class="where">{r.where}</p>
+              <p>{r.detail}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+
+    <section class="section honors">
+      <h2>Honors and grants</h2>
+      <ul>
+        {honors.map((h) => <li>{h}</li>)}
+      </ul>
+    </section>
+
+    <section class="section">
+      <Placeholder
+        title="CV download"
+        provide={[
+          'A PDF of your CV, saved as public/Matthew_Leitao_CV.pdf. Tell me which version to link: the full academic CV, a one-page industry resume, or both.',
+        ]}
+      />
+    </section>
+  </div>
+</Base>
+
+<style>
+  .timeline {
+    margin-top: clamp(32px, 5vw, 56px);
+    list-style: none;
+  }
+
+  .timeline > li {
+    display: grid;
+    gap: 0.35rem 2.5rem;
+  }
+
+  @media (min-width: 760px) {
+    .timeline > li {
+      grid-template-columns: 9rem minmax(0, 1fr);
+    }
+  }
+
+  .when {
+    margin: 0;
+    font-family: var(--display);
+    font-weight: 500;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  h2 {
+    font-size: 1.3rem;
+  }
+
+  .where {
+    margin: 0.2rem 0 0.6rem;
+    font-family: var(--display);
+    color: var(--muted);
+    font-size: 1rem;
+  }
+
+  .timeline p:last-child {
+    margin: 0;
+    max-width: 60ch;
+  }
+
+  .honors {
+    max-width: 62ch;
+  }
+
+  .honors ul {
+    margin: 0.75rem 0 0;
+    padding-left: 1.2rem;
+  }
+
+  .honors li {
+    margin-bottom: 0.4rem;
+  }
+</style>

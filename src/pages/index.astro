@@ -1,74 +1,138 @@
 ---
+import Base from '../layouts/Base.astro';
 import ForestPlot from '../components/ForestPlot.astro';
-import data from '../data/trust-by-domain.json';
+import data from '../data/trust-in-medical-ai/trust-by-domain.json';
+import { href } from '../utils/url';
 ---
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Matthew Leitao — Behavioral Scientist</title>
-    <meta name="description" content="Behavioral scientist and data scientist studying how people trust AI. Interactive evidence from my own research." />
-  </head>
-  <body>
-    <main>
-      <header class="hero">
-        <p class="eyebrow">Behavioral science · Data science</p>
-        <h1>People trust AI less than doctors, even when the advice is identical.</h1>
-        <p class="lede">
-          My doctoral research asked why. Six preregistered studies, more than 3,000 participants.
-          Below is real evidence from that work.
-        </p>
-      </header>
 
-      <section class="card">
-        <h2>The trust gap shows up in every kind of medical decision</h2>
-        <p class="sub">
-          Study 2 (N = 106). How much more people trusted a doctor than an AI, by type of decision.
-          Each dot is the mean difference; the line is the 95% confidence interval.
-          Hover or focus a row for the full statistics.
-        </p>
-        <ForestPlot rows={data.rows} xMin={0} xMax={5} xLabel="Doctor minus AI (trust rating points)" />
-        <p class="takeaway">
-          <strong>Takeaway:</strong> the gap is large and consistent (Cohen's d from 1.24 to 1.33),
-          so it is not driven by one kind of decision. That points toward perceptions of the decision-maker,
-          not the medical content, as the cause.
-        </p>
-        <p class="source">Source: {data.source}</p>
-      </section>
-    </main>
-  </body>
-</html>
+<Base description="Behavioral scientist studying how people decide whether to trust AI. Interactive evidence from my own research.">
+  <div class="wrap">
+    <header class="hero">
+      <h1>People trust AI less than doctors, even when the advice is identical.</h1>
+      <p class="lede">
+        I'm Matthew Leitao, a behavioral scientist. I design experiments on how people decide whether to trust AI,
+        analyze the data in R, and report what the numbers support, including the null results.
+      </p>
+    </header>
 
-<style is:global>
-  :root {
-    --bg: #fbfaf7; --ink: #1c1b19; --muted: #6b6860; --grid: #e6e2d8;
-    --card: #ffffff; --accent: #c2410c; --rule: #e6e2d8;
+    <section class="section gap" aria-labelledby="gap-title">
+      <h2 id="gap-title">The gap shows up in every kind of medical decision</h2>
+      <p class="sub">
+        In Study 2 of my dissertation, 106 adults rated how much they trusted a doctor and an AI making the same
+        medical judgment. Each dot is the average difference, and the line is its 95% confidence interval. Hover over
+        a row or tab to it for the exact statistics.
+      </p>
+      <div class="gap-grid">
+      <ForestPlot
+        rows={data.rows}
+        xMin={-1}
+        xMax={5}
+        xLabel="Doctor minus AI, in trust rating points"
+        leftLabel="AI trusted more"
+        rightLabel="Doctor trusted more"
+        animate
+      />
+      <div>
+      <p class="takeaway">
+        The gap is large in all five domains, with effect sizes from d = 1.24 to 1.33. It barely moves with the type
+        of decision, so the cause is more likely in how people see the decision-maker than in the medical content.
+        The rest of the dissertation tests that idea.
+      </p>
+      <p class="small muted">
+        Source: Leitao (2024), Georgetown University dissertation, Study 2, Table 7.
+        <a href={href('/projects/trust-in-medical-ai/')}>Read the full case study</a>.
+      </p>
+      </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="do-title">
+      <h2 id="do-title">What I do</h2>
+      <ul class="rows do">
+        <li>
+          <h3>Design experiments</h3>
+          <p>
+            Preregistered, randomized studies, from the first hypothesis through recruitment, analysis and write-up.
+            My dissertation ran six of them and recruited more than 3,000 participants.
+          </p>
+        </li>
+        <li>
+          <h3>Model messy human data</h3>
+          <p>
+            Multilevel, longitudinal and causal models in R, applied to surveys, daily diaries and clinical-trial data.
+          </p>
+        </li>
+        <li>
+          <h3>Lead research teams</h3>
+          <p>
+            Managed five research assistants across six or seven concurrent projects at Georgetown. Now manage six
+            projects at the National Institutes of Health.
+          </p>
+        </li>
+      </ul>
+      <p class="next">
+        See all the <a href={href('/projects/')}>projects</a>, or check the
+        <a href={href('/skills/')}>evidence behind each skill</a>.
+      </p>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .hero {
+    padding-top: clamp(40px, 8vw, 96px);
   }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #151412; --ink: #f1eee7; --muted: #a29d92; --grid: #2f2d29;
-      --card: #1d1b18; --accent: #fb923c; --rule: #2f2d29;
+
+  .hero h1 {
+    font-size: clamp(2.5rem, 6.4vw, 4.6rem);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    max-width: 20ch;
+  }
+
+  .hero .lede {
+    margin-top: 1.5rem;
+  }
+
+  .gap-grid {
+    display: grid;
+    gap: 2rem 4rem;
+    align-items: start;
+  }
+
+  @media (min-width: 1000px) {
+    .gap-grid {
+      grid-template-columns: minmax(0, 480px) minmax(0, 1fr);
     }
   }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0; background: var(--bg); color: var(--ink);
-    font: 17px/1.6 Georgia, 'Iowan Old Style', 'Times New Roman', serif;
+
+  .sub {
+    color: var(--muted);
+    font-size: 1rem;
+    margin: 0.75rem 0 1.75rem;
   }
-  main { max-width: 760px; margin: 0 auto; padding: 56px 20px 96px; }
-  .eyebrow {
-    font: 600 12.5px/1 system-ui, sans-serif; letter-spacing: .12em;
-    text-transform: uppercase; color: var(--accent); margin: 0 0 16px;
+
+  .takeaway {
+    margin-top: 0;
   }
-  h1 { font-size: clamp(30px, 6vw, 46px); line-height: 1.12; margin: 0 0 20px; letter-spacing: -.01em; }
-  h2 { font-size: 22px; line-height: 1.25; margin: 0 0 8px; }
-  .lede { color: var(--muted); margin: 0 0 40px; }
-  .card {
-    background: var(--card); border: 1px solid var(--rule);
-    border-radius: 14px; padding: 28px 24px;
+
+  .do > li {
+    display: grid;
+    gap: 0.35rem 2rem;
   }
-  .sub { color: var(--muted); font-size: 15px; margin: 0 0 20px; }
-  .takeaway { margin: 20px 0 0; }
-  .source { color: var(--muted); font: 12.5px/1.5 system-ui, sans-serif; margin: 16px 0 0; }
+
+  .do p {
+    margin: 0;
+    max-width: 58ch;
+  }
+
+  @media (min-width: 760px) {
+    .do > li {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    }
+  }
+
+  .next {
+    margin-top: 1.5rem;
+  }
 </style>

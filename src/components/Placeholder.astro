@@ -1,0 +1,42 @@
+---
+interface Props {
+  title: string;
+  provide: string[];
+}
+const { title, provide } = Astro.props;
+---
+
+<aside class="slot" aria-label="Placeholder">
+  <p class="slot-title">{title}</p>
+  <p class="slot-note">Needs from you:</p>
+  <ul>
+    {provide.map((item) => <li>{item}</li>)}
+  </ul>
+</aside>
+
+<style>
+  .slot {
+    border: 1.5px dashed var(--muted);
+    border-radius: 6px;
+    padding: 1.1rem 1.25rem;
+    font-family: var(--display);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .slot-title {
+    margin: 0 0 0.35rem;
+    font-weight: 600;
+    font-size: 1.05rem;
+  }
+
+  .slot-note {
+    margin: 0 0 0.25rem;
+    color: var(--muted);
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 1.2rem;
+  }
+</style>

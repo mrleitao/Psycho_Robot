@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import EvidenceMatrix from '../components/EvidenceMatrix.astro';
+import skills from '../data/skills.json';
+---
+
+<Base
+  title="Skills"
+  description="My research and data skills, each marked with how I know I have them: direct work, published projects, coursework or practice still in progress."
+>
+  <div class="wrap">
+    <header class="page-head">
+      <h1>Skills, with the evidence</h1>
+      <p class="lede">
+        Every skill carries a level, so you can see what I did myself and what I am still building. Filter by level to
+        see just one kind.
+      </p>
+    </header>
+
+    <div class="body">
+      <EvidenceMatrix skills={skills} />
+    </div>
+  </div>
+</Base>
+
+<style>
+  .body {
+    margin-top: clamp(32px, 5vw, 56px);
+  }
+</style>

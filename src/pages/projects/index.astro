@@ -1,0 +1,139 @@
+---
+import Base from '../../layouts/Base.astro';
+import { href } from '../../utils/url';
+
+const projects = [
+  {
+    title: 'Trust in medical AI',
+    link: href('/projects/trust-in-medical-ai/'),
+    summary:
+      "Six preregistered studies, with more than 3,000 participants recruited, on why people trust a doctor's advice more than an AI's, and whether a humanlike AI closes the gap.",
+    role: 'Sole researcher',
+    status: 'Completed in 2024 as my Georgetown dissertation',
+  },
+  {
+    title: 'Generative AI collaboration and the experience of work',
+    link: 'https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6926039',
+    summary:
+      'Two preregistered experiments (N = 1,299) on how drafting with AI, compared with editing AI output, changes quality, time and how the work feels.',
+    role: 'Co-first author',
+    status: 'Working paper, under review',
+  },
+  {
+    title: 'Smartphones and social connection',
+    link: 'https://doi.org/10.1037/tmb0000125',
+    summary:
+      'A mini mega-analysis pooling eight experiments (N = 1,778) on how phones in face-to-face conversations affect connection, and for whom.',
+    role: 'First author',
+    status: 'Published in 2024 in Technology, Mind, and Behavior',
+  },
+  {
+    title: 'A virtual reality buffet in a pharmacology trial',
+    link: 'https://doi.org/10.1177/29941520261484294',
+    summary:
+      'A secondary analysis of a randomized crossover trial of a ghrelin-receptor blocker in 29 people with alcohol use disorder, using a virtual reality buffet to measure food behavior.',
+    role: 'First author',
+    status: 'Published in 2026 in the Journal of Medical Extended Reality',
+  },
+  {
+    title: 'Obedience to computer authority',
+    summary:
+      "A preregistered experiment (N = 305) testing whether people follow a computer's instructions as readily as a person's. The conditions did not differ.",
+    role: 'Sole researcher',
+    status: "Completed in 2019 as my master's thesis at CSUN",
+  },
+  {
+    title: 'Patient attitudes toward genomic results',
+    summary:
+      'An online experiment on how a second review of a genetic risk result, including an AI review, changes trust in that result.',
+    role: 'Lead researcher, with principal investigator Susan Persky',
+    status: 'In IRB review, with no data collected yet',
+  },
+];
+---
+
+<Base
+  title="Projects"
+  description="Research I have led or contributed to, with my role and the status of each project."
+>
+  <div class="wrap">
+    <header class="page-head">
+      <h1>Projects</h1>
+      <p class="lede">
+        Research I have led or contributed to. Each row shows my role and where the work stands.
+      </p>
+    </header>
+
+    <ul class="rows projects">
+      {
+        projects.map((p) => (
+          <li>
+            <div class="what">
+              <h2>{p.link ? <a href={p.link}>{p.title}</a> : p.title}</h2>
+              <p>{p.summary}</p>
+            </div>
+            <dl class="meta">
+              <div>
+                <dt>My role</dt>
+                <dd>{p.role}</dd>
+              </div>
+              <div>
+                <dt>Status</dt>
+                <dd>{p.status}</dd>
+              </div>
+            </dl>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</Base>
+
+<style>
+  .projects {
+    margin-top: clamp(32px, 5vw, 56px);
+  }
+
+  .projects > li {
+    display: grid;
+    gap: 1rem 3rem;
+  }
+
+  @media (min-width: 860px) {
+    .projects > li {
+      grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+    }
+  }
+
+  h2 {
+    font-size: 1.35rem;
+    margin-bottom: 0.4rem;
+  }
+
+  h2 a {
+    text-decoration-color: var(--rule);
+  }
+
+  .what p {
+    margin: 0;
+    max-width: 60ch;
+  }
+
+  .meta {
+    margin: 0;
+    display: grid;
+    gap: 0.6rem;
+    font-family: var(--display);
+    font-size: 0.92rem;
+    line-height: 1.4;
+    align-content: start;
+  }
+
+  dt {
+    color: var(--muted);
+  }
+
+  dd {
+    margin: 0;
+  }
+</style>

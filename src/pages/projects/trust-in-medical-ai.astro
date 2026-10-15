@@ -1,0 +1,162 @@
+---
+import Base from '../../layouts/Base.astro';
+import ForestPlot from '../../components/ForestPlot.astro';
+import Placeholder from '../../components/Placeholder.astro';
+import data from '../../data/trust-in-medical-ai/trust-by-domain.json';
+import meta from '../../data/trust-in-medical-ai/meta.json';
+import { href } from '../../utils/url';
+---
+
+<Base
+  title="Trust in medical AI"
+  description="Six preregistered studies on why people trust a doctor's advice more than an AI's, from my Georgetown dissertation."
+>
+  <div class="wrap">
+    <header class="page-head">
+      <p class="back small"><a href={href('/projects/')}>All projects</a></p>
+      <h1>Trust in medical AI</h1>
+      <p class="lede">
+        My dissertation at Georgetown University, completed in 2024. Six preregistered studies, with more than 3,000
+        participants recruited, on why people trust a doctor's advice more than an AI's.
+      </p>
+    </header>
+
+    <div class="prose">
+      <section class="section">
+        <h2>The question</h2>
+        <p>
+          Medical AI has shown diagnostic and prescriptive ability that rivals doctors. Yet when a doctor and an AI give
+          people the same recommendation, people trust the doctor more. I wanted to know what drives that gap, and
+          whether it can be closed.
+        </p>
+      </section>
+    </div>
+
+    <section class="section chart" aria-labelledby="gap-title">
+      <h2 id="gap-title">The gap holds across medical domains</h2>
+      <p class="sub">
+        Study 2 asked 106 adults how much they trusted a doctor and an AI making the same medical judgment. Hover over
+        a row or tab to it for the exact statistics.
+      </p>
+      <ForestPlot
+        rows={data.rows}
+        xMin={-1}
+        xMax={5}
+        xLabel="Doctor minus AI, in trust rating points"
+        leftLabel="AI trusted more"
+        rightLabel="Doctor trusted more"
+      />
+      <p class="small muted source">
+        Source: {meta.source} Study 2, Table 7.
+        <a href={meta.publicLinks.study2Preregistration}>Preregistration</a> and
+        <a href={meta.publicLinks.study2DataAndAnalysis}>data and analysis</a> are on OSF.
+      </p>
+    </section>
+
+    <div class="prose">
+      <section class="section">
+        <h2>What I found</h2>
+        <ul class="findings">
+          <li>
+            <strong>People trusted the doctor more in every study.</strong> In each of the first five studies, the doctor
+            won across medical domains, decision types and self-relevant scenarios.
+          </li>
+          <li>
+            <strong>People saw the doctor as more capable.</strong> They rated doctors higher on both intuition
+            (d = 0.58) and quantitative reasoning (d = 0.56), and trusted them more to make medical decisions
+            (d = 0.79). These are Study 1 results.
+          </li>
+          <li>
+            <strong>A humanlike AI helped in one design but not another.</strong> When people judged both AIs, they
+            trusted the humanlike one more (Study 5, d = 0.46). When each person saw only one AI, the difference was not
+            significant (Study 3, d = 0.07).
+          </li>
+          <li>
+            <strong>Trust did not change behavior.</strong> In a 15-day health intervention (560 recruited, 455
+            retained), whether a doctor or an AI made the recommendation did not change adherence. I report it as a
+            null result.
+          </li>
+        </ul>
+      </section>
+
+      <section class="section">
+        <h2>How I measured it</h2>
+        <p>
+          I collected trust ratings and a behavioral measure called weight on advice, which records how far people move
+          their own judgment toward a recommendation. Every study was preregistered.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>What this means for product teams</h2>
+        <p>
+          If a health AI is trusted less than a clinician, the gap persisted across every medical domain I tested, so
+          adjusting the content alone may not close it. Test how people perceive the decision-maker, and measure what
+          they do, not only what they say they trust.
+        </p>
+      </section>
+    </div>
+
+    <section class="section slots" aria-labelledby="more-title">
+      <h2 id="more-title">More charts for this page</h2>
+      <div class="slot-grid">
+        <Placeholder
+          title="Humanlike AI across Studies 3 to 5"
+          provide={[
+            'Mean trust and 95% confidence interval for each condition in each study',
+            'The trust scale and its range',
+            'The figure from the dissertation, if you want the chart to match it',
+          ]}
+        />
+        <Placeholder
+          title="Adherence over 15 days in Study 6"
+          provide={[
+            'Daily adherence by condition, as a summary table or a de-identified file',
+            'Confirmation that the consent form allows public release',
+          ]}
+        />
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .back {
+    margin-bottom: 1rem;
+  }
+
+  .chart {
+    max-width: 680px;
+  }
+
+  .sub {
+    color: var(--muted);
+    font-size: 1rem;
+    margin: 0.75rem 0 1.75rem;
+  }
+
+  .source {
+    margin-top: 1.25rem;
+  }
+
+  .findings {
+    margin: 1rem 0 0;
+    padding-left: 1.2rem;
+  }
+
+  .findings li {
+    margin-bottom: 0.9rem;
+  }
+
+  .slot-grid {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  @media (min-width: 760px) {
+    .slot-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,12 @@
+{
+  "project": "Trust in medical AI",
+  "source": "Leitao, M. R. (2024). Artificial Intelligence, Humanization, and Health Beliefs. Doctoral dissertation, Georgetown University.",
+  "files": {
+    "trust-by-domain.json": "Study 2 (N = 106), Table 7: Doctor minus AI trust difference by medical-decision domain. Transcribed from the dissertation."
+  },
+  "sharing": "Published summary statistics only. No raw participant data in this repository.",
+  "publicLinks": {
+    "study2Preregistration": "https://osf.io/k25g8",
+    "study2DataAndAnalysis": "https://osf.io/7png8"
+  }
+}

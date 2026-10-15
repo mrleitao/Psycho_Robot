@@ -1,0 +1,127 @@
+---
+import Base from '../layouts/Base.astro';
+
+// Each citation is written once, in the order authors appear in the paper.
+// Verified against the papers and the project's experience repository. Edit text here, not in the markup below.
+const groups = [
+  {
+    heading: 'Published',
+    items: [
+      {
+        role: 'First author',
+        html: '<strong>Leitao, M. R.</strong>, Farokhnia, M., Leggio, L., &amp; Persky, S. (2026). Experiences and behavior during a virtual reality buffet simulation: A secondary analysis of a ghrelin-related pharmacology randomized controlled trial in people with alcohol use disorder. <em>Journal of Medical Extended Reality</em>. <a href="https://doi.org/10.1177/29941520261484294">doi.org/10.1177/29941520261484294</a>',
+      },
+      {
+        role: 'Contributing author',
+        html: 'Berzenski, S. R., Shulze, J., <strong>Leitao, M. R.</strong>, &amp; Ruvalcaba, O. (2025). Motivations for gaming scale: A comparison of competitive and noncompetitive gamers. <em>Journal of Electronic Gaming and Esports, 3</em>(1). <a href="https://doi.org/10.1123/jege.2024-0026">doi.org/10.1123/jege.2024-0026</a>',
+      },
+      {
+        role: 'First author',
+        html: '<strong>Leitao, M. R.</strong>, Proulx, J. D. E., &amp; Kushlev, K. (2024). Smartphones undermine social connectedness more in men than women: A mini mega-analysis. <em>Technology, Mind, and Behavior, 5</em>(1). <a href="https://doi.org/10.1037/tmb0000125">doi.org/10.1037/tmb0000125</a>',
+      },
+      {
+        role: 'Contributing author',
+        html: 'Rarity, E., <strong>Leitao, M. R.</strong>, &amp; Rutchick, A. M. (2022). Identification with characters in parasocial relationships predicts sharing their personality traits. <em>Psychology of Popular Media, 11</em>(2), 111–116. <a href="https://doi.org/10.1037/ppm0000389">doi.org/10.1037/ppm0000389</a>',
+      },
+      {
+        role: 'Contributing author',
+        html: 'Tibbetts, M., Epstein-Shuman, A., <strong>Leitao, M. R.</strong>, &amp; Kushlev, K. (2021). A week during COVID-19: Online social interactions are associated with greater connection and more stress. <em>Computers in Human Behavior Reports, 4</em>, 100133. <a href="https://doi.org/10.1016/j.chbr.2021.100133">doi.org/10.1016/j.chbr.2021.100133</a>',
+      },
+      {
+        role: 'Contributing author',
+        html: 'Del Cid, D. A., Larranaga, D., <strong>Leitao, M.</strong>, Mosher, R. L., Berzenski, S. R., Gandhi, V., &amp; Drew, S. A. (2021). Exploratory factor analysis and validity of the Virtual Reality Symptom Questionnaire and Computer Use Survey. <em>Ergonomics, 64</em>(1), 69–77.',
+      },
+      {
+        role: 'Second author',
+        html: 'Kushlev, K., &amp; <strong>Leitao, M. R.</strong> (2020). The effects of smartphones on well-being: Theoretical integration and research agenda. <em>Current Opinion in Psychology, 36</em>, 77–82. <a href="https://doi.org/10.1016/j.copsyc.2020.05.001">doi.org/10.1016/j.copsyc.2020.05.001</a>',
+      },
+    ],
+  },
+  {
+    heading: 'Accepted',
+    items: [
+      {
+        role: 'Contributing author',
+        html: 'Hertendorf, B. N., <strong>Leitao, M. R.</strong>, Peterson, C., Stoeling, D., &amp; Persky, S. Characterizing genetic determinism about body weight: Predictors and implications.',
+      },
+    ],
+  },
+  {
+    heading: 'Under review',
+    items: [
+      {
+        role: 'Co-first author',
+        html: 'Logg, J. M.†, <strong>Leitao, M. R.</strong>†, &amp; Ulu, C. The cost of generative AI collaboration strategies to the psychological experience of work. <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6926039">SSRN working paper</a>. † Co-first authors.',
+      },
+      {
+        role: 'Contributing author',
+        html: 'Logg, J. M., Tinsley, C. H., &amp; <strong>Leitao, M. R.</strong> Risk creep: A COVID-19 longitudinal field study.',
+      },
+    ],
+  },
+  {
+    heading: 'Dissertation',
+    items: [
+      {
+        role: 'Sole author',
+        html: '<strong>Leitao, M. R.</strong> (2024). <em>Artificial intelligence, humanization, and health beliefs</em> [Doctoral dissertation, Georgetown University].',
+      },
+    ],
+  },
+];
+---
+
+<Base
+  title="Research"
+  description="Ten papers published, accepted or under review on trust in AI, smartphones, wellbeing and clinical research, with my role on each."
+>
+  <div class="wrap">
+    <header class="page-head">
+      <h1>Research</h1>
+      <p class="lede">
+        Ten papers: seven published, one accepted and two under review. I have also given more than 25 conference
+        presentations and chaired the 2024 SPSP session on aversion to and appreciation of AI.
+      </p>
+    </header>
+
+    {
+      groups.map((g) => (
+        <section class="section group">
+          <h2>{g.heading}</h2>
+          <ul class="rows">
+            {g.items.map((item) => (
+              <li>
+                <p class="cite" set:html={item.html} />
+                <p class="role small muted">{item.role}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
+</Base>
+
+<style>
+  .group {
+    margin-top: clamp(40px, 6vw, 72px);
+    max-width: 780px;
+  }
+
+  .group h2 {
+    margin-bottom: 0.75rem;
+  }
+
+  .cite {
+    margin: 0 0 0.3rem;
+    font-size: 1.02rem;
+    line-height: 1.55;
+    padding-left: 1.5rem;
+    text-indent: -1.5rem;
+  }
+
+  .role {
+    margin: 0;
+    font-family: var(--display);
+  }
+</style>
