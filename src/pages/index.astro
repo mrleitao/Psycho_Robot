@@ -1,0 +1,74 @@
+---
+import ForestPlot from '../components/ForestPlot.astro';
+import data from '../data/trust-by-domain.json';
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Matthew Leitao — Behavioral Scientist</title>
+    <meta name="description" content="Behavioral scientist and data scientist studying how people trust AI. Interactive evidence from my own research." />
+  </head>
+  <body>
+    <main>
+      <header class="hero">
+        <p class="eyebrow">Behavioral science · Data science</p>
+        <h1>People trust AI less than doctors, even when the advice is identical.</h1>
+        <p class="lede">
+          My doctoral research asked why. Six preregistered studies, more than 3,000 participants.
+          Below is real evidence from that work.
+        </p>
+      </header>
+
+      <section class="card">
+        <h2>The trust gap shows up in every kind of medical decision</h2>
+        <p class="sub">
+          Study 2 (N = 106). How much more people trusted a doctor than an AI, by type of decision.
+          Each dot is the mean difference; the line is the 95% confidence interval.
+          Hover or focus a row for the full statistics.
+        </p>
+        <ForestPlot rows={data.rows} xMin={0} xMax={5} xLabel="Doctor minus AI (trust rating points)" />
+        <p class="takeaway">
+          <strong>Takeaway:</strong> the gap is large and consistent (Cohen's d from 1.24 to 1.33),
+          so it is not driven by one kind of decision. That points toward perceptions of the decision-maker,
+          not the medical content, as the cause.
+        </p>
+        <p class="source">Source: {data.source}</p>
+      </section>
+    </main>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --bg: #fbfaf7; --ink: #1c1b19; --muted: #6b6860; --grid: #e6e2d8;
+    --card: #ffffff; --accent: #c2410c; --rule: #e6e2d8;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #151412; --ink: #f1eee7; --muted: #a29d92; --grid: #2f2d29;
+      --card: #1d1b18; --accent: #fb923c; --rule: #2f2d29;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 17px/1.6 Georgia, 'Iowan Old Style', 'Times New Roman', serif;
+  }
+  main { max-width: 760px; margin: 0 auto; padding: 56px 20px 96px; }
+  .eyebrow {
+    font: 600 12.5px/1 system-ui, sans-serif; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin: 0 0 16px;
+  }
+  h1 { font-size: clamp(30px, 6vw, 46px); line-height: 1.12; margin: 0 0 20px; letter-spacing: -.01em; }
+  h2 { font-size: 22px; line-height: 1.25; margin: 0 0 8px; }
+  .lede { color: var(--muted); margin: 0 0 40px; }
+  .card {
+    background: var(--card); border: 1px solid var(--rule);
+    border-radius: 14px; padding: 28px 24px;
+  }
+  .sub { color: var(--muted); font-size: 15px; margin: 0 0 20px; }
+  .takeaway { margin: 20px 0 0; }
+  .source { color: var(--muted); font: 12.5px/1.5 system-ui, sans-serif; margin: 16px 0 0; }
+</style>
