@@ -157,8 +157,20 @@ import { href } from '../../utils/url';
       <p class="small muted source">
         Paired t tests on the released data. Decision items are on a 0 to 100 scale, recommender ratings on 0 to 10. The
         paper's hypothesis numbers are used; the exploratory test (E) was not preregistered. How the file was cleaned is in
-        <a href="https://github.com/mrleitao/Psycho_Robot#study-1-data-release">the project README</a>.
+        <a href="https://github.com/mrleitao/Psycho_Robot#study-1-data-release">the project README</a>. The data, code,
+        <a href={href('/docs/study1-preregistration.pdf')}>preregistration</a> and
+        <a href={href('/code/study1-original-analysis.Rmd')}>original analysis notebook</a> are all linked from
+        <a href={href('/projects/trust-in-medical-ai/study-1/#files')}>the full Study 1 page</a>.
       </p>
+    </section>
+
+    <section class="section chart" aria-labelledby="full-title">
+      <h2 id="full-title">Every table and figure from Study 1</h2>
+      <p class="sub">
+        Descriptives, reliability, factor analysis, all eight tests, the eleven-recommender maps and the mixed models,
+        rebuilt from the public data. Each figure has hover details and a table view.
+      </p>
+      <p><a class="go" href={href('/projects/trust-in-medical-ai/study-1/')}>Open Study 1 in full</a></p>
     </section>
 
     <section class="section chart" id="power" aria-labelledby="power-title">
@@ -220,6 +232,11 @@ import { href } from '../../utils/url';
 
   .source {
     margin-top: 1.25rem;
+  }
+
+  .go {
+    font-family: var(--display);
+    font-weight: 600;
   }
 
   .findings {

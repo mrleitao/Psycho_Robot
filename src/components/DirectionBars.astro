@@ -1,0 +1,96 @@
+---
+// Person as effect size: for each comparison, how many people rated the first item higher, the same, or lower.
+interface Row {
+  id: string;
+  text: string;
+  aLabel: string;
+  bLabel: string;
+  n: number;
+  higher: number;
+  same: number;
+  lower: number;
+  left: 'doctor' | 'ai' | 'plain' | 'hybrid';
+  right: 'doctor' | 'ai' | 'plain' | 'hybrid';
+}
+interface Props {
+  rows: Row[];
+}
+const { rows } = Astro.props;
+const W = 720;
+const padL = 14;
+const padR = 14;
+const rowH = 62;
+const top = 6;
+const H = top + rows.length * rowH + 4;
+const bw = W - padL - padR;
+const pct = (n: number, t: number) => `${((100 * n) / t).toFixed(0)}%`;
+---
+
+<figure class="dir" data-fig>
+  <div class="scroll" tabindex="0" role="region" aria-label="Chart. Scrolls sideways on narrow screens.">
+  <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-label="For each comparison, the share of people who rated the first item higher, the same, or lower">
+    {
+      rows.map((r, i) => {
+        const y0 = top + i * rowH;
+        const total = r.higher + r.same + r.lower;
+        const w1 = (r.higher / total) * bw;
+        const w2 = (r.same / total) * bw;
+        const w3 = (r.lower / total) * bw;
+        return (
+          <g
+            class="row"
+            data-tip
+            tabindex="0"
+            role="group"
+            aria-label={`${r.text}. ${r.higher} of ${total} rated ${r.aLabel} higher, ${r.same} the same, ${r.lower} rated ${r.bLabel} higher`}
+            data-label={r.text}
+            data-lines={`${r.aLabel} higher: ${r.higher} people (${pct(r.higher, total)})|Same: ${r.same} (${pct(r.same, total)})|${r.bLabel} higher: ${r.lower} (${pct(r.lower, total)})`}
+          >
+            <rect class="hit" x="0" y={y0} width={W} height={rowH} />
+            <text class="name" x={padL} y={y0 + 17}>{r.text}</text>
+            <rect class={`seg a ${r.left}`} x={padL} y={y0 + 26} width={Math.max(0, w1 - 2)} height="22" rx="3" />
+            <rect class="seg same" x={padL + w1} y={y0 + 26} width={Math.max(0, w2 - 2)} height="22" rx="3" />
+            <rect class={`seg b ${r.right}`} x={padL + w1 + w2} y={y0 + 26} width={Math.max(0, w3)} height="22" rx="3" />
+            <text class="in" x={padL + 8} y={y0 + 42}>{pct(r.higher, total)}</text>
+            <text class="in right" x={W - padR - 8} y={y0 + 42} text-anchor="end">{pct(r.lower, total)}</text>
+          </g>
+        );
+      })
+    }
+  </svg>
+  </div>
+  <ul class="key">
+    <li><span class="sw first"></span>First item rated higher</li>
+    <li><span class="sw same"></span>Rated the same</li>
+    <li><span class="sw second"></span>Second item rated higher</li>
+    <li class="muted">Doctor is cobalt, AI is marigold, wherever they appear</li>
+  </ul>
+  <div class="tip" hidden></div>
+</figure>
+
+<script>
+  import { attachTips } from '../utils/figtip';
+  document.querySelectorAll<HTMLElement>('[data-fig]').forEach(attachTips);
+</script>
+
+<style>
+  .dir { margin: 1.25rem 0 0; position: relative; max-width: 760px; }
+  .scroll { overflow-x: auto; }
+  svg { display: block; width: 100%; min-width: 620px; height: auto; overflow: visible; }
+  .hit { fill: transparent; }
+  .row:hover .hit, .row:focus .hit { fill: var(--wash); }
+  .row:focus { outline: none; }
+  .row:focus-visible .hit { stroke: var(--doctor); stroke-width: 2; }
+  .name { fill: var(--ink); font-family: var(--display); font-weight: 600; font-size: 15px; }
+  .seg.doctor { fill: var(--doctor); } .seg.ai { fill: var(--ai); } .seg.hybrid { fill: var(--muted); }
+  .seg.plain.a { fill: var(--ink); opacity: 0.78; } .seg.plain.b { fill: var(--muted); opacity: 0.6; }
+  .seg.same { fill: var(--rule); }
+  .in { font-family: var(--display); font-size: 13px; font-weight: 600; fill: var(--paper); font-variant-numeric: tabular-nums; }
+  .key { list-style: none; margin: 0.6rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.35rem 1.25rem; font-family: var(--display); font-size: 0.92rem; }
+  .key li { display: inline-flex; align-items: center; gap: 0.5rem; }
+  .key .muted { color: var(--muted); }
+  .sw { width: 1.4rem; height: 0.8rem; border-radius: 2px; flex: none; }
+  .sw.first { background: var(--ink); opacity: 0.78; } .sw.same { background: var(--rule); } .sw.second { background: var(--muted); opacity: 0.6; }
+  .tip { position: absolute; transform: translate(-50%, -100%); display: grid; gap: 0.1rem; padding: 0.55rem 0.8rem; background: var(--ink); color: var(--paper); border-radius: 6px; font-family: var(--display); font-size: 0.85rem; line-height: 1.35; white-space: nowrap; pointer-events: none; z-index: 2; }
+  .tip[hidden] { display: none; }
+</style>

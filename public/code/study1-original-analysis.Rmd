@@ -1,0 +1,1808 @@
+---
+title: "Health Algorithm Objectivity - Chapter 1"
+author: "Matthew Leitao"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+<!--
+Original analysis notebook for Study 1 (Chapter 1), as I ran it on the raw Qualtrics export.
+Only two lines were changed for release: the local file paths on my computer were replaced
+with "raw-data/..." placeholders. Everything else, including notes to myself and unfinished
+exploratory chunks, is as written.
+
+The raw .sav file is not released because it holds fields that could identify people.
+To rerun the results from the public file, use study1-analysis.R and study1-ratings.csv instead.
+-->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r packages}
+if(!require(haven)) {install.packages("haven")}
+if(!require(tidyverse))  {install.packages("tidyverse")}
+if(!require(gghalves))  {install.packages("gghalves")}
+if(!require(psych))  {install.packages("psych")}
+if(!require(effectsize))  {install.packages("effectsize")}
+if(!require(lme4))  {install.packages("lme4")}
+if(!require(MuMIn))  {install.packages("MuMIn")}
+if(!require(sjPlot))  {install.packages("sjPlot")}
+if(!require(sjmisc))  {install.packages("sjmisc")}
+if(!require(EMAtools))  {install.packages("EMAtools")}
+if(!require(papaja))  {install.packages("papaja")}
+if(!require(lm.beta))  {install.packages("lm.beta")}
+if(!require(viridis))  {install.packages("viridis")}
+if(!require(ghibli))  {install.packages("ghibli")}
+if(!require(report))  {install.packages("report")}
+```
+
+```{r}
+Health_Algorithm_Objectivity_1 <- read_sav("raw-data/study1-raw.sav")  # raw file, not released; see the de-identified CSV
+```
+
+
+# Hypotheses
+
+1.a.1 - People will perceive diagnostic medical decisions as requiring more quantitative reasoning than prescriptive medical decisions.
+
+1.a.2 - People will perceive diagnostic medical decisions as requiring more quantitative reasoning than preventative medical decisions.
+
+1.a.3 - People will perceive prescriptive medical decisions as requiring more quantitative reasoning than preventative medical decisions.
+
+1.b.1 - People will perceive medical decisions about physical health as requiring more quantitative reasoning than decisions about mental health.
+
+1.b.2 - People will perceive medical decisions about bodily injury as requiring more quantitative reasoning than decisions about acute sickness.
+
+2.a.1 - People will perceive a doctor as being more capable of intuition-based decision-making than an algorithm
+
+3.a. - People will judge doctors to be more trustworthy than medical artificial intelligence.
+
+
+```{r}
+
+describe(Health_Algorithm_Objectivity_1)
+```
+
+## Removing Preview
+```{r}
+Health_Algorithm_Objectivity_1_Clean <- Health_Algorithm_Objectivity_1[-c(1,2,3,4,5,6,7), ]
+```
+
+
+```{r}
+Health_Algorithm_Objectivity_1_Clean <- Health_Algorithm_Objectivity_1_Clean %>%
+  dplyr::rename(
+    Int_Quant_Rec_Inj = Int_Quant_1,
+    Int_Quant_Diag_Inj = Int_Quant_2,
+    Int_Quant_Pres_Inj_Surgery = Int_Quant_3,
+    Int_Quant_Pres_Inj_Med = Int_Quant_4,
+    Int_Quant_Rec_Ment = Int_Quant_5,
+    Int_Quant_Diag_Ment = Int_Quant_6,
+    Int_Quant_Pres_Ment = Int_Quant_7,
+    Int_Quant_Rec_AcuS = Int_Quant_8,
+    Int_Quant_Diag_AcuS = Int_Quant_9,
+    Int_Quant_Pres_AcuS = Int_Quant_10,
+    Int_Quant_Rec_ChronS = Int_Quant_11,
+    Int_Quant_Diag_ChronS = Int_Quant_12,
+    Int_Quant_Pres_ChronS = Int_Quant_13,
+    Int_Quant_Rec_Wellbeing = Int_Quant_14,
+    Int_Quant_Med_Gen = Int_Quant_15,
+    DM_QR_AI_Fitness = Q29_AI_Fitness
+  )
+```
+
+
+## Creating Dummies
+
+### Ethnicity Dummy Variable
+```{r}
+#Ethnicity Dummy Variables
+
+Health_Algorithm_Objectivity_1_Clean <- Health_Algorithm_Objectivity_1_Clean %>%
+  mutate(
+    IsAsian = case_when(
+      Ethnicity_1 == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    IsBlack = case_when(
+      Ethnicity_2 == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    IsWhite = case_when(
+      Ethnicity_3 == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    IsNativeAmerican = case_when(
+      Ethnicity_5 == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    IsPacificIslander = case_when(
+      Ethnicity_6 == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    IsOther = case_when(
+      Ethnicity_8 == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    IsHispanic = case_when(
+      Hispanic == 1 ~ 1,
+      Hispanic == 0 ~ 0,
+      TRUE ~ NA_real_
+    )
+  )
+
+```
+
+
+### Gender
+```{r}
+Health_Algorithm_Objectivity_1_Clean <- Health_Algorithm_Objectivity_1_Clean %>%
+  mutate(
+    IsMale = case_when(
+      Gender == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    IsNonBinary = case_when(
+      Gender == 4 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    IsTrans = case_when(
+      Transgender == 1 ~ 1,
+      Transgender == 0 ~ 0,
+      TRUE ~ NA_real_
+    )
+    
+)
+```
+
+
+### Other Demographics
+```{r}
+Health_Algorithm_Objectivity_1_Clean <- Health_Algorithm_Objectivity_1_Clean %>%
+  mutate(
+    IsVisableMinority = case_when(
+      Visible_Minority == 1 ~ 1,
+      Visible_Minority == 0 ~ 0,
+      TRUE ~ NA_real_
+    ),
+    
+    IsMinority = case_when(
+      Minority == 1 ~ 1,
+      Minority == 0 ~ 0,
+      TRUE ~ NA_real_
+    ),
+    
+    EnglishFirst = case_when(
+      First_Language == 1 ~ 1,
+      First_Language == 2 ~ 2,
+      TRUE ~ NA_real_
+    ),
+    
+    NativeUSA = case_when(
+      Native_USA == 1 ~ 1,
+      Native_USA == 0 ~ 0,
+      TRUE ~ NA_real_
+    ),
+    
+    ParentEd = case_when(
+      Parent_College == 1 ~ 1,
+      Parent_College == 0 ~ 0,
+      TRUE ~ NA_real_
+    ),
+    
+    LearningDisability = case_when(
+      Disablity_Learning == 1 ~ 1,
+      Disablity_Learning == 0 ~ 0,
+      TRUE ~ NA_real_
+    ),
+    
+    PhysicalDisability = case_when(
+      Disablity_Physical == 1 ~ 1,
+      Disablity_Physical == 0 ~ 0,
+      TRUE ~ NA_real_
+    ),
+    
+    MentalIllness = case_when(
+      Disablity_Mental == 1 ~ 1,
+      Disablity_Mental == 0 ~ 0,
+      TRUE ~ NA_real_
+    )
+)
+```
+
+
+### Employment & Income
+```{r}
+
+Health_Algorithm_Objectivity_1_Clean <- Health_Algorithm_Objectivity_1_Clean %>%
+  mutate(
+    EmpFull = case_when(
+      Employment == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EmpPart = case_when(
+      Employment == 2 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EmpSelf = case_when(
+      Employment == 3 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EmpUn = case_when(
+      Employment == 4 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EmpRet = case_when(
+      Employment == 5 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EmpStud = case_when(
+      Employment == 6 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EduAtt_LessHigh = case_when(
+      Education_Att == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EduAtt_LessHigh = case_when(
+      Education_Att == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EduAtt_HighSchool = case_when(
+      Education_Att == 2 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EduAtt_LessColl = case_when(
+      Education_Att == 3 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EduAtt_College = case_when(
+      Education_Att == 4 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EduAtt_LessGrad = case_when(
+      Education_Att == 5 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EduAtt_Graduate = case_when(
+      Education_Att == 6 ~ 1,
+      TRUE ~ 0
+    )
+  )
+    
+
+```
+
+
+### Marriage Status
+```{r}
+Health_Algorithm_Objectivity_1_Clean %>%
+  mutate(
+    Single = case_when(
+      Married == 1|2 ~ 1,
+      TRUE ~ 0
+    ))
+
+
+Health_Algorithm_Objectivity_1_Clean <- Health_Algorithm_Objectivity_1_Clean %>%
+  mutate(
+    Single = case_when(
+      Married == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    Marriage = case_when(
+      Married == 2 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    LivePartner = case_when(
+      Married == 3 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    Divorced = case_when(
+      Married == 4 ~ 1,
+      TRUE ~ 0
+    )
+  )
+
+```
+
+
+
+
+
+Demographics
+```{r}
+prop.table(table(Health_Algorithm_Objectivity_1_Clean$Gender))
+
+describe(Health_Algorithm_Objectivity_1_Clean$Age)
+```
+```{r}
+table(Health_Algorithm_Objectivity_1_Clean$Age)
+```
+
+
+# PreRegistered Analysis
+
+Our primary analysis will be a series of paired samples t-tests between individual items and groups. 
+
+1.	We will compare people’s perceptions of diagnostic decisions and prescriptive decisions.
+2.	We will compare people’s perceptions of diagnostic decisions and preventative decisions.
+
+3.	We will compare people’s perceptions of prescriptive decisions and preventative decisions.
+4.	We will compare people’s perceptions of decisions about bodily injury and decisions about mental health.
+5.	We will compare people’s perceptions of decisions about bodily injury and decisions about acute sickness. 
+6.	We will compare people’s perceptions of the capability of doctors using intuition and medical artificial intelligence using intuition. 
+7.	We will compare people’s perceptions of the capability of doctors using quantitative reasoning and medical artificial intelligence using quantitative reasoning.
+8.	We will compare people’s reported trust in doctors and medical artificial intelligence.
+
+
+
+## Correlation & Cronbachs Alpha Of Composites
+
+### Diagonsis
+
+Diagnostic Decisions:
+1.	Diagnosing a Broken Bone
+2.	Diagnosing Depression
+3.	Diagnosing Strep Throat
+4.	Diagnosing Diabetes
+
+#### Correlation/Alpha
+```{r}
+Health_Algorithm_Objectivity_1_Clean %>%
+  select(Int_Quant_Diag_Inj, Int_Quant_Diag_Ment, Int_Quant_Diag_AcuS, Int_Quant_Diag_ChronS) %>%
+    corr.test()
+```
+
+
+```{r}
+Health_Algorithm_Objectivity_1_Clean %>%
+  select(Int_Quant_Diag_Inj, Int_Quant_Diag_Ment, Int_Quant_Diag_AcuS, Int_Quant_Diag_ChronS) %>%
+  alpha()
+```
+
+
+### Prescriptive
+
+Prescriptive Decisions:
+1.	Prescribing Pain Medication for a Knee Injury
+2.	Prescribing Anti-Depressants and Cognitive Behavioral Therapy for Depression
+3.	Prescribing Anti-Biotics for Strep Throat
+4.	Prescribing Insulin and a Change in Diet for Diabetes
+
+```{r}
+Health_Algorithm_Objectivity_1_Clean %>%
+  select(Int_Quant_Pres_Inj_Med, Int_Quant_Pres_Ment, Int_Quant_Pres_AcuS, Int_Quant_Pres_ChronS) %>%
+    corr.test()
+```
+
+
+```{r}
+Health_Algorithm_Objectivity_1_Clean %>%
+  select(Int_Quant_Pres_Inj_Med, Int_Quant_Pres_Ment, Int_Quant_Pres_AcuS, Int_Quant_Pres_ChronS) %>%
+  alpha()
+```
+
+
+### Preventative 
+
+Preventative Decisions:
+1.	Recommending Stretching to Prevent Injury
+2.	Recommending Meditation and Exercise to Promote Mental Health
+3.	Recommending Vitamin C + Zinc to Fight Off Infections
+4.	Recommending a Strict Diet to Promote Better Physical Health
+
+```{r}
+Health_Algorithm_Objectivity_1_Clean %>%
+  select(Int_Quant_Rec_Inj, Int_Quant_Rec_Ment, Int_Quant_Rec_AcuS, Int_Quant_Rec_ChronS) %>%
+    corr.test()
+```
+
+
+```{r}
+Health_Algorithm_Objectivity_1_Clean %>%
+  select(Int_Quant_Rec_Inj, Int_Quant_Rec_Ment, Int_Quant_Rec_AcuS, Int_Quant_Rec_ChronS) %>%
+  alpha()
+```
+
+1.	Physical Health:
+    a.	Bodily Injury:
+             i.	Recommending Stretching to Prevent Injury
+            ii.	Diagnosing a Broken Bone
+           iii.	Prescribing Pain Medication for a Knee Injury
+    b.	Acute Sickness:
+             i.	Recommending Vitamin C + Zinc to Fight Off Infections
+            ii.	Diagnosing Strep Throat
+           iii.	Prescribing Anti-Biotics for Strep Throat
+     c.	Chronic Sickness:
+             i.	Recommending a Strict Diet to Promote Better Physical Health
+            ii.	Diagnosing Diabetes
+           iii.	Prescribing Insulin and a Change in Diet for Diabetes
+2.	Mental Health:
+     a.	Recommending Meditation and Exercise to Promote Mental Health
+     b.	Diagnosing Depression
+     c.	Prescribing Anti-Depressants and Cognitive Behavioral Therapy for Depression
+
+
+### Physical Health
+```{r}
+Health_Algorithm_Objectivity_1_Clean %>%
+  select(Int_Quant_Diag_Inj, Int_Quant_Diag_AcuS, Int_Quant_Diag_ChronS, Int_Quant_Rec_Inj, Int_Quant_Rec_AcuS, Int_Quant_Rec_ChronS, Int_Quant_Pres_Inj_Med,  Int_Quant_Pres_AcuS, Int_Quant_Pres_ChronS) %>%
+    corr.test()
+```
+
+
+```{r}
+Health_Algorithm_Objectivity_1_Clean %>%
+  select(Int_Quant_Diag_Inj, Int_Quant_Diag_AcuS, Int_Quant_Diag_ChronS, Int_Quant_Rec_Inj, Int_Quant_Rec_AcuS, Int_Quant_Rec_ChronS, Int_Quant_Pres_Inj_Med,  Int_Quant_Pres_AcuS, Int_Quant_Pres_ChronS) %>%
+  alpha()
+```
+
+### Mental Health
+```{r}
+Health_Algorithm_Objectivity_1_Clean %>%
+  select(Int_Quant_Diag_Ment, Int_Quant_Rec_Ment, Int_Quant_Pres_Ment) %>%
+    corr.test()
+```
+
+
+```{r}
+Health_Algorithm_Objectivity_1_Clean %>%
+  select(Int_Quant_Diag_Ment, Int_Quant_Rec_Ment, Int_Quant_Pres_Ment) %>%
+  alpha()
+```
+
+
+### Bodily Injury
+```{r}
+Health_Algorithm_Objectivity_1_Clean %>%
+  select(Int_Quant_Diag_Inj, Int_Quant_Rec_Inj, Int_Quant_Pres_Inj_Med) %>%
+    corr.test()
+```
+
+
+```{r}
+Health_Algorithm_Objectivity_1_Clean %>%
+  select(Int_Quant_Diag_Inj, Int_Quant_Rec_Inj, Int_Quant_Pres_Inj_Med) %>%
+  alpha()
+```
+
+
+### Acute Sickness
+```{r}
+Health_Algorithm_Objectivity_1_Clean %>%
+  select(Int_Quant_Diag_AcuS, Int_Quant_Rec_AcuS, Int_Quant_Pres_AcuS) %>%
+    corr.test()
+```
+
+
+```{r}
+Health_Algorithm_Objectivity_1_Clean %>%
+  select(Int_Quant_Diag_AcuS, Int_Quant_Rec_AcuS, Int_Quant_Pres_AcuS) %>%
+  alpha()
+```
+
+
+### Chronic Sickness
+```{r}
+Health_Algorithm_Objectivity_1_Clean %>%
+  select(Int_Quant_Diag_ChronS, Int_Quant_Rec_ChronS, Int_Quant_Pres_ChronS) %>%
+    corr.test()
+```
+
+
+```{r}
+Health_Algorithm_Objectivity_1_Clean %>%
+  select(Int_Quant_Diag_ChronS, Int_Quant_Rec_ChronS, Int_Quant_Pres_ChronS) %>%
+  alpha()
+```
+
+### All
+```{r}
+Int_Quant_Cor_All <- Health_Algorithm_Objectivity_1_Clean %>%
+  select(Int_Quant_Diag_Inj, Int_Quant_Diag_AcuS, Int_Quant_Diag_ChronS, Int_Quant_Rec_Inj, Int_Quant_Rec_AcuS, Int_Quant_Rec_ChronS, Int_Quant_Pres_Inj_Med,  Int_Quant_Pres_AcuS, Int_Quant_Pres_ChronS,Int_Quant_Diag_Ment, Int_Quant_Rec_Ment, Int_Quant_Pres_Ment) %>% cor(use = "complete.obs")
+
+Int_Quant_Cor_All
+```
+
+#### Exploritory Factor Analysis
+```{r}
+Int_Quant_EFA_Data <- Health_Algorithm_Objectivity_1_Clean %>%
+  select(Int_Quant_Diag_Inj, Int_Quant_Diag_AcuS, Int_Quant_Diag_ChronS, Int_Quant_Rec_Inj, Int_Quant_Rec_AcuS, Int_Quant_Rec_ChronS, Int_Quant_Pres_Inj_Med,  Int_Quant_Pres_AcuS, Int_Quant_Pres_ChronS,Int_Quant_Diag_Ment, Int_Quant_Rec_Ment, Int_Quant_Pres_Ment)
+```
+
+
+##### Scree Plot
+```{r}
+
+EFA_Fit <- fa(Int_Quant_EFA_Data,nfactors = ncol(Int_Quant_EFA_Data), rotate = "none")
+n_factors <- length(EFA_Fit$e.values)
+
+scree    <- data.frame(
+  Factor_n =  as.factor(1:n_factors), 
+  Eigenvalue = EFA_Fit$e.values)
+
+ggplot(scree, aes(x = Factor_n, y = Eigenvalue, group = 1)) + 
+  geom_point() + geom_line() +
+  xlab("Number of factors") +
+  ylab("Initial eigenvalue") +
+  labs( title = "Scree Plot", 
+        subtitle = "(Based on the unreduced correlation matrix)")
+```
+```{r}
+scree
+```
+
+
+##### Analysis
+```{r}
+Int_Quant_FactorAnalysis <- fa(r = Int_Quant_Cor_All,nfactor = 3, rotate = "oblimin",  fm = "minchi")
+
+Int_Quant_FactorAnalysis
+```
+##### Plot
+```{r}
+fa.diagram(Int_Quant_FactorAnalysis)
+```
+
+## Combine
+```{r}
+Health_Algorithm_Objectivity_1_Clean <- Health_Algorithm_Objectivity_1_Clean %>%
+  mutate(
+    Int_Quant_Diagnosis    = (Int_Quant_Diag_Inj + Int_Quant_Diag_Ment + Int_Quant_Diag_AcuS + Int_Quant_Diag_ChronS)/4,
+    Int_Quant_Prescription  = (Int_Quant_Pres_Inj_Med + Int_Quant_Pres_Ment + Int_Quant_Pres_AcuS + Int_Quant_Pres_ChronS)/4,
+    Int_Quant_Preventative  = (Int_Quant_Rec_Inj + Int_Quant_Rec_Ment + Int_Quant_Rec_AcuS + Int_Quant_Rec_ChronS)/4,
+    Int_Quant_PhysHealth    = (Int_Quant_Diag_Inj + Int_Quant_Diag_AcuS + Int_Quant_Diag_ChronS + Int_Quant_Rec_Inj + Int_Quant_Rec_AcuS + Int_Quant_Rec_ChronS + Int_Quant_Pres_Inj_Med + Int_Quant_Pres_AcuS + Int_Quant_Pres_ChronS)/9,
+    Int_Quant_MentHealth    = (Int_Quant_Diag_Ment + Int_Quant_Rec_Ment + Int_Quant_Pres_Ment)/3,
+    Int_Quant_BodyInj       = (Int_Quant_Diag_Inj + Int_Quant_Rec_Inj + Int_Quant_Pres_Inj_Med)/3,
+    Int_Quant_AcuteSic      = (Int_Quant_Diag_AcuS + Int_Quant_Rec_AcuS + Int_Quant_Pres_AcuS)/3,
+    Int_Quant_ChronSic      = (Int_Quant_Diag_ChronS + Int_Quant_Rec_ChronS + Int_Quant_Pres_ChronS)/3
+  )
+    
+
+```
+
+
+## Descriptives Before Compositing
+```{r}
+Health_Algorithm_Objectivity_1_Clean %>%
+  select(Int_Quant_Diag_Inj, Int_Quant_Diag_AcuS, Int_Quant_Diag_ChronS, Int_Quant_Rec_Inj, Int_Quant_Rec_AcuS, Int_Quant_Rec_ChronS, Int_Quant_Pres_Inj_Med, Int_Quant_Pres_AcuS, Int_Quant_Pres_ChronS, Int_Quant_Diag_Ment, Int_Quant_Rec_Ment, Int_Quant_Pres_Ment,Int_Quant_Pres_Inj_Surgery, Int_Quant_Rec_Wellbeing, Int_Quant_Med_Gen) %>% describe()
+    
+```
+
+
+## Descriptives for Composites
+```{r}
+Health_Algorithm_Objectivity_1_Clean %>%
+  select(
+    Int_Quant_Diagnosis, Int_Quant_Prescription, Int_Quant_Preventative, Int_Quant_PhysHealth,
+         Int_Quant_MentHealth, Int_Quant_BodyInj, Int_Quant_AcuteSic, Int_Quant_ChronSic, Int_Quant_Pres_Inj_Surgery, Int_Quant_Rec_Wellbeing, Int_Quant_Med_Gen
+    ) %>%
+  describe()
+```
+
+```{r}
+Health_Algorithm_Objectivity_1_Clean <- Health_Algorithm_Objectivity_1_Clean%>%
+  select(-Create_New_Field_or_Choose_From_Dropdown...)
+```
+
+
+# Saving Data Set
+```{r}
+write_sav(Health_Algorithm_Objectivity_1_Clean, "raw-data/study1-clean.sav")  # not released
+```
+
+
+
+To create the qualities of the decisions I have to dummy code categories to define the categories that I am evaluating.
+
+# Analysis
+
+### Hypothesis 1 - Not Significant
+```{r}
+t.test(Health_Algorithm_Objectivity_1_Clean$Int_Quant_Diagnosis, Health_Algorithm_Objectivity_1_Clean$Int_Quant_Prescription, paired = TRUE)
+```
+```{r}
+cohens_d(Health_Algorithm_Objectivity_1_Clean$Int_Quant_Diagnosis, Health_Algorithm_Objectivity_1_Clean$Int_Quant_Prescription, paired = TRUE)
+```
+
+```{r}
+report(t.test(Health_Algorithm_Objectivity_1_Clean$Int_Quant_Diagnosis, Health_Algorithm_Objectivity_1_Clean$Int_Quant_Prescription, paired = TRUE))
+```
+
+
+
+
+### Hypothesis 2 - Significant
+```{r}
+t.test(Health_Algorithm_Objectivity_1_Clean$Int_Quant_Diagnosis, Health_Algorithm_Objectivity_1_Clean$Int_Quant_Preventative, paired = TRUE)
+```
+
+
+```{r}
+cohens_d(Health_Algorithm_Objectivity_1_Clean$Int_Quant_Diagnosis, Health_Algorithm_Objectivity_1_Clean$Int_Quant_Preventative, paired = TRUE)
+```
+
+
+```{r}
+report(t.test(Health_Algorithm_Objectivity_1_Clean$Int_Quant_Diagnosis, Health_Algorithm_Objectivity_1_Clean$Int_Quant_Preventative, paired = TRUE))
+```
+
+
+### Hypothesis 3 - Significant
+```{r}
+t.test(Health_Algorithm_Objectivity_1_Clean$Int_Quant_Prescription, Health_Algorithm_Objectivity_1_Clean$Int_Quant_Preventative, paired = TRUE)
+```
+
+
+```{r}
+cohens_d(Health_Algorithm_Objectivity_1_Clean$Int_Quant_Prescription, Health_Algorithm_Objectivity_1_Clean$Int_Quant_Preventative, paired = TRUE)
+```
+
+```{r}
+report(t.test(Health_Algorithm_Objectivity_1_Clean$Int_Quant_Prescription, Health_Algorithm_Objectivity_1_Clean$Int_Quant_Preventative, paired = TRUE))
+```
+
+
+
+### Hypothesis 4 - Significant
+```{r}
+t.test(Health_Algorithm_Objectivity_1_Clean$Int_Quant_PhysHealth, Health_Algorithm_Objectivity_1_Clean$Int_Quant_MentHealth, paired = TRUE)
+```
+
+```{r}
+cohens_d(Health_Algorithm_Objectivity_1_Clean$Int_Quant_PhysHealth, Health_Algorithm_Objectivity_1_Clean$Int_Quant_MentHealth, paired = TRUE)
+```
+
+```{r}
+report(t.test(Health_Algorithm_Objectivity_1_Clean$Int_Quant_PhysHealth, Health_Algorithm_Objectivity_1_Clean$Int_Quant_MentHealth, paired = TRUE))
+```
+
+
+### Hypothesis 5 - Not Significant (Marginal)
+```{r}
+t.test(Health_Algorithm_Objectivity_1_Clean$Int_Quant_BodyInj, Health_Algorithm_Objectivity_1_Clean$Int_Quant_AcuteSic, paired = TRUE)
+```
+
+```{r}
+cohens_d(Health_Algorithm_Objectivity_1_Clean$Int_Quant_BodyInj, Health_Algorithm_Objectivity_1_Clean$Int_Quant_AcuteSic, paired = TRUE)
+```
+
+```{r}
+report(t.test(Health_Algorithm_Objectivity_1_Clean$Int_Quant_BodyInj, Health_Algorithm_Objectivity_1_Clean$Int_Quant_AcuteSic, paired = TRUE))
+```
+
+
+## Decriptives For Decision Makers - Quantitative Reasoning
+```{r}
+Health_Algorithm_Objectivity_1_Clean %>%
+dplyr::select(
+    DM_QR_Doctor_General, DM_QR_Nurse, DM_QR_Doctor_Remote, DM_QR_Therapist, DM_QR_PersonalTrainer, DM_QR_AI_General, DM_QR_AI_Diagonstic, DM_QR_AI_Chatbot, DM_QR_AI_Fitness, DM_QR_Doctor_AI, DM_QR_Lay
+  ) %>%
+  describe()
+
+```
+
+## Decriptives For Decision Makers - Intution
+```{r}
+Health_Algorithm_Objectivity_1_Clean %>%
+dplyr::select(
+   DM_IN_Doctor_General, Decision_Maker_IN_Nurse, Decision_Maker_IN_Doctor_Remote, Decision_Maker_IN_Therapist, Decision_Maker_IN_PersonalTrainer, Decision_Maker_IN_AI_General, Decision_Maker_IN_AI_Diagonstic, Decision_Maker_IN_AI_Chatbot,Decision_Maker_IN_AI_Fitness,  Decision_Maker_IN_Doctor_AI, Decision_Maker_IN_Lay
+  ) %>%
+  describe()
+
+```
+
+## Decriptives For Decision Makers - Trust
+```{r}
+Health_Algorithm_Objectivity_1_Clean %>%
+dplyr::select(
+   Decision_Maker_TR_Doctor_General, Decision_Maker_TR_Nurse, Decision_Maker_TR_Doctor_Remote, Decision_Maker_TR_Therapist, Decision_Maker_TR_PersonalTrainer, Decision_Maker_TR_AI_General, Decision_Maker_TR_AI_Diagonostic, Decision_Maker_TR_AI_Chatbot, Decision_Maker_TR_AI_Fitness, Decision_Maker_TR_Doctor_AI, Decision_Maker_TR_Lay
+  ) %>%
+  describe()
+
+```
+
+# Ranked Descriptives
+
+## Decriptives For Decision Makers - Quantitative Reasoning
+```{r}
+Health_Algorithm_Objectivity_1_Clean %>%
+ dplyr::select(
+    DM_QR_Doctor_General, DM_QR_Nurse, DM_QR_Doctor_Remote, DM_QR_Therapist, DM_QR_Doctor_AI, DM_QR_AI_General, DM_QR_PersonalTrainer, DM_QR_AI_Diagonstic, DM_QR_AI_Chatbot, DM_QR_AI_Fitness,  DM_QR_Lay
+  ) %>%
+  describe()
+
+```
+
+## Decriptives For Decision Makers - Intution
+```{r}
+Health_Algorithm_Objectivity_1_Clean %>%
+  dplyr::select(
+   DM_IN_Doctor_General, Decision_Maker_IN_Nurse, Decision_Maker_IN_Therapist, Decision_Maker_IN_Doctor_Remote,  Decision_Maker_IN_PersonalTrainer,  Decision_Maker_IN_Doctor_AI, Decision_Maker_IN_Lay, Decision_Maker_IN_AI_General, Decision_Maker_IN_AI_Diagonstic, Decision_Maker_IN_AI_Chatbot,Decision_Maker_IN_AI_Fitness
+  ) %>%
+  describe()
+
+```
+
+## Decriptives For Decision Makers - Trust
+```{r}
+Health_Algorithm_Objectivity_1_Clean %>%
+  dplyr::select(
+   Decision_Maker_TR_Doctor_General, Decision_Maker_TR_Nurse, Decision_Maker_TR_Doctor_Remote, Decision_Maker_TR_Therapist, Decision_Maker_TR_Doctor_AI, Decision_Maker_TR_PersonalTrainer, Decision_Maker_TR_AI_General, Decision_Maker_TR_AI_Diagonostic,  Decision_Maker_TR_Lay,  Decision_Maker_TR_AI_Fitness, Decision_Maker_TR_AI_Chatbot
+  ) %>%
+  describe()
+
+```
+
+### Hypothesis 6 - Significant
+```{r}
+t.test(Health_Algorithm_Objectivity_1_Clean$DM_IN_Doctor_General, Health_Algorithm_Objectivity_1_Clean$Decision_Maker_IN_AI_General, paired = TRUE)
+```
+
+```{r}
+cohens_d(Health_Algorithm_Objectivity_1_Clean$DM_IN_Doctor_General, Health_Algorithm_Objectivity_1_Clean$Decision_Maker_IN_AI_General, paired = TRUE)
+```
+
+```{r}
+report(t.test(Health_Algorithm_Objectivity_1_Clean$DM_IN_Doctor_General, Health_Algorithm_Objectivity_1_Clean$Decision_Maker_IN_AI_General, paired = TRUE))
+```
+
+
+### Hypothesis 6.2 - Significant
+```{r}
+t.test(Health_Algorithm_Objectivity_1_Clean$DM_QR_Doctor_General, Health_Algorithm_Objectivity_1_Clean$DM_QR_AI_General, paired = TRUE)
+```
+
+
+```{r}
+cohens_d(Health_Algorithm_Objectivity_1_Clean$DM_QR_Doctor_General, Health_Algorithm_Objectivity_1_Clean$DM_QR_AI_General, paired = TRUE)
+```
+
+```{r}
+report(t.test(Health_Algorithm_Objectivity_1_Clean$DM_QR_Doctor_General, Health_Algorithm_Objectivity_1_Clean$DM_QR_AI_General, paired = TRUE))
+```
+
+
+
+### Hypothesis 7 - Significant
+```{r}
+t.test(Health_Algorithm_Objectivity_1_Clean$Decision_Maker_TR_Doctor_General, Health_Algorithm_Objectivity_1_Clean$Decision_Maker_TR_AI_General, paired = TRUE)
+```
+
+```{r}
+cohens_d(Health_Algorithm_Objectivity_1_Clean$Decision_Maker_TR_Doctor_General, Health_Algorithm_Objectivity_1_Clean$Decision_Maker_TR_AI_General, paired = TRUE)
+```
+
+```{r}
+report(t.test(Health_Algorithm_Objectivity_1_Clean$Decision_Maker_TR_Doctor_General, Health_Algorithm_Objectivity_1_Clean$Decision_Maker_TR_AI_General, paired = TRUE))
+```
+
+
+
+#### Person As Effect Size
+```{r}
+Health_Algorithm_Objectivity_1_Clean <- Health_Algorithm_Objectivity_1_Clean %>%
+  mutate(
+    EffectDirection_TR_DocAiG  = case_when(
+      Decision_Maker_TR_Doctor_General > Decision_Maker_TR_AI_General ~  1,
+      Decision_Maker_TR_Doctor_General == Decision_Maker_TR_AI_General ~ 2,
+      Decision_Maker_TR_Doctor_General < Decision_Maker_TR_AI_General ~ 3,
+      TRUE ~ NA_real_
+    )
+  )
+```
+
+
+```{r}
+Health_Algorithm_Objectivity_1_Clean$EffectDirection_TR_DocAiG <- recode_factor(Health_Algorithm_Objectivity_1_Clean$EffectDirection_TR_DocAiG, `1` = "Positive", `2` = "No Change", `3` = "Negative")
+
+TRDocAiGCountTable <- table(Health_Algorithm_Objectivity_1_Clean$EffectDirection_TR_DocAiG)
+TRDocAiGCountTable
+
+# Get Percentage of Distribution
+prop.table(TRDocAiGCountTable)
+```
+
+
+
+
+
+# Exploritory Analysis and Data Cleaning
+
+## Creating Long Format Data
+
+There are two types of long format data I want to analyse.
+
+1. Qualities of the decision makers
+2. Qualities of the decision.
+
+### Reducing Data Frame
+```{r}
+
+Health_Algorithm_Objectivity_1_Tight_Variables <- c(
+
+'ResponseId',
+
+
+#Demographics
+'Age', 'IsMale', 'IsNonBinary','IsTrans',
+'IsAsian','IsBlack','IsHispanic','IsNativeAmerican','IsPacificIslander','IsOther','IsWhite','NativeUSA',
+'IsMinority','IsVisableMinority',
+'LearningDisability','MentalIllness','PhysicalDisability',
+'Divorced','Single','LivePartner','Marriage',
+'EduAtt_College','EduAtt_Graduate','EduAtt_HighSchool','EduAtt_LessColl','EduAtt_LessGrad','EduAtt_LessHigh','ParentEd',
+'EmpFull','EmpPart','EmpRet','EmpSelf','EmpStud','EmpUn',
+'EnglishFirst',
+'Income',
+#Politics
+'Political_Econ','Political_Social','Religious',
+
+# Medical Decisions
+"Int_Quant_AcuteSic", "Int_Quant_BodyInj", "Int_Quant_ChronSic","Int_Quant_Diag_AcuS", "Int_Quant_Diag_ChronS", "Int_Quant_Diag_Inj", "Int_Quant_Diag_Ment","Int_Quant_Diagnosis","Int_Quant_Med_Gen","Int_Quant_MentHealth","Int_Quant_PhysHealth", "Int_Quant_Pres_AcuS","Int_Quant_Pres_ChronS", "Int_Quant_Pres_Inj_Med", "Int_Quant_Pres_Inj_Surgery", "Int_Quant_Pres_Ment", "Int_Quant_Prescription", "Int_Quant_Preventative","Int_Quant_Rec_AcuS","Int_Quant_Rec_ChronS","Int_Quant_Rec_Inj","Int_Quant_Rec_Ment", "Int_Quant_Rec_Wellbeing",
+
+# Medical Decision Maker
+#Intuition
+"DM_IN_Doctor_General","Decision_Maker_IN_AI_Chatbot", "Decision_Maker_IN_AI_Diagonstic", "Decision_Maker_IN_AI_Fitness", "Decision_Maker_IN_AI_General","Decision_Maker_IN_Doctor_AI", "Decision_Maker_IN_Doctor_Remote","Decision_Maker_IN_Lay", "Decision_Maker_IN_Nurse", "Decision_Maker_IN_PersonalTrainer", "Decision_Maker_IN_Therapist", 
+
+
+#Trust
+"Decision_Maker_TR_Doctor_General","Decision_Maker_TR_AI_Chatbot","Decision_Maker_TR_AI_Diagonostic","Decision_Maker_TR_AI_Fitness","Decision_Maker_TR_AI_General", "Decision_Maker_TR_Doctor_AI",  "Decision_Maker_TR_Doctor_Remote", "Decision_Maker_TR_Lay", "Decision_Maker_TR_Nurse", "Decision_Maker_TR_PersonalTrainer", "Decision_Maker_TR_Therapist", 
+
+# Quantitative Reasoning
+"DM_QR_Doctor_General", "DM_QR_AI_Chatbot", "DM_QR_AI_Diagonstic", "DM_QR_AI_Fitness", "DM_QR_AI_General", "DM_QR_Doctor_AI",  "DM_QR_Doctor_Remote", "DM_QR_Lay", "DM_QR_Nurse", "DM_QR_PersonalTrainer", "DM_QR_Therapist", 
+
+
+# Experience
+"Exp_AI_ChatGTP", "Exp_AI_Fitness", "Exp_AI_General", "Exp_AI_Medical", "Exp_ME_Fitness", "Exp_ME_General", "Exp_ME_Hospital"
+
+)
+
+Health_Algorithm_Objectivity_1_Tight <- Health_Algorithm_Objectivity_1_Clean %>%
+                dplyr::select(Health_Algorithm_Objectivity_1_Tight_Variables)
+
+
+
+```
+
+### Renaming
+```{r}
+Health_Algorithm_Objectivity_1_Tight <- Health_Algorithm_Objectivity_1_Tight %>%
+  dplyr::rename(
+    Int_Quant.AcuteSickness        = Int_Quant_AcuteSic,
+    Int_Quant.BodilyInjury         = Int_Quant_BodyInj, 
+    Int_Quant.ChronSickeness       = Int_Quant_ChronSic,
+    Int_Quant.Diag_AcuteSickness   = Int_Quant_Diag_AcuS,
+    Int_Quant.Diag_ChronSickness   = Int_Quant_Diag_ChronS,
+    Int_Quant.Diag_Injury          = Int_Quant_Diag_Inj,
+    Int_Quant.Diag_Mental          = Int_Quant_Diag_Ment,
+    Int_Quant.Diagnosis            = Int_Quant_Diagnosis,
+    Int_Quant.Med_General          = Int_Quant_Med_Gen,
+    Int_Quant.MentHealth           = Int_Quant_MentHealth,
+    Int_Quant.PhysHealth           = Int_Quant_PhysHealth,
+    Int_Quant.Pres_AcuteSickness   = Int_Quant_Pres_AcuS,
+    Int_Quant.Pres_ChronSickness   = Int_Quant_Pres_ChronS,
+    Int_Quant.Pres_Injury_Medicine = Int_Quant_Pres_Inj_Med,
+    Int_Quant.Pres_Inj_Surgery     = Int_Quant_Pres_Inj_Surgery,
+    Int_Quant.Pres_Mental          = Int_Quant_Pres_Ment,
+    Int_Quant.Prescription         = Int_Quant_Prescription,
+    Int_Quant.Preventative         = Int_Quant_Preventative,
+    Int_Quant.Rec_AcuteSickness    = Int_Quant_Rec_AcuS,
+    Int_Quant.Rec_ChronSickness    = Int_Quant_Rec_ChronS,
+    Int_Quant.Rec_Injury           = Int_Quant_Rec_Inj,
+    Int_Quant.Rec_Mental           = Int_Quant_Rec_Ment,
+    Int_Quant.Rec_Wellbeing        = Int_Quant_Rec_Wellbeing,
+    
+    
+    DM_AI_Chatbot.Intuition       = Decision_Maker_IN_AI_Chatbot, 
+    DM_AI_Diagonistic.Intuition   = Decision_Maker_IN_AI_Diagonstic,
+    DM_AI_Fitness.Intuition       = Decision_Maker_IN_AI_Fitness,
+    DM_AI_General.Intuition       = Decision_Maker_IN_AI_General,
+    DM_Doctor_AI.Intuition        = Decision_Maker_IN_Doctor_AI,
+    DM_Doctor_Remote.Intuition    = Decision_Maker_IN_Doctor_Remote,
+    DM_Lay.Intuition              = Decision_Maker_IN_Lay,
+    DM_Nurse.Intuition            = Decision_Maker_IN_Nurse,
+    DM_Personal_Trainer.Intuition = Decision_Maker_IN_PersonalTrainer,
+    DM_Therapist.Intuition        = Decision_Maker_IN_Therapist,
+    DM_Doctor_General.Intuition   = DM_IN_Doctor_General,
+    
+    DM_AI_Chatbot.Trust       = Decision_Maker_TR_AI_Chatbot, 
+    DM_AI_Diagonistic.Trust   = Decision_Maker_TR_AI_Diagonostic,
+    DM_AI_Fitness.Trust       = Decision_Maker_TR_AI_Fitness,
+    DM_AI_General.Trust       = Decision_Maker_TR_AI_General,
+    DM_Doctor_AI.Trust        = Decision_Maker_TR_Doctor_AI,
+    DM_Doctor_Remote.Trust    = Decision_Maker_TR_Doctor_Remote,
+    DM_Lay.Trust              = Decision_Maker_TR_Lay,
+    DM_Nurse.Trust            = Decision_Maker_TR_Nurse,
+    DM_Personal_Trainer.Trust = Decision_Maker_TR_PersonalTrainer,
+    DM_Therapist.Trust        = Decision_Maker_TR_Therapist,
+    DM_Doctor_General.Trust   = Decision_Maker_TR_Doctor_General,
+     
+    DM_AI_Chatbot.Quantitative_Reasoning       = DM_QR_AI_Chatbot,
+    DM_AI_Diagonistic.Quantitative_Reasoning   = DM_QR_AI_Diagonstic,
+    DM_AI_Fitness.Quantitative_Reasoning       = DM_QR_AI_Fitness,
+    DM_AI_General.Quantitative_Reasoning       = DM_QR_AI_General,
+    DM_Doctor_AI.Quantitative_Reasoning        = DM_QR_Doctor_AI,
+    DM_Doctor_Remote.Quantitative_Reasoning    = DM_QR_Doctor_Remote,
+    DM_Lay.Quantitative_Reasoning              = DM_QR_Lay,
+    DM_Nurse.Quantitative_Reasoning            = DM_QR_Nurse,
+    DM_Personal_Trainer.Quantitative_Reasoning = DM_QR_PersonalTrainer,
+    DM_Therapist.Quantitative_Reasoning        = DM_QR_Therapist,
+    DM_Doctor_General.Quantitative_Reasoning   = DM_QR_Doctor_General
+  )
+
+Health_Algorithm_Objectivity_1_Tight <- dplyr::mutate(Health_Algorithm_Objectivity_1_Tight, ID = row_number())
+```
+
+
+### Pivoting Longer
+#### By Decision
+```{r}
+Health_Algorithm_Objectivity_1_Longer_Decision <- Health_Algorithm_Objectivity_1_Tight %>%
+  pivot_longer(
+    cols = starts_with("Int_Quant"),
+    names_to = c('Decision'),
+    names_prefix = ("Int_Quant.")
+  ) 
+
+Health_Algorithm_Objectivity_1_Longer_Decision <- Health_Algorithm_Objectivity_1_Longer_Decision %>%
+  dplyr::rename(
+    Int_Quant = value
+  )
+
+```
+
+
+
+#### By Decision-Maker
+```{r}
+Health_Algorithm_Objectivity_1_Longer <- Health_Algorithm_Objectivity_1_Tight %>%
+  pivot_longer(
+    cols = starts_with("DM"),
+    names_to = c('Decision_Maker', '.value'), 
+    names_sep = '\\.'
+  )
+
+
+```
+
+```{r}
+Health_Algorithm_Objectivity_1_Longer$Decision_Maker <- factor(Health_Algorithm_Objectivity_1_Longer$Decision_Maker, levels = c("DM_Doctor_General", "DM_Doctor_Remote", "DM_Lay", "DM_Nurse", "DM_Personal_Trainer", "DM_Therapist", "DM_AI_Chatbot", "DM_AI_Diagonistic", "DM_AI_Fitness", "DM_AI_General", "DM_Doctor_AI"))
+```
+
+
+```{r}
+Health_Algorithm_Objectivity_1_Longer <- Health_Algorithm_Objectivity_1_Longer %>%
+  mutate(
+    IsAI = case_when(
+    Decision_Maker == "DM_AI_Chatbot" | Decision_Maker == "DM_AI_Diagonistic" | Decision_Maker =="DM_AI_Fitness" | Decision_Maker == "DM_AI_General"| Decision_Maker == "DM_Doctor_AI" ~ 1,
+    TRUE ~ 0
+    )
+    
+  )
+
+```
+
+```{r}
+Health_Algorithm_Objectivity_1_Longer_Decision$Int_Quant.STD <- scale(Health_Algorithm_Objectivity_1_Longer_Decision$Int_Quant)
+```
+
+
+## Plots
+Number Line Plots
+I want to make plots so I can put the values of interest on a number line, kind of like grey 2007.
+I should do this by taking the mean reported by each person and making a data frame out of them.
+
+*Note - I need to change the names and perhaps find some way to highlight the compiled variables rather than making it look like the other variables. Also reconsider the colors.
+
+```{r}
+Health_Algorithm_Objectivity_1_Longer_Decision$Decision <- 
+  recode_factor(Health_Algorithm_Objectivity_1_Longer_Decision$Decision, 
+         AcuteSickness        = "Acute Sickness Related",
+         BodilyInjury         = "Bodily Injury Related",
+         ChronSickeness       = "Chronic Sickness Related",
+         Diagnosis            = "Diagnostic",
+         Med_General          = "Medical General",
+         MentHealth           = "Mental Health Related",
+         PhysHealth           = "Physical Health Related",
+         Prescription         = "Prescriptive",
+         Preventative         = "Preventative",
+         Rec_Mental           = 'Recommend Meditation',
+         Rec_Injury           = 'Recommend Stretching',
+         Rec_ChronS           = 'Recommend Strict Diet',
+         Rec_AcuteSickness    = 'Recommend Vitimin C + Zinc',
+         Pres_Inj_Surgery     = 'Prescribe Knee Surgery',
+         Pres_Mental          = 'Prescribe Anti-Depressants + Therapy',
+         Pres_Injury_Medicine = 'Prescribe Pain Medication',
+         Rec_ChronSickness    = 'Recommend Strict Diet',
+         Pres_ChronSickness   = 'Prescribe Insulin',
+         Pres_AcuteSickness   = 'Prescribe Anti-Biotics',
+         Diag_Mental          = 'Diagnose Depression',
+         Diag_Injury          = 'Diagnose A Broken Bone',
+         Diag_ChronSickness   = 'Diagnose Diabetes',
+         Diag_AcuteSickness   = 'Diagnose Strep Throat',
+         Rec_Wellbeing        = 'Recommend General Wellbeing Improvements'
+         )
+
+```
+
+```{r}
+unique(Health_Algorithm_Objectivity_1_Longer_Decision$Decision)
+```
+legend.background = element_blank(), legend.box.background = element_rect("transparent"), legend.text = element_text( size = 3),
+
+
+
+
+```{r}
+Health_Algorithm_Objectivity_1_Longer_Decision %>%
+  select(Decision) %>%
+  group_by(Decision) %>% 
+  summarise(n=n())
+```
+
+
+
+```{r}
+Health_Algorithm_Objectivity_1_Longer_Decision %>%
+  select(Decision) %>%
+  group_by(Decision) %>%
+  filter(Decision == Decisions_Full) %>% summarise(n=n())
+```
+
+
+```{r}
+Health_Algorithm_Objectivity_1_Longer_Decision %>%
+  mutate(Decision = fct_reorder(Decision, Int_Quant, .fun = "mean")) %>%
+  ggplot(aes(Int_Quant, Decision, color = Decision)) + geom_jitter() + stat_summary(fun.y=mean, geom="point", shape=18, size=6, color="black") + stat_summary(geom = "errorbar", fun.data = mean_cl_boot, width = 1, size = 1.25, color = "black") + ggtitle("Medical Decision by Intuition/Quantiative Reasoning") + xlab("Intuition (0) versus Quantative Reasoning(100)") + ylab("Medical Decision") + theme_apa() +
+  theme(panel.background = element_rect("transparent"), plot.background = element_rect("transparent", color = NA), legend.position="none" , axis.ticks = element_line(colour = "black"), axis.line = element_line(colour = "black"), axis.text = element_text(colour = "black", size = 12))
+
+
+#ggsave("Medical Decisions Matrix Empty.png", width = 15, height = 11)
+```
+
+```{r}
+Health_Algorithm_Objectivity_1_Longer_Decision %>%
+  mutate(Decision = fct_reorder(Decision, Int_Quant, .fun = "mean")) %>%
+    filter(Decision == "Acute Sickness Related" | Decision ==  "Chronic Sickness Related" | Decision == "Bodily Injury Related" | Decision ==  "Mental Health Related" | Decision ==  "Physical Health Related") %>%
+  ggplot(aes(Decision, Int_Quant,  color = Decision, fill = Decision)) + 
+      geom_flat_violin(position = position_nudge(x = .2, y = 0), alpha = .6, adjust = 4) +
+    geom_point(position=position_jitter(width = .15),size = 1, alpha = .90) +
+       scale_fill_manual(values = c("#F18C8E", "#F0B7A4", "#F1D1B6", "#568EA6", "#305F72")) +
+          scale_colour_manual(values = c("#F18C8E", "#F0B7A4", "#F1D1B6", "#568EA6", "#305F72")) +
+  stat_summary(geom = "errorbar", fun.data = mean_cl_boot, width = 0.35, size = 1, color = "black") +
+ stat_summary(fun.y=mean, geom="point", shape=23, stroke = 1, size = 3, color="black", fill = "#FCBB6D") +  ggtitle("Domain of Medical Decision by Intuition/Quantiative Reasoning") + xlab("Medical Decision") + ylab("Intuition (0) versus Quantative Reasoning(100)") + theme_apa() +
+  theme(panel.background = element_rect("transparent"), plot.background = element_rect("transparent", color = NA), legend.position="none" , axis.ticks = element_line(colour = "black"), axis.line = element_line(colour = "black"), axis.text = element_text(colour = "black", size = 12))
+
+
+ ggsave("Medical Decisions Matrix Domain.png", width = 12, height = 9)
+```
+
+```{r}
+Health_Algorithm_Objectivity_1_Longer_Decision %>%
+  mutate(Decision = fct_reorder(Decision, Int_Quant, .fun = "mean")) %>%
+    filter(Decision == "Acute Sickness Related" | Decision ==  "Chronic Sickness Related" | Decision == "Bodily Injury Related" | Decision ==  "Mental Health Related" | Decision ==  "Physical Health Related") %>%
+  ggplot(aes(Decision, Int_Quant,  color = Decision, fill = Decision)) + 
+      geom_flat_violin(position = position_nudge(x = .2, y = 0), alpha = .6, adjust = 4) +
+    geom_point(position=position_jitter(width = .15),size = 2.5, alpha = 1/2, color = "black") +
+       scale_fill_manual(values = c("#F18C8E", "#F0B7A4", "#F1D1B6", "#568EA6", "#305F72")) +
+          scale_colour_manual(values = c("#F18C8E", "#F0B7A4", "#F1D1B6", "#568EA6", "#305F72")) +
+  stat_summary(geom = "errorbar", fun.data = mean_cl_boot, width = 0.35, size = 1.5, stroke = 1.5, color = "white") +
+ stat_summary(fun.y=mean, geom="point", shape=23, stroke = 1.5, size = 3, color="white") +  ggtitle("Domain of Medical Decision by Intuition/Quantiative Reasoning") + xlab("Medical Decision") + ylab("Intuition (0) versus Quantative Reasoning(100)") + theme_apa() + theme(plot.title = element_text(face = "bold", size = 16), axis.title = element_text(face = "bold", size = 14), panel.background = element_rect("transparent"), plot.background = element_rect("transparent", color = NA), legend.position="none" , axis.ticks = element_line(colour = "white"), axis.line = element_line(colour = "white"), axis.text = element_text(colour = "white", size = 12, face = "bold"))
+
+ ggsave("Medical Decisions Matrix Domain Presentation.png", width = 12, height = 9)
+
+```
+
+
+
+```{r}
+Health_Algorithm_Objectivity_1_Longer_Decision %>%
+  filter(Decision == "Diagnostic" | Decision == "Prescriptive" | Decision == "Preventative") %>%
+  mutate(Decision = fct_reorder(Decision, Int_Quant, .fun = "mean")) %>%
+    ggplot(aes(Decision, Int_Quant,  color = Decision, fill = Decision)) + 
+      geom_flat_violin(position = position_nudge(x = .2, y = 0), alpha = .6, adjust = 4, weight = 2) +
+    geom_point(position=position_jitter(width = .15),size = 2.5, alpha = .90) +
+       scale_fill_manual(values = c("#A2D4AB", "#3EACA8", "#547A82")) +
+          scale_colour_manual(values = c("#A2D4AB", "#3EACA8", "#547A82"))+
+  stat_summary(geom = "errorbar", fun.data = mean_cl_boot, width = 0.35, size = 1, color = "black") + 
+  stat_summary(fun.y=mean, geom="point", shape=23, stroke = 1, size = 3, color="black", fill = "#FCBB6D") + 
+  ggtitle("Stage of Medical Decision by Intuition/Quantiative Reasoning") + xlab("Medical Decision" ) + ylab("Intuition (0) versus Quantative Reasoning(100)") + theme_apa() +
+  theme(panel.background = element_rect("transparent"), plot.background = element_rect("transparent", color = NA), legend.position="none" , axis.ticks = element_line(colour = "black"), axis.line = element_line(colour = "black"), axis.text = element_text(colour = "black", size = 12))
+ ggsave("Medical Decisions Matrix Stage.png", width = 9, height = 8)
+```
+
+```{r}
+Health_Algorithm_Objectivity_1_Longer_Decision %>%
+  filter(Decision == "Diagnostic" | Decision == "Prescriptive" | Decision == "Preventative") %>%
+  mutate(Decision = fct_reorder(Decision, Int_Quant, .fun = "mean")) %>%
+    ggplot(aes(Decision, Int_Quant,  color = Decision, fill = Decision)) + 
+      geom_flat_violin(position = position_nudge(x = .2, y = 0), alpha = .6, adjust = 4) +
+    geom_point(position=position_jitter(width = .15),size = 2.5, alpha = 1/2, color = "black") +
+       scale_fill_manual(values = c("#A2D4AB", "#3EACA8", "#547A82")) +
+          scale_colour_manual(values = c("#A2D4AB", "#3EACA8", "#547A82"))+
+stat_summary(geom = "errorbar", fun.data = mean_cl_boot, width = 0.35, size = 1, stroke = 1, color = "white") +
+ stat_summary(fun.y=mean, geom="point", shape=23, stroke = 1, size = 3, color="white") + 
+ggtitle("Stage of Medical Decision by Intuition/Quantiative Reasoning") + xlab("Medical Decision") + ylab("Intuition (0) versus Quantative Reasoning(100)") +    theme_apa() + theme(plot.title = element_text(face = "bold", size = 16), axis.title = element_text(face = "bold", size = 14), panel.background = element_rect("transparent"), plot.background = element_rect("transparent", color = NA), legend.position="none" , axis.ticks = element_line(colour = "white"), axis.line = element_line(colour = "white"), axis.text = element_text(colour = "white", size = 12, face = "bold"))
+  
+ ggsave("Medical Decisions Matrix Stage Presentation.png", width = 9, height = 8)
+```
+
+```{r}
+Health_Algorithm_Objectivity_1_Longer_Decision %>%
+  filter(Decision == "Diagnose Strep Throat" | Decision == "Diagnose Diabetes" | Decision ==  "Diagnose A Broken Bone" | Decision == "Diagnose Depression" | Decision ==  "Medical General" | Decision == "Prescribe Anti-Biotics" | Decision ==  "Prescribe Insulin" | Decision ==  "Prescribe Pain Medication" | Decision ==  "Prescribe Knee Surgery" | Decision == "Prescribe Anti-Depressants + Therapy" | Decision ==  "Recommend Vitimin C + Zinc"| Decision ==  "Recommend Strict Diet" | Decision ==  "Recommend Stretching" | Decision == "Recommend Meditation" | Decision ==  "Recommend General Wellbeing Improvements") %>%
+  mutate(Decision = fct_reorder(Decision, Int_Quant, .fun = "mean")) %>%
+  ggplot(aes(Int_Quant, Decision, color = Decision)) + geom_jitter(aes(size = .5)) +  stat_summary(geom = "errorbar", fun.data = mean_cl_boot, width = 1, size = 2.5, color = "white") +
+  scale_color_viridis(discrete = TRUE) +
+  stat_summary(fun.y=mean, geom="point", shape=23, stroke = 2, size = 4, color="white", fill = "#FCBB6D") + ggtitle("Medical Judgment by Intuition/Quantiative Reasoning") + xlab("Intuition (0) versus Quantative Reasoning(100)") + ylab("Medical Decision") + theme_apa() + theme(plot.title = element_text(face = "bold", size = 16), axis.title = element_text(face = "bold", size = 14), panel.background = element_rect("transparent"), plot.background = element_rect("transparent", color = NA), legend.position="none" , axis.ticks = element_line(colour = "white"), axis.line = element_line(colour = "white"), axis.text = element_text(colour = "white", size = 14, face = "bold"))
+
+
+ggsave("Medical Decisions Matrix Empty.png", width = 15, height = 10)
+```
+
+
+```{r}
+Decision_Mean_Table <- Health_Algorithm_Objectivity_1_Longer_Decision %>%
+  mutate(Decision = fct_reorder(Decision, Int_Quant, .fun = "mean")) %>%
+  group_by(Decision) %>%
+  summarise(Mean = mean(Int_Quant, na.rm = TRUE))
+            
+write_csv(Decision_Mean_Table, "Decision Mean Table.csv")
+```
+
+
+## Algorithm Versus Lay Person Trust
+```{r}
+t.test(Health_Algorithm_Objectivity_1_Clean$Decision_Maker_TR_Lay, Health_Algorithm_Objectivity_1_Clean$Decision_Maker_TR_AI_General, paired = TRUE)
+```
+
+```{r}
+cohens_d(Health_Algorithm_Objectivity_1_Clean$Decision_Maker_TR_Lay, Health_Algorithm_Objectivity_1_Clean$Decision_Maker_TR_AI_General, paired = TRUE)
+```
+
+```{r}
+t.test(Health_Algorithm_Objectivity_1_Clean$Decision_Maker_IN_Lay, Health_Algorithm_Objectivity_1_Clean$Decision_Maker_IN_AI_General, paired = TRUE)
+```
+```{r}
+t.test(Health_Algorithm_Objectivity_1_Clean$DM_QR_AI_General, Health_Algorithm_Objectivity_1_Clean$Decision_Maker_IN_AI_General, paired = TRUE)
+```
+
+
+
+#### Person As Effect Size
+```{r}
+Health_Algorithm_Objectivity_1_Clean <- Health_Algorithm_Objectivity_1_Clean %>%
+  mutate(
+    EffectDirection_TR_LayAlgG  = case_when(
+      Decision_Maker_TR_Lay > Decision_Maker_TR_AI_General ~  1,
+      Decision_Maker_TR_Lay == Decision_Maker_TR_AI_General ~ 2,
+      Decision_Maker_TR_Lay < Decision_Maker_TR_AI_General ~ 3,
+      TRUE ~ NA_real_
+    )
+  )
+```
+
+
+```{r}
+Health_Algorithm_Objectivity_1_Clean$EffectDirection_TR_LayAlgG <- recode_factor(Health_Algorithm_Objectivity_1_Clean$EffectDirection_TR_LayAlgG, `1` = "Positive", `2` = "No Change", `3` = "Negative")
+
+TRLayAlgGCountTable <- table(Health_Algorithm_Objectivity_1_Clean$EffectDirection_TR_LayAlgG)
+TRLayAlgGCountTable
+
+# Get Percentage of Distribution
+prop.table(TRLayAlgGCountTable)
+```
+
+
+
+## Doctor versus Doctor AI
+```{r}
+t.test(Health_Algorithm_Objectivity_1_Clean$Decision_Maker_TR_Doctor_General, Health_Algorithm_Objectivity_1_Clean$Decision_Maker_TR_Doctor_AI, paired = TRUE)
+```
+
+
+```{r}
+cohens_d(Health_Algorithm_Objectivity_1_Clean$Decision_Maker_TR_Doctor_General, Health_Algorithm_Objectivity_1_Clean$Decision_Maker_TR_Doctor_AI, paired = TRUE)
+```
+
+
+```{r}
+summary(lm(Decision_Maker_TR_Doctor_General ~ DM_IN_Doctor_General + DM_QR_Doctor_General , data = Health_Algorithm_Objectivity_1_Clean))
+
+lm.beta(lm(Decision_Maker_TR_Doctor_General ~ DM_IN_Doctor_General + DM_QR_Doctor_General , data = Health_Algorithm_Objectivity_1_Clean))
+
+
+```
+
+```{r}
+summary(lm(Decision_Maker_TR_AI_General ~ Decision_Maker_IN_AI_General + DM_QR_AI_General , data = Health_Algorithm_Objectivity_1_Clean))
+
+lm.beta(lm(Decision_Maker_TR_AI_General ~ Decision_Maker_IN_AI_General + DM_QR_AI_General , data = Health_Algorithm_Objectivity_1_Clean))
+
+
+```
+```{r}
+summary(lm(Decision_Maker_TR_Lay ~ Decision_Maker_IN_Lay + DM_QR_Lay, data = Health_Algorithm_Objectivity_1_Clean))
+
+lm.beta(lm(Decision_Maker_TR_Lay ~ Decision_Maker_IN_Lay + DM_QR_Lay, data = Health_Algorithm_Objectivity_1_Clean))
+
+
+```
+
+
+### Correlations
+
+#### Doctor
+```{r}
+Health_Algorithm_Objectivity_1_Longer %>%
+  filter(Decision_Maker == "DM_Doctor_General") %>%
+  dplyr::select(Trust, Quantitative_Reasoning, Intuition) %>%
+  corr.test()
+```
+#### AI General
+```{r}
+Health_Algorithm_Objectivity_1_Longer %>%
+  filter(Decision_Maker == "DM_AI_General") %>%
+  dplyr::select(Trust, Quantitative_Reasoning, Intuition) %>%
+  corr.test()
+```
+
+#### Lay
+```{r}
+Health_Algorithm_Objectivity_1_Longer %>%
+  filter(Decision_Maker == "DM_Lay") %>%
+  dplyr::select(Trust, Quantitative_Reasoning, Intuition) %>%
+  corr.test()
+```
+
+
+
+
+
+## Means By Group
+```{r}
+Health_Algorithm_Objectivity_1_Longer$Intuition <- Health_Algorithm_Objectivity_1_Longer$Intuition -1
+Health_Algorithm_Objectivity_1_Longer$Quantitative_Reasoning <- Health_Algorithm_Objectivity_1_Longer$Quantitative_Reasoning -1
+
+Health_Algorithm_Decision_Maker_Mean_Table <- Health_Algorithm_Objectivity_1_Longer %>%
+  group_by(Decision_Maker) %>%
+ summarise(Trust = mean(Trust, na.rm = TRUE),  Quantiative_Reasoning = mean(Quantitative_Reasoning, na.rm = TRUE),  Intuition_M = mean(Intuition, na.rm = TRUE), QR_CI = (sd(Quantitative_Reasoning, na.rm = TRUE)/sqrt(n()))*1.96, IN_CI = (sd(Intuition, na.rm = TRUE)/sqrt(n()))*1.96)
+
+
+Health_Algorithm_Decision_Maker_Mean_Table 
+```
+
+####dddd
+*Note - I need to visualize this better, if I can put error bars around each side of the circle that would be ideal. Maybe I can use symbols instead of putting the words. I will also have to change the names.
+
+```{r}
+Health_Algorithm_Decision_Maker_Mean_Table$Decision_Maker <- as.factor(Health_Algorithm_Decision_Maker_Mean_Table$Decision_Maker)
+
+Health_Algorithm_Decision_Maker_Mean_Table$Decision_Maker  <- 
+  recode_factor(Health_Algorithm_Decision_Maker_Mean_Table$Decision_Maker , 
+         DM_Doctor_General = 'General Doctor',
+         DM_Nurse          = 'Nurse',
+         DM_Doctor_Remote  = 'Remote Doctor',
+         DM_Therapist    = 'Therapist',
+         DM_Doctor_AI   = 'Doctor w/ AI',
+         DM_Personal_Trainer    = 'Personal Trainer',
+         DM_AI_General = 'General AI',
+         DM_AI_Diagonistic   = 'Diagnostic AI',
+         DM_Lay   = 'Lay Individual',
+         DM_AI_Fitness    = 'Fitness Related AI',
+         DM_AI_Chatbot = 'AI Therapy Chatbot'
+         )
+
+
+```
+
+
+, colour = "white"
+```{r}
+ggplot(Health_Algorithm_Decision_Maker_Mean_Table, aes(Intuition_M, Quantiative_Reasoning, label = Decision_Maker , fill = Decision_Maker, colour = Decision_Maker)) + 
+  geom_point(size = 4, stroke = 2, aes(shape = Decision_Maker)) +
+  scale_shape_manual(values=c(12,2,13,4,5,6,7,8,9,10,11)) +
+  geom_errorbar(aes(ymin=Quantiative_Reasoning-QR_CI, ymax=Quantiative_Reasoning+QR_CI), size = 1.5) +
+  geom_errorbar(aes(xmin=Intuition_M-IN_CI, xmax=Intuition_M+IN_CI), size = 1.5) + 
+  coord_cartesian(xlim = c(3.5, 7.5), ylim = c(3.5,7.5)) + ggtitle("Medical Decision Maker by Intuition and Quantiative Reasoning") + xlab("Intuition") + ylab("Quantitative Reasoning") + 
+  scale_color_viridis(discrete = TRUE) +
+  theme_apa()  +  theme(plot.title = element_text(face = "bold", size = 16), axis.title = element_text(face = "bold", size = 14), panel.background = element_rect("transparent"), plot.background = element_rect("transparent", color = NA), legend.background = element_blank(), legend.box.background = element_rect("transparent", colour = NA), legend.title = element_text(colour = "black", face = "bold"), legend.text = element_text(colour = "white"),  axis.text = element_text(colour = "white", face = "bold"), axis.ticks = element_line(colour = "white"), axis.line = element_line(colour = "white")) 
+
+ ggsave("Decision Maker Matrix Empty White Presentation.png", width = 8.5, height = 7)
+```
+#### CCCC
+*Note have to rename the vales and change the intervals to a much more understandable values. If possible add statements below the x axis to show how people answered.
+```{r}
+Health_Algorithm_Objectivity_1_Longer$Decision_Maker <- as.factor(Health_Algorithm_Objectivity_1_Longer$Decision_Maker)
+
+Health_Algorithm_Objectivity_1_Longer$Decision_Maker  <- 
+  recode_factor(Health_Algorithm_Objectivity_1_Longer$Decision_Maker , 
+         DM_Doctor_General = 'General Doctor',
+         DM_Nurse          = 'Nurse',
+         DM_Doctor_Remote  = 'Remote Doctor',
+         DM_Therapist    = 'Therapist',
+         DM_Doctor_AI   = 'Doctor w/ AI',
+         DM_Personal_Trainer    = 'Personal Trainer',
+         DM_AI_General = 'General AI',
+         DM_AI_Diagonistic   = 'Diagnostic AI',
+         DM_Lay   = 'Lay Individual',
+         DM_AI_Fitness    = 'Fitness Related AI',
+         DM_AI_Chatbot = 'AI Therapy Chatbot'
+         )
+
+Health_Algorithm_Objectivity_1_Longer$Trust <- Health_Algorithm_Objectivity_1_Longer$Trust - 1
+```
+
+```{r}
+
+Health_Algorithm_Objectivity_1_Longer %>%
+  mutate(Decision_Maker = fct_reorder(Decision_Maker, Trust, .fun = "mean")) %>%
+  ggplot(aes(Trust, Decision_Maker, color = Decision_Maker)) + geom_jitter() +  stat_summary(geom = "errorbar", fun.data = mean_cl_boot, width = 1, size = 1.25, color = "black") + stat_summary(fun.y=mean, geom="point", shape=23, stroke = 1, size = 3, color="black", fill = "#FCBB6D") +
+    scale_color_viridis(discrete = TRUE) +
+  ggtitle("Trust by Medical Decision-Maker") + xlab("Trust") + ylab("Medical Decision-Maker") +  theme_apa()   + theme(plot.title = element_text(face = "bold", size = 16), axis.title = element_text(face = "bold", size = 14), panel.background = element_rect("transparent"), plot.background = element_rect("transparent", color = NA), legend.position = "none",  axis.text = element_text(colour = "white", face = "bold"), axis.ticks = element_line(colour = "white"), axis.line = element_line(colour = "white")) 
+
+
+ggsave("Medical Decision Maker Trust Matrix Empty White Presentation.png", width = 8, height = 6)
+```
+
+## Linear Mixed Effect Model - Decision Maker
+
+### Creating Person-Mean Centered and Person Mean Variables
+```{r}
+Health_Algorithm_Objectivity_1_Longer <- Health_Algorithm_Objectivity_1_Longer %>%
+  mutate(
+    Quantitative_Reasoning_PM = pmean(ResponseId, Quantitative_Reasoning),
+    Quantitative_Reasoning_PMC = pcenter(ResponseId, Quantitative_Reasoning),
+    Intuition_PM = pmean(ResponseId, Intuition),
+    Intuition_PMC = pcenter(ResponseId, Intuition), 
+    
+  )
+
+Health_Algorithm_Objectivity_1_Longer %>%
+  select(ResponseId, Quantitative_Reasoning_PM, Quantitative_Reasoning_PMC, Intuition_PM, Intuition_PMC) %>%
+  describe()
+
+
+```
+
+
+
+8### Base
+```{r}
+HealthAlgorithm_LMER_1 <- lmer(Trust ~ Quantitative_Reasoning + Intuition + IsAI + (1|ResponseId), data = Health_Algorithm_Objectivity_1_Longer)
+
+summary(HealthAlgorithm_LMER_1)
+```
+
+```{r}
+r.squaredGLMM(HealthAlgorithm_LMER_1)
+```
+
+```{r}
+tab_model(HealthAlgorithm_LMER_1, show.std = TRUE)
+```
+
+
+```{r}
+lm.beta.lmer(HealthAlgorithm_LMER_1)
+```
+
+#### Decomposed Model
+```{r}
+HealthAlgorithm_LMER_1D <- lmer(Trust ~ Quantitative_Reasoning_PM + Quantitative_Reasoning_PMC + Intuition_PM + Intuition_PMC + (1|ResponseId), data = Health_Algorithm_Objectivity_1_Longer)
+
+summary(HealthAlgorithm_LMER_1D)
+```
+
+```{r}
+r.squaredGLMM(HealthAlgorithm_LMER_1D)
+```
+
+```{r}
+tab_model(HealthAlgorithm_LMER_1D, show.std = TRUE)
+```
+
+
+```{r}
+lm.beta.lmer(HealthAlgorithm_LMER_1D)
+```
+
+### Base Difference Between AI and Humans
+```{r}
+HealthAlgorithm_LMER_IsAIOnly <- lmer(Trust ~ IsAI + (1|ResponseId), data = Health_Algorithm_Objectivity_1_Longer)
+
+summary(HealthAlgorithm_LMER_IsAIOnly)
+```
+
+```{r}
+r.squaredGLMM(HealthAlgorithm_LMER_IsAIOnly)
+```
+
+```{r}
+tab_model(HealthAlgorithm_LMER_IsAIOnly, show.std = TRUE)
+```
+
+
+### Cov
+```{r}
+HealthAlgorithm_LMER_2 <- lmer(Trust ~ Quantitative_Reasoning + Intuition + IsAI + (1|ResponseId), data = Health_Algorithm_Objectivity_1_Longer)
+
+summary(HealthAlgorithm_LMER_2)
+```
+
+```{r}
+r.squaredGLMM(HealthAlgorithm_LMER_2)
+```
+
+```{r}
+tab_model(HealthAlgorithm_LMER_2, show.std = TRUE)
+```
+
+```{r}
+anova(HealthAlgorithm_LMER_1, HealthAlgorithm_LMER_2)
+```
+
+#### Decomposed Model
+```{r}
+HealthAlgorithm_LMER_2D <- lmer(Trust ~ Quantitative_Reasoning_PM + Quantitative_Reasoning_PMC + Intuition_PM + Intuition_PMC + IsAI + (1|ResponseId), data = Health_Algorithm_Objectivity_1_Longer)
+
+summary(HealthAlgorithm_LMER_2D)
+```
+
+```{r}
+r.squaredGLMM(HealthAlgorithm_LMER_2D)
+```
+
+```{r}
+tab_model(HealthAlgorithm_LMER_2D, show.std = TRUE)
+```
+
+```{r}
+report(HealthAlgorithm_LMER_2D)
+```
+
+
+```{r}
+lm.beta.lmer(HealthAlgorithm_LMER_2D)
+```
+
+```{r}
+anova(HealthAlgorithm_LMER_1D, HealthAlgorithm_LMER_2D)
+```
+
+### Interaction
+```{r}
+HealthAlgorithm_LMER_3 <- lmer(Trust ~ Quantitative_Reasoning*IsAI + Intuition*IsAI + (1|ResponseId), data = Health_Algorithm_Objectivity_1_Longer)
+
+summary(HealthAlgorithm_LMER_3)
+```
+
+```{r}
+r.squaredGLMM(HealthAlgorithm_LMER_3)
+```
+
+```{r}
+anova(HealthAlgorithm_LMER_2, HealthAlgorithm_LMER_3)
+```
+
+
+```{r}
+tab_model(HealthAlgorithm_LMER_3, show.std = TRUE)
+```
+
+
+```{r}
+lm.beta.lmer(HealthAlgorithm_LMER_3)
+```
+
+#### Decomposed Model
+```{r}
+HealthAlgorithm_LMER_3D <- lmer(Trust ~ Quantitative_Reasoning_GM* IsAI + Quantitative_Reasoning_PMC* IsAI + Intuition_GM * IsAI + Intuition_PMC * IsAI + (1+  Intuition_PMC + Quantitative_Reasoning_PMC|ResponseId), data = Health_Algorithm_Objectivity_1_Longer)
+
+summary(HealthAlgorithm_LMER_3D)
+```
+
+```{r}
+r.squaredGLMM(HealthAlgorithm_LMER_3D)
+```
+
+```{r}
+tab_model(HealthAlgorithm_LMER_3D, show.std = TRUE)
+```
+
+
+```{r}
+lm.beta.lmer(HealthAlgorithm_LMER_3D)
+```
+
+
+```{r}
+anova(HealthAlgorithm_LMER_1D, HealthAlgorithm_LMER_2D, HealthAlgorithm_LMER_3D)
+```
+
+### Individual Models/Moderation
+
+#### AI
+```{r}
+HealthAlgorithm_LMER_AI <- lmer(Trust ~ Quantitative_Reasoning + Intuition + (1|ResponseId), data = Health_Algorithm_Objectivity_1_Longer, subset = IsAI == 1)
+
+summary(HealthAlgorithm_LMER_AI)
+
+```
+
+
+```{r}
+r.squaredGLMM(HealthAlgorithm_LMER_AI)
+```
+
+
+
+#### Human
+```{r}
+HealthAlgorithm_LMER_Hum <- lmer(Trust ~ Quantitative_Reasoning + Intuition + (1|ResponseId), data = Health_Algorithm_Objectivity_1_Longer, subset = IsAI == 0)
+
+summary(HealthAlgorithm_LMER_Hum)
+
+```
+
+```{r}
+r.squaredGLMM(HealthAlgorithm_LMER_Hum)
+```
+
+## Combo Plot
+```{r}
+ggplot(data = Health_Algorithm_Objectivity_1_Longer,
+
+       aes(x = Trust,
+
+           y = Intuition ,
+
+           col = as.factor(IsAI))) +
+
+  geom_smooth(method = lm, se = F, fullrange = F, lty = 1, size = 2) +
+  #Base
+  ## Quantiative Reasoning
+  #geom_abline(slope = 0.3724, intercept = 	1.225, colour = "black", size = 3, linetype = 4) +
+  
+  ## Intuition
+  #geom_abline(slope = 0.4371, intercept = 	1.225, colour = "grey", size = 3, linetype = 4) +
+  
+  # AI
+  ## Quantiative Reasoning
+  geom_abline(slope = 0.27275, intercept = 	1.65439, colour = "red4", size = 3, linetype = 4) +
+  
+  ## Intuition
+  geom_abline(slope = 0.42999, intercept = 	1.65439, colour = "orange", size = 3, linetype = 4) +
+  
+  # Hum
+  ## Quantitative Reasoning
+  geom_abline(slope = 0.4452, intercept = 	1.514, colour = "blue4", size = 3, linetype = 4) +
+  
+  ## Intuition
+  geom_abline(slope = 0.3531, intercept = 	1.514, colour = "green", size = 3, linetype = 4) +
+  
+  xlab("Quantiative Reasoning/Intution") + ylab("Trust") +
+
+  coord_cartesian(xlim = c(0,10),  ylim = c(0,10)) +
+  
+  scale_x_continuous(breaks=seq(0,10,by=1)) +
+
+  scale_y_continuous(breaks=seq(0,10,by=1)) +
+  
+  theme_apa() +
+
+  theme(
+    panel.background = element_rect(fill='transparent'), #transparent panel bg
+    plot.background = element_rect(fill='transparent', color=NA), #transparent plot bg
+    panel.grid.major = element_blank(), #remove major gridlines
+    panel.grid.minor = element_blank(), #remove minor gridlines
+    legend.background = element_rect(fill='transparent'), #transparent legend bg
+    legend.box.background = element_rect(fill='transparent') #transparent legend panel
+  ) +
+  
+  theme(text = element_text(family = "serif")) +
+
+  scale_color_manual(values = c("000000","00000"),
+
+                     labels = c("AI", "Human"),
+
+                     name = "Pandemic Happiness")
+
+
+```
+
+```{r}
+ggplot(data = Health_Algorithm_Objectivity_1_Longer,
+
+       aes(x = Trust,
+
+           y = Intuition ,
+
+           col = as.factor(IsAI))) +
+
+  geom_smooth(method = lm, se = F, fullrange = F, lty = 1, size = 2) +
+  # AI
+  ## Quantiative Reasoning
+  geom_abline(slope = 0.27275, intercept = 	1.65439, colour = "gray", size = 3) +
+  
+  ## Intuition
+  geom_abline(slope = 0.42999, intercept = 	1.65439, colour = "blue", size = 3) +
+  
+  xlab("Quantiative Reasoning/Intution") + ylab("Trust") +
+
+  coord_cartesian(xlim = c(0,10),  ylim = c(0,10)) +
+  
+  scale_x_continuous(breaks=seq(0,10,by=1)) +
+
+  scale_y_continuous(breaks=seq(0,10,by=1)) +
+  
+  theme_apa() +
+
+  theme(
+    panel.background = element_rect(fill='transparent'), #transparent panel bg
+    plot.background = element_rect(fill='transparent', color=NA), #transparent plot bg
+    panel.grid.major = element_blank(), #remove major gridlines
+    panel.grid.minor = element_blank(), #remove minor gridlines
+    legend.background = element_rect(fill='transparent'), #transparent legend bg
+    legend.box.background = element_rect(fill='transparent') #transparent legend panel
+  ) +
+  
+  theme(text = element_text(family = "serif")) +
+
+  scale_color_manual(values = c("000000","00000"),
+
+                     labels = c("Quantitative Reasoning - Gray", "Intuition - Blue"),
+
+                     name = "Artificial Intellgence")
+
+
+```
+
+
+```{r message=TRUE, warning=FALSE}
+ggplot(data = Health_Algorithm_Objectivity_1_Longer,
+
+       aes(x = Trust,
+
+           y = Intuition ,
+
+           col = as.factor(IsAI))) +
+
+  geom_smooth(method = lm, se = F, fullrange = F, lty = 1, size = 2) +
+
+  # Hum
+  ## Quantitative Reasoning
+  geom_abline(slope = 0.4452, intercept = 	1.514, colour = "gray", size = 3) +
+  
+  ## Intuition
+  geom_abline(slope = 0.3531, intercept = 	1.514, colour = "blue", size = 3) +
+  
+  xlab("Quantiative Reasoning/Intution") + ylab("Trust") +
+
+  coord_cartesian(xlim = c(0,10),  ylim = c(0,10)) +
+  
+  scale_x_continuous(breaks=seq(0,10,by=1)) +
+
+  scale_y_continuous(breaks=seq(0,10,by=1)) +
+  
+  theme_apa() +
+
+  theme(
+    panel.background = element_rect(fill='transparent'), #transparent panel bg
+    plot.background = element_rect(fill='transparent', color=NA), #transparent plot bg
+    panel.grid.major = element_blank(), #remove major gridlines
+    panel.grid.minor = element_blank(), #remove minor gridlines
+    legend.background = element_rect(fill='transparent'), #transparent legend bg
+    legend.box.background = element_rect(fill='transparent') #transparent legend panel
+  ) +
+  
+  theme(text = element_text(family = "serif")) +
+
+  scale_color_manual(values = c("000000","00000"),
+
+                     labels = c("Quantitative Reasoning - Gray", "Intuition - Blue"),
+
+                     name = "Human Expert")
+
+
+```
+
+## Within/Between Person Correlations
+```{r}
+
+Health_Algorithm_Objectivity_1_Longer$Intuition <- as.numeric(Health_Algorithm_Objectivity_1_Longer$Intuition)
+
+Health_Algorithm_Objectivity_1_Longer$Quantitative_Reasoning <- as.numeric(Health_Algorithm_Objectivity_1_Longer$Quantitative_Reasoning)
+
+Health_Algorithm_Objectivity_1_Longer$Trust <- as.numeric(Health_Algorithm_Objectivity_1_Longer$Trust)
+
+
+W_B_Corr <- Health_Algorithm_Objectivity_1_Longer %>%
+ dplyr::select(ID, Trust, Intuition, Quantitative_Reasoning, IsMale) %>%
+  statsBy(group = c("ID"))
+
+
+W_B_Corr$rbg
+W_B_Corr$pbg
+
+
+W_B_Corr$rwg
+W_B_Corr$pwg
+```
+
+#### Is AI
+```{r}
+
+W_B_Corr_AI <- Health_Algorithm_Objectivity_1_Longer %>%
+  filter(IsAI == 1) %>%
+ dplyr::select(ID, Trust, Intuition, Quantitative_Reasoning) %>%
+  statsBy(group = c("ID"))
+
+W_B_Corr_AI$rbg
+W_B_Corr_AI$pbg
+
+W_B_Corr_AI$rwg
+W_B_Corr_AI$pwg
+
+```
+
+#### Is Hum
+```{r}
+
+W_B_Corr_Hum <- Health_Algorithm_Objectivity_1_Longer %>%
+  filter(IsAI == 0) %>%
+ dplyr::select(ID, Trust, Intuition, Quantitative_Reasoning) %>%
+  statsBy(group = c("ID"))
+
+W_B_Corr_Hum$rbg
+W_B_Corr_Hum$pbg
+
+W_B_Corr_Hum$rwg
+W_B_Corr_Hum$pwg
+
+```
+
+
+
+```{r}
+HealthAlgorithm_LMER_1 <- lmer(Trust ~ Quantitative_Reasoning + Intuition + (1|ResponseId), data = Health_Algorithm_Objectivity_1_Longer)
+
+summary(HealthAlgorithm_LMER_1)
+```
+
+```{r}
+r.squaredGLMM(HealthAlgorithm_LMER_1)
+```
+
+```{r}
+tab_model(HealthAlgorithm_LMER_1, show.std = TRUE)
+```
+
+
+```{r}
+lm.beta.lmer(HealthAlgorithm_LMER_1)
+```

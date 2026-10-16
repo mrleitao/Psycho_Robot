@@ -1,0 +1,146 @@
+---
+// Each recommender placed by how capable people think it is of intuition (across) and of quantitative reasoning (up).
+interface Item {
+  id: string;
+  label: string;
+  ai: number;
+  qr: number;
+  qrCI: number;
+  intuition: number;
+  intuitionCI: number;
+  n: number;
+  trust: number;
+}
+interface Props {
+  items: Item[];
+}
+const { items } = Astro.props;
+const W = 680;
+const H = 560;
+const L = 56;
+const R = 24;
+const T = 16;
+const B = 60;
+const min = 3;
+const max = 7.5;
+const x = (v: number) => L + ((v - min) / (max - min)) * (W - L - R);
+const y = (v: number) => T + (1 - (v - min) / (max - min)) * (H - T - B);
+const ticks = [3, 4, 5, 6, 7];
+const kind = (it: Item) => (it.id === 'doctor_using_ai' ? 'hybrid' : it.ai ? 'ai' : 'human');
+const kindName = { human: 'Human', ai: 'AI', hybrid: 'Doctor using AI' } as const;
+// Where each name sits so neighbours do not run into each other: [anchor, dx, dy]
+const place: Record<string, ['start' | 'end', number, number]> = {
+  doctor: ['start', 11, -10],
+  nurse: ['start', 11, 6],
+  doctor_remote: ['end', -11, -11],
+  therapist: ['start', 11, -6],
+  personal_trainer: ['start', 11, 5],
+  layperson: ['start', 11, 5],
+  doctor_using_ai: ['end', -11, -9],
+  ai_general: ['start', 11, -9],
+  ai_diagnostic: ['end', -11, -9],
+  ai_chatbot: ['start', 11, 18],
+  ai_fitness: ['end', -11, 18],
+};
+const f = (n: number) => n.toFixed(2);
+---
+
+<figure class="map" data-fig>
+  <div class="scroll" tabindex="0" role="region" aria-label="Chart. Scrolls sideways on narrow screens.">
+  <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-label="Each medical recommender placed by how capable people think it is of intuition and of quantitative reasoning">
+    <g class="grid">
+      {ticks.map((t) => <line x1={x(t)} x2={x(t)} y1={T} y2={H - B} />)}
+      {ticks.map((t) => <line x1={L} x2={W - R} y1={y(t)} y2={y(t)} />)}
+    </g>
+    <line class="diag" x1={x(min)} y1={y(min)} x2={x(max)} y2={y(max)} />
+    <text class="diag-label" transform={`translate(${x(3.2)} ${y(3.2) - 8}) rotate(${-Math.atan2(y(min) - y(max), x(max) - x(min)) * 180 / Math.PI})`}>Equally capable of both</text>
+    {
+      items.map((it) => {
+        const k = kind(it);
+        const [anchor, dx, dy] = place[it.id] ?? ['start', 11, 5];
+        return (
+          <g
+            class={`pt ${k}`}
+            data-tip
+            tabindex="0"
+            role="group"
+            aria-label={`${it.label}. Intuition ${f(it.intuition)}, quantitative reasoning ${f(it.qr)}, out of 10`}
+            data-label={it.label}
+            data-lines={`Quantitative reasoning ${f(it.qr)} (plus or minus ${f(it.qrCI)})|Intuition ${f(it.intuition)} (plus or minus ${f(it.intuitionCI)})|Trust ${f(it.trust)}|${it.n} people`}
+          >
+            <line class="bar" x1={x(it.intuition - it.intuitionCI)} x2={x(it.intuition + it.intuitionCI)} y1={y(it.qr)} y2={y(it.qr)} />
+            <line class="bar" x1={x(it.intuition)} x2={x(it.intuition)} y1={y(it.qr - it.qrCI)} y2={y(it.qr + it.qrCI)} />
+            <circle class="hit" cx={x(it.intuition)} cy={y(it.qr)} r="16" />
+            <circle class="dot" cx={x(it.intuition)} cy={y(it.qr)} r="6.5" />
+            <text class="name" x={x(it.intuition) + dx} y={y(it.qr) + dy} text-anchor={anchor}>{it.label}</text>
+          </g>
+        );
+      })
+    }
+    <g class="axis">
+      <line x1={L} x2={W - R} y1={H - B} y2={H - B} />
+      <line x1={L} x2={L} y1={T} y2={H - B} />
+      {ticks.map((t) => <text x={x(t)} y={H - B + 22} text-anchor="middle">{t}</text>)}
+      {ticks.map((t) => <text x={L - 10} y={y(t) + 5} text-anchor="end">{t}</text>)}
+      <text class="axis-title" x={(L + W - R) / 2} y={H - 14} text-anchor="middle">Capable of intuition (0 to 10)</text>
+      <text class="axis-title" transform={`translate(16 ${(T + H - B) / 2}) rotate(-90)`} text-anchor="middle">Capable of quantitative reasoning (0 to 10)</text>
+    </g>
+  </svg>
+  </div>
+  <ul class="key">
+    <li><span class="sw human"></span>Human</li>
+    <li><span class="sw hybrid"></span>Doctor using AI</li>
+    <li><span class="sw ai"></span>AI</li>
+    <li class="muted">Bars are 95% confidence intervals</li>
+  </ul>
+  <div class="tip" hidden></div>
+  <details class="table-view">
+    <summary>View as a table</summary>
+    <table>
+      <thead><tr><th scope="col">Recommender</th><th scope="col">Type</th><th scope="col" class="num">Intuition</th><th scope="col" class="num">Quantitative reasoning</th><th scope="col" class="num">n</th></tr></thead>
+      <tbody>
+        {items.map((it) => (
+          <tr><th scope="row">{it.label}</th><td>{kindName[kind(it)]}</td><td class="num">{f(it.intuition)} ± {f(it.intuitionCI)}</td><td class="num">{f(it.qr)} ± {f(it.qrCI)}</td><td class="num">{it.n}</td></tr>
+        ))}
+      </tbody>
+    </table>
+  </details>
+</figure>
+
+<script>
+  import { attachTips } from '../utils/figtip';
+  document.querySelectorAll<HTMLElement>('[data-fig]').forEach(attachTips);
+</script>
+
+<style>
+  .map { margin: 1.25rem 0 0; position: relative; max-width: 700px; }
+  .scroll { overflow-x: auto; }
+  svg { display: block; width: 100%; min-width: 560px; height: auto; overflow: visible; }
+  .grid line { stroke: var(--rule); }
+  .diag { stroke: var(--muted); stroke-dasharray: 6 6; opacity: 0.7; }
+  .diag-label { fill: var(--muted); font-family: var(--display); font-size: 12px; }
+  .axis line { stroke: var(--muted); }
+  .axis text { fill: var(--muted); font-family: var(--display); font-size: 14px; }
+  .name { fill: var(--ink); font-family: var(--display); font-weight: 600; font-size: 13.5px; paint-order: stroke; stroke: var(--paper); stroke-width: 5px; stroke-linejoin: round; }
+  .hit { fill: transparent; }
+  .bar { stroke-width: 2; opacity: 0.5; }
+  .dot { stroke: var(--paper); stroke-width: 2; }
+  .human .bar { stroke: var(--doctor); } .human .dot { fill: var(--doctor); }
+  .ai .bar { stroke: var(--ai); } .ai .dot { fill: var(--ai); }
+  .hybrid .bar { stroke: var(--muted); } .hybrid .dot { fill: var(--muted); }
+  .pt:hover .bar, .pt:focus .bar { opacity: 1; }
+  .pt:focus { outline: none; }
+  .pt:focus-visible .hit { stroke: var(--ink); stroke-width: 2; }
+  .key { list-style: none; margin: 0.6rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.35rem 1.25rem; font-family: var(--display); font-size: 0.92rem; }
+  .key li { display: inline-flex; align-items: center; gap: 0.5rem; }
+  .key .muted { color: var(--muted); }
+  .sw { width: 0.8rem; height: 0.8rem; border-radius: 50%; flex: none; }
+  .sw.human { background: var(--doctor); } .sw.ai { background: var(--ai); } .sw.hybrid { background: var(--muted); }
+  .tip { position: absolute; transform: translate(-50%, -100%); display: grid; gap: 0.1rem; padding: 0.55rem 0.8rem; background: var(--ink); color: var(--paper); border-radius: 6px; font-family: var(--display); font-size: 0.85rem; line-height: 1.35; white-space: nowrap; pointer-events: none; z-index: 2; }
+  .tip[hidden] { display: none; }
+  .table-view { margin-top: 0.9rem; font-family: var(--display); font-size: 0.9rem; }
+  .table-view summary { cursor: pointer; color: var(--muted); }
+  .table-view table { width: 100%; margin-top: 0.75rem; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  .table-view th, .table-view td { padding: 0.4rem 0.5rem; text-align: left; border-bottom: 1px solid var(--rule); }
+  .table-view .num { text-align: right; }
+</style>

@@ -18,7 +18,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='light']) {
     --paper: #0e131f;
     --ink: #e9edf5;
     --muted: #9ba5ba;
@@ -27,6 +27,22 @@
     --doctor: #6c80e6;
     --ai: #bf7f1a;
   }
+}
+
+/* An explicit theme choice (data-theme) wins over the system setting. */
+:root[data-theme='dark'] {
+    --paper: #0e131f;
+    --ink: #e9edf5;
+    --muted: #9ba5ba;
+    --rule: #242c3e;
+    --wash: #171e2d;
+    --doctor: #6c80e6;
+    --ai: #bf7f1a;
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
 }
 
 *,

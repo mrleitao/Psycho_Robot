@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use these data, please cite them as below."
+type: dataset
+title: "Study 1 data and analysis: trust in medical AI"
+abstract: "De-identified ratings from 188 adults who judged fifteen medical decisions and eleven medical recommenders (a doctor, a nurse, AI tools and others) on trust, quantitative reasoning and intuition. Study 1 of the dissertation Artificial Intelligence, Humanization, and Health Beliefs."
+authors:
+  - family-names: Leitao
+    given-names: Matthew R.
+repository-code: "https://github.com/mrleitao/Psycho_Robot"
+license: CC-BY-4.0
+date-released: 2026-10-16
+keywords:
+  - trust
+  - artificial intelligence
+  - medical decision-making
+  - open data

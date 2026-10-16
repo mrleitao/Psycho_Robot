@@ -1,0 +1,87 @@
+---
+// Factor loadings as a table with a bar in each cell, so the pattern is visible at a glance.
+interface Props {
+  items: string[];
+  loadings: number[][];
+  communalities: number[];
+  factorNames: string[];
+  variance: number[];
+  phi: number[][];
+}
+const { items, loadings, communalities, factorNames, variance, phi } = Astro.props;
+const f = (n: number) => n.toFixed(2);
+// Items are listed by the factor they load on most, so each factor's block sits together.
+const order = items
+  .map((_, i) => i)
+  .sort((a, b) => {
+    const fa = loadings[a].indexOf(Math.max(...loadings[a].map(Math.abs)));
+    const fb = loadings[b].indexOf(Math.max(...loadings[b].map(Math.abs)));
+    return fa - fb || Math.abs(loadings[b][fb]) - Math.abs(loadings[a][fa]);
+  });
+---
+
+<figure class="load">
+  <div class="table-wrap" tabindex="0" role="region" aria-label="Factor loadings. Scrolls sideways on narrow screens.">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Decision</th>
+          {factorNames.map((n, i) => <th scope="col"><span class="fn">Factor {i + 1}</span><span class="fd">{n}</span></th>)}
+          <th scope="col" class="num"><abbr title="The share of this decision's variation the three factors explain together">Shared</abbr></th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          order.map((i) => (
+            <tr>
+              <th scope="row">{items[i]}</th>
+              {loadings[i].map((v) => (
+                <td class={Math.abs(v) >= 0.3 ? 'on' : 'off'} title={`Loading ${f(v)}`}>
+                  <span class="cell">
+                    <span class="bar" style={`width:${Math.min(100, Math.abs(v) * 100)}%; ${v < 0 ? 'opacity:.5' : ''}`}></span>
+                    <span class="n">{f(v).replace('-', '\u2212')}</span>
+                  </span>
+                </td>
+              ))}
+              <td class="num">{f(communalities[i])}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+      <tfoot>
+        <tr>
+          <th scope="row">Variance explained</th>
+          {variance.map((v) => <td>{(v * 100).toFixed(0)}%</td>)}
+          <td class="num">{(variance.reduce((a, b) => a + b, 0) * 100).toFixed(0)}%</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  <p class="note small muted">
+    Factors correlate {f(phi[0][1])} (1 and 2), {f(phi[0][2])} (1 and 3) and {f(phi[1][2])} (2 and 3). Bold loadings are 0.30 or larger.
+  </p>
+</figure>
+
+<style>
+  .load { margin: 1.25rem 0 0; }
+  .table-wrap { overflow-x: auto; border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); }
+  table { width: 100%; border-collapse: collapse; font-family: var(--display); font-size: 0.92rem; font-variant-numeric: tabular-nums; }
+  th, td { padding: 0.45rem 0.7rem; text-align: left; }
+  thead th { border-bottom: 1px solid var(--ink); font-weight: 600; vertical-align: bottom; min-width: 7rem; }
+  thead th:first-child { min-width: 12rem; }
+  .fn { display: block; }
+  .fd { display: block; font-weight: 400; color: var(--muted); font-size: 0.82rem; line-height: 1.25; }
+  tbody th { font-weight: 500; }
+  tbody tr + tr > *, tfoot > tr > * { border-top: 1px solid var(--rule); }
+  tbody tr:hover > * { background: var(--wash); }
+  .num { text-align: right; }
+  .cell { position: relative; display: block; height: 1.5rem; }
+  .bar { position: absolute; left: 0; top: 0.2rem; bottom: 0.2rem; background: var(--doctor); opacity: 0.18; border-radius: 2px; }
+  .n { position: relative; display: block; line-height: 1.5rem; padding-left: 0.3rem; }
+  td.on .n { font-weight: 700; }
+  td.off .n { color: var(--muted); }
+  td.on .bar { opacity: 0.35; }
+  tfoot th { font-weight: 600; }
+  abbr { text-decoration: underline dotted var(--muted); text-underline-offset: 0.25em; cursor: help; }
+  .note { margin: 0.6rem 0 0; max-width: 70ch; font-family: var(--display); }
+</style>

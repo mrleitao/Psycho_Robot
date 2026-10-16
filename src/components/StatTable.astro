@@ -1,0 +1,71 @@
+---
+// A results table. Cells arrive already formatted so each page decides the rounding.
+interface Col {
+  key: string;
+  label: string;
+  hint?: string; // shown on hover and read by screen readers
+  num?: boolean;
+  wrap?: boolean; // let long text break onto several lines
+  minw?: string; // minimum width of a wrapping column
+}
+interface Props {
+  title: string;
+  id?: string;
+  columns: Col[];
+  rows: Record<string, string | number | null>[];
+  note?: string;
+  stripe?: boolean;
+}
+const { title, id, columns, rows, note } = Astro.props;
+---
+
+<figure class="stat" id={id}>
+  <figcaption>{title}</figcaption>
+  <div class="table-wrap" tabindex="0" role="region" aria-label={`${title}. Scrolls sideways on narrow screens.`}>
+    <table>
+      <thead>
+        <tr>
+          {
+            columns.map((c, i) => (
+              <th scope="col" class={c.num ? 'num' : ''}>
+                {c.hint ? <abbr title={c.hint}>{c.label}</abbr> : c.label}
+              </th>
+            ))
+          }
+        </tr>
+      </thead>
+      <tbody>
+        {
+          rows.map((r) => (
+            <tr>
+              {columns.map((c, i) =>
+                i === 0 ? (
+                  <th scope="row">{r[c.key]}</th>
+                ) : (
+                  <td class={`${c.num ? 'num' : ''} ${c.wrap ? 'wrap' : ''}`} style={c.minw ? `min-width:${c.minw}` : undefined}>{r[c.key] ?? ''}</td>
+                ),
+              )}
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+  {note && <p class="note small muted">{note}</p>}
+</figure>
+
+<style>
+  .stat { margin: 2rem 0 0; }
+  figcaption { font-family: var(--display); font-weight: 650; font-size: 1.02rem; margin-bottom: 0.6rem; }
+  .table-wrap { overflow-x: auto; border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); }
+  table { width: 100%; border-collapse: collapse; font-family: var(--display); font-size: 0.92rem; font-variant-numeric: tabular-nums; }
+  th, td { padding: 0.45rem 0.7rem; text-align: left; white-space: nowrap; }
+  thead th { font-weight: 600; border-bottom: 1px solid var(--ink); color: var(--ink); vertical-align: bottom; }
+  tbody th { font-weight: 500; white-space: normal; min-width: 11rem; }
+  tbody tr + tr > * { border-top: 1px solid var(--rule); }
+  tbody tr:hover > * { background: var(--wash); }
+  .num { text-align: right; }
+  td.wrap { white-space: normal; min-width: 14rem; }
+  abbr { text-decoration: underline dotted var(--muted); text-underline-offset: 0.25em; cursor: help; }
+  .note { margin: 0.6rem 0 0; max-width: 70ch; font-family: var(--display); }
+</style>

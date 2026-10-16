@@ -1,0 +1,125 @@
+---
+// Predicted trust as a rating climbs from 0 to 10, in the model fitted to AI recommenders and the one fitted to humans.
+interface Line {
+  group: string;
+  predictor: string;
+  slope: number;
+  points: number[][]; // [x, fit, lo, hi]
+}
+interface Props {
+  lines: Line[];
+}
+const { lines } = Astro.props;
+const panels = ['Human', 'AI'];
+const PW = 330;
+const H = 380;
+const L = 46;
+const T = 14;
+const B = 56;
+const gap = 40;
+const W = L + PW * 2 + gap;
+const x = (v: number, p: number) => (p === 0 ? L : L + PW + gap) + (v / 10) * (PW - 10);
+const y = (v: number) => T + (1 - v / 10) * (H - T - B);
+const ticks = [0, 2, 4, 6, 8, 10];
+const f = (n: number) => n.toFixed(2);
+---
+
+<figure class="sl" data-fig>
+  <div class="scroll" tabindex="0" role="region" aria-label="Chart. Scrolls sideways on narrow screens.">
+  <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-label="Predicted trust against quantitative reasoning and intuition ratings, for human and AI recommenders">
+    {
+      panels.map((name, p) => {
+        const mine = lines.filter((l) => l.group === name);
+        const cls = name === 'AI' ? 'ai' : 'human';
+        return (
+          <g class={cls}>
+            <g class="grid">
+              {ticks.map((t) => <line x1={x(0, p)} x2={x(10, p)} y1={y(t)} y2={y(t)} />)}
+            </g>
+            <text class="panel" x={x(0, p)} y={T + 14}>{name === 'AI' ? 'AI recommenders' : 'Human recommenders'}</text>
+            {
+              mine.map((l, li) => {
+                const dashed = l.predictor === 'Intuition';
+                const band =
+                  l.points.map((q, i) => `${i ? 'L' : 'M'} ${x(q[0], p).toFixed(1)} ${y(q[3]).toFixed(1)}`).join(' ') +
+                  ' ' +
+                  [...l.points].reverse().map((q) => `L ${x(q[0], p).toFixed(1)} ${y(q[2]).toFixed(1)}`).join(' ') +
+                  ' Z';
+                const path = l.points.map((q, i) => `${i ? 'L' : 'M'} ${x(q[0], p).toFixed(1)} ${y(q[1]).toFixed(1)}`).join(' ');
+                const end = l.points[l.points.length - 1];
+                return (
+                  <g
+                    class="ln"
+                    data-tip
+                    tabindex="0"
+                    role="group"
+                    aria-label={`${name} recommenders, ${l.predictor}. Each extra point raises predicted trust by ${f(l.slope)}`}
+                    data-label={`${l.predictor}, ${name === 'AI' ? 'AI' : 'human'} recommenders`}
+                    data-lines={`Each extra point adds ${f(l.slope)} to predicted trust|At 0: ${f(l.points[0][1])}, at 10: ${f(end[1])}`}
+                  >
+                    <path class="band" d={band} />
+                    <path class="hitline" d={path} />
+                    <path class={`line ${dashed ? 'dashed' : ''}`} d={path} />
+                    <line class={`lg ${dashed ? 'dashed' : ''}`} x1={x(0, p) + 2} x2={x(0, p) + 30} y1={T + 36 + li * 20} y2={T + 36 + li * 20} />
+                    <text class="end" x={x(0, p) + 38} y={T + 40 + li * 20}>{l.predictor}: +{f(l.slope)} per point</text>
+                  </g>
+                );
+              })
+            }
+            <g class="axis">
+              <line x1={x(0, p)} x2={x(10, p)} y1={H - B} y2={H - B} />
+              {ticks.map((t) => <text x={x(t, p)} y={H - B + 20} text-anchor="middle">{t}</text>)}
+              <text class="axis-title" x={(x(0, p) + x(10, p)) / 2} y={H - 14} text-anchor="middle">Rating of the recommender (0 to 10)</text>
+            </g>
+          </g>
+        );
+      })
+    }
+    <g class="axis">
+      {ticks.map((t) => <text x={L - 10} y={y(t) + 5} text-anchor="end">{t}</text>)}
+      <text class="axis-title" transform={`translate(14 ${(T + H - B) / 2}) rotate(-90)`} text-anchor="middle">Predicted trust (0 to 10)</text>
+    </g>
+  </svg>
+  </div>
+  <ul class="key">
+    <li><span class="solid"></span>Quantitative reasoning</li>
+    <li><span class="dash"></span>Intuition</li>
+    <li class="muted">The other rating is held at its average. Bands are 95% confidence intervals.</li>
+  </ul>
+  <div class="tip" hidden></div>
+</figure>
+
+<script>
+  import { attachTips } from '../utils/figtip';
+  document.querySelectorAll<HTMLElement>('[data-fig]').forEach(attachTips);
+</script>
+
+<style>
+  .sl { margin: 1.25rem 0 0; position: relative; max-width: 760px; }
+  .scroll { overflow-x: auto; }
+  svg { display: block; width: 100%; min-width: 640px; height: auto; overflow: visible; }
+  .grid line { stroke: var(--rule); }
+  .axis line { stroke: var(--muted); }
+  .axis text { fill: var(--muted); font-family: var(--display); font-size: 14px; }
+  .panel { fill: var(--ink); font-family: var(--display); font-weight: 650; font-size: 15px; }
+  .human .line { stroke: var(--doctor); } .human .band { fill: var(--doctor); } .human .end { fill: var(--doctor); }
+  .ai .line { stroke: var(--ai); } .ai .band { fill: var(--ai); } .ai .end { fill: var(--ai); }
+  .line { fill: none; stroke-width: 3; stroke-linecap: round; }
+  .line.dashed { stroke-dasharray: 8 6; }
+  .band { opacity: 0.14; }
+  .hitline { fill: none; stroke: transparent; stroke-width: 22; }
+  .end { font-family: var(--display); font-size: 13px; font-weight: 600; }
+  .lg { stroke-width: 3; stroke-linecap: round; }
+  .human .lg { stroke: var(--doctor); } .ai .lg { stroke: var(--ai); }
+  .lg.dashed { stroke-dasharray: 6 4; }
+  .ln:hover .band, .ln:focus .band { opacity: 0.3; }
+  .ln:focus { outline: none; }
+  .ln:focus-visible .line { stroke-width: 5; }
+  .key { list-style: none; margin: 0.6rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.35rem 1.25rem; font-family: var(--display); font-size: 0.92rem; align-items: center; }
+  .key li { display: inline-flex; align-items: center; gap: 0.5rem; }
+  .key .muted { color: var(--muted); }
+  .solid, .dash { width: 1.6rem; height: 0; border-top: 3px solid var(--ink); display: inline-block; }
+  .dash { border-top-style: dashed; }
+  .tip { position: absolute; transform: translate(-50%, -100%); display: grid; gap: 0.1rem; padding: 0.55rem 0.8rem; background: var(--ink); color: var(--paper); border-radius: 6px; font-family: var(--display); font-size: 0.85rem; line-height: 1.35; white-space: nowrap; pointer-events: none; z-index: 2; }
+  .tip[hidden] { display: none; }
+</style>

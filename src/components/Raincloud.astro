@@ -1,0 +1,146 @@
+---
+// One row per measure: the shape of everyone's answers (a smoothed outline), every person as a dot,
+// and the mean with its bootstrapped 95% interval. Mirrors the notebook's jittered violin plots.
+interface Row {
+  id: string;
+  label: string;
+  n: number;
+  mean: number;
+  lo: number;
+  hi: number;
+  values: (number | null)[];
+  density: number[];
+  kind?: 'plain' | 'human' | 'ai' | 'hybrid';
+}
+interface Props {
+  rows: Row[];
+  grid: number[];
+  domain: [number, number];
+  tickStep: number;
+  xLabel: string;
+  ariaLabel: string;
+  xJitter?: number; // spread dots sideways by this many scale points (for whole-number scales)
+  unit?: string;
+}
+const { rows, grid, domain, tickStep, xLabel, ariaLabel, xJitter = 0, unit = '' } = Astro.props;
+const [min, max] = domain;
+const W = 720;
+const padL = 14;
+const padR = 14;
+const rowH = 86;
+const top = 6;
+const axisY = top + rows.length * rowH + 2;
+const H = axisY + 54;
+const x = (v: number) => padL + ((v - min) / (max - min)) * (W - padL - padR);
+const ticks: number[] = [];
+for (let t = min; t <= max + 1e-9; t += tickStep) ticks.push(t);
+const f = (n: number) => n.toFixed(1);
+// Two different irrational steps keep the sideways and up-down jitter from lining up into diagonals.
+const frac = (v: number) => v - Math.floor(v);
+const jx = (i: number, k: number) => frac(i * 0.6180339887 + k * 0.37) - 0.5;
+const jy = (i: number, k: number) => frac(i * 0.7548776662 + k * 0.11 + 0.31) - 0.5;
+const kindName = { plain: '', human: 'Human', ai: 'AI', hybrid: 'Doctor using AI' } as const;
+
+const shapes = rows.map((r, ri) => {
+  const y0 = top + ri * rowH;
+  const base = y0 + 54;
+  const path =
+    `M ${x(grid[0])} ${base} ` +
+    r.density.map((d, i) => `L ${x(grid[i]).toFixed(1)} ${(base - d * 26).toFixed(1)}`).join(' ') +
+    ` L ${x(grid[grid.length - 1])} ${base} Z`;
+  const dots = r.values
+    .map((v, i) => (v == null ? null : { cx: x(v + xJitter * jx(i, ri) * 2), cy: y0 + 70 + jy(i, ri) * 12 }))
+    .filter(Boolean) as { cx: number; cy: number }[];
+  return { y0, base, path, dots };
+});
+---
+
+<figure class="rc" data-fig>
+  <div class="scroll" tabindex="0" role="region" aria-label="Chart. Scrolls sideways on narrow screens.">
+  <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-label={ariaLabel}>
+    <g class="grid">
+      {ticks.map((t) => <line x1={x(t)} x2={x(t)} y1={top} y2={axisY} />)}
+    </g>
+    {
+      rows.map((r, ri) => {
+        const s = shapes[ri];
+        return (
+          <g
+            class={`row ${r.kind ?? 'plain'}`}
+            data-tip
+            tabindex="0"
+            role="group"
+            aria-label={`${r.label}. Average ${f(r.mean)}${unit}, 95 percent interval ${f(r.lo)} to ${f(r.hi)}, ${r.n} people`}
+            data-label={r.label}
+            data-lines={`Average ${f(r.mean)}${unit}, 95% interval ${f(r.lo)} to ${f(r.hi)}|${r.n} people${r.kind && r.kind !== 'plain' ? `|${kindName[r.kind]}` : ''}`}
+          >
+            <rect class="hit" x="0" y={s.y0} width={W} height={rowH} />
+            <path class="shape" d={s.path} />
+            {s.dots.map((p) => <circle class="pt" cx={p.cx.toFixed(1)} cy={p.cy.toFixed(1)} r="2.4" />)}
+            <line class="ci" x1={x(r.lo)} x2={x(r.hi)} y1={s.base + 5} y2={s.base + 5} />
+            <path class="mean" d={`M ${x(r.mean)} ${s.base - 1} l 6 6 l -6 6 l -6 -6 Z`} />
+            <text class="name" x={padL} y={s.y0 + 15}>{r.label}</text>
+            <text class="val" x={W - padR} y={s.y0 + 15} text-anchor="end">{f(r.mean)}</text>
+          </g>
+        );
+      })
+    }
+    <g class="axis">
+      <line x1={padL} x2={W - padR} y1={axisY} y2={axisY} />
+      {ticks.map((t) => <text x={x(t)} y={axisY + 22} text-anchor="middle">{t}</text>)}
+      <text class="axis-title" x={W / 2} y={axisY + 46} text-anchor="middle">{xLabel}</text>
+    </g>
+  </svg>
+  </div>
+  <p class="key small muted">
+    Outline: how answers are spread (smoothed). Dots: one person each. Diamond and bar: the average and its bootstrapped 95% interval.
+  </p>
+  <div class="tip" hidden></div>
+  <details class="table-view">
+    <summary>View as a table</summary>
+    <table>
+      <thead><tr><th scope="col">Measure</th><th scope="col" class="num">n</th><th scope="col" class="num">Mean</th><th scope="col" class="num">95% interval</th></tr></thead>
+      <tbody>
+        {rows.map((r) => (
+          <tr><th scope="row">{r.label}</th><td class="num">{r.n}</td><td class="num">{f(r.mean)}</td><td class="num">{f(r.lo)} to {f(r.hi)}</td></tr>
+        ))}
+      </tbody>
+    </table>
+  </details>
+</figure>
+
+<script>
+  import { attachTips } from '../utils/figtip';
+  document.querySelectorAll<HTMLElement>('[data-fig]').forEach(attachTips);
+</script>
+
+<style>
+  .rc { margin: 1.25rem 0 0; position: relative; max-width: 760px; }
+  .scroll { overflow-x: auto; }
+  svg { display: block; width: 100%; min-width: 620px; height: auto; overflow: visible; }
+  .grid line { stroke: var(--rule); stroke-width: 1; }
+  .axis line { stroke: var(--muted); stroke-width: 1; }
+  .axis text { fill: var(--muted); font-family: var(--display); font-size: 14px; }
+  .name { fill: var(--ink); font-family: var(--display); font-weight: 600; font-size: 15px; paint-order: stroke; stroke: var(--paper); stroke-width: 6px; stroke-linejoin: round; }
+  .val { fill: var(--muted); font-family: var(--display); font-size: 14px; font-variant-numeric: tabular-nums; paint-order: stroke; stroke: var(--paper); stroke-width: 6px; stroke-linejoin: round; }
+  .hit { fill: transparent; }
+  .row:hover .hit, .row:focus .hit { fill: var(--wash); }
+  .row:focus { outline: none; }
+  .row:focus-visible .hit { stroke: var(--doctor); stroke-width: 2; }
+  .shape { fill-opacity: 0.22; stroke-width: 1.5; }
+  .pt { fill-opacity: 0.5; }
+  .ci { stroke: var(--ink); stroke-width: 2.5; stroke-linecap: round; }
+  .mean { fill: var(--ink); stroke: var(--paper); stroke-width: 1.5; }
+  .plain .shape { fill: var(--muted); stroke: var(--muted); } .plain .pt { fill: var(--muted); }
+  .human .shape { fill: var(--doctor); stroke: var(--doctor); } .human .pt { fill: var(--doctor); }
+  .ai .shape { fill: var(--ai); stroke: var(--ai); } .ai .pt { fill: var(--ai); }
+  .hybrid .shape { fill: var(--muted); stroke: var(--muted); } .hybrid .pt { fill: var(--muted); }
+  .key { margin: 0.6rem 0 0; font-family: var(--display); }
+  .tip { position: absolute; transform: translate(-50%, -100%); display: grid; gap: 0.1rem; padding: 0.55rem 0.8rem; background: var(--ink); color: var(--paper); border-radius: 6px; font-family: var(--display); font-size: 0.85rem; line-height: 1.35; white-space: nowrap; pointer-events: none; z-index: 2; }
+  .tip[hidden] { display: none; }
+  .table-view { margin-top: 0.9rem; font-family: var(--display); font-size: 0.9rem; }
+  .table-view summary { cursor: pointer; color: var(--muted); }
+  .table-view table { width: 100%; margin-top: 0.75rem; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  .table-view th, .table-view td { padding: 0.4rem 0.5rem; text-align: left; border-bottom: 1px solid var(--rule); }
+  .table-view .num { text-align: right; }
+</style>

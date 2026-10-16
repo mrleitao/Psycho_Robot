@@ -8,9 +8,13 @@
     "study1-tests.json": "Study 1 paired tests: the seven preregistered hypotheses plus one exploratory test, computed by analysis/study1-summaries.py.",
     "public/data/study1-ratings.csv": "Study 1 participant-level ratings with six coarse demographic groups, de-identified (see analysis/study1-deidentify.py). Released by the author as open data.",
     "study1-outcomes.json": "Study 1 (N = 188): doctor and AI means with 95% confidence intervals for trust, quantitative reasoning and intuition, plus paired effect sizes. Computed by analysis/study1-summaries.py.",
-    "study1-test-defs.json": "Definitions of the Study 1 tests and composites, shared by the Python script and the live table."
+    "study1-test-defs.json": "Definitions of the Study 1 tests and composites, shared by the Python script and the live table.",
+    "study1-full.json": "Study 1 (N = 188): every table and model on the Study 1 in full page. Computed by analysis/study1-full-results.py from public/data/study1-ratings.csv.",
+    "study1-points.json": "Study 1: each person's value for the dot plots, with bootstrapped intervals and smoothed shapes. Computed by analysis/study1-full-results.py.",
+    "public/docs/study1-preregistration.pdf": "Study 1 preregistration, from the author's Word file with a reviewer's margin comment removed.",
+    "public/code/study1-original-analysis.Rmd": "The author's original Study 1 analysis notebook, run on the raw export. Only the local file paths were replaced."
   },
-  "sharing": "Published summary statistics, plus the de-identified Study 1 file released by the author (public/data/). No raw files, IDs, IP addresses, locations or timestamps, and no sensitive demographics.",
+  "sharing": "Published summary statistics, plus the de-identified Study 1 file released by the author (public/data/, CC BY 4.0). No raw files, IDs, IP addresses, locations or timestamps, and no sensitive demographics. A demographic group is its own filter option only if at least 30 people are in it.",
   "publicLinks": {
     "study2Preregistration": "https://osf.io/k25g8",
     "study2DataAndAnalysis": "https://osf.io/7png8"
