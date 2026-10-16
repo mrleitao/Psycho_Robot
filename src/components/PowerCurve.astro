@@ -1,0 +1,225 @@
+---
+interface Preset {
+  id: string;
+  label: string;
+  d: number;
+}
+interface Props {
+  presets: Preset[];
+  studyN: number;
+}
+const { presets, studyN } = Astro.props;
+---
+
+<div class="power" data-power data-n={studyN}>
+  <div class="controls">
+    <label class="slider">
+      <span>Effect size (d)</span>
+      <input type="range" id="power-d" min="0.05" max="1.2" step="0.01" value="0.41" data-d />
+      <output data-d-out>0.41</output>
+    </label>
+    <label class="pick">
+      <span>Significance level</span>
+      <select id="power-alpha" data-alpha>
+        <option value="0.05" selected>.05</option>
+        <option value="0.01">.01</option>
+        <option value="0.005">.005</option>
+      </select>
+    </label>
+    <fieldset class="target">
+      <legend>Chance of detecting it</legend>
+      <label><input type="radio" name="power-target" value="0.8" checked /> 80%</label>
+      <label><input type="radio" name="power-target" value="0.9" /> 90%</label>
+    </fieldset>
+  </div>
+
+  <div class="presets" role="group" aria-label="Use an effect size from Study 1">
+    <span class="presets-label">Use a Study 1 result</span>
+    {presets.map((p) => <button type="button" class="chip" data-preset={p.d}>{p.label} <b>d = {p.d.toFixed(2)}</b></button>)}
+  </div>
+
+  <figure class="plot" data-fig>
+    <svg tabindex="0" data-svg role="img" aria-label="Power curve: chance of detecting the chosen effect, by number of people"></svg>
+    <div class="tip" hidden data-tip></div>
+    <ul class="key">
+      <li><span class="line main"></span>Chosen effect</li>
+      <li><span class="line ref"></span>Small (0.2), medium (0.5), large (0.8)</li>
+      <li><span class="line study"></span>Study 1 sample size</li>
+    </ul>
+  </figure>
+
+  <dl class="reads" data-reads></dl>
+
+  <details class="table-view">
+    <summary>View as a table</summary>
+    <table data-table></table>
+  </details>
+</div>
+
+<script>
+  import { powerPaired, nNeeded, minDetectable } from '../utils/power';
+
+  document.querySelectorAll<HTMLElement>('[data-power]').forEach((root) => {
+    const $ = <T extends Element>(s: string) => root.querySelector<T>(s)!;
+    const dIn = $<HTMLInputElement>('[data-d]');
+    const dOut = $<HTMLOutputElement>('[data-d-out]');
+    const alphaSel = $<HTMLSelectElement>('[data-alpha]');
+    const svg = $<SVGSVGElement>('[data-svg]');
+    const tip = $<HTMLElement>('[data-tip]');
+    const fig = $<HTMLElement>('[data-fig]');
+    const reads = $<HTMLElement>('[data-reads]');
+    const table = $<HTMLTableElement>('[data-table]');
+    const studyN = Number(root.dataset.n);
+
+    const W = 440, H = 300, L = 62, R = 16, T = 12, B = 52, MAXN = 400;
+    const x = (n: number) => L + (n / MAXN) * (W - L - R);
+    const y = (p: number) => T + (1 - p) * (H - T - B);
+    const nOf = (px: number) => Math.round(((px - L) / (W - L - R)) * MAXN);
+
+    let curve: number[] = [];
+    let refs: { d: number; pts: number[] }[] = [];
+    let state = { d: 0.41, alpha: 0.05, target: 0.8 };
+
+    const grid = Array.from({ length: Math.floor(MAXN / 4) + 1 }, (_, i) => i * 4);
+    const compute = () => {
+      curve = grid.map((n) => powerPaired(state.d, n, state.alpha));
+      refs = [0.2, 0.5, 0.8].map((d) => ({ d, pts: grid.map((n) => powerPaired(d, n, state.alpha)) }));
+    };
+    const path = (pts: number[]) => pts.map((p, i) => `${i ? 'L' : 'M'}${x(grid[i]).toFixed(1)},${y(p).toFixed(1)}`).join('');
+
+    const draw = () => {
+      const need = nNeeded(state.d, state.alpha, state.target, 5000);
+      let out = '<g class="grid">';
+      for (const p of [0, 0.2, 0.4, 0.6, 0.8, 1]) out += `<line x1="${L}" x2="${W - R}" y1="${y(p)}" y2="${y(p)}"/>`;
+      out += '</g><g class="axis">';
+      for (const p of [0, 0.2, 0.4, 0.6, 0.8, 1]) out += `<text x="${L - 8}" y="${y(p) + 4}" text-anchor="end">${Math.round(p * 100)}%</text>`;
+      for (const n of [0, 100, 200, 300, 400]) out += `<text x="${x(n)}" y="${H - B + 20}" text-anchor="middle">${n}</text>`;
+      out += `<text class="axis-title" x="${(L + W - R) / 2}" y="${H - 10}" text-anchor="middle">People (pairs of ratings)</text>`;
+      out += `<text class="axis-title" transform="translate(14 ${(T + H - B) / 2}) rotate(-90)" text-anchor="middle">Chance of detecting the effect</text></g>`;
+      refs.forEach((r) => (out += `<path class="ref" d="${path(r.pts)}"/>`));
+      out += `<line class="target" x1="${L}" x2="${W - R}" y1="${y(state.target)}" y2="${y(state.target)}"/>`;
+      out += `<line class="study" x1="${x(studyN)}" x2="${x(studyN)}" y1="${T}" y2="${H - B}"/>`;
+      out += `<text class="study-label" x="${x(studyN) + 6}" y="${T + 12}">${studyN} people</text>`;
+      out += `<path class="main" d="${path(curve)}"/>`;
+      const pStudy = powerPaired(state.d, studyN, state.alpha);
+      out += `<circle class="dot" cx="${x(studyN)}" cy="${y(pStudy)}" r="5"/>`;
+      if (need && need <= MAXN) {
+        out += `<line class="need" x1="${x(need)}" x2="${x(need)}" y1="${y(state.target)}" y2="${H - B}"/><circle class="dot need" cx="${x(need)}" cy="${y(state.target)}" r="5"/>`;
+      }
+      out += '<g data-cross hidden><line class="cross" y1="' + T + '" y2="' + (H - B) + '"/><circle class="dot" r="4.5"/></g>';
+      svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+      svg.innerHTML = out;
+
+      const mde = minDetectable(studyN, state.alpha, state.target);
+      reads.innerHTML =
+        `<div><dt>People needed</dt><dd>${need === null ? 'more than 5,000' : need}</dd></div>` +
+        `<div><dt>Chance with ${studyN} people</dt><dd>${(pStudy * 100).toFixed(pStudy > 0.995 ? 1 : 0)}%</dd></div>` +
+        `<div><dt>Smallest d detectable with ${studyN}</dt><dd>${mde.toFixed(2)}</dd></div>`;
+
+      const ns = [10, 24, 50, 100, studyN, 300, 400];
+      table.innerHTML = '<thead><tr><th scope="col">People</th><th scope="col">Chance of detecting d = ' + state.d.toFixed(2) + '</th></tr></thead><tbody>' +
+        ns.map((n) => `<tr><th scope="row">${n}</th><td>${(powerPaired(state.d, n, state.alpha) * 100).toFixed(0)}%</td></tr>`).join('') + '</tbody>';
+
+      const cross = svg.querySelector<SVGGElement>('[data-cross]')!;
+      const showAt = (n: number) => {
+        n = Math.max(4, Math.min(MAXN, n));
+        const p = powerPaired(state.d, n, state.alpha);
+        cross.removeAttribute('hidden');
+        cross.querySelector('line')!.setAttribute('x1', String(x(n)));
+        cross.querySelector('line')!.setAttribute('x2', String(x(n)));
+        cross.querySelector('circle')!.setAttribute('cx', String(x(n)));
+        cross.querySelector('circle')!.setAttribute('cy', String(y(p)));
+        tip.innerHTML = `<strong>${n} people</strong><span>${(p * 100).toFixed(0)}% chance of detecting d = ${state.d.toFixed(2)}</span>`;
+        tip.hidden = false;
+        const fr = fig.getBoundingClientRect(), sr = svg.getBoundingClientRect(), half = tip.offsetWidth / 2;
+        const px = (x(n) / W) * sr.width + (sr.left - fr.left);
+        tip.style.left = `${Math.max(half, Math.min(fr.width - half, px))}px`;
+        tip.style.top = `${(y(p) / H) * sr.height + (sr.top - fr.top) - 12}px`;
+        svg.dataset.n = String(n);
+      };
+      const hideTip = () => { cross.setAttribute('hidden', ''); tip.hidden = true; };
+      svg.onpointermove = (e) => {
+        const r = svg.getBoundingClientRect();
+        showAt(nOf(((e.clientX - r.left) / r.width) * W));
+      };
+      svg.onpointerleave = hideTip;
+      svg.onblur = hideTip;
+      svg.onfocus = () => showAt(Number(svg.dataset.n || studyN));
+      svg.onkeydown = (e) => {
+        const cur = Number(svg.dataset.n || studyN);
+        if (e.key === 'ArrowRight') { showAt(cur + 4); e.preventDefault(); }
+        if (e.key === 'ArrowLeft') { showAt(cur - 4); e.preventDefault(); }
+      };
+    };
+
+    const update = () => {
+      state = {
+        d: Number(dIn.value),
+        alpha: Number(alphaSel.value),
+        target: Number(root.querySelector<HTMLInputElement>('input[name=power-target]:checked')!.value),
+      };
+      dOut.textContent = state.d.toFixed(2);
+      compute();
+      draw();
+    };
+    root.addEventListener('input', update);
+    root.addEventListener('change', update);
+    root.querySelectorAll<HTMLButtonElement>('[data-preset]').forEach((b) =>
+      b.addEventListener('click', () => {
+        dIn.value = String(Math.min(1.2, Math.max(0.05, Number(b.dataset.preset))));
+        update();
+      })
+    );
+    update();
+  });
+</script>
+
+<style>
+  .power { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.25rem; }
+  .power > * { min-width: 0; }
+  .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(12rem, 100%), 1fr)); gap: 0.9rem 1.5rem; align-items: end; font-family: var(--display); max-width: 640px; }
+  .slider { display: grid; grid-template-columns: 1fr auto; gap: 0.25rem 0.75rem; align-items: center; font-size: 0.9rem; color: var(--muted); }
+  .slider span { grid-column: 1 / -1; }
+  .slider output { font-size: 1.25rem; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+  input[type='range'] { width: 100%; accent-color: var(--doctor); }
+  .pick { display: grid; gap: 0.25rem; font-size: 0.9rem; color: var(--muted); }
+  select { font: inherit; font-size: 1rem; color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 0.4rem 0.6rem; }
+  fieldset.target { border: 0; margin: 0; padding: 0; min-width: 0; display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; font-size: 1rem; color: var(--ink); }
+  fieldset.target legend { padding: 0; margin-bottom: 0.25rem; font-size: 0.9rem; color: var(--muted); }
+  select:focus-visible, input:focus-visible { outline: 2px solid var(--doctor); outline-offset: 2px; }
+  .presets { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; font-family: var(--display); }
+  .presets-label { color: var(--muted); font-size: 0.9rem; margin-right: 0.25rem; }
+  .chip { font: inherit; font-family: var(--display); font-size: 0.88rem; color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 999px; padding: 0.3rem 0.7rem; cursor: pointer; }
+  .chip:hover { border-color: var(--muted); }
+  .chip:focus-visible { outline: 2px solid var(--doctor); outline-offset: 2px; }
+  .chip b { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .plot { margin: 0; position: relative; max-width: 560px; }
+  svg { display: block; width: 100%; height: auto; overflow: visible; touch-action: pan-y; }
+  svg:focus-visible { outline: 2px solid var(--doctor); outline-offset: 4px; }
+  svg :global(.grid line) { stroke: var(--rule); stroke-width: 1; }
+  svg :global(.axis text) { fill: var(--muted); font-family: var(--display); font-size: 13px; }
+  svg :global(.axis .axis-title) { font-size: 13px; }
+  svg :global(path.main) { fill: none; stroke: var(--doctor); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+  svg :global(path.ref) { fill: none; stroke: var(--muted); stroke-width: 1.5; opacity: 0.55; }
+  svg :global(.target) { stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 5 4; }
+  svg :global(.study) { stroke: var(--ai); stroke-width: 2; }
+  svg :global(.study-label) { fill: var(--ai); font-family: var(--display); font-size: 13px; font-weight: 600; paint-order: stroke; stroke: var(--paper); stroke-width: 5px; stroke-linejoin: round; }
+  svg :global(.need) { stroke: var(--doctor); stroke-width: 1.5; stroke-dasharray: 3 3; }
+  svg :global(.dot) { fill: var(--doctor); stroke: var(--paper); stroke-width: 2; }
+  svg :global(.dot.need) { fill: var(--paper); stroke: var(--doctor); stroke-width: 2.5; }
+  svg :global(.cross) { stroke: var(--ink); stroke-width: 1; opacity: 0.5; }
+  .key { list-style: none; margin: 0.5rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.35rem 1.25rem; font-family: var(--display); font-size: 0.9rem; }
+  .key li { display: inline-flex; align-items: center; gap: 0.5rem; }
+  .line { width: 1.4rem; height: 0; border-top: 3px solid; flex: none; }
+  .line.main { border-color: var(--doctor); } .line.ref { border-color: var(--muted); border-top-width: 2px; opacity: 0.6; } .line.study { border-color: var(--ai); }
+  .tip { position: absolute; transform: translate(-50%, -100%); display: grid; gap: 0.1rem; padding: 0.5rem 0.75rem; background: var(--ink); color: var(--paper); border-radius: 6px; font-family: var(--display); font-size: 0.85rem; line-height: 1.35; white-space: nowrap; pointer-events: none; z-index: 2; }
+  .tip[hidden] { display: none; }
+  .reads { display: flex; flex-wrap: wrap; gap: 0.5rem 2.25rem; margin: 0; font-family: var(--display); }
+  .reads :global(dt) { color: var(--muted); font-size: 0.9rem; }
+  .reads :global(dd) { margin: 0; font-size: 1.6rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .table-view { font-family: var(--display); font-size: 0.9rem; }
+  .table-view summary { cursor: pointer; color: var(--muted); }
+  .table-view table { margin-top: 0.75rem; border-collapse: collapse; font-variant-numeric: tabular-nums; min-width: 16rem; }
+  .table-view :global(th), .table-view :global(td) { padding: 0.4rem 0.75rem 0.4rem 0; text-align: left; border-bottom: 1px solid var(--rule); font-weight: 400; }
+  .table-view :global(thead th) { color: var(--muted); }
+</style>

@@ -65,6 +65,7 @@ Chart components so far:
 | `RankDots` | Ranked means with 95% intervals |
 | `OutcomePairs` | Doctor versus AI on several outcomes, side by side |
 | `Study1Live` | Demographic filters that rerun the chart, the tests and the histograms |
+| `PowerCurve` | Power for a paired t test: effect size, people needed, and what Study 1 could detect |
 | `EvidenceMatrix` | Skills against the evidence that supports each |
 
 ## The pages
@@ -85,6 +86,8 @@ The CV was assembled from the existing CV, a skills inventory, a record of exper
 ## Study 1 data release
 
 The Study 1 section of the trust-in-medical-AI page has two parts. A static chart shows the main finding: doctor versus AI on trust, quantitative reasoning and intuition, side by side as in the paper. Below it, visitors can filter to a demographic group and the chart, the table of tests and the histograms rerun on the spot. This section records how the released file was made and how the live part works. The data are released as part of an open science commitment.
+
+**Release approval.** The author confirms the study's IRB approval allows public release of the de-identified data.
 
 **Source.** The raw Qualtrics export of the Study 1 survey (Chapter 1 of the dissertation). It is not in this repository: it contains IP addresses, coordinates, response IDs, panel IDs and detailed demographic answers.
 
@@ -109,6 +112,8 @@ The Study 1 section of the trust-in-medical-AI page has two parts. A static char
 **Derived files.** [`analysis/study1-summaries.py`](analysis/study1-summaries.py) writes `trust-by-recommender.json`, `study1-tests.json` and `study1-outcomes.json` (the static charts read these). The tests themselves are defined once, in `study1-test-defs.json`, which both the Python script and the live table read, so they cannot drift apart.
 
 **How the live part works.** [`Study1Live.astro`](src/components/Study1Live.astro) loads the CSV in the visitor's browser, filters the rows, and recomputes everything with a small statistics routine written for the page (paired t test, p value from the t distribution, confidence intervals). Nothing is sent anywhere. Choices within a demographic row combine as "or", and choices across rows combine as "and". The page shows results only when at least 10 people match, and it warns that subgroup results are exploratory.
+
+**Power analysis.** `PowerCurve` and the "smallest detectable effect" line under the filters use `src/utils/power.ts`, an implementation of the noncentral t distribution (Lenth, 1989, AS 243), with `src/utils/stats.ts` for the t distribution. `analysis/check-stats.py` and `analysis/check-stats.mjs` print the same cases from scipy and from the browser code so they can be compared: they agree to five decimals. The chart is a sensitivity view (what the study could detect) and not "observed power", which adds nothing beyond the p value.
 
 **Checks.**
 

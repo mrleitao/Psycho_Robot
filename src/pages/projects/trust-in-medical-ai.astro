@@ -5,10 +5,12 @@ import EffectDots from '../../components/EffectDots.astro';
 import RankDots from '../../components/RankDots.astro';
 import OutcomePairs from '../../components/OutcomePairs.astro';
 import Study1Live from '../../components/Study1Live.astro';
+import PowerCurve from '../../components/PowerCurve.astro';
 import Placeholder from '../../components/Placeholder.astro';
 import data from '../../data/trust-in-medical-ai/trust-by-domain.json';
 import effects from '../../data/trust-in-medical-ai/effects-by-study.json';
 import ranked from '../../data/trust-in-medical-ai/trust-by-recommender.json';
+import study1 from '../../data/trust-in-medical-ai/study1-tests.json';
 import outcomes from '../../data/trust-in-medical-ai/study1-outcomes.json';
 import meta from '../../data/trust-in-medical-ai/meta.json';
 import { href } from '../../utils/url';
@@ -156,6 +158,26 @@ import { href } from '../../utils/url';
         Paired t tests on the released data. Decision items are on a 0 to 100 scale, recommender ratings on 0 to 10. The
         paper's hypothesis numbers are used; the exploratory test (E) was not preregistered. How the file was cleaned is in
         <a href="https://github.com/mrleitao/Psycho_Robot#study-1-data-release">the project README</a>.
+      </p>
+    </section>
+
+    <section class="section chart" id="power" aria-labelledby="power-title">
+      <h2 id="power-title">How many people does a finding need?</h2>
+      <p class="sub">
+        Power is the chance a study detects a real effect of a given size. Slide the effect size or pick one of the
+        Study 1 results to see how many people it takes, and how well Study 1's 188 people could
+        detect it. This is the same reason the filters above stop at 10 people: small groups can only detect large
+        differences, so a real but modest difference often looks like nothing.
+      </p>
+      <PowerCurve
+        presets={study1.tests.filter((t) => t.d > 0).map((t) => ({ id: t.id, label: t.id, d: t.d }))}
+        studyN={188}
+      />
+      <p class="small muted source">
+        Power for a two-sided paired t test, the test used for every comparison in Study 1, computed in your browser
+        from the noncentral t distribution and checked against scipy. This is a sensitivity view: it shows what size of
+        effect the study could detect, not how likely the results already seen were. The H labels use the dissertation's
+        numbering.
       </p>
     </section>
 
