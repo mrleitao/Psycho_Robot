@@ -1,0 +1,175 @@
+---
+// Rows of dots with intervals, one small panel per measure, sharing the same row labels.
+// Used for "each recommender on three measures" and "the human-minus-AI gap in each group of people".
+interface Cell {
+  mean: number;
+  lo: number;
+  hi: number;
+  n: number;
+}
+type Kind = 'human' | 'ai' | 'hybrid' | 'plain';
+interface Item {
+  head?: string; // a section heading row
+  label?: string;
+  sub?: string; // small text after the label, e.g. "n = 55"
+  kind?: Kind;
+  cells?: (Cell | null)[];
+  tipLines?: (string | null)[]; // extra tooltip line for each panel
+}
+interface Panel {
+  title: string;
+  domain: [number, number];
+  tickStep: number;
+  zero?: boolean; // draw a line at 0
+  axisLabel: string;
+}
+interface Props {
+  items: Item[];
+  panels: Panel[];
+  ariaLabel: string;
+  tableLabel: string;
+  valueLabel: string; // "Average" or "Average gap"
+}
+const { items, panels, ariaLabel, tableLabel, valueLabel } = Astro.props;
+
+const W = 780;
+const labelW = 222;
+const padR = 10;
+const gap = 34;
+const pw = (W - labelW - padR - gap * (panels.length - 1)) / panels.length;
+const rowH = 30;
+const headH = 30;
+const top = 34;
+let y = top;
+const placed = items.map((it) => {
+  const h = it.head ? headH : rowH;
+  const r = { it, y0: y, h };
+  y += h;
+  return r;
+});
+const bottom = y + 2;
+const H = bottom + 50;
+const px = (p: number, v: number) => {
+  const [a, b] = panels[p].domain;
+  return labelW + p * (pw + gap) + ((v - a) / (b - a)) * pw;
+};
+const ticksFor = (p: Panel) => {
+  const out: number[] = [];
+  for (let t = p.domain[0]; t <= p.domain[1] + 1e-9; t += p.tickStep) out.push(Math.round(t * 100) / 100);
+  return out;
+};
+const f = (n: number) => n.toFixed(1).replace('-', '−');
+const kindName = { human: 'Human', ai: 'AI', hybrid: 'Doctor using AI', plain: '' } as const;
+---
+
+<figure class="dp" data-fig>
+  <div class="scroll" tabindex="0" role="region" aria-label="Chart. Scrolls sideways on narrow screens.">
+    <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-label={ariaLabel}>
+      {
+        panels.map((p, pi) => (
+          <g>
+            <rect class="panelbg" x={px(pi, p.domain[0])} y={top - 6} width={pw} height={bottom - top + 8} />
+            {ticksFor(p).map((t) => <line class="grid" x1={px(pi, t)} x2={px(pi, t)} y1={top - 6} y2={bottom + 2} />)}
+            {p.zero && <line class="zero" x1={px(pi, 0)} x2={px(pi, 0)} y1={top - 6} y2={bottom + 2} />}
+            <text class="ptitle" x={px(pi, p.domain[0])} y={top - 16}>{p.title}</text>
+            {ticksFor(p).map((t) => <text class="tick" x={px(pi, t)} y={bottom + 20} text-anchor="middle">{f(t).replace('.0', '')}</text>)}
+            <text class="axtitle" x={px(pi, p.domain[0]) + pw / 2} y={bottom + 42} text-anchor="middle">{p.axisLabel}</text>
+          </g>
+        ))
+      }
+      {
+        placed.map(({ it, y0, h }) =>
+          it.head ? (
+            <text class="head" x="0" y={y0 + 21}>{it.head}</text>
+          ) : (
+            <g
+              class={`row ${it.kind ?? 'plain'}`}
+              data-tip
+              tabindex="0"
+              role="group"
+              aria-label={`${it.label}. ${(it.cells ?? []).map((c, i) => (c ? `${panels[i].title}: ${f(c.mean)}, interval ${f(c.lo)} to ${f(c.hi)}` : '')).filter(Boolean).join('. ')}`}
+              data-label={it.label}
+              data-lines={(it.cells ?? [])
+                .map((c, i) =>
+                  c ? `${panels[i].title}: ${f(c.mean)} (95% interval ${f(c.lo)} to ${f(c.hi)}), ${c.n} people${it.tipLines?.[i] ? `, ${it.tipLines[i]}` : ''}` : null,
+                )
+                .filter(Boolean)
+                .join('|')}
+            >
+              <rect class="hit" x="0" y={y0} width={W} height={h} />
+              <text class="name" x={it.kind === 'plain' ? 12 : 0} y={y0 + 20}>{it.label}</text>
+              {it.sub && <text class="sub" x={labelW - 8} y={y0 + 20} text-anchor="end">{it.sub}</text>}
+              {(it.cells ?? []).map((c, pi) =>
+                c ? (
+                  <g>
+                    <line class="ci" x1={px(pi, c.lo)} x2={px(pi, c.hi)} y1={y0 + h / 2} y2={y0 + h / 2} />
+                    <circle class="dot" cx={px(pi, c.mean)} cy={y0 + h / 2} r="5" />
+                  </g>
+                ) : null,
+              )}
+            </g>
+          ),
+        )
+      }
+    </svg>
+  </div>
+  <div class="tip" hidden></div>
+  <details class="table-view">
+    <summary>View as a table</summary>
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">{tableLabel}</th>
+          {panels.map((p) => <th scope="col" class="num">{p.title}: {valueLabel.toLowerCase()} [95% interval]</th>)}
+        </tr>
+      </thead>
+      <tbody>
+        {
+          items.filter((i) => !i.head).map((it) => (
+            <tr>
+              <th scope="row">{it.label}{it.sub ? ` (${it.sub})` : ''}</th>
+              {(it.cells ?? []).map((c) => <td class="num">{c ? `${f(c.mean)} [${f(c.lo)}, ${f(c.hi)}]` : ''}</td>)}
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </details>
+</figure>
+
+<script>
+  import { attachTips } from '../utils/figtip';
+  document.querySelectorAll<HTMLElement>('[data-fig]').forEach(attachTips);
+</script>
+
+<style>
+  .dp { margin: 1.25rem 0 0; position: relative; max-width: 800px; }
+  .scroll { overflow-x: auto; }
+  svg { display: block; width: 100%; min-width: 660px; height: auto; overflow: visible; }
+  .panelbg { fill: var(--wash); opacity: 0.55; }
+  .grid { stroke: var(--rule); stroke-width: 1; }
+  .zero { stroke: var(--ink); stroke-width: 1.25; }
+  .ptitle { fill: var(--ink); font-family: var(--display); font-weight: 650; font-size: 14px; }
+  .tick { fill: var(--muted); font-family: var(--display); font-size: 12.5px; }
+  .axtitle { fill: var(--muted); font-family: var(--display); font-size: 12.5px; }
+  .head { fill: var(--ink); font-family: var(--display); font-weight: 700; font-size: 14px; }
+  .name { fill: var(--ink); font-family: var(--display); font-size: 14px; }
+  .sub { fill: var(--muted); font-family: var(--display); font-size: 12.5px; font-variant-numeric: tabular-nums; }
+  .hit { fill: transparent; }
+  .row:hover .hit, .row:focus .hit { fill: var(--wash); opacity: 0.8; }
+  .row:focus { outline: none; }
+  .row:focus-visible .hit { stroke: var(--doctor); stroke-width: 2; }
+  .ci { stroke-width: 2.5; stroke-linecap: round; }
+  .dot { stroke: var(--paper); stroke-width: 1.5; }
+  .human .ci { stroke: var(--doctor); } .human .dot { fill: var(--doctor); }
+  .ai .ci { stroke: var(--ai); } .ai .dot { fill: var(--ai); }
+  .hybrid .ci { stroke: var(--muted); } .hybrid .dot { fill: var(--muted); }
+  .plain .ci { stroke: var(--ink); } .plain .dot { fill: var(--ink); }
+  .tip { position: absolute; transform: translate(-50%, -100%); display: grid; gap: 0.1rem; padding: 0.55rem 0.8rem; background: var(--ink); color: var(--paper); border-radius: 6px; font-family: var(--display); font-size: 0.85rem; line-height: 1.35; white-space: nowrap; pointer-events: none; z-index: 2; }
+  .tip[hidden] { display: none; }
+  .table-view { margin-top: 0.9rem; font-family: var(--display); font-size: 0.9rem; }
+  .table-view summary { cursor: pointer; color: var(--muted); }
+  .table-view table { width: 100%; margin-top: 0.75rem; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  .table-view th, .table-view td { padding: 0.4rem 0.5rem; text-align: left; border-bottom: 1px solid var(--rule); }
+  .table-view .num { text-align: right; }
+</style>

@@ -1,0 +1,84 @@
+---
+// One dot per person: their average trust in human recommenders against their average trust in AI recommenders.
+interface Props {
+  points: number[][]; // [human, ai]
+  slope: number;
+  intercept: number;
+  r: number;
+}
+const { points, slope, intercept, r } = Astro.props;
+const S = 420;
+const L = 52;
+const T = 12;
+const B = 54;
+const R = 14;
+const W = L + S + R;
+const H = T + S + B;
+const x = (v: number) => L + (v / 10) * S;
+const y = (v: number) => T + (1 - v / 10) * S;
+const ticks = [0, 2, 4, 6, 8, 10];
+const f = (n: number) => n.toFixed(1);
+const fit = [0, 10].map((v) => [v, Math.max(0, Math.min(10, intercept + slope * v))]);
+const below = points.filter((p) => p[1] < p[0]).length;
+---
+
+<figure class="ls" data-fig>
+  <div class="scroll" tabindex="0" role="region" aria-label="Chart. Scrolls sideways on narrow screens.">
+    <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-label={`Each person's average trust in human recommenders against their average trust in AI recommenders. Correlation ${r.toFixed(2)}. ${below} of ${points.length} people sit below the diagonal, trusting AI less.`}>
+      <g class="grid">
+        {ticks.map((t) => <line x1={x(t)} x2={x(t)} y1={T} y2={T + S} />)}
+        {ticks.map((t) => <line x1={L} x2={L + S} y1={y(t)} y2={y(t)} />)}
+      </g>
+      <line class="diag" x1={x(0)} y1={y(0)} x2={x(10)} y2={y(10)} />
+      <text class="diaglabel" x={x(7.2)} y={y(7.2) - 14} transform={`rotate(-45 ${x(7.2)} ${y(7.2) - 14})`}>Equal trust</text>
+      <line class="fit" x1={x(fit[0][0])} y1={y(fit[0][1])} x2={x(fit[1][0])} y2={y(fit[1][1])} />
+      {
+        points.map((p, i) => (
+          <circle
+            class="pt"
+            cx={x(p[0]).toFixed(1)}
+            cy={y(p[1]).toFixed(1)}
+            r="4"
+            data-tip
+            tabindex="-1"
+            data-label={`Person ${i + 1}`}
+            data-lines={`Humans ${f(p[0])}, AI ${f(p[1])}|${p[1] < p[0] ? 'Trusts AI less' : p[1] > p[0] ? 'Trusts AI more' : 'Equal'}`}
+          />
+        ))
+      }
+      <g class="axis">
+        {ticks.map((t) => <text x={x(t)} y={T + S + 20} text-anchor="middle">{t}</text>)}
+        {ticks.map((t) => <text x={L - 10} y={y(t) + 4} text-anchor="end">{t}</text>)}
+        <text class="axtitle" x={L + S / 2} y={T + S + 44} text-anchor="middle">Average trust in the six human recommenders</text>
+        <text class="axtitle" transform={`translate(14 ${T + S / 2}) rotate(-90)`} text-anchor="middle">Average trust in the four AI recommenders</text>
+      </g>
+    </svg>
+  </div>
+  <p class="key small muted">
+    One dot per person. The solid line is the best-fit line; the dashed line is where trust would be equal. Dots below
+    it belong to people who trust AI less than humans.
+  </p>
+  <div class="tip" hidden></div>
+</figure>
+
+<script>
+  import { attachTips } from '../utils/figtip';
+  document.querySelectorAll<HTMLElement>('[data-fig]').forEach(attachTips);
+</script>
+
+<style>
+  .ls { margin: 1.25rem 0 0; position: relative; max-width: 520px; }
+  .scroll { overflow-x: auto; }
+  svg { display: block; width: 100%; min-width: 380px; height: auto; overflow: visible; }
+  .grid line { stroke: var(--rule); stroke-width: 1; }
+  .diag { stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 6 5; }
+  .diaglabel { fill: var(--muted); font-family: var(--display); font-size: 12.5px; text-anchor: middle; }
+  .fit { stroke: var(--ink); stroke-width: 2.5; stroke-linecap: round; }
+  .pt { fill: var(--ai); fill-opacity: 0.5; stroke: var(--paper); stroke-width: 0.75; }
+  .pt:hover { fill-opacity: 1; stroke: var(--ink); stroke-width: 1.5; }
+  .axis text { fill: var(--muted); font-family: var(--display); font-size: 13px; }
+  .axis .axtitle { font-size: 13.5px; }
+  .key { margin: 0.6rem 0 0; font-family: var(--display); }
+  .tip { position: absolute; transform: translate(-50%, -100%); display: grid; gap: 0.1rem; padding: 0.55rem 0.8rem; background: var(--ink); color: var(--paper); border-radius: 6px; font-family: var(--display); font-size: 0.85rem; line-height: 1.35; white-space: nowrap; pointer-events: none; z-index: 2; }
+  .tip[hidden] { display: none; }
+</style>

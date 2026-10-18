@@ -1,0 +1,141 @@
+---
+// The factor diagram: items on the left, the factors on the right, an arrow for every loading of .30 or more
+// (the notebook's psych::fa.diagram cut-off), and curved lines for the correlations between factors.
+interface Props {
+  items: string[];
+  loadings: number[][];
+  factorNames: string[];
+  phi: number[][];
+  cut?: number;
+}
+const { items, loadings, factorNames, phi, cut = 0.3 } = Astro.props;
+const dom = (row: number[]) => row.indexOf(Math.max(...row.map(Math.abs)));
+const order = items
+  .map((_, i) => i)
+  .sort((a, b) => dom(loadings[a]) - dom(loadings[b]) || Math.abs(loadings[b][dom(loadings[b])]) - Math.abs(loadings[a][dom(loadings[a])]));
+const W = 760;
+const boxW = 262;
+const boxH = 26;
+const gapY = 10;
+const top = 8;
+const H = top + order.length * (boxH + gapY) + 56;
+const fx = 560;
+const fR = 54;
+const itemY = (rank: number) => top + rank * (boxH + gapY) + boxH / 2;
+const rankOf: Record<number, number> = {};
+order.forEach((i, r) => (rankOf[i] = r));
+// each factor circle sits at the middle of the items that load on it most
+const fy = factorNames.map((_, k) => {
+  const mine = order.filter((i) => dom(loadings[i]) === k).map((i) => itemY(rankOf[i]));
+  return mine.length ? (Math.min(...mine) + Math.max(...mine)) / 2 : H / 2;
+});
+fy[0] = Math.max(fy[0], top + fR);
+for (let k = 1; k < fy.length; k++) fy[k] = Math.max(fy[k], fy[k - 1] + 2 * fR + 14);
+const minus = (s: string) => s.replace('-', '−');
+const fmt = (v: number) => minus(v.toFixed(2).replace(/^(-?)0\./, '$1.'));
+const pairs: [number, number][] = [[0, 1], [1, 2], [0, 2]];
+---
+
+<figure class="fd" data-fig>
+  <div class="scroll" tabindex="0" role="region" aria-label="Factor diagram. Scrolls sideways on narrow screens.">
+    <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-label="Factor diagram. Each decision points to the factor it loads on, labelled with its loading. Only loadings of .30 and above are drawn.">
+      {
+        pairs.map(([a, b]) => {
+          const x1 = fx + fR;
+          const x2 = fx + fR;
+          const bulge = a === 0 && b === 2 ? 118 : 64;
+          const y1 = fy[a];
+          const y2 = fy[b];
+          const mid = (y1 + y2) / 2;
+          return (
+            <g>
+              <path class="phi" d={`M ${x1 - 6} ${y1 + (y2 > y1 ? 1 : -1) * 0} Q ${x1 + bulge} ${mid} ${x2 - 6} ${y2}`} />
+              <text class="philabel" x={x1 + bulge * 0.5 + 8} y={mid + 4}>{fmt(phi[a][b])}</text>
+            </g>
+          );
+        })
+      }
+      {
+        order.map((i) =>
+          loadings[i].map((v, k) =>
+            Math.abs(v) >= cut ? (
+              <g>
+                <line
+                  class={`arrow ${dom(loadings[i]) === k ? 'main' : 'cross'}`}
+                  x1={boxW + 14}
+                  y1={itemY(rankOf[i])}
+                  x2={fx - fR + 4}
+                  y2={fy[k]}
+                />
+              </g>
+            ) : null,
+          ),
+        )
+      }
+      {
+        order.map((i) =>
+          loadings[i].map((v, k) => {
+            if (Math.abs(v) < cut) return null;
+            const t = dom(loadings[i]) === k ? 0.3 : 0.38;
+            const x = boxW + 14 + (fx - fR + 4 - boxW - 14) * t;
+            const y = itemY(rankOf[i]) + (fy[k] - itemY(rankOf[i])) * t;
+            return <text class="lv" x={x} y={y - 4}>{fmt(v)}</text>;
+          }),
+        )
+      }
+      {
+        order.map((i) => (
+          <g
+            data-tip
+            tabindex="0"
+            role="group"
+            aria-label={`${items[i]}. Loadings ${loadings[i].map((v, k) => `${factorNames[k]} ${fmt(v)}`).join(', ')}`}
+            data-label={items[i]}
+            data-lines={loadings[i].map((v, k) => `${factorNames[k]}: ${fmt(v)}`).join('|')}
+          >
+            <rect class="box" x="0" y={itemY(rankOf[i]) - boxH / 2} width={boxW} height={boxH} rx="3" />
+            <text class="boxtext" x="10" y={itemY(rankOf[i]) + 5}>{items[i]}</text>
+          </g>
+        ))
+      }
+      {
+        factorNames.map((n, k) => (
+          <g>
+            <circle class={`fac f${k}`} cx={fx} cy={fy[k]} r={fR} />
+            <foreignObject x={fx - fR + 6} y={fy[k] - 32} width={(fR - 6) * 2} height="64">
+              <div class="factext">{n}</div>
+            </foreignObject>
+          </g>
+        ))
+      }
+    </svg>
+  </div>
+  <div class="tip" hidden></div>
+</figure>
+
+<script>
+  import { attachTips } from '../utils/figtip';
+  document.querySelectorAll<HTMLElement>('[data-fig]').forEach(attachTips);
+</script>
+
+<style>
+  .fd { margin: 1.25rem 0 0; position: relative; max-width: 780px; }
+  .scroll { overflow-x: auto; }
+  svg { display: block; width: 100%; min-width: 640px; height: auto; overflow: visible; }
+  .box { fill: var(--wash); stroke: var(--rule); stroke-width: 1; }
+  g:hover > .box, g:focus > .box { stroke: var(--ink); }
+  g:focus { outline: none; }
+  g:focus-visible > .box { stroke: var(--doctor); stroke-width: 2; }
+  .boxtext { fill: var(--ink); font-family: var(--display); font-size: 13.5px; }
+  .arrow { stroke-width: 1.5; }
+  .arrow.main { stroke: var(--ink); opacity: 0.75; }
+  .arrow.cross { stroke: var(--muted); opacity: 0.55; stroke-dasharray: 4 3; }
+  .lv { fill: var(--muted); font-family: var(--display); font-size: 11.5px; font-variant-numeric: tabular-nums; paint-order: stroke; stroke: var(--paper); stroke-width: 4px; stroke-linejoin: round; }
+  .phi { fill: none; stroke: var(--muted); stroke-width: 1.5; opacity: 0.8; }
+  .philabel { fill: var(--muted); font-family: var(--display); font-size: 12px; paint-order: stroke; stroke: var(--paper); stroke-width: 4px; stroke-linejoin: round; }
+  .fac { fill: var(--paper); stroke-width: 2.5; }
+  .f0 { stroke: var(--doctor); } .f1 { stroke: var(--ai); } .f2 { stroke: var(--ink); }
+  .factext { font-family: var(--display); font-size: 12px; font-weight: 600; line-height: 1.2; text-align: center; color: var(--ink); height: 64px; display: flex; align-items: center; justify-content: center; }
+  .tip { position: absolute; transform: translate(-50%, -100%); display: grid; gap: 0.1rem; padding: 0.55rem 0.8rem; background: var(--ink); color: var(--paper); border-radius: 6px; font-family: var(--display); font-size: 0.85rem; line-height: 1.35; white-space: nowrap; pointer-events: none; z-index: 2; }
+  .tip[hidden] { display: none; }
+</style>

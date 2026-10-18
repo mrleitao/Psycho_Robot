@@ -7,8 +7,12 @@ import LoadingsTable from '../../../components/LoadingsTable.astro';
 import MakerMap from '../../../components/MakerMap.astro';
 import SlopesPlot from '../../../components/SlopesPlot.astro';
 import DirectionBars from '../../../components/DirectionBars.astro';
+import DotPanels from '../../../components/DotPanels.astro';
+import LinkScatter from '../../../components/LinkScatter.astro';
+import FactorDiagram from '../../../components/FactorDiagram.astro';
 import full from '../../../data/trust-in-medical-ai/study1-full.json';
 import pts from '../../../data/trust-in-medical-ai/study1-points.json';
+import hva from '../../../data/trust-in-medical-ai/study1-human-vs-ai.json';
 import { href } from '../../../utils/url';
 
 const repo = 'https://github.com/mrleitao/Psycho_Robot';
@@ -173,6 +177,112 @@ const wbRows = full.withinBetween.flatMap((g) =>
 const slopes = full.slopes.lines;
 const aiModel = full.mixedModels[6];
 const huModel = full.mixedModels[7];
+
+// ---- humans versus AI (second tab)
+const hv = hva.tests.map((t: any) => ({ key: t.key, measure: t.measure, ...t.human_vs_ai }));
+const hvCols = [
+  { key: 'measure', label: 'Rating' },
+  { key: 'human', label: 'Humans, mean (SD)', num: true, hint: 'Average of the six human recommenders' },
+  { key: 'ai', label: 'AI, mean (SD)', num: true, hint: 'Average of the four AI recommenders' },
+  { key: 'diff', label: 'Difference [95% CI]', num: true, hint: 'Humans minus AI' },
+  { key: 't', label: 't (df)', num: true },
+  { key: 'p', label: 'p', num: true },
+  { key: 'd', label: 'd [95% CI]', num: true, hint: 'Cohen’s d for paired data' },
+];
+const hvRow = (label: string, t: any) => ({
+  measure: label,
+  human: `${f2(t.meanA)} (${f2(t.sdA)})`,
+  ai: `${f2(t.meanB)} (${f2(t.sdB)})`,
+  diff: minus(`${f2(t.diff)} [${f2(t.lo)}, ${f2(t.hi)}]`),
+  t: minus(`${f2(t.t)} (${t.df})`),
+  p: pv(t.p),
+  d: minus(`${f2(t.d)} [${f2(t.dLo)}, ${f2(t.dHi)}]`),
+});
+const hvRows = hva.tests.map((t: any) => hvRow(t.measure, t.human_vs_ai));
+const hvAltCols = [
+  { key: 'label', label: 'Comparison', wrap: true, minw: '14rem' },
+  { key: 'means', label: 'Means (SD)', num: true, wrap: true, minw: '9.5rem', hint: 'First group, then second group' },
+  { key: 'diff', label: 'Difference [95% CI]', num: true },
+  { key: 't', label: 't (df)', num: true },
+  { key: 'p', label: 'p', num: true },
+  { key: 'd', label: 'd [95% CI]', num: true },
+];
+const altDefs: [string, string, string][] = [
+  ['human_vs_hybrid', 'humans versus a doctor using AI', 'First group is the six human recommenders'],
+  ['hybrid_vs_ai', 'a doctor using AI versus the four AI tools', ''],
+  ['human_vs_ai5', 'humans versus AI, counting a doctor using AI as AI (the notebook’s rule)', ''],
+];
+const hvAltRows = hva.tests.flatMap((t: any) =>
+  altDefs.map(([k, what]) => {
+    const r: any = t[k];
+    return {
+      label: `${t.measure}: ${what}`,
+      means: `${f2(r.meanA)} (${f2(r.sdA)}), ${f2(r.meanB)} (${f2(r.sdB)})`,
+      diff: minus(`${f2(r.diff)} [${f2(r.lo)}, ${f2(r.hi)}]`),
+      t: minus(`${f2(r.t)} (${r.df})`),
+      p: pv(r.p),
+      d: minus(`${f2(r.d)} [${f2(r.dLo)}, ${f2(r.dHi)}]`),
+    };
+  }),
+);
+const hvCloud = hva.clouds.map((c: any) => ({ ...c, rows: c.rows }));
+const hvDir = hva.tests.map((t: any) => ({
+  id: t.key, text: `${t.measure}: humans versus AI`, aLabel: 'humans', bLabel: 'AI', n: t.human_vs_ai.n,
+  higher: t.human_vs_ai.higher, same: t.human_vs_ai.same, lower: t.human_vs_ai.lower, left: 'doctor', right: 'ai',
+})) as any[];
+const hvT = hva.tests[0].human_vs_ai;
+const groupHead = { human: 'Human recommenders', hybrid: 'Human with AI', ai: 'AI recommenders' } as const;
+const profileItems: any[] = [];
+(['human', 'hybrid', 'ai'] as const).forEach((g) => {
+  profileItems.push({ head: groupHead[g] });
+  hva.profile.filter((r: any) => r.group === g).forEach((r: any) =>
+    profileItems.push({ label: r.label, kind: g, cells: r.cells }),
+  );
+});
+const profilePanels = [
+  { title: 'Trust', domain: [3, 8], tickStep: 1, axisLabel: 'Average rating, 0 to 10' },
+  { title: 'Quantitative reasoning', domain: [3, 8], tickStep: 1, axisLabel: 'Average rating, 0 to 10' },
+  { title: 'Intuition', domain: [3, 8], tickStep: 1, axisLabel: 'Average rating, 0 to 10' },
+] as any[];
+const gapPanels = [
+  { title: 'Trust', domain: [-1, 4], tickStep: 1, zero: true, axisLabel: 'Humans minus AI' },
+  { title: 'Quantitative reasoning', domain: [-1, 4], tickStep: 1, zero: true, axisLabel: 'Humans minus AI' },
+  { title: 'Intuition', domain: [-1, 4], tickStep: 1, zero: true, axisLabel: 'Humans minus AI' },
+] as any[];
+const gapItems: any[] = [];
+hva.subgroups.forEach((sv: any) => {
+  gapItems.push({ head: sv.variable });
+  sv.groups.forEach((g: any) => gapItems.push({ label: g.label, sub: `n = ${g.n}`, kind: 'plain', cells: g.cells }));
+});
+const subTestRows = hva.subgroups.map((sv: any) => ({
+  label: sv.variable,
+  groups: sv.groups.map((g: any) => g.label).join(', '),
+  ...Object.fromEntries(
+    ['trust', 'qr', 'int'].map((k, i) => {
+      const t = sv.tests[i];
+      return [k, t ? `${t.stat} = ${minus(f2(t.value))}, p ${pv(t.p)}` : ''];
+    }),
+  ),
+}));
+const linkRows = hva.links.map((l: any) => ({
+  label: l.measure, n: l.n, r: r3(l.r), ci: `${r3(l.lo)} to ${r3(l.hi)}`, p: pv(l.p),
+}));
+const consRows = hva.consistency.map((c: any) => ({
+  label: `${c.measure}: ${c.group}`, alpha: noZero(c.alpha.toFixed(2)), rbar: noZero(c.meanR.toFixed(2)),
+}));
+const coefRows = [
+  ['Quantitative reasoning', 1],
+  ['Intuition', 2],
+].map(([lab, i]: any) => {
+  const h = huModel.terms[i];
+  const a = aiModel.terms[i];
+  return {
+    label: lab,
+    hum: `${minus(f2(h.b))} [${minus(f2(h.lo))}, ${minus(f2(h.hi))}]`,
+    ai: `${minus(f2(a.b))} [${minus(f2(a.lo))}, ${minus(f2(a.hi))}]`,
+  };
+});
+
 const toc = [
   ['sample', 'Who took part'],
   ['decisions', 'Fifteen medical decisions'],
@@ -199,6 +309,12 @@ const toc = [
       </p>
     </header>
 
+    <div class="tabs" role="tablist" aria-label="Views of Study 1">
+      <button role="tab" id="tab-full" aria-controls="panel-full" aria-selected="true" data-tab="full">All of Study 1</button>
+      <button role="tab" id="tab-ai" aria-controls="panel-ai" aria-selected="false" tabindex="-1" data-tab="ai">Humans versus AI</button>
+    </div>
+
+    <div role="tabpanel" id="panel-full" aria-labelledby="tab-full" class="panel">
     <nav class="toc" aria-label="On this page">
       <ul>
         {toc.map(([id, label]) => <li><a href={`#${id}`}>{label}</a></li>)}
@@ -351,6 +467,13 @@ const toc = [
         phi={efa.factorCorrelations}
       />
       <p class="small muted note">{efa.note}</p>
+
+      <h3 class="fig-title">Figure 4b. The factor diagram</h3>
+      <p class="intro">
+        The same solution as a diagram, as the notebook’s factor diagram drew it. Each decision points to the factor it loads on
+        most (solid line); dashed lines are smaller loadings of .30 or more. The curves give the correlations between factors.
+      </p>
+      <FactorDiagram items={efa.items} loadings={efa.loadings} factorNames={factorNames} phi={efa.factorCorrelations} />
     </section>
 
     <!-- ============================ tests ============================ -->
@@ -570,7 +693,8 @@ const toc = [
           <li><a href={href('/code/study1-analysis.R')}>study1-analysis.R</a>, the main tests in R, from the public file</li>
           <li><a href={href('/code/study1-original-analysis.Rmd')}>study1-original-analysis.Rmd</a>, my original notebook, run on the raw export</li>
           <li><a href={href('/docs/study1-preregistration.pdf')}>Preregistration (PDF)</a>, written before data collection</li>
-          <li><a href={`${repo}/blob/main/analysis/study1-full-results.py`}>study1-full-results.py</a>, the code that produced every number on this page</li>
+          <li><a href={`${repo}/blob/main/analysis/study1-full-results.py`}>study1-full-results.py</a>, the code behind the tables and figures in “All of Study 1”</li>
+          <li><a href={`${repo}/blob/main/analysis/study1-human-vs-ai.py`}>study1-human-vs-ai.py</a>, the code behind the “Humans versus AI” tab</li>
         </ul>
         <p>
           Everything above was computed in Python from the released file. Where the notebook used an R package, I used the
@@ -584,10 +708,226 @@ const toc = [
         </p>
       </div>
     </section>
+    </div>
+
+    <div role="tabpanel" id="panel-ai" aria-labelledby="tab-ai" class="panel" hidden>
+      <div class="prose">
+        <p class="how small muted">
+          This tab sets the two kinds of recommender side by side. <strong>Humans</strong> are the doctor, nurse, remote doctor,
+          therapist, personal trainer and layperson (six). <strong>AI</strong> is AI in general, an AI diagnostic tool, an AI chatbot and an
+          AI fitness coach (four). A doctor using AI is a person plus a tool, so it is shown on its own. Each person’s score for a
+          group is the average of their ratings of its recommenders. The doctor-versus-AI comparison in the dissertation (H6, H7, E)
+          is one pair; this is the exploratory version across all of them. It was not preregistered.
+        </p>
+      </div>
+
+      <section class="section" id="hva-gap" aria-labelledby="hva-gap-title">
+        <h2 id="hva-gap-title">The gap</h2>
+        <p class="intro">
+          People rated humans higher than AI on all three things. On average, trust was {f1(hv[0].diff)} points higher for humans
+          (d = {f2(hv[0].d)}), intuition {f1(hv[2].diff)} points higher (d = {f2(hv[2].d)}), and perceived quantitative reasoning
+          {f1(hv[1].diff)} points higher (d = {f2(hv[1].d)}), the smallest of the three.
+        </p>
+        <StatTable
+          id="table-hva"
+          title="Table 15. Humans versus AI, paired by person"
+          columns={hvCols}
+          rows={hvRows}
+          note={`Paired t tests on each person’s average rating. Only people who rated every recommender in both groups are included (${Math.min(...hva.tests.map((t: any) => t.human_vs_ai.n))} to ${Math.max(...hva.tests.map((t: any) => t.human_vs_ai.n))} of ${full.sample.n}). d is the mean difference over the SD of the differences.`}
+        />
+
+        <h3 class="fig-title" id="fig-hva-clouds">Figure 9. Every person, humans against AI</h3>
+        <p class="intro">
+          Each outline is how people’s averages are spread, each dot is one person, and the diamond is the group average with its
+          bootstrapped 95% interval. The doctor using AI sits between the two groups on all three.
+        </p>
+        {
+          hvCloud.map((c: any) => (
+            <div class="cloud">
+              <h4 class="mini">{c.measure}</h4>
+              <Raincloud rows={c.rows} grid={hva.densityGrid10} domain={[0, 10]} tickStep={1} xJitter={0.2} xLabel={`${c.measure}, average rating (0 to 10)`} ariaLabel={`${c.measure}: each person's average for human recommenders, a doctor using AI, and AI recommenders`} />
+            </div>
+          ))
+        }
+
+        <h3 class="fig-title" id="fig-hva-dir">Figure 10. How many people show the gap?</h3>
+        <p class="intro">
+          The averages hide the people who go the other way. Counting each person’s own difference: {hvDir[0].higher} of
+          {' '}{hvDir[0].higher + hvDir[0].same + hvDir[0].lower} rated humans higher on trust, {hvDir[0].lower} rated AI higher, and
+          {' '}{hvDir[0].same} rated them equal.
+        </p>
+        <DirectionBars rows={hvDir} />
+
+        <details class="more">
+          <summary>If a doctor using AI is counted differently</summary>
+          <StatTable
+            id="table-hva-alt"
+            title="Table 16. Other ways to draw the line"
+            columns={hvAltCols}
+            rows={hvAltRows}
+            note="The same paired tests with the doctor using AI shown on its own, compared with each group, or counted as AI as the notebook does. The conclusion does not change."
+          />
+        </details>
+      </section>
+
+      <section class="section" id="hva-each" aria-labelledby="hva-each-title">
+        <h2 id="hva-each-title">Recommender by recommender</h2>
+        <p class="intro">
+          The groups are not uniform. The doctor is trusted most and the layperson about as little as the AI tools. The gap is
+          widest against the doctor and the nurse, and nearly closes against the layperson. The four AI tools are close to one
+          another.
+        </p>
+        <h3 class="fig-title" id="fig-hva-profile">Figure 11. Each recommender on all three ratings</h3>
+        <DotPanels
+          items={profileItems}
+          panels={profilePanels}
+          ariaLabel="Average trust, quantitative reasoning and intuition for each of the eleven recommenders, grouped as human, human with AI, and AI"
+          tableLabel="Recommender"
+          valueLabel="Average"
+        />
+        <p class="small muted note">Dots are averages and bars are 95% confidence intervals. Blue is human, marigold is AI, grey is a doctor using AI.</p>
+      </section>
+
+      <section class="section" id="hva-link" aria-labelledby="hva-link-title">
+        <h2 id="hva-link-title">Do people who trust humans also trust AI?</h2>
+        <p class="intro">
+          Yes, moderately: the more someone trusts human recommenders, the more they tend to trust AI (r = {r3(hva.trustLink.r)},
+          n = {hva.trustLink.n}). Most dots fall under the equal-trust line, which is the same gap seen person by person.
+        </p>
+        <h3 class="fig-title" id="fig-hva-link">Figure 12. Trust in humans and trust in AI, one dot per person</h3>
+        <LinkScatter points={hva.trustLink.points} slope={hva.trustLink.slope} intercept={hva.trustLink.intercept} r={hva.trustLink.r} />
+        <StatTable
+          id="table-hva-link"
+          title="Table 17. How closely the two go together"
+          columns={[
+            { key: 'label', label: 'Rating' },
+            { key: 'n', label: 'n', num: true },
+            { key: 'r', label: 'r', num: true, hint: 'Pearson correlation between a person’s human average and AI average' },
+            { key: 'ci', label: '95% CI', num: true },
+            { key: 'p', label: 'p', num: true },
+          ]}
+          rows={linkRows}
+        />
+        <StatTable
+          id="table-hva-cons"
+          title="Table 18. How consistent people are within each group"
+          columns={[
+            { key: 'label', label: 'Rating and group' },
+            { key: 'alpha', label: 'Alpha', num: true, hint: 'Cronbach’s alpha across the recommenders in the group' },
+            { key: 'rbar', label: 'Average r', num: true, hint: 'Average correlation between two recommenders in the group' },
+          ]}
+          rows={consRows}
+          note="Alpha rises with the number of items, so compare the average correlations instead: about .75 between two AI tools and about .43 between two human recommenders. People rate the AI tools much more alike than they rate the humans."
+        />
+      </section>
+
+      <section class="section" id="hva-who" aria-labelledby="hva-who-title">
+        <h2 id="hva-who-title">Who shows the gap?</h2>
+        <p class="intro">
+          The gap points the same way in every group of people shown for trust and intuition, but its size varies. In this sample
+          it is largest among people aged 60 and over, among White participants compared with Black participants, and among people
+          with little experience of AI. It does not differ much by education or political views.
+        </p>
+        <h3 class="fig-title" id="fig-hva-who">Figure 13. The gap, group by group</h3>
+        <DotPanels
+          items={gapItems}
+          panels={gapPanels}
+          ariaLabel="Average gap between human and AI ratings for trust, quantitative reasoning and intuition, in each group of participants"
+          tableLabel="Group"
+          valueLabel="Average gap"
+        />
+        <p class="small muted note">{hva.subgroupNote}</p>
+        <StatTable
+          id="table-hva-who"
+          title="Table 19. Does the gap differ between groups?"
+          columns={[
+            { key: 'label', label: 'Compared by' },
+            { key: 'groups', label: 'Groups', wrap: true, minw: '12rem' },
+            { key: 'trust', label: 'Trust', num: true, wrap: true, minw: '8.5rem' },
+            { key: 'qr', label: 'Quantitative reasoning', num: true, wrap: true, minw: '8.5rem' },
+            { key: 'int', label: 'Intuition', num: true, wrap: true, minw: '8.5rem' },
+          ]}
+          rows={subTestRows}
+          note="t tests for two groups and one-way F tests for more. Exploratory, and not adjusted for running 18 tests, so treat a single small p as a lead, not a finding. The groups overlap (for example, older people and people with less AI experience), so this does not say which characteristic matters."
+        />
+      </section>
+
+      <section class="section" id="hva-model" aria-labelledby="hva-model-title">
+        <h2 id="hva-model-title">What goes with trust, for humans and for AI</h2>
+        <p class="intro">
+          For humans, perceived quantitative reasoning is the stronger partner of trust. For AI, it is perceived intuition. Letting the
+          two slopes differ by recommender type improves the model (Table 13 in “All of Study 1”: χ² = {f2(full.modelComparisons[1].chi2)},
+          p {pv(full.modelComparisons[1].p)}).
+        </p>
+        <StatTable
+          id="table-hva-coef"
+          title="Table 20. Trust predicted from the other two ratings, humans and AI"
+          columns={[
+            { key: 'label', label: 'Predictor' },
+            { key: 'hum', label: 'Humans, b [95% CI]', num: true },
+            { key: 'ai', label: 'AI, b [95% CI]', num: true },
+          ]}
+          rows={coefRows}
+          note="Mixed models with a random intercept for each person, fitted separately to the human and AI recommenders (the doctor using AI counts as AI, as in the notebook). b is the change in trust for one more point on the predictor, holding the other predictor fixed."
+        />
+        <h3 class="fig-title" id="fig-hva-slopes">Figure 14. Predicted trust, humans and AI</h3>
+        <SlopesPlot lines={slopes} />
+        <p class="small muted note">{full.slopes.note}</p>
+      </section>
+    </div>
   </div>
 </Base>
 
+<script>
+  // Two tabs. Both panels are in the page, so without scripting everything is simply shown.
+  const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+  const panels = new Map(tabs.map((t) => [t.dataset.tab as string, document.getElementById(`panel-${t.dataset.tab}`) as HTMLElement]));
+  function select(name: string, focus = false) {
+    tabs.forEach((t) => {
+      const on = t.dataset.tab === name;
+      t.setAttribute('aria-selected', String(on));
+      t.tabIndex = on ? 0 : -1;
+      if (on && focus) t.focus();
+    });
+    panels.forEach((p, k) => (p.hidden = k !== name));
+  }
+  function fromHash() {
+    const id = decodeURIComponent(location.hash.slice(1));
+    if (!id) return;
+    if (id === 'humans-vs-ai') return select('ai');
+    const el = document.getElementById(id);
+    const name = el?.closest('[role="tabpanel"]')?.id.replace('panel-', '');
+    if (name) {
+      select(name);
+      el?.scrollIntoView();
+    }
+  }
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => {
+      select(t.dataset.tab as string);
+      history.replaceState(null, '', t.dataset.tab === 'ai' ? '#humans-vs-ai' : location.pathname + location.search);
+    });
+    t.addEventListener('keydown', (e) => {
+      const j = e.key === 'ArrowRight' ? i + 1 : e.key === 'ArrowLeft' ? i - 1 : e.key === 'Home' ? 0 : e.key === 'End' ? tabs.length - 1 : -1;
+      if (j < 0) return;
+      e.preventDefault();
+      select(tabs[(j + tabs.length) % tabs.length].dataset.tab as string, true);
+    });
+  });
+  addEventListener('hashchange', fromHash);
+  select('full');
+  fromHash();
+</script>
+
 <style>
+  .tabs { display: flex; gap: 0.25rem; margin-top: 2rem; border-bottom: 2px solid var(--rule); font-family: var(--display); }
+  .tabs button { appearance: none; background: none; border: 0; border-bottom: 3px solid transparent; margin-bottom: -2px; padding: 0.6rem 1rem; font: inherit; font-weight: 600; font-size: 1rem; color: var(--muted); cursor: pointer; }
+  .tabs button:hover { color: var(--ink); }
+  .tabs button[aria-selected='true'] { color: var(--ink); border-bottom-color: var(--doctor); }
+  .tabs button:focus-visible { outline: 3px solid var(--doctor); outline-offset: -3px; border-radius: 4px; }
+  .panel[hidden] { display: none; }
+  .cloud { margin-top: 1.5rem; }
+  .mini { margin: 0 0 -0.4rem; font-size: 0.98rem; }
   .toc { margin-top: 2rem; }
   .toc ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; font-family: var(--display); font-size: 0.95rem; }
   .toc a { text-decoration-color: var(--rule); }

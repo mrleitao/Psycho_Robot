@@ -132,6 +132,8 @@ The Study 1 section of the trust-in-medical-AI page has two parts. A static char
 
 The page `src/pages/projects/trust-in-medical-ai/study-1.astro` rebuilds every table and figure of the Study 1 analysis notebook from the released file: sample, descriptives, reliability, the factor analysis, the paired tests with a person-level count, the eleven-recommender descriptives and maps, the regressions, and the mixed models. All numbers come from [`analysis/study1-full-results.py`](analysis/study1-full-results.py), which writes `study1-full.json` (tables and models) and `study1-points.json` (every person's value, for the dot plots).
 
+The same page has a second tab, "Humans versus AI", which compares the six human recommenders with the four AI recommenders (paired tests, every person's averages, each recommender, who shows the gap, and the slopes). Its numbers come from [`analysis/study1-human-vs-ai.py`](analysis/study1-human-vs-ai.py), which writes `study1-human-vs-ai.json`. It is exploratory and was not preregistered. The factor diagram (Figure 4b) completes the set of figures in the notebook; the notebook's last mixed model (3D) uses variables the notebook never creates, so it is the one piece not reproduced.
+
 **What matches the dissertation, and what does not.** H1 to H7 and the exploratory test were checked against the dissertation text (see Checks above). The other tables come from the notebook's exploratory sections, recomputed from the public file. They have not been compared with the dissertation's own tables, and the sample table is coarser than the dissertation's because the public file groups demographics.
 
 **Where Python stands in for R.**
