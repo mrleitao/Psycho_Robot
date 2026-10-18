@@ -1,0 +1,48 @@
+---
+// Doctor (versus AI) -> mediators -> trust, with the within-person path estimates written on every arrow.
+interface Med { name: string; a: number; b: number; indirect: number; lo: number; hi: number }
+interface Props { mediators: Med[]; direct: number; total: number; title: string }
+const { mediators, direct, total, title } = Astro.props;
+const fm = (n: number) => n.toFixed(2).replace('-', '−');
+const W = 760, rowH = 92, top = 20;
+const H = top + Math.max(mediators.length, 1) * rowH + 70;
+const xl = 110, xm = 390, xr = 650;
+const my = (i: number) => top + 40 + i * rowH;
+const cy = top + 40 + ((mediators.length - 1) * rowH) / 2;
+const dy = H - 36;
+---
+<figure class="md">
+  <div class="scroll" tabindex="0" role="region" aria-label={`${title}. Scrolls sideways on narrow screens.`}>
+    <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-label={`${title}. ${mediators.map((m) => `${m.name}: a ${fm(m.a)}, b ${fm(m.b)}, indirect ${fm(m.indirect)}`).join('; ')}. Direct ${fm(direct)}, total ${fm(total)}.`}>
+      <rect class="box" x={xl - 80} y={cy - 24} width="160" height="48" rx="4" />
+      <text class="bt" x={xl} y={cy + 5} text-anchor="middle">Doctor, not AI</text>
+      <rect class="box" x={xr - 60} y={cy - 24} width="120" height="48" rx="4" />
+      <text class="bt" x={xr} y={cy + 5} text-anchor="middle">Trust</text>
+      {mediators.map((m, i) => (
+        <g data-m>
+          <line class="ar" x1={xl + 80} y1={cy} x2={xm - 88} y2={my(i)} />
+          <line class="ar" x1={xm + 88} y1={my(i)} x2={xr - 60} y2={cy} />
+          <text class="pl" x={(xl + 80 + xm - 88) / 2 - 4} y={(cy + my(i)) / 2 - 8} text-anchor="middle">a = {fm(m.a)}</text>
+          <text class="pl" x={(xm + 88 + xr - 60) / 2} y={(cy + my(i)) / 2 - 8} text-anchor="middle">b = {fm(m.b)}</text>
+          <rect class="box med" x={xm - 88} y={my(i) - 26} width="176" height="52" rx="4" />
+          <text class="bt" x={xm} y={my(i) - 3} text-anchor="middle">{m.name}</text>
+          <text class="ind" x={xm} y={my(i) + 15} text-anchor="middle">indirect {fm(m.indirect)} [{fm(m.lo)}, {fm(m.hi)}]</text>
+        </g>
+      ))}
+      <path class="ar direct" d={`M ${xl} ${cy + 24} L ${xl} ${dy} L ${xr} ${dy} L ${xr} ${cy + 24}`} fill="none" />
+      <text class="pl" x={(xl + xr) / 2} y={dy - 8} text-anchor="middle">Direct effect = {fm(direct)} (total {fm(total)})</text>
+    </svg>
+  </div>
+</figure>
+<style>
+  .md { margin: 1.25rem 0 0; max-width: 780px; }
+  .scroll { overflow-x: auto; }
+  svg { display: block; width: 100%; min-width: 620px; height: auto; }
+  .box { fill: var(--wash); stroke: var(--rule); }
+  .med { stroke: var(--ai); stroke-width: 2; }
+  .bt { fill: var(--ink); font-family: var(--display); font-size: 14px; font-weight: 600; }
+  .ind { fill: var(--muted); font-family: var(--display); font-size: 12px; font-variant-numeric: tabular-nums; }
+  .pl { fill: var(--ink); font-family: var(--display); font-size: 12.5px; font-variant-numeric: tabular-nums; paint-order: stroke; stroke: var(--paper); stroke-width: 4px; }
+  .ar { stroke: var(--ink); stroke-width: 1.5; opacity: 0.75; }
+  .direct { stroke: var(--muted); stroke-dasharray: 5 4; }
+</style>

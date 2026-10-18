@@ -1,0 +1,58 @@
+---
+// One dot per medical decision: how much quantitative reasoning people said it needs (across), and how much more
+// they would trust a doctor than an AI for it (up), with the 95% interval of that gap.
+interface Pt { label: string; x: number; y: number; lo: number; hi: number }
+interface Props { points: Pt[]; slope: number; intercept: number; r: number; xDomain: [number, number]; yDomain: [number, number]; xTitle: string; yTitle: string; ariaLabel: string }
+const { points, slope, intercept, r, xDomain, yDomain, xTitle, yTitle, ariaLabel } = Astro.props;
+const W = 640, H = 420, L = 58, R = 16, T = 14, B = 56;
+const x = (v: number) => L + ((v - xDomain[0]) / (xDomain[1] - xDomain[0])) * (W - L - R);
+const y = (v: number) => T + (1 - (v - yDomain[0]) / (yDomain[1] - yDomain[0])) * (H - T - B);
+const xt: number[] = []; for (let t = Math.ceil(xDomain[0] / 10) * 10; t <= xDomain[1]; t += 10) xt.push(t);
+const yt: number[] = []; for (let t = Math.ceil(yDomain[0]); t <= yDomain[1] + 1e-9; t += 1) yt.push(t);
+const f = (n: number) => n.toFixed(1);
+---
+<figure class="gs" data-fig>
+  <div class="scroll" tabindex="0" role="region" aria-label="Chart. Scrolls sideways on narrow screens.">
+    <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-label={ariaLabel}>
+      <g class="grid">
+        {xt.map((t) => <line x1={x(t)} x2={x(t)} y1={T} y2={H - B} />)}
+        {yt.map((t) => <line x1={L} x2={W - R} y1={y(t)} y2={y(t)} />)}
+      </g>
+      <line class="fit" x1={x(xDomain[0])} y1={y(intercept + slope * xDomain[0])} x2={x(xDomain[1])} y2={y(intercept + slope * xDomain[1])} />
+      {points.map((p) => (
+        <g data-tip tabindex="0" role="group" aria-label={`${p.label}. Needs ${f(p.x)} of 100. Trust gap ${f(p.y)}, interval ${f(p.lo)} to ${f(p.hi)}`}
+          data-label={p.label} data-lines={`Quantitative reasoning needed: ${f(p.x)} of 100|Doctor minus AI trust: ${f(p.y)} (95% interval ${f(p.lo)} to ${f(p.hi)})`}>
+          <line class="ci" x1={x(p.x)} x2={x(p.x)} y1={y(p.lo)} y2={y(p.hi)} />
+          <circle class="pt" cx={x(p.x)} cy={y(p.y)} r="6" />
+        </g>
+      ))}
+      <g class="axis">
+        {xt.map((t) => <text x={x(t)} y={H - B + 20} text-anchor="middle">{t}</text>)}
+        {yt.map((t) => <text x={L - 10} y={y(t) + 4} text-anchor="end">{t}</text>)}
+        <text class="axtitle" x={L + (W - L - R) / 2} y={H - 10} text-anchor="middle">{xTitle}</text>
+        <text class="axtitle" transform={`translate(15 ${T + (H - T - B) / 2}) rotate(-90)`} text-anchor="middle">{yTitle}</text>
+      </g>
+    </svg>
+  </div>
+  <p class="key small muted">Twelve dots, one per decision. The line is the best fit across the twelve (r = {r.toFixed(2)}).</p>
+  <div class="tip" hidden></div>
+</figure>
+<script>
+  import { attachTips } from '../utils/figtip';
+  document.querySelectorAll<HTMLElement>('[data-fig]').forEach(attachTips);
+</script>
+<style>
+  .gs { margin: 1.25rem 0 0; position: relative; max-width: 680px; }
+  .scroll { overflow-x: auto; }
+  svg { display: block; width: 100%; min-width: 480px; height: auto; overflow: visible; }
+  .grid line { stroke: var(--rule); }
+  .fit { stroke: var(--muted); stroke-width: 2; stroke-dasharray: 6 5; }
+  .ci { stroke: var(--doctor); stroke-width: 2; opacity: 0.6; }
+  .pt { fill: var(--doctor); stroke: var(--paper); stroke-width: 1.5; }
+  g:focus { outline: none; }
+  g:hover > .pt, g:focus-visible > .pt { stroke: var(--ink); stroke-width: 2; }
+  .axis text { fill: var(--muted); font-family: var(--display); font-size: 13px; }
+  .key { margin: 0.6rem 0 0; font-family: var(--display); }
+  .tip { position: absolute; transform: translate(-50%, -100%); display: grid; gap: 0.1rem; padding: 0.55rem 0.8rem; background: var(--ink); color: var(--paper); border-radius: 6px; font-family: var(--display); font-size: 0.85rem; line-height: 1.35; white-space: nowrap; pointer-events: none; z-index: 2; }
+  .tip[hidden] { display: none; }
+</style>

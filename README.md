@@ -14,6 +14,7 @@ This README doubles as a build log. It records how the site was made and why, so
 6. [The live CV](#the-live-cv)
 7. [Study 1 data release](#study-1-data-release)
 8. [Study 1 in full](#study-1-in-full)
+   - [Study 2 data release and full results](#study-2-data-release-and-full-results)
 9. [Content rules](#content-rules)
 10. [Everyday tasks](#everyday-tasks)
 11. [Deploying](#deploying)
@@ -151,6 +152,18 @@ As a check, the mixed-model slopes for AI and for human recommenders (0.273 and 
 **Not copied from the notebook.** The notebook counted people who rated a doctor above, equal to or below an AI for trust only; the page does the same count for every test and says so. The notebook's jittered violin plots used a very wide smoothing setting; the page uses a narrower one so the shape of the answers shows. Notes to self and presentation versions of the plots (white text on transparent backgrounds) are not reproduced.
 
 **Narrow screens.** The dot plots, the map and the slopes chart keep a minimum width and scroll sideways, because shrinking them to a phone screen would make the labels unreadable. Each has a table view.
+
+## Study 2 data release and full results
+
+Study 2 (106 adults rate trust in a doctor and in an AI for twelve medical decisions, and rate both on quantitative reasoning, intuition, warmth, competence and seven mind-perception items) was released the same way as Study 1.
+
+- [`analysis/study2-deidentify.py`](analysis/study2-deidentify.py) turns the raw Qualtrics export (not in the repository) into `public/data/study2-ratings.csv` (106 rows) and `study2-codebook.csv`. It drops preview and non-consenting rows, removes IP addresses, locations, timestamps and IDs, shuffles participant numbers (seed 2023), and keeps only coarse demographics: age in four bands (18-44, 45-59, 60-69, 70+), gender, race as White or another or multiple, education, religiosity and AI experience in two or three levels. Exact age is not released.
+- [`analysis/study2-full-results.py`](analysis/study2-full-results.py) writes `study2-full.json` and `study2-points.json`, which the page `src/pages/projects/trust-in-medical-ai/study-2.astro` reads. The page has the sample, the twelve decisions, the doctor-versus-AI tests (per decision and per group), the eleven qualities, the mixed models with VIFs and R squared, within- and between-person correlations, mediation, and subgroup gaps. Components added: `GapScatter`, `MediationDiagram` (and `DotPanels`, from Study 1).
+- Files: `public/code/study2-analysis.R` (not run, no R in the build environment), `public/code/study2-original-analysis.Rmd` (author's notebook, only local paths replaced), `public/docs/study2-preregistration.pdf`.
+
+**Checked against the dissertation.** Paired tests and effect sizes, the correlations in Tables 11 and 12 (within .03), the full mixed model (doctor 1.68, intuition .14, quantitative reasoning .27, warmth .14, competence .58, N = 2,454 ratings from 105 people) and the double-mediation indirect effects reproduce. Differences: random-effect variances are not identical to lme4's (fixed effects and residual variance are); mediation z values are close to, not identical to, Mplus's; between-person correlations differ by up to .03; the dissertation's narrative numbers sometimes disagree with its own Table 5 (the data agree with the table).
+
+**Deviations, on purpose.** Ratings use the scales participants saw (the notebook kept some Qualtrics codes, so means and intercepts differ; differences, slopes and correlations do not). Composites are missing if any item is missing. Age enters as the band number, so the age rows differ a little from the dissertation; rerunning the dissertation's Table 8 privately with exact age gives the same results (doctor 1.683, intuition .140, quantitative reasoning .272, warmth .134, competence .578, age .002, man .037; 2,454 ratings, 105 people). The age-band-by-doctor interaction (b = .16, p = .01) is exploratory and was not in the dissertation.
 
 ## Content rules
 

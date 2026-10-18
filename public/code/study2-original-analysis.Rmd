@@ -1,0 +1,2450 @@
+---
+title: "Health Algorithm - Chapter 1 - Study 2"
+author: "Matthew Leitao"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+<!--
+Original analysis notebook for Study 2 (Chapter 1), as I ran it on the raw Qualtrics export.
+Only two lines were changed for release: the local file paths on my computer were replaced
+with "raw-data/..." placeholders. Everything else, including notes to myself and unfinished
+exploratory chunks, is as written.
+
+The raw .sav file is not released because it holds fields that could identify people.
+To rerun the results from the public file, use study2-analysis.R and study2-ratings.csv instead.
+-->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r packages}
+if(!require(haven)) {install.packages("haven")}
+if(!require(tidyverse))  {install.packages("tidyverse")}
+if(!require(psych))  {install.packages("psych")}
+if(!require(effectsize))  {install.packages("effectsize")}
+if(!require(lme4))  {install.packages("lme4")}
+if(!require(MuMIn))  {install.packages("MuMIn")}
+if(!require(sjPlot))  {install.packages("sjPlot")}
+if(!require(sjmisc))  {install.packages("sjmisc")}
+if(!require(EMAtools))  {install.packages("EMAtools")}
+if(!require(papaja))  {install.packages("papaja")}
+if(!require(lm.beta))  {install.packages("lm.beta")}
+if(!require(report))  {install.packages("report")}
+if(!require(broom))  {install.packages("broom")}
+if(!require(bmlm))  {install.packages("bmlm")}
+if(!require(mediation))  {install.packages("mediation")}
+if(!require(MplusAutomation))  {install.packages("MplusAutomation")}
+if(!require(here))  {install.packages("here")}
+```
+
+
+```{r}
+Health_Algorithm_Objectivity_2 <- read_sav("raw-data/study2-raw.sav")  # raw file, not released; see the de-identified CSV
+```
+
+
+# Hypotheses
+H1. People will report trusting doctors more than artificial intelligence for all the medical decisions that we present to them.
+
+H2. The difference in trust between doctors and artificial intelligence will vary based on the perceived amount of needed quantitative reasoning believed to be needed to make that medical decision. 
+
+H3.a. The capability of a decision-maker to use quantitative reasoning will correlate with the perceived competence of the decision-maker.
+
+H3.b. The capability of a decision-maker to use intuition will correlate with the perceived warmth of the decision-maker.
+
+H4.a. The perceived warmth of the decision-maker will mediate the differences in trust between the artificial intelligence and the doctor.
+
+H4.b. The perceived competence of the decision maker will mediate the differences in trust between the artificial intelligence and the doctor.
+
+# Cleaning
+```{r}
+describe(Health_Algorithm_Objectivity_2$Int_Quant_10)
+```
+
+## Removing Non-Viable Participants
+### Removing Preview & Test Worker
+```{r}
+
+Health_Algorithm_Objectivity_2_Clean <- Health_Algorithm_Objectivity_2[-c(1,2,3,4), ]
+
+```
+
+
+### Removing People Who Did Not Consent
+```{r}
+Health_Algorithm_Objectivity_2_Clean <- Health_Algorithm_Objectivity_2_Clean %>%
+  filter(Consent == 1)
+
+```
+
+
+## Renaming Variables
+```{r}
+Health_Algorithm_Objectivity_2_Clean <- Health_Algorithm_Objectivity_2_Clean %>%
+  dplyr::rename(
+    Trust.Rec_Inj.AI = A1_AI_Doc_Trust_1,
+    Trust.Rec_Inj.Doc = A1_AI_Doc_Trust_2,
+    Trust.Diag_Inj.AI = A2_AI_Doc_Trust_1,
+    Trust.Diag_Inj.Doc = A2_AI_Doc_Trust_2,
+    Trust.Pres_Inj.AI = A4_AI_Doc_Trust_1,
+    Trust.Pres_Inj.Doc = A4_AI_Doc_Trust_2,
+    Trust.Rec_Ment.AI = A5_AI_Doc_Trust_1,
+    Trust.Rec_Ment.Doc = A5_AI_Doc_Trust_2,
+    Trust.Diag_Ment.AI = A6_AI_Doc_Trust_1,
+    Trust.Diag_Ment.Doc = A6_AI_Doc_Trust_2,
+    Trust.Pres_Ment.AI = A7_AI_Doc_Trust_1,
+    Trust.Pres_Ment.Doc = A7_AI_Doc_Trust_2,
+    Trust.Rec_AcuS.AI = A8_AI_Doc_Trust_1,
+    Trust.Rec_AcuS.Doc = A8_AI_Doc_Trust_2,
+    Trust.Diag_AcuS.AI = A9_AI_Doc_Trust_1,
+    Trust.Diag_AcuS.Doc = A9_AI_Doc_Trust_2,
+    Trust.Pres_AcuS.AI = A10_AI_Doc_Trust_1,
+    Trust.Pres_AcuS.Doc = A10_AI_Doc_Trust_2,
+    Trust.Rec_ChronS.AI = A11_AI_Doc_Trust_1,
+    Trust.Rec_ChronS.Doc = A11_AI_Doc_Trust_2,
+    Trust.Diag_ChronS.AI = A12_AI_Doc_Trust_1,
+    Trust.Diag_ChronS.Doc = A12_AI_Doc_Trust_2,
+    Trust.Pres_ChronS.AI = A13_AI_Doc_Trust_1,
+    Trust.Pres_ChronS.Doc = A13_AI_Doc_Trust_2,
+    Int_Quant_Rec_Inj = Int_Quant_1,
+    Int_Quant_Diag_Inj = Int_Quant_2,
+    Int_Quant_Pres_Inj_Med = Int_Quant_4,
+    Int_Quant_Rec_Ment = Int_Quant_5,
+    Int_Quant_Diag_Ment = Int_Quant_6,
+    Int_Quant_Pres_Ment = Int_Quant_7,
+    Int_Quant_Rec_AcuS = Int_Quant_8,
+    Int_Quant_Diag_AcuS = Int_Quant_9,
+    Int_Quant_Pres_AcuS = Int_Quant_10,
+    Int_Quant_Rec_ChronS = Int_Quant_11,
+    Int_Quant_Diag_ChronS = Int_Quant_12,
+    Int_Quant_Pres_ChronS = Int_Quant_13
+  )
+
+```
+
+## Fixing Trust
+```{r}
+Health_Algorithm_Objectivity_2_Clean %>%
+ dplyr::select("Trust.Diag_AcuS.AI", "Trust.Diag_AcuS.Doc", "Trust.Diag_ChronS.Doc", "Trust.Diag_Inj.AI", "Trust.Diag_Inj.Doc", "Trust.Diag_Ment.AI", "Trust.Diag_Ment.Doc", "Trust.Pres_AcuS.AI", "Trust.Pres_AcuS.Doc", "Trust.Pres_ChronS.AI", "Trust.Pres_ChronS.Doc", "Trust.Pres_Inj.AI", "Trust.Pres_Inj.Doc", "Trust.Pres_Ment.AI", "Trust.Pres_Ment.Doc", "Trust.Rec_AcuS.AI", "Trust.Rec_AcuS.Doc", "Trust.Rec_ChronS.AI", "Trust.Rec_ChronS.Doc", "Trust.Rec_Inj.AI", "Trust.Rec_Inj.Doc", "Trust.Rec_Ment.AI" ) %>%
+  describe()
+```
+
+```{r}
+table(Health_Algorithm_Objectivity_2_Clean$Trust.Diag_AcuS.AI)
+```
+
+
+```{r}
+Health_Algorithm_Objectivity_2_Clean <- Health_Algorithm_Objectivity_2_Clean %>%
+  mutate(
+    Trust.Rec_Inj.AI = case_when(
+      Trust.Rec_Inj.AI == 1 ~ 0,
+      Trust.Rec_Inj.AI == 3 ~ 1,
+      Trust.Rec_Inj.AI == 4 ~ 2,
+      Trust.Rec_Inj.AI == 5 ~ 3,
+      Trust.Rec_Inj.AI == 6 ~ 4,
+      Trust.Rec_Inj.AI == 7 ~ 5,
+      Trust.Rec_Inj.AI == 8 ~ 6,
+      Trust.Rec_Inj.AI == 9 ~ 7,
+      Trust.Rec_Inj.AI == 10 ~ 8,
+      Trust.Rec_Inj.AI == 11 ~ 9,
+      Trust.Rec_Inj.AI == 13 ~ 10,
+      TRUE ~ NA_real_
+    ),
+    
+    Trust.Diag_Inj.AI = case_when(
+      Trust.Diag_Inj.AI == 1 ~ 0,
+      Trust.Diag_Inj.AI == 3 ~ 1,
+      Trust.Diag_Inj.AI == 4 ~ 2,
+      Trust.Diag_Inj.AI == 5 ~ 3,
+      Trust.Diag_Inj.AI == 6 ~ 4,
+      Trust.Diag_Inj.AI == 7 ~ 5,
+      Trust.Diag_Inj.AI == 8 ~ 6,
+      Trust.Diag_Inj.AI == 9 ~ 7,
+      Trust.Diag_Inj.AI == 10 ~ 8,
+      Trust.Diag_Inj.AI == 11 ~ 9,
+      Trust.Diag_Inj.AI == 13 ~ 10,
+      TRUE ~ NA_real_
+    ),
+    Trust.Pres_Inj.AI = case_when(
+      Trust.Pres_Inj.AI == 1 ~ 0,
+      Trust.Pres_Inj.AI == 3 ~ 1,
+      Trust.Pres_Inj.AI == 4 ~ 2,
+      Trust.Pres_Inj.AI == 5 ~ 3,
+      Trust.Pres_Inj.AI == 6 ~ 4,
+      Trust.Pres_Inj.AI == 7 ~ 5,
+      Trust.Pres_Inj.AI == 8 ~ 6,
+      Trust.Pres_Inj.AI == 9 ~ 7,
+      Trust.Pres_Inj.AI == 10 ~ 8,
+      Trust.Pres_Inj.AI == 11 ~ 9,
+      Trust.Pres_Inj.AI == 13 ~ 10,
+      TRUE ~ NA_real_
+    ),
+    Trust.Rec_Ment.AI = case_when(
+      Trust.Rec_Ment.AI == 1 ~ 0,
+      Trust.Rec_Ment.AI == 3 ~ 1,
+      Trust.Rec_Ment.AI == 4 ~ 2,
+      Trust.Rec_Ment.AI == 5 ~ 3,
+      Trust.Rec_Ment.AI == 6 ~ 4,
+      Trust.Rec_Ment.AI == 7 ~ 5,
+      Trust.Rec_Ment.AI == 8 ~ 6,
+      Trust.Rec_Ment.AI == 9 ~ 7,
+      Trust.Rec_Ment.AI == 10 ~ 8,
+      Trust.Rec_Ment.AI == 11 ~ 9,
+      Trust.Rec_Ment.AI == 13 ~ 10,
+      TRUE ~ NA_real_
+    ),
+    Trust.Diag_Ment.AI = case_when(
+      Trust.Diag_Ment.AI == 1 ~ 0,
+      Trust.Diag_Ment.AI == 3 ~ 1,
+      Trust.Diag_Ment.AI == 4 ~ 2,
+      Trust.Diag_Ment.AI == 5 ~ 3,
+      Trust.Diag_Ment.AI == 6 ~ 4,
+      Trust.Diag_Ment.AI == 7 ~ 5,
+      Trust.Diag_Ment.AI == 8 ~ 6,
+      Trust.Diag_Ment.AI == 9 ~ 7,
+      Trust.Diag_Ment.AI == 10 ~ 8,
+      Trust.Diag_Ment.AI == 11 ~ 9,
+      Trust.Diag_Ment.AI == 13 ~ 10,
+      TRUE ~ NA_real_
+    ),
+    Trust.Pres_Ment.AI = case_when(
+      Trust.Pres_Ment.AI == 1 ~ 0,
+      Trust.Pres_Ment.AI == 3 ~ 1,
+      Trust.Pres_Ment.AI == 4 ~ 2,
+      Trust.Pres_Ment.AI == 5 ~ 3,
+      Trust.Pres_Ment.AI == 6 ~ 4,
+      Trust.Pres_Ment.AI == 7 ~ 5,
+      Trust.Pres_Ment.AI == 8 ~ 6,
+      Trust.Pres_Ment.AI == 9 ~ 7,
+      Trust.Pres_Ment.AI == 10 ~ 8,
+      Trust.Pres_Ment.AI == 11 ~ 9,
+      Trust.Pres_Ment.AI == 13 ~ 10,
+      TRUE ~ NA_real_
+    ),
+    Trust.Rec_AcuS.AI = case_when(
+      Trust.Rec_AcuS.AI == 1 ~ 0,
+      Trust.Rec_AcuS.AI == 3 ~ 1,
+      Trust.Rec_AcuS.AI == 4 ~ 2,
+      Trust.Rec_AcuS.AI == 5 ~ 3,
+      Trust.Rec_AcuS.AI == 6 ~ 4,
+      Trust.Rec_AcuS.AI == 7 ~ 5,
+      Trust.Rec_AcuS.AI == 8 ~ 6,
+      Trust.Rec_AcuS.AI == 9 ~ 7,
+      Trust.Rec_AcuS.AI == 10 ~ 8,
+      Trust.Rec_AcuS.AI == 11 ~ 9,
+      Trust.Rec_AcuS.AI == 13 ~ 10,
+      TRUE ~ NA_real_
+    ),
+    Trust.Diag_AcuS.AI = case_when(
+      Trust.Diag_AcuS.AI == 1 ~ 0,
+      Trust.Diag_AcuS.AI == 3 ~ 1,
+      Trust.Diag_AcuS.AI == 4 ~ 2,
+      Trust.Diag_AcuS.AI == 5 ~ 3,
+      Trust.Diag_AcuS.AI == 6 ~ 4,
+      Trust.Diag_AcuS.AI == 7 ~ 5,
+      Trust.Diag_AcuS.AI == 8 ~ 6,
+      Trust.Diag_AcuS.AI == 9 ~ 7,
+      Trust.Diag_AcuS.AI == 10 ~ 8,
+      Trust.Diag_AcuS.AI == 11 ~ 9,
+      Trust.Diag_AcuS.AI == 13 ~ 10,
+      TRUE ~ NA_real_
+    ),
+    Trust.Pres_AcuS.AI = case_when(
+      Trust.Pres_AcuS.AI == 1 ~ 0,
+      Trust.Pres_AcuS.AI == 3 ~ 1,
+      Trust.Pres_AcuS.AI == 4 ~ 2,
+      Trust.Pres_AcuS.AI == 5 ~ 3,
+      Trust.Pres_AcuS.AI == 6 ~ 4,
+      Trust.Pres_AcuS.AI == 7 ~ 5,
+      Trust.Pres_AcuS.AI == 8 ~ 6,
+      Trust.Pres_AcuS.AI == 9 ~ 7,
+      Trust.Pres_AcuS.AI == 10 ~ 8,
+      Trust.Pres_AcuS.AI == 11 ~ 9,
+      Trust.Pres_AcuS.AI == 13 ~ 10,
+      TRUE ~ NA_real_
+    ),
+    Trust.Rec_ChronS.AI = case_when(
+      Trust.Rec_ChronS.AI == 1 ~ 0,
+      Trust.Rec_ChronS.AI == 3 ~ 1,
+      Trust.Rec_ChronS.AI == 4 ~ 2,
+      Trust.Rec_ChronS.AI == 5 ~ 3,
+      Trust.Rec_ChronS.AI == 6 ~ 4,
+      Trust.Rec_ChronS.AI == 7 ~ 5,
+      Trust.Rec_ChronS.AI == 8 ~ 6,
+      Trust.Rec_ChronS.AI == 9 ~ 7,
+      Trust.Rec_ChronS.AI == 10 ~ 8,
+      Trust.Rec_ChronS.AI == 11 ~ 9,
+      Trust.Rec_ChronS.AI == 13 ~ 10,
+      TRUE ~ NA_real_
+    ),
+    Trust.Diag_ChronS.AI = case_when(
+      Trust.Diag_ChronS.AI == 1 ~ 0,
+      Trust.Diag_ChronS.AI == 3 ~ 1,
+      Trust.Diag_ChronS.AI == 4 ~ 2,
+      Trust.Diag_ChronS.AI == 5 ~ 3,
+      Trust.Diag_ChronS.AI == 6 ~ 4,
+      Trust.Diag_ChronS.AI == 7 ~ 5,
+      Trust.Diag_ChronS.AI == 8 ~ 6,
+      Trust.Diag_ChronS.AI == 9 ~ 7,
+      Trust.Diag_ChronS.AI == 10 ~ 8,
+      Trust.Diag_ChronS.AI == 11 ~ 9,
+      Trust.Diag_ChronS.AI == 13 ~ 10,
+      TRUE ~ NA_real_
+    ),
+    Trust.Pres_ChronS.AI = case_when(
+      Trust.Pres_ChronS.AI == 1 ~ 0,
+      Trust.Pres_ChronS.AI == 3 ~ 1,
+      Trust.Pres_ChronS.AI == 4 ~ 2,
+      Trust.Pres_ChronS.AI == 5 ~ 3,
+      Trust.Pres_ChronS.AI == 6 ~ 4,
+      Trust.Pres_ChronS.AI == 7 ~ 5,
+      Trust.Pres_ChronS.AI == 8 ~ 6,
+      Trust.Pres_ChronS.AI == 9 ~ 7,
+      Trust.Pres_ChronS.AI == 10 ~ 8,
+      Trust.Pres_ChronS.AI == 11 ~ 9,
+      Trust.Pres_ChronS.AI == 13 ~ 10,
+      TRUE ~ NA_real_
+    ),
+    Trust.Rec_Inj.Doc = case_when(
+      Trust.Rec_Inj.Doc == 1 ~ 0,
+      Trust.Rec_Inj.Doc == 3 ~ 1,
+      Trust.Rec_Inj.Doc == 4 ~ 2,
+      Trust.Rec_Inj.Doc == 5 ~ 3,
+      Trust.Rec_Inj.Doc == 6 ~ 4,
+      Trust.Rec_Inj.Doc == 7 ~ 5,
+      Trust.Rec_Inj.Doc == 8 ~ 6,
+      Trust.Rec_Inj.Doc == 9 ~ 7,
+      Trust.Rec_Inj.Doc == 10 ~ 8,
+      Trust.Rec_Inj.Doc == 11 ~ 9,
+      Trust.Rec_Inj.Doc == 13 ~ 10,
+      TRUE ~ NA_real_
+    ),
+    Trust.Diag_Inj.Doc = case_when(
+      Trust.Diag_Inj.Doc == 1 ~ 0,
+      Trust.Diag_Inj.Doc == 3 ~ 1,
+      Trust.Diag_Inj.Doc == 4 ~ 2,
+      Trust.Diag_Inj.Doc == 5 ~ 3,
+      Trust.Diag_Inj.Doc == 6 ~ 4,
+      Trust.Diag_Inj.Doc == 7 ~ 5,
+      Trust.Diag_Inj.Doc == 8 ~ 6,
+      Trust.Diag_Inj.Doc == 9 ~ 7,
+      Trust.Diag_Inj.Doc == 10 ~ 8,
+      Trust.Diag_Inj.Doc == 11 ~ 9,
+      Trust.Diag_Inj.Doc == 13 ~ 10,
+      TRUE ~ NA_real_
+    ),
+    Trust.Pres_Inj.Doc = case_when(
+      Trust.Pres_Inj.Doc == 1 ~ 0,
+      Trust.Pres_Inj.Doc == 3 ~ 1,
+      Trust.Pres_Inj.Doc == 4 ~ 2,
+      Trust.Pres_Inj.Doc == 5 ~ 3,
+      Trust.Pres_Inj.Doc == 6 ~ 4,
+      Trust.Pres_Inj.Doc == 7 ~ 5,
+      Trust.Pres_Inj.Doc == 8 ~ 6,
+      Trust.Pres_Inj.Doc == 9 ~ 7,
+      Trust.Pres_Inj.Doc == 10 ~ 8,
+      Trust.Pres_Inj.Doc == 11 ~ 9,
+      Trust.Pres_Inj.Doc == 13 ~ 10,
+      TRUE ~ NA_real_
+    ),
+    Trust.Rec_Ment.Doc = case_when(
+      Trust.Rec_Ment.Doc == 1 ~ 0,
+      Trust.Rec_Ment.Doc == 3 ~ 1,
+      Trust.Rec_Ment.Doc == 4 ~ 2,
+      Trust.Rec_Ment.Doc == 5 ~ 3,
+      Trust.Rec_Ment.Doc == 6 ~ 4,
+      Trust.Rec_Ment.Doc == 7 ~ 5,
+      Trust.Rec_Ment.Doc == 8 ~ 6,
+      Trust.Rec_Ment.Doc == 9 ~ 7,
+      Trust.Rec_Ment.Doc == 10 ~ 8,
+      Trust.Rec_Ment.Doc == 11 ~ 9,
+      Trust.Rec_Ment.Doc == 13 ~ 10,
+      TRUE ~ NA_real_
+    ),
+    Trust.Diag_Ment.Doc = case_when(
+      Trust.Diag_Ment.Doc == 1 ~ 0,
+      Trust.Diag_Ment.Doc == 3 ~ 1,
+      Trust.Diag_Ment.Doc == 4 ~ 2,
+      Trust.Diag_Ment.Doc == 5 ~ 3,
+      Trust.Diag_Ment.Doc == 6 ~ 4,
+      Trust.Diag_Ment.Doc == 7 ~ 5,
+      Trust.Diag_Ment.Doc == 8 ~ 6,
+      Trust.Diag_Ment.Doc == 9 ~ 7,
+      Trust.Diag_Ment.Doc == 10 ~ 8,
+      Trust.Diag_Ment.Doc == 11 ~ 9,
+      Trust.Diag_Ment.Doc == 13 ~ 10,
+      TRUE ~ NA_real_
+    ),
+    Trust.Pres_Ment.Doc = case_when(
+      Trust.Pres_Ment.Doc == 1 ~ 0,
+      Trust.Pres_Ment.Doc == 3 ~ 1,
+      Trust.Pres_Ment.Doc == 4 ~ 2,
+      Trust.Pres_Ment.Doc == 5 ~ 3,
+      Trust.Pres_Ment.Doc == 6 ~ 4,
+      Trust.Pres_Ment.Doc == 7 ~ 5,
+      Trust.Pres_Ment.Doc == 8 ~ 6,
+      Trust.Pres_Ment.Doc == 9 ~ 7,
+      Trust.Pres_Ment.Doc == 10 ~ 8,
+      Trust.Pres_Ment.Doc == 11 ~ 9,
+      Trust.Pres_Ment.Doc == 13 ~ 10,
+      TRUE ~ NA_real_
+    ),
+    Trust.Rec_AcuS.Doc = case_when(
+      Trust.Rec_AcuS.Doc == 1 ~ 0,
+      Trust.Rec_AcuS.Doc == 3 ~ 1,
+      Trust.Rec_AcuS.Doc == 4 ~ 2,
+      Trust.Rec_AcuS.Doc == 5 ~ 3,
+      Trust.Rec_AcuS.Doc == 6 ~ 4,
+      Trust.Rec_AcuS.Doc == 7 ~ 5,
+      Trust.Rec_AcuS.Doc == 8 ~ 6,
+      Trust.Rec_AcuS.Doc == 9 ~ 7,
+      Trust.Rec_AcuS.Doc == 10 ~ 8,
+      Trust.Rec_AcuS.Doc == 11 ~ 9,
+      Trust.Rec_AcuS.Doc == 13 ~ 10,
+      TRUE ~ NA_real_
+    ),
+    Trust.Diag_AcuS.Doc = case_when(
+      Trust.Diag_AcuS.Doc == 1 ~ 0,
+      Trust.Diag_AcuS.Doc == 3 ~ 1,
+      Trust.Diag_AcuS.Doc == 4 ~ 2,
+      Trust.Diag_AcuS.Doc == 5 ~ 3,
+      Trust.Diag_AcuS.Doc == 6 ~ 4,
+      Trust.Diag_AcuS.Doc == 7 ~ 5,
+      Trust.Diag_AcuS.Doc == 8 ~ 6,
+      Trust.Diag_AcuS.Doc == 9 ~ 7,
+      Trust.Diag_AcuS.Doc == 10 ~ 8,
+      Trust.Diag_AcuS.Doc == 11 ~ 9,
+      Trust.Diag_AcuS.Doc == 13 ~ 10,
+      TRUE ~ NA_real_
+    ),
+    Trust.Pres_AcuS.Doc = case_when(
+      Trust.Pres_AcuS.Doc == 1 ~ 0,
+      Trust.Pres_AcuS.Doc == 3 ~ 1,
+      Trust.Pres_AcuS.Doc == 4 ~ 2,
+      Trust.Pres_AcuS.Doc == 5 ~ 3,
+      Trust.Pres_AcuS.Doc == 6 ~ 4,
+      Trust.Pres_AcuS.Doc == 7 ~ 5,
+      Trust.Pres_AcuS.Doc == 8 ~ 6,
+      Trust.Pres_AcuS.Doc == 9 ~ 7,
+      Trust.Pres_AcuS.Doc == 10 ~ 8,
+      Trust.Pres_AcuS.Doc == 11 ~ 9,
+      Trust.Pres_AcuS.Doc == 13 ~ 10,
+      TRUE ~ NA_real_
+    ),
+    Trust.Rec_ChronS.Doc = case_when(
+      Trust.Rec_ChronS.Doc == 1 ~ 0,
+      Trust.Rec_ChronS.Doc == 3 ~ 1,
+      Trust.Rec_ChronS.Doc == 4 ~ 2,
+      Trust.Rec_ChronS.Doc == 5 ~ 3,
+      Trust.Rec_ChronS.Doc == 6 ~ 4,
+      Trust.Rec_ChronS.Doc == 7 ~ 5,
+      Trust.Rec_ChronS.Doc == 8 ~ 6,
+      Trust.Rec_ChronS.Doc == 9 ~ 7,
+      Trust.Rec_ChronS.Doc == 10 ~ 8,
+      Trust.Rec_ChronS.Doc == 11 ~ 9,
+      Trust.Rec_ChronS.Doc == 13 ~ 10,
+      TRUE ~ NA_real_
+    ),
+    Trust.Diag_ChronS.Doc = case_when(
+      Trust.Diag_ChronS.Doc == 1 ~ 0,
+      Trust.Diag_ChronS.Doc == 3 ~ 1,
+      Trust.Diag_ChronS.Doc == 4 ~ 2,
+      Trust.Diag_ChronS.Doc == 5 ~ 3,
+      Trust.Diag_ChronS.Doc == 6 ~ 4,
+      Trust.Diag_ChronS.Doc == 7 ~ 5,
+      Trust.Diag_ChronS.Doc == 8 ~ 6,
+      Trust.Diag_ChronS.Doc == 9 ~ 7,
+      Trust.Diag_ChronS.Doc == 10 ~ 8,
+      Trust.Diag_ChronS.Doc == 11 ~ 9,
+      Trust.Diag_ChronS.Doc == 13 ~ 10,
+      TRUE ~ NA_real_
+    ),
+    Trust.Pres_ChronS.Doc = case_when(
+      Trust.Pres_ChronS.Doc == 1 ~ 0,
+      Trust.Pres_ChronS.Doc == 3 ~ 1,
+      Trust.Pres_ChronS.Doc == 4 ~ 2,
+      Trust.Pres_ChronS.Doc == 5 ~ 3,
+      Trust.Pres_ChronS.Doc == 6 ~ 4,
+      Trust.Pres_ChronS.Doc == 7 ~ 5,
+      Trust.Pres_ChronS.Doc == 8 ~ 6,
+      Trust.Pres_ChronS.Doc == 9 ~ 7,
+      Trust.Pres_ChronS.Doc == 10 ~ 8,
+      Trust.Pres_ChronS.Doc == 11 ~ 9,
+      Trust.Pres_ChronS.Doc == 13 ~ 10,
+      TRUE ~ NA_real_
+    )
+  )
+
+
+```
+
+```{r}
+Health_Algorithm_Objectivity_2_Clean %>%
+ dplyr::select("Trust.Diag_AcuS.AI", "Trust.Diag_AcuS.Doc", "Trust.Diag_ChronS.AI", "Trust.Diag_ChronS.Doc", "Trust.Diag_Inj.AI", "Trust.Diag_Inj.Doc", "Trust.Diag_Ment.AI", "Trust.Diag_Ment.Doc", "Trust.Pres_AcuS.AI", "Trust.Pres_AcuS.Doc", "Trust.Pres_ChronS.AI", "Trust.Pres_ChronS.Doc", "Trust.Pres_Inj.AI", "Trust.Pres_Inj.Doc", "Trust.Pres_Ment.AI", "Trust.Pres_Ment.Doc", "Trust.Rec_AcuS.AI", "Trust.Rec_AcuS.Doc", "Trust.Rec_ChronS.AI", "Trust.Rec_ChronS.Doc", "Trust.Rec_Inj.AI", "Trust.Rec_Inj.Doc", "Trust.Rec_Ment.AI","Trust.Rec_Ment.Doc" ) %>%
+  describe()
+```
+
+
+## Fixing Intuition - Need to Fix Mind Preception
+```{r}
+Health_Algorithm_Objectivity_2_Clean %>%
+ dplyr::select(Decision_Maker.IN.AI, Decision_Maker.IN.Doc, Decision_Maker.Antic.AI, Decision_Maker.Antic.Doc, Decision_Maker.Gen.AI, Decision_Maker.Gen.Doc, Decision_Maker.Fam.AI, Decision_Maker.Fam.Doc, Decision_Maker.Acct.AI, Decision_Maker.Acct.Doc, Decision_Maker.Under.AI, Decision_Maker.Under.Doc, Decision_Maker.Trans.AI, Decision_Maker.Trans.Doc, Decision_Maker.PUnd.AI, Decision_Maker.PUnd.Doc) %>%
+  describe()
+```
+
+
+```{r}
+Health_Algorithm_Objectivity_2_Clean <- Health_Algorithm_Objectivity_2_Clean %>%
+  mutate(
+    Decision_Maker.IN.AI = case_when(
+      Decision_Maker.IN.AI == 1 ~ 1,
+      Decision_Maker.IN.AI == 2 ~ 2,
+      Decision_Maker.IN.AI == 3 ~ 3,
+      Decision_Maker.IN.AI == 4 ~ 4,
+      Decision_Maker.IN.AI == 5 ~ 5,
+      Decision_Maker.IN.AI == 6 ~ 6,
+      Decision_Maker.IN.AI == 7 ~ 7,
+      Decision_Maker.IN.AI == 12 ~ 8,
+      Decision_Maker.IN.AI == 13 ~ 9,
+      Decision_Maker.IN.AI == 14 ~ 10,
+      Decision_Maker.IN.AI == 15 ~ 11,
+      TRUE ~ NA_real_
+    ),
+   Decision_Maker.IN.Doc = case_when(
+      Decision_Maker.IN.Doc == 1 ~ 1,
+      Decision_Maker.IN.Doc == 2 ~ 2,
+      Decision_Maker.IN.Doc == 3 ~ 3,
+      Decision_Maker.IN.Doc == 4 ~ 4,
+      Decision_Maker.IN.Doc == 5 ~ 5,
+      Decision_Maker.IN.Doc == 6 ~ 6,
+      Decision_Maker.IN.Doc == 7 ~ 7,
+      Decision_Maker.IN.Doc == 12 ~ 8,
+      Decision_Maker.IN.Doc == 13 ~ 9,
+      Decision_Maker.IN.Doc == 14 ~ 10,
+      Decision_Maker.IN.Doc == 15 ~ 11,
+      TRUE ~ NA_real_
+    ),
+   Decision_Maker.Antic.AI = case_when(
+      Decision_Maker.Antic.AI == 1 ~ 1,
+      Decision_Maker.Antic.AI == 2 ~ 2,
+      Decision_Maker.Antic.AI == 3 ~ 3,
+      Decision_Maker.Antic.AI == 4 ~ 4,
+      Decision_Maker.Antic.AI == 5 ~ 5,
+      Decision_Maker.Antic.AI == 6 ~ 6,
+      Decision_Maker.Antic.AI == 7 ~ 7,
+      Decision_Maker.Antic.AI == 12 ~ 8,
+      Decision_Maker.Antic.AI == 13 ~ 9,
+      Decision_Maker.Antic.AI == 14 ~ 10,
+      Decision_Maker.Antic.AI == 15 ~ 11,
+      TRUE ~ NA_real_
+    ),
+   
+   Decision_Maker.Antic.Doc = case_when(
+      Decision_Maker.Antic.Doc == 1 ~ 1,
+      Decision_Maker.Antic.Doc == 2 ~ 2,
+      Decision_Maker.Antic.Doc == 3 ~ 3,
+      Decision_Maker.Antic.Doc == 4 ~ 4,
+      Decision_Maker.Antic.Doc == 5 ~ 5,
+      Decision_Maker.Antic.Doc == 6 ~ 6,
+      Decision_Maker.Antic.Doc == 7 ~ 7,
+      Decision_Maker.Antic.Doc == 12 ~ 8,
+      Decision_Maker.Antic.Doc == 13 ~ 9,
+      Decision_Maker.Antic.Doc == 14 ~ 10,
+      Decision_Maker.Antic.Doc == 15 ~ 11,
+      TRUE ~ NA_real_
+    ),
+   Decision_Maker.Gen.AI = case_when(
+      Decision_Maker.Gen.AI == 1 ~ 1,
+      Decision_Maker.Gen.AI == 2 ~ 2,
+      Decision_Maker.Gen.AI == 3 ~ 3,
+      Decision_Maker.Gen.AI == 4 ~ 4,
+      Decision_Maker.Gen.AI == 5 ~ 5,
+      Decision_Maker.Gen.AI == 6 ~ 6,
+      Decision_Maker.Gen.AI == 7 ~ 7,
+      Decision_Maker.Gen.AI == 12 ~ 8,
+      Decision_Maker.Gen.AI == 13 ~ 9,
+      Decision_Maker.Gen.AI == 14 ~ 10,
+      Decision_Maker.Gen.AI == 15 ~ 11,
+      TRUE ~ NA_real_
+    ), 
+   Decision_Maker.Gen.Doc = case_when(
+      Decision_Maker.Gen.Doc == 1 ~ 1,
+      Decision_Maker.Gen.Doc == 2 ~ 2,
+      Decision_Maker.Gen.Doc == 3 ~ 3,
+      Decision_Maker.Gen.Doc == 4 ~ 4,
+      Decision_Maker.Gen.Doc == 5 ~ 5,
+      Decision_Maker.Gen.Doc == 6 ~ 6,
+      Decision_Maker.Gen.Doc == 7 ~ 7,
+      Decision_Maker.Gen.Doc == 12 ~ 8,
+      Decision_Maker.Gen.Doc == 13 ~ 9,
+      Decision_Maker.Gen.Doc == 14 ~ 10,
+      Decision_Maker.Gen.Doc == 15 ~ 11,
+      TRUE ~ NA_real_
+    ),
+   Decision_Maker.Fam.AI = case_when(
+      Decision_Maker.Fam.AI == 1 ~ 1,
+      Decision_Maker.Fam.AI == 2 ~ 2,
+      Decision_Maker.Fam.AI == 3 ~ 3,
+      Decision_Maker.Fam.AI == 4 ~ 4,
+      Decision_Maker.Fam.AI == 5 ~ 5,
+      Decision_Maker.Fam.AI == 6 ~ 6,
+      Decision_Maker.Fam.AI == 7 ~ 7,
+      Decision_Maker.Fam.AI == 12 ~ 8,
+      Decision_Maker.Fam.AI == 13 ~ 9,
+      Decision_Maker.Fam.AI == 14 ~ 10,
+      Decision_Maker.Fam.AI == 15 ~ 11,
+      TRUE ~ NA_real_
+    ),
+   Decision_Maker.Fam.Doc = case_when(
+      Decision_Maker.Fam.Doc == 1 ~ 1,
+      Decision_Maker.Fam.Doc == 2 ~ 2,
+      Decision_Maker.Fam.Doc == 3 ~ 3,
+      Decision_Maker.Fam.Doc == 4 ~ 4,
+      Decision_Maker.Fam.Doc == 5 ~ 5,
+      Decision_Maker.Fam.Doc == 6 ~ 6,
+      Decision_Maker.Fam.Doc == 7 ~ 7,
+      Decision_Maker.Fam.Doc == 12 ~ 8,
+      Decision_Maker.Fam.Doc == 13 ~ 9,
+      Decision_Maker.Fam.Doc == 14 ~ 10,
+      Decision_Maker.Fam.Doc == 15 ~ 11,
+      TRUE ~ NA_real_
+    ),
+   Decision_Maker.Acct.AI = case_when(
+      Decision_Maker.Acct.AI == 1 ~ 1,
+      Decision_Maker.Acct.AI == 2 ~ 2,
+      Decision_Maker.Acct.AI == 3 ~ 3,
+      Decision_Maker.Acct.AI == 4 ~ 4,
+      Decision_Maker.Acct.AI == 5 ~ 5,
+      Decision_Maker.Acct.AI == 6 ~ 6,
+      Decision_Maker.Acct.AI == 7 ~ 7,
+      Decision_Maker.Acct.AI == 12 ~ 8,
+      Decision_Maker.Acct.AI == 13 ~ 9,
+      Decision_Maker.Acct.AI == 14 ~ 10,
+      Decision_Maker.Acct.AI == 15 ~ 11,
+      TRUE ~ NA_real_
+    ),
+   Decision_Maker.Acct.Doc= case_when(
+      Decision_Maker.Acct.Doc == 1 ~ 1,
+      Decision_Maker.Acct.Doc == 2 ~ 2,
+      Decision_Maker.Acct.Doc == 3 ~ 3,
+      Decision_Maker.Acct.Doc == 4 ~ 4,
+      Decision_Maker.Acct.Doc == 5 ~ 5,
+      Decision_Maker.Acct.Doc == 6 ~ 6,
+      Decision_Maker.Acct.Doc == 7 ~ 7,
+      Decision_Maker.Acct.Doc == 12 ~ 8,
+      Decision_Maker.Acct.Doc == 13 ~ 9,
+      Decision_Maker.Acct.Doc == 14 ~ 10,
+      Decision_Maker.Acct.Doc == 15 ~ 11,
+      TRUE ~ NA_real_
+    ),
+   Decision_Maker.Under.AI = case_when(
+      Decision_Maker.Under.AI == 1 ~ 1,
+      Decision_Maker.Under.AI == 2 ~ 2,
+      Decision_Maker.Under.AI == 3 ~ 3,
+      Decision_Maker.Under.AI == 4 ~ 4,
+      Decision_Maker.Under.AI == 5 ~ 5,
+      Decision_Maker.Under.AI == 6 ~ 6,
+      Decision_Maker.Under.AI == 7 ~ 7,
+      Decision_Maker.Under.AI == 12 ~ 8,
+      Decision_Maker.Under.AI == 13 ~ 9,
+      Decision_Maker.Under.AI == 14 ~ 10,
+      Decision_Maker.Under.AI == 15 ~ 11,
+      TRUE ~ NA_real_
+    ),
+   Decision_Maker.Under.Doc = case_when(
+      Decision_Maker.Under.Doc == 1 ~ 1,
+      Decision_Maker.Under.Doc == 2 ~ 2,
+      Decision_Maker.Under.Doc == 3 ~ 3,
+      Decision_Maker.Under.Doc == 4 ~ 4,
+      Decision_Maker.Under.Doc == 5 ~ 5,
+      Decision_Maker.Under.Doc == 6 ~ 6,
+      Decision_Maker.Under.Doc == 7 ~ 7,
+      Decision_Maker.Under.Doc == 12 ~ 8,
+      Decision_Maker.Under.Doc == 13 ~ 9,
+      Decision_Maker.Under.Doc == 14 ~ 10,
+      Decision_Maker.Under.Doc == 15 ~ 11,
+      TRUE ~ NA_real_
+    ),
+   Decision_Maker.Trans.AI = case_when(
+      Decision_Maker.Trans.AI == 1 ~ 1,
+      Decision_Maker.Trans.AI == 2 ~ 2,
+      Decision_Maker.Trans.AI == 3 ~ 3,
+      Decision_Maker.Trans.AI == 4 ~ 4,
+      Decision_Maker.Trans.AI == 5 ~ 5,
+      Decision_Maker.Trans.AI == 6 ~ 6,
+      Decision_Maker.Trans.AI == 7 ~ 7,
+      Decision_Maker.Trans.AI == 12 ~ 8,
+      Decision_Maker.Trans.AI == 13 ~ 9,
+      Decision_Maker.Trans.AI == 14 ~ 10,
+      Decision_Maker.Trans.AI == 15 ~ 11,
+      TRUE ~ NA_real_
+    ),
+   Decision_Maker.Trans.Doc = case_when(
+      Decision_Maker.Trans.Doc == 1 ~ 1,
+      Decision_Maker.Trans.Doc == 2 ~ 2,
+      Decision_Maker.Trans.Doc == 3 ~ 3,
+      Decision_Maker.Trans.Doc == 4 ~ 4,
+      Decision_Maker.Trans.Doc == 5 ~ 5,
+      Decision_Maker.Trans.Doc == 6 ~ 6,
+      Decision_Maker.Trans.Doc == 7 ~ 7,
+      Decision_Maker.Trans.Doc == 12 ~ 8,
+      Decision_Maker.Trans.Doc == 13 ~ 9,
+      Decision_Maker.Trans.Doc == 14 ~ 10,
+      Decision_Maker.Trans.Doc == 15 ~ 11,
+      TRUE ~ NA_real_
+    ),
+   Decision_Maker.PUnd.AI = case_when(
+      Decision_Maker.PUnd.AI == 1 ~ 1,
+      Decision_Maker.PUnd.AI == 2 ~ 2,
+      Decision_Maker.PUnd.AI == 3 ~ 3,
+      Decision_Maker.PUnd.AI == 4 ~ 4,
+      Decision_Maker.PUnd.AI == 5 ~ 5,
+      Decision_Maker.PUnd.AI == 6 ~ 6,
+      Decision_Maker.PUnd.AI == 7 ~ 7,
+      Decision_Maker.PUnd.AI == 12 ~ 8,
+      Decision_Maker.PUnd.AI == 13 ~ 9,
+      Decision_Maker.PUnd.AI == 14 ~ 10,
+      Decision_Maker.PUnd.AI == 15 ~ 11,
+      TRUE ~ NA_real_
+    ),
+   Decision_Maker.PUnd.Doc = case_when(
+      Decision_Maker.PUnd.Doc == 1 ~ 1,
+      Decision_Maker.PUnd.Doc == 2 ~ 2,
+      Decision_Maker.PUnd.Doc == 3 ~ 3,
+      Decision_Maker.PUnd.Doc == 4 ~ 4,
+      Decision_Maker.PUnd.Doc == 5 ~ 5,
+      Decision_Maker.PUnd.Doc == 6 ~ 6,
+      Decision_Maker.PUnd.Doc == 7 ~ 7,
+      Decision_Maker.PUnd.Doc == 12 ~ 8,
+      Decision_Maker.PUnd.Doc == 13 ~ 9,
+      Decision_Maker.PUnd.Doc == 14 ~ 10,
+      Decision_Maker.PUnd.Doc == 15 ~ 11,
+      TRUE ~ NA_real_
+    )
+  )
+```
+
+```{r}
+Health_Algorithm_Objectivity_2_Clean %>%
+ dplyr::select(Decision_Maker.IN.AI, Decision_Maker.IN.Doc, Decision_Maker.Gen.Doc) %>%
+  describe()
+```
+
+## Creating Dummies
+
+### Ethnicity Dummy Variable
+```{r}
+#Ethnicity Dummy Variables
+
+Health_Algorithm_Objectivity_2_Clean <- Health_Algorithm_Objectivity_2_Clean %>%
+  mutate(
+    IsAsian = case_when(
+      Ethnicity_1 == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    IsBlack = case_when(
+      Ethnicity_2 == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    IsWhite = case_when(
+      Ethnicity_3 == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    IsNativeAmerican = case_when(
+      Ethnicity_5 == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    IsPacificIslander = case_when(
+      Ethnicity_6 == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    IsOther = case_when(
+      Ethnicity_8 == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    IsHispanic = case_when(
+      Hispanic == 1 ~ 1,
+      Hispanic == 0 ~ 0,
+      TRUE ~ NA_real_
+    )
+  )
+
+```
+
+
+### Gender
+```{r}
+Health_Algorithm_Objectivity_2_Clean <- Health_Algorithm_Objectivity_2_Clean %>%
+  mutate(
+    IsMale = case_when(
+      Gender == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    IsNonBinary = case_when(
+      Gender == 4 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    IsTrans = case_when(
+      Transgender == 1 ~ 1,
+      Transgender == 0 ~ 0,
+      TRUE ~ NA_real_
+    )
+    
+  )
+```
+
+
+### Other Demographics
+```{r}
+Health_Algorithm_Objectivity_2_Clean <- Health_Algorithm_Objectivity_2_Clean %>%
+  mutate(
+    
+    EnglishFirst = case_when(
+      First_Language == 1 ~ 1,
+      First_Language == 2 ~ 2,
+      TRUE ~ NA_real_
+    )
+  )
+```
+
+
+### Employment & Income
+```{r}
+
+Health_Algorithm_Objectivity_2_Clean <- Health_Algorithm_Objectivity_2_Clean %>%
+  mutate(
+    EmpFull = case_when(
+      Employment == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EmpPart = case_when(
+      Employment == 2 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EmpSelf = case_when(
+      Employment == 3 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EmpUn = case_when(
+      Employment == 4 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EmpRet = case_when(
+      Employment == 5 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EmpStud = case_when(
+      Employment == 6 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EduAtt_LessHigh = case_when(
+      Education_Att == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EduAtt_LessHigh = case_when(
+      Education_Att == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EduAtt_HighSchool = case_when(
+      Education_Att == 2 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EduAtt_LessColl = case_when(
+      Education_Att == 3 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EduAtt_College = case_when(
+      Education_Att == 4 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EduAtt_LessGrad = case_when(
+      Education_Att == 5 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EduAtt_Graduate = case_when(
+      Education_Att == 6 ~ 1,
+      TRUE ~ 0
+    )
+  )
+
+
+```
+
+
+
+
+Demographics
+```{r}
+prop.table(table(Health_Algorithm_Objectivity_2_Clean$Gender))
+
+describe(Health_Algorithm_Objectivity_2_Clean$Age)
+```
+
+
+```{r}
+table(Health_Algorithm_Objectivity_2_Clean$Age)
+```
+
+
+# PreRegistered Analysis
+
+1. Our primary analysis will be a paired samples t-test to compare trust in doctors and artificial intelligence along every dimension of medical decisions. We will also compare doctors and artificial intelligence using paired samples t-tests on the medical decision dimensions we will create.
+
+12 - Paired Samples T-Tests - Base
+
+a. Rec_Inj
+b. Diag_Inj
+c. Pres_Inj
+d. Rec_Ment
+e. Diag_Ment
+f. Pres_Ment
+g. Rec_AcuS
+h. Diag_AcuS
+i. Pres_AcuS
+j. Rec_ChronS
+k. Diag_ChronS
+l. Pres_ChronS
+
+Combined
+n. Diagnostic
+m. Prescriptive
+o. Preventative
+p. Physical Health
+q. Mental Health
+r. Bodily Injury
+s. Acute Sickness
+t. Chronic Stress
+
+2. We will also conduct a linear mixed-effect model to investigate the overall trust difference in doctors and artificial intelligence for all medical decisions without the composites. Next, we will run this linear mixed-effects model using people’s perceptions of quantitative reasoning/intuition needed to make accurate medical decisions.
+
+
+
+3. Additionally, we will run a linear mixed-effect model to determine whether the perceived warmth and competence of the decision-maker mediate the difference in trust between doctors and artificial intelligence.
+
+
+
+4. Finally, we will correlate mind perception, the capability to use intuition, the capability to use quantitative reasoning, competence, and warmth.
+
+
+
+### Correlation & Cronbachs Alpha Of Composites
+
+#### Diagonsis
+
+Diagnostic Decisions:
+1.	Diagnosing a Broken Bone
+2.	Diagnosing Depression
+3.	Diagnosing Strep Throat
+4.	Diagnosing Diabetes
+
+##### Correlation/Alpha
+```{r}
+Health_Algorithm_Objectivity_2_Clean %>%
+  dplyr::select(Int_Quant_Diag_Inj, Int_Quant_Diag_Ment, Int_Quant_Diag_AcuS, Int_Quant_Diag_ChronS) %>%
+  corr.test()
+```
+
+
+```{r}
+Health_Algorithm_Objectivity_2_Clean %>%
+  dplyr::select(Int_Quant_Diag_Inj, Int_Quant_Diag_Ment, Int_Quant_Diag_AcuS, Int_Quant_Diag_ChronS) %>%
+  alpha()
+```
+
+
+#### Prescriptive
+
+Prescriptive Decisions:
+1.	Prescribing Pain Medication for a Knee Injury
+2.	Prescribing Anti-Depressants and Cognitive Behavioral Therapy for Depression
+3.	Prescribing Anti-Biotics for Strep Throat
+4.	Prescribing Insulin and a Change in Diet for Diabetes
+
+```{r}
+Health_Algorithm_Objectivity_2_Clean %>%
+  dplyr::select(Int_Quant_Pres_Inj_Med, Int_Quant_Pres_Ment, Int_Quant_Pres_AcuS, Int_Quant_Pres_ChronS) %>%
+  corr.test()
+```
+
+
+```{r}
+Health_Algorithm_Objectivity_2_Clean %>%
+  dplyr::select(Int_Quant_Pres_Inj_Med, Int_Quant_Pres_Ment, Int_Quant_Pres_AcuS, Int_Quant_Pres_ChronS) %>%
+  alpha()
+```
+
+
+#### Preventative 
+
+Preventative Decisions:
+1.	Recommending Stretching to Prevent Injury
+2.	Recommending Meditation and Exercise to Promote Mental Health
+3.	Recommending Vitamin C + Zinc to Fight Off Infections
+4.	Recommending a Strict Diet to Promote Better Physical Health
+
+```{r}
+Health_Algorithm_Objectivity_2_Clean %>%
+  dplyr::select(Int_Quant_Rec_Inj, Int_Quant_Rec_Ment, Int_Quant_Rec_AcuS, Int_Quant_Rec_ChronS) %>%
+  corr.test()
+```
+
+
+```{r}
+Health_Algorithm_Objectivity_2_Clean %>%
+  dplyr::select(Int_Quant_Rec_Inj, Int_Quant_Rec_Ment, Int_Quant_Rec_AcuS, Int_Quant_Rec_ChronS) %>%
+  alpha()
+```
+
+1.	Physical Health:
+a.	Bodily Injury:
+i.	Recommending Stretching to Prevent Injury
+ii.	Diagnosing a Broken Bone
+iii.	Prescribing Pain Medication for a Knee Injury
+b.	Acute Sickness:
+i.	Recommending Vitamin C + Zinc to Fight Off Infections
+ii.	Diagnosing Strep Throat
+iii.	Prescribing Anti-Biotics for Strep Throat
+c.	Chronic Sickness:
+i.	Recommending a Strict Diet to Promote Better Physical Health
+ii.	Diagnosing Diabetes
+iii.	Prescribing Insulin and a Change in Diet for Diabetes
+2.	Mental Health:
+a.	Recommending Meditation and Exercise to Promote Mental Health
+b.	Diagnosing Depression
+c.	Prescribing Anti-Depressants and Cognitive Behavioral Therapy for Depression
+
+
+#### Physical Health
+```{r}
+Health_Algorithm_Objectivity_2_Clean %>%
+  dplyr::select(Int_Quant_Diag_Inj, Int_Quant_Diag_AcuS, Int_Quant_Diag_ChronS, Int_Quant_Rec_Inj, Int_Quant_Rec_AcuS, Int_Quant_Rec_ChronS, Int_Quant_Pres_Inj_Med,  Int_Quant_Pres_AcuS, Int_Quant_Pres_ChronS) %>%
+  corr.test()
+```
+
+
+```{r}
+Health_Algorithm_Objectivity_2_Clean %>%
+  dplyr::select(Int_Quant_Diag_Inj, Int_Quant_Diag_AcuS, Int_Quant_Diag_ChronS, Int_Quant_Rec_Inj, Int_Quant_Rec_AcuS, Int_Quant_Rec_ChronS, Int_Quant_Pres_Inj_Med,  Int_Quant_Pres_AcuS, Int_Quant_Pres_ChronS) %>%
+  alpha()
+```
+
+#### Mental Health
+```{r}
+Health_Algorithm_Objectivity_2_Clean %>%
+  dplyr::select(Int_Quant_Diag_Ment, Int_Quant_Rec_Ment, Int_Quant_Pres_Ment) %>%
+  corr.test()
+```
+
+
+```{r}
+Health_Algorithm_Objectivity_2_Clean %>%
+  dplyr::select(Int_Quant_Diag_Ment, Int_Quant_Rec_Ment, Int_Quant_Pres_Ment) %>%
+  alpha()
+```
+
+
+#### Bodily Injury
+```{r}
+Health_Algorithm_Objectivity_2_Clean %>%
+  dplyr::select(Int_Quant_Diag_Inj, Int_Quant_Rec_Inj, Int_Quant_Pres_Inj_Med) %>%
+  corr.test()
+```
+
+
+```{r}
+Health_Algorithm_Objectivity_2_Clean %>%
+  dplyr::select(Int_Quant_Diag_Inj, Int_Quant_Rec_Inj, Int_Quant_Pres_Inj_Med) %>%
+  alpha()
+```
+
+
+#### Acute Sickness
+```{r}
+Health_Algorithm_Objectivity_2_Clean %>%
+  dplyr::select(Int_Quant_Diag_AcuS, Int_Quant_Rec_AcuS, Int_Quant_Pres_AcuS) %>%
+  corr.test()
+```
+
+
+```{r}
+Health_Algorithm_Objectivity_2_Clean %>%
+  dplyr::select(Int_Quant_Diag_AcuS, Int_Quant_Rec_AcuS, Int_Quant_Pres_AcuS) %>%
+  alpha()
+```
+
+
+#### Chronic Sickness
+```{r}
+Health_Algorithm_Objectivity_2_Clean %>%
+  dplyr::select(Int_Quant_Diag_ChronS, Int_Quant_Rec_ChronS, Int_Quant_Pres_ChronS) %>%
+  corr.test()
+```
+
+
+```{r}
+Health_Algorithm_Objectivity_2_Clean %>%
+  dplyr::select(Int_Quant_Diag_ChronS, Int_Quant_Rec_ChronS, Int_Quant_Pres_ChronS) %>%
+  alpha()
+```
+
+#### All
+```{r}
+Int_Quant_Cor_All <- Health_Algorithm_Objectivity_2_Clean %>%
+  dplyr::select(Int_Quant_Diag_Inj, Int_Quant_Diag_AcuS, Int_Quant_Diag_ChronS, Int_Quant_Rec_Inj, Int_Quant_Rec_AcuS, Int_Quant_Rec_ChronS, Int_Quant_Pres_Inj_Med,  Int_Quant_Pres_AcuS, Int_Quant_Pres_ChronS,Int_Quant_Diag_Ment, Int_Quant_Rec_Ment, Int_Quant_Pres_Ment) %>% cor(use = "complete.obs")
+
+Int_Quant_Cor_All
+```
+
+
+
+### Combine Int_Quant
+```{r}
+Health_Algorithm_Objectivity_2_Clean <- Health_Algorithm_Objectivity_2_Clean %>%
+  mutate(
+    Int_Quant_Diagnosis    = (Int_Quant_Diag_Inj + Int_Quant_Diag_Ment + Int_Quant_Diag_AcuS + Int_Quant_Diag_ChronS)/4,
+    Int_Quant_Prescription  = (Int_Quant_Pres_Inj_Med + Int_Quant_Pres_Ment + Int_Quant_Pres_AcuS + Int_Quant_Pres_ChronS)/4,
+    Int_Quant_Preventative  = (Int_Quant_Rec_Inj + Int_Quant_Rec_Ment + Int_Quant_Rec_AcuS + Int_Quant_Rec_ChronS)/4,
+    Int_Quant_PhysHealth    = (Int_Quant_Diag_Inj + Int_Quant_Diag_AcuS + Int_Quant_Diag_ChronS + Int_Quant_Rec_Inj + Int_Quant_Rec_AcuS + Int_Quant_Rec_ChronS + Int_Quant_Pres_Inj_Med + Int_Quant_Pres_AcuS + Int_Quant_Pres_ChronS)/9,
+    Int_Quant_MentHealth    = (Int_Quant_Diag_Ment + Int_Quant_Rec_Ment + Int_Quant_Pres_Ment)/3,
+    Int_Quant_BodyInj       = (Int_Quant_Diag_Inj + Int_Quant_Rec_Inj + Int_Quant_Pres_Inj_Med)/3,
+    Int_Quant_AcuteSic      = (Int_Quant_Diag_AcuS + Int_Quant_Rec_AcuS + Int_Quant_Pres_AcuS)/3,
+    Int_Quant_ChronSic      = (Int_Quant_Diag_ChronS + Int_Quant_Rec_ChronS + Int_Quant_Pres_ChronS)/3
+  )
+
+
+```
+
+
+### Descriptives Before Compositing
+```{r}
+Health_Algorithm_Objectivity_2_Clean %>%
+  dplyr::select(Int_Quant_Diag_Inj, Int_Quant_Diag_AcuS, Int_Quant_Diag_ChronS, Int_Quant_Rec_Inj, Int_Quant_Rec_AcuS, Int_Quant_Rec_ChronS, Int_Quant_Pres_Inj_Med, Int_Quant_Pres_AcuS, Int_Quant_Pres_ChronS, Int_Quant_Diag_Ment, Int_Quant_Rec_Ment, Int_Quant_Pres_Ment) %>% describe()
+
+```
+
+
+### Descriptives for Composites
+```{r}
+Health_Algorithm_Objectivity_2_Clean %>%
+  dplyr::select(
+    Int_Quant_Diagnosis, Int_Quant_Prescription, Int_Quant_Preventative, Int_Quant_PhysHealth,
+    Int_Quant_MentHealth, Int_Quant_BodyInj, Int_Quant_AcuteSic, Int_Quant_ChronSic
+  ) %>%
+  describe()
+```
+
+
+## Combine Trust
+
+### Doc
+```{r}
+Health_Algorithm_Objectivity_2_Clean <- Health_Algorithm_Objectivity_2_Clean %>%
+  mutate(
+    Trust.Diagnosis.Doc     = (Trust.Diag_Inj.Doc + Trust.Diag_Ment.Doc  + Trust.Diag_AcuS.Doc  + Trust.Diag_ChronS.Doc )/4,
+    Trust.Prescription.Doc   = (Trust.Pres_Inj.Doc  + Trust.Pres_Ment.Doc  + Trust.Pres_AcuS.Doc + Trust.Pres_ChronS.Doc )/4,
+    Trust.Preventative.Doc   = (Trust.Rec_Inj.Doc  + Trust.Rec_Ment.Doc  + Trust.Rec_AcuS.Doc  + Trust.Rec_ChronS.Doc )/4,
+    Trust.PhysHealth.Doc     = (Trust.Diag_Inj.Doc  + Trust.Diag_AcuS.Doc  + Trust.Diag_ChronS.Doc  + Trust.Rec_Inj.Doc  + Trust.Rec_AcuS.Doc  + Trust.Rec_ChronS.Doc  + Trust.Pres_Inj.Doc  + Trust.Pres_AcuS.Doc  + Trust.Pres_ChronS.Doc )/9,
+    Trust.MentHealth.Doc    = (Trust.Diag_Ment.Doc  + Trust.Rec_Ment.Doc  + Trust.Pres_Ment.Doc )/3,
+    Trust.BodyInj.Doc        = (Trust.Diag_Inj.Doc  + Trust.Rec_Inj.Doc  + Trust.Pres_Inj.Doc )/3,
+    Trust.AcuteSic.Doc       = (Trust.Diag_AcuS.Doc  + Trust.Rec_AcuS.Doc  + Trust.Pres_AcuS.Doc )/3,
+    Trust.ChronSic.Doc       = (Trust.Diag_ChronS.Doc  + Trust.Rec_ChronS.Doc  + Trust.Pres_ChronS.Doc)/3
+  )
+
+
+```
+
+
+```{r}
+Health_Algorithm_Objectivity_2_Clean %>%
+  dplyr::select(Trust.Diag_Inj.Doc, Trust.Diag_AcuS.Doc, Trust.Diag_ChronS.Doc, Trust.Rec_Inj.Doc, Trust.Rec_AcuS.Doc, Trust.Rec_ChronS.Doc, Trust.Pres_Inj.Doc, Trust.Pres_AcuS.Doc, Trust.Pres_ChronS.Doc, Trust.Diag_Ment.Doc, Trust.Rec_Ment.Doc, Trust.Pres_Ment.Doc) %>% describe()
+
+```
+
+
+
+
+### AI
+```{r}
+Health_Algorithm_Objectivity_2_Clean <- Health_Algorithm_Objectivity_2_Clean %>%
+  mutate(
+    Trust.Diagnosis.AI     = (Trust.Diag_Inj.AI + Trust.Diag_Ment.AI  + Trust.Diag_AcuS.AI  + Trust.Diag_ChronS.AI )/4,
+    Trust.Prescription.AI   = (Trust.Pres_Inj.AI  + Trust.Pres_Ment.AI  + Trust.Pres_AcuS.AI + Trust.Pres_ChronS.AI )/4,
+    Trust.Preventative.AI   = (Trust.Rec_Inj.AI  + Trust.Rec_Ment.AI  + Trust.Rec_AcuS.AI  + Trust.Rec_ChronS.AI )/4,
+    Trust.PhysHealth.AI     = (Trust.Diag_Inj.AI  + Trust.Diag_AcuS.AI  + Trust.Diag_ChronS.AI  + Trust.Rec_Inj.AI  + Trust.Rec_AcuS.AI  + Trust.Rec_ChronS.AI  + Trust.Pres_Inj.AI  + Trust.Pres_AcuS.AI  + Trust.Pres_ChronS.AI )/9,
+    Trust.MentHealth.AI    = (Trust.Diag_Ment.AI  + Trust.Rec_Ment.AI  + Trust.Pres_Ment.AI )/3,
+    Trust.BodyInj.AI        = (Trust.Diag_Inj.AI  + Trust.Rec_Inj.AI  + Trust.Pres_Inj.AI )/3,
+    Trust.AcuteSic.AI       = (Trust.Diag_AcuS.AI  + Trust.Rec_AcuS.AI  + Trust.Pres_AcuS.AI )/3,
+    Trust.ChronSic.AI       = (Trust.Diag_ChronS.AI  + Trust.Rec_ChronS.AI  + Trust.Pres_ChronS.AI)/3
+  )
+
+
+```
+
+
+
+```{r}
+Health_Algorithm_Objectivity_2_Clean %>%
+  dplyr::select(Trust.Diag_Inj.AI, Trust.Diag_AcuS.AI, Trust.Diag_ChronS.AI, Trust.Rec_Inj.AI, Trust.Rec_AcuS.AI, Trust.Rec_ChronS.AI, Trust.Pres_Inj.AI, Trust.Pres_AcuS.AI, Trust.Pres_ChronS.AI, Trust.Diag_Ment.AI, Trust.Rec_Ment.AI, Trust.Pres_Ment.AI) %>% describe()
+
+```
+
+
+```{r}
+Health_Algorithm_Objectivity_2_Clean <- Health_Algorithm_Objectivity_2_Clean%>%
+  dplyr::select(-Create_New_Field_or_Choose_From_Dropdown...)
+```
+
+# Saving Data
+```{r}
+write_sav(Health_Algorithm_Objectivity_2_Clean, "raw-data/study2-clean.sav")  # not released
+```
+
+
+# T-Tests
+## Base
+### Rec_Inj
+```{r}
+Rec_Inj.ttest <- tidy(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.Rec_Inj.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.Rec_Inj.AI, paired = TRUE))
+
+Rec_Inj.ttest
+```
+
+
+```{r}
+report(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.Rec_Inj.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.Rec_Inj.AI, paired = TRUE))
+
+```
+
+### Diag_Inj
+```{r}
+Diag_Inj.ttest <- tidy(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.Diag_Inj.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.Diag_Inj.AI, paired = TRUE))
+
+Diag_Inj.ttest
+```
+
+
+```{r}
+report(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.Diag_Inj.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.Diag_Inj.AI, paired = TRUE))
+
+```
+
+### Pres_Inj
+```{r}
+Pres_Inj.ttest <- tidy(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.Pres_Inj.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.Pres_Inj.AI, paired = TRUE))
+
+Pres_Inj.ttest
+```
+
+```{r}
+report(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.Pres_Inj.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.Pres_Inj.AI, paired = TRUE))
+
+```
+
+### Rec_Ment
+```{r}
+Rec_Ment.ttest <- tidy(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.Rec_Ment.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.Rec_Ment.AI, paired = TRUE))
+
+Rec_Ment.ttest
+```
+
+```{r}
+report(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.Rec_Ment.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.Rec_Ment.AI, paired = TRUE))
+
+```
+
+### Diag_Ment
+```{r}
+Diag_Ment.ttest <- tidy(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.Diag_Ment.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.Diag_Ment.AI, paired = TRUE))
+
+Diag_Ment.ttest
+```
+
+```{r}
+report(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.Diag_Ment.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.Diag_Ment.AI, paired = TRUE))
+
+```
+
+### Pres_Ment
+```{r}
+Pres_Ment.ttest <- tidy(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.Pres_Ment.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.Pres_Ment.AI, paired = TRUE))
+
+Pres_Ment.ttest
+```
+
+```{r}
+Pres_Ment.ttest <- Health_Algorithm_Objectivity_2_Clean %>%
+  drop_na(Trust.Pres_Ment.Doc) 
+
+
+Pres_Ment.ttest.report <- t.test(Pres_Ment.ttest$Trust.Pres_Ment.Doc, Pres_Ment.ttest$Trust.Pres_Ment.AI, paired = TRUE)
+
+
+report(Pres_Ment.ttest.report)
+
+
+```
+
+### Rec_AcuS
+```{r}
+Rec_AcuS.ttest <- tidy(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.Rec_AcuS.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.Rec_AcuS.AI, paired = TRUE))
+
+Rec_AcuS.ttest
+```
+
+```{r}
+report(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.Rec_AcuS.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.Rec_AcuS.AI, paired = TRUE))
+
+```
+
+
+### Diag_AcuS
+```{r}
+Diag_AcuS.ttest <- tidy(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.Diag_AcuS.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.Diag_AcuS.AI, paired = TRUE))
+
+Diag_AcuS.ttest
+```
+
+```{r}
+report(
+  
+report::report(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.Diag_AcuS.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.Diag_AcuS.AI, paired = TRUE))
+```
+
+### Pres_AcuS
+```{r}
+Pres_AcuS.ttest <- tidy(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.Pres_AcuS.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.Pres_AcuS.AI, paired = TRUE))
+
+Pres_AcuS.ttest
+```
+
+```{r}
+report(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.Pres_AcuS.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.Pres_AcuS.AI, paired = TRUE))
+
+```
+
+### Rec_ChronS
+```{r}
+Rec_ChronS.ttest <- tidy(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.Rec_ChronS.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.Rec_ChronS.AI, paired = TRUE))
+
+Rec_ChronS.ttest
+```
+
+```{r}
+report(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.Rec_ChronS.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.Rec_ChronS.AI, paired = TRUE))
+
+```
+
+### Diag_ChronS
+```{r}
+Diag_ChronS.ttest <- tidy(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.Diag_ChronS.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.Diag_ChronS.AI, paired = TRUE))
+
+Diag_ChronS.ttest
+```
+
+```{r}
+report(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.Diag_ChronS.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.Diag_ChronS.AI, paired = TRUE))
+
+```
+
+### Pres_ChronS
+```{r}
+Pres_ChronS.ttest <- tidy(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.Pres_ChronS.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.Pres_ChronS.AI, paired = TRUE))
+
+Pres_ChronS.ttest
+```
+
+```{r}
+report(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.Pres_ChronS.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.Pres_ChronS.AI, paired = TRUE))
+
+```
+
+
+## Composite
+### Diagnostic
+```{r}
+Diagnostic.ttest <- tidy(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.Diagnosis.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.Diagnosis.AI, paired = TRUE))
+
+Diagnostic.ttest
+```
+
+```{r}
+report(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.Diagnosis.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.Diagnosis.AI, paired = TRUE))
+
+```
+
+### Prescriptive
+```{r}
+Prescriptive.ttest <- tidy(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.Prescription.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.Prescription.AI, paired = TRUE))
+
+Prescriptive.ttest
+```
+
+```{r}
+report(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.Prescription.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.Prescription.AI, paired = TRUE))
+
+```
+
+### Preventative
+```{r}
+Preventative.ttest <- tidy(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.Preventative.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.Preventative.AI, paired = TRUE))
+
+Preventative.ttest
+```
+
+```{r}
+report(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.Preventative.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.Preventative.AI, paired = TRUE))
+
+```
+
+### Physical Health
+```{r}
+Physical.ttest <- tidy(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.PhysHealth.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.PhysHealth.AI, paired = TRUE))
+
+Physical.ttest
+```
+
+```{r}
+report(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.PhysHealth.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.PhysHealth.AI, paired = TRUE))
+
+```
+
+
+
+### Mental Health
+```{r}
+MentalHealth.ttest <- tidy(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.MentHealth.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.MentHealth.AI, paired = TRUE))
+
+MentalHealth.ttest
+
+```
+
+```{r}
+report(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.MentHealth.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.MentHealth.AI, paired = TRUE))
+
+```
+
+### Bodily Injury
+```{r}
+BodilyInjury.ttest <- tidy(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.BodyInj.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.BodyInj.AI, paired = TRUE))
+
+BodilyInjury.ttest
+```
+
+```{r}
+report(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.BodyInj.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.BodyInj.AI, paired = TRUE))
+
+```
+
+### Acute Sickness
+```{r}
+AcuteSick.ttest <- tidy(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.AcuteSic.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.AcuteSic.AI, paired = TRUE))
+
+AcuteSick.ttest
+```
+
+```{r}
+report(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.AcuteSic.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.AcuteSic.AI, paired = TRUE))
+
+```
+
+### Chronic Stress
+```{r}
+ChronicSick.ttest <- tidy(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.ChronSic.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.ChronSic.AI, paired = TRUE))
+
+ChronicSick.ttest
+
+```
+
+```{r}
+report(t.test(Health_Algorithm_Objectivity_2_Clean$Trust.ChronSic.Doc, Health_Algorithm_Objectivity_2_Clean$Trust.ChronSic.AI, paired = TRUE))
+
+```
+
+```{r}
+Intuition.ttest <- t.test(Health_Algorithm_Objectivity_2_Clean$Decision_Maker.IN.Doc, Health_Algorithm_Objectivity_2_Clean$Decision_Maker.IN.AI, paired = TRUE)
+
+Intuition.ttest
+```
+```{r}
+report(Intuition.ttest)
+```
+
+
+##Tables
+
+### Base
+```{r}
+
+T_test.list <- data.frame(c("Rec_Inj.ttest", "Diag_Inj.ttest", "Pres_Inj.ttest", "Rec_Ment.ttest", "Diag_Ment.ttest", "Pres_Ment.ttest", "Rec_AcuS.ttest", "Diag_AcuS.ttest", "Pres_AcuS.ttest", "Rec_ChronS.ttest", "Diag_ChronS.ttest", "Pres_ChronS.ttest"))
+
+T_test.table <- bind_rows(list(Rec_Inj.ttest, Diag_Inj.ttest, Pres_Inj.ttest, Rec_Ment.ttest, Diag_Ment.ttest, Pres_Ment.ttest, Rec_AcuS.ttest, Diag_AcuS.ttest, Pres_AcuS.ttest, Rec_ChronS.ttest, Diag_ChronS.ttest, Pres_ChronS.ttest))
+
+T_test.list <- rowid_to_column(T_test.list, "ID")
+
+T_test.table <- rowid_to_column(T_test.table, "ID")
+
+T_test.list <- rename(T_Test.list, T_test.Name = c..Rec_Inj.ttest....Diag_Inj.ttest....Pres_Inj.ttest....Rec_Ment.ttest...)
+
+Base_ttests_results <- full_join(T_test.list, T_test.table)
+
+write_csv(Base_ttests_results, "Base_ttest_trust_results_Chp1_St2.csv")
+```
+
+
+### Composite
+Preventative, Diagnistic, Prescriptive
+```{r}
+
+T_test.list <- data.frame(c("Preventative.ttest","Diagnostic.ttest", "Prescriptive.ttest"))
+
+T_test.table <- bind_rows(list(Preventative.ttest, Diagnostic.ttest, Prescriptive.ttest))
+
+T_test.list <- rowid_to_column(T_test.list, "ID")
+
+T_test.table <- rowid_to_column(T_test.table, "ID")
+
+T_test.list <- rename(T_test.list, T_test.Name = c..Preventative.ttest....Diagnostic.ttest....Prescriptive.ttest..)
+
+Composite1_ttests_results <- full_join(T_test.list, T_test.table)
+
+write_csv(Composite1_ttests_results, "Composite1_ttest_trust_results_Chp1_St2.csv")
+```
+
+Physical Health, Mental Health, Bodily Injury, Acute Sickness, Chronic Sickness
+```{r}
+
+T_test.list <- data.frame(c('Physical.ttest', 'MentalHealth.ttest', 'BodilyInjury.ttest', 'AcuteSick.ttest', 'ChronicSick.ttest'))
+
+T_test.table <- bind_rows(list(Physical.ttest, MentalHealth.ttest, BodilyInjury.ttest, AcuteSick.ttest, ChronicSick.ttest))
+
+T_test.list <- rowid_to_column(T_test.list, "ID")
+
+T_test.table <- rowid_to_column(T_test.table, "ID")
+
+T_test.list <- rename(T_test.list, T_test.Name = c..Physical.ttest....MentalHealth.ttest....BodilyInjury.ttest...)
+
+Composite1_ttests_results <- full_join(T_test.list, T_test.table)
+
+write_csv(Composite1_ttests_results, "Composite2_ttest_trust_results_Chp1_St2.csv")
+```
+
+
+# Correlation
+```{r}
+Health_Algorithm_Objectivity_2_Clean %>%
+  dplyr::select(Decision_Maker.QR.Doc, Decision_Maker.IN.Doc, Competence.Doc, Warmth.Doc) %>%
+  corr.test()
+
+```
+
+```{r}
+Health_Algorithm_Objectivity_2_Clean %>%
+  dplyr::select(Decision_Maker.QR.AI, Decision_Maker.IN.AI, Competence.AI, Warmth.AI) %>%
+  corr.test()
+
+```
+
+## Creating Long Format Data
+
+There are two types of long format data I want to analyse.
+
+1. Qualities of the decision makers
+2. Qualities of the decision.
+
+The data then needs to be put into a long format with the data being double nested, first by decision, next by decision maker. Both of which are nested within participant. This will mean that the qualties of the decisions should be doubled, the qualties of the decision makers needs to repeat 12 times, and the trust in the decision should have distinct non-repearting values. This should look like:
+
+ResponseID, Decision-Maker, Decision, Trust, Int_Quant, Quality_Of_DecisionMaker
+
+This should mean I need to pivot the data 3 seperate times and remerge it. 
+
+
+### Reducing Data Frame
+```{r}
+
+Health_Algorithm_Objectivity_2_Tight_Variables <- c(
+  
+  'ResponseId',
+  
+  
+  #Demographics
+  'Age', 'IsMale', 'IsNonBinary','IsTrans',
+  'IsAsian','IsBlack','IsHispanic','IsNativeAmerican','IsPacificIslander','IsOther','IsWhite',
+  'EduAtt_College','EduAtt_Graduate','EduAtt_HighSchool','EduAtt_LessColl','EduAtt_LessGrad','EduAtt_LessHigh',
+  'EmpFull','EmpPart','EmpRet','EmpSelf','EmpStud','EmpUn',
+  'EnglishFirst',
+  'Income',
+  #Politics
+  'Religious',
+  
+  # Medical Decisions
+  "Int_Quant_AcuteSic", "Int_Quant_BodyInj", "Int_Quant_ChronSic","Int_Quant_Diag_AcuS", "Int_Quant_Diag_ChronS", "Int_Quant_Diag_Inj", "Int_Quant_Diag_Ment","Int_Quant_Diagnosis","Int_Quant_MentHealth","Int_Quant_PhysHealth", "Int_Quant_Pres_AcuS","Int_Quant_Pres_ChronS", "Int_Quant_Pres_Inj_Med", "Int_Quant_Pres_Ment", "Int_Quant_Prescription", "Int_Quant_Preventative","Int_Quant_Rec_AcuS","Int_Quant_Rec_ChronS","Int_Quant_Rec_Inj","Int_Quant_Rec_Ment",
+  
+  # Trust
+  
+  "Trust.Diag_AcuS.Doc", "Trust.Diag_ChronS.Doc", "Trust.Diag_Inj.Doc", "Trust.Diag_Ment.Doc", "Trust.Pres_AcuS.Doc", "Trust.Pres_ChronS.Doc", "Trust.Pres_Inj.Doc", "Trust.Pres_Ment.Doc", "Trust.Rec_AcuS.Doc", "Trust.Rec_ChronS.Doc", "Trust.Rec_Inj.Doc", "Trust.Rec_Ment.Doc",
+  
+  "Trust.Diag_AcuS.AI", "Trust.Diag_ChronS.AI", "Trust.Diag_Inj.AI", "Trust.Diag_Ment.AI", "Trust.Pres_AcuS.AI", "Trust.Pres_ChronS.AI", "Trust.Pres_Inj.AI", "Trust.Pres_Ment.AI", "Trust.Rec_AcuS.AI", "Trust.Rec_ChronS.AI", "Trust.Rec_Inj.AI", "Trust.Rec_Ment.AI", 
+  
+  # Medical Decision Maker
+  ## Doctor
+  "Decision_Maker.Acct.Doc", "Decision_Maker.Antic.Doc", "Decision_Maker.Fam.Doc", "Decision_Maker.Gen.Doc", "Decision_Maker.IN.Doc", "Decision_Maker.PUnd.Doc", "Decision_Maker.QR.Doc", "Decision_Maker.Trans.Doc", "Decision_Maker.Under.Doc", "Competence.Doc", "Warmth.Doc",
+  ## AI
+  "Decision_Maker.Acct.AI", "Decision_Maker.Antic.AI", "Decision_Maker.Fam.AI", "Decision_Maker.Gen.AI","Decision_Maker.IN.AI", "Decision_Maker.PUnd.AI", "Decision_Maker.QR.AI", "Decision_Maker.Trans.AI", "Decision_Maker.Under.AI", "Competence.AI", "Warmth.AI",
+  
+  
+  # Experience
+  "Exp_AI_ChatGTP",  "Exp_AI_General", "Exp_AI_Medical", "Exp_ME_General", "Exp_ME_Hospital"
+  
+)
+
+Health_Algorithm_Objectivity_2_Tight <- Health_Algorithm_Objectivity_2_Clean %>%
+  dplyr::select(Health_Algorithm_Objectivity_2_Tight_Variables)
+
+Health_Algorithm_Objectivity_2_Tight <- rowid_to_column(Health_Algorithm_Objectivity_2_Tight, "ID")
+
+
+```
+
+
+```{r}
+Health_Algorithm_Objectivity_2_Tight <- Health_Algorithm_Objectivity_2_Tight %>%
+  dplyr::rename(
+    Int_Quant.AcuteSickness        = Int_Quant_AcuteSic,
+    Int_Quant.BodilyInjury         = Int_Quant_BodyInj, 
+    Int_Quant.ChronSickness        = Int_Quant_ChronSic,
+    Int_Quant.Diag_AcuS            = Int_Quant_Diag_AcuS,
+    Int_Quant.Diag_ChronS          = Int_Quant_Diag_ChronS,
+    Int_Quant.Diag_Inj             = Int_Quant_Diag_Inj,
+    Int_Quant.Diag_Ment            = Int_Quant_Diag_Ment,
+    Int_Quant.Diagnosis            = Int_Quant_Diagnosis,
+    Int_Quant.MentHealth           = Int_Quant_MentHealth,
+    Int_Quant.PhysHealth           = Int_Quant_PhysHealth,
+    Int_Quant.Pres_AcuS            = Int_Quant_Pres_AcuS,
+    Int_Quant.Pres_ChronS          = Int_Quant_Pres_ChronS,
+    Int_Quant.Pres_Inj             = Int_Quant_Pres_Inj_Med,
+    Int_Quant.Pres_Ment            = Int_Quant_Pres_Ment,
+    Int_Quant.Prescription         = Int_Quant_Prescription,
+    Int_Quant.Preventative         = Int_Quant_Preventative,
+    Int_Quant.Rec_AcuS             = Int_Quant_Rec_AcuS,
+    Int_Quant.Rec_ChronS           = Int_Quant_Rec_ChronS,
+    Int_Quant.Rec_Inj              = Int_Quant_Rec_Inj,
+    Int_Quant.Rec_Ment             = Int_Quant_Rec_Ment,
+    
+  )
+```
+
+
+
+
+### Pivoting Longer
+#### Decision Only
+
+
+```{r}
+
+Pivot_Ch1_St2_Decision <- Health_Algorithm_Objectivity_2_Tight %>%
+  dplyr::select('ResponseId', "ID", "Int_Quant.Diag_AcuS", "Int_Quant.Diag_ChronS", "Int_Quant.Diag_Inj", "Int_Quant.Diag_Ment" , "Int_Quant.Pres_AcuS", "Int_Quant.Pres_ChronS", "Int_Quant.Pres_Inj", "Int_Quant.Pres_Ment",  "Int_Quant.Rec_AcuS", "Int_Quant.Rec_ChronS", "Int_Quant.Rec_Inj", "Int_Quant.Rec_Ment") %>%
+  pivot_longer(
+    cols = starts_with("Int_Quant"),
+    names_to = c('Decision'),
+    names_prefix = ("Int_Quant."),
+    values_to = "Int_Quant"
+  )
+```
+
+#### Trust Only
+```{r}
+
+Pivot_Ch1_St2_Trust <- Health_Algorithm_Objectivity_2_Tight %>%
+  dplyr::select('ResponseId',  "ID", "Trust.Diag_AcuS.AI", "Trust.Diag_AcuS.Doc", "Trust.Diag_ChronS.AI",  "Trust.Diag_ChronS.Doc", "Trust.Diag_Inj.AI", "Trust.Diag_Inj.Doc", "Trust.Diag_Ment.AI", "Trust.Diag_Ment.Doc", "Trust.Pres_AcuS.AI", "Trust.Pres_AcuS.Doc", "Trust.Pres_ChronS.AI", "Trust.Pres_ChronS.Doc", "Trust.Pres_Inj.AI", "Trust.Pres_Inj.Doc", "Trust.Pres_Ment.AI", "Trust.Pres_Ment.Doc", "Trust.Rec_AcuS.AI", "Trust.Rec_AcuS.Doc", "Trust.Rec_ChronS.AI", "Trust.Rec_ChronS.Doc", "Trust.Rec_Inj.AI", "Trust.Rec_Inj.Doc", "Trust.Rec_Ment.AI","Trust.Rec_Ment.Doc" ) %>%
+  pivot_longer(
+    cols = starts_with("Trust"),
+    names_to = c('Remove_Later','Decision', "Decision_Maker" ),
+        names_sep = "\\.",
+    values_to = "Trust"
+  )
+
+```
+
+#### Decision Maker
+```{r}
+Pivot_Ch1_St2_Decision_Maker_Doc <- Health_Algorithm_Objectivity_2_Tight %>%
+  dplyr::select('ResponseId',  "ID", "Decision_Maker.Acct.Doc", "Decision_Maker.Antic.Doc", "Decision_Maker.Fam.Doc", "Decision_Maker.Gen.Doc", "Decision_Maker.IN.Doc", "Decision_Maker.PUnd.Doc", "Decision_Maker.QR.Doc", "Decision_Maker.Trans.Doc", "Decision_Maker.Under.Doc", "Competence.Doc", "Warmth.Doc")
+
+Pivot_Ch1_St2_Decision_Maker_Doc$Decision_Maker <- "Doc"
+
+Pivot_Ch1_St2_Decision_Maker_Doc <- Pivot_Ch1_St2_Decision_Maker_Doc %>%
+  dplyr::rename(
+    Acct        = Decision_Maker.Acct.Doc,
+    Antic       = Decision_Maker.Antic.Doc,
+    Familiar    = Decision_Maker.Fam.Doc,
+    General     = Decision_Maker.Gen.Doc,
+    Intuition   = Decision_Maker.IN.Doc,
+    PUnder      = Decision_Maker.PUnd.Doc,
+    Quant       = Decision_Maker.QR.Doc,
+    Transparent = Decision_Maker.Trans.Doc,
+    Understand  = Decision_Maker.Under.Doc,
+    Competence  = Competence.Doc,
+    Warmth      = Warmth.Doc
+)
+
+```
+
+
+```{r}
+Pivot_Ch1_St2_Decision_Maker_AI <- Health_Algorithm_Objectivity_2_Tight %>%
+  dplyr::select('ResponseId',  "ID", "Decision_Maker.Acct.AI", "Decision_Maker.Antic.AI", "Decision_Maker.Fam.AI", "Decision_Maker.Gen.AI","Decision_Maker.IN.AI", "Decision_Maker.PUnd.AI", "Decision_Maker.QR.AI", "Decision_Maker.Trans.AI", "Decision_Maker.Under.AI", "Competence.AI", "Warmth.AI") 
+
+Pivot_Ch1_St2_Decision_Maker_AI$Decision_Maker <- "AI"
+
+Pivot_Ch1_St2_Decision_Maker_AI <- Pivot_Ch1_St2_Decision_Maker_AI %>%
+  dplyr::rename(
+    Acct        = Decision_Maker.Acct.AI,
+    Antic       = Decision_Maker.Antic.AI,
+    Familiar    = Decision_Maker.Fam.AI,
+    General     = Decision_Maker.Gen.AI,
+    Intuition   = Decision_Maker.IN.AI,
+    PUnder      = Decision_Maker.PUnd.AI,
+    Quant       = Decision_Maker.QR.AI,
+    Transparent = Decision_Maker.Trans.AI,
+    Understand  = Decision_Maker.Under.AI,
+    Competence  = Competence.AI,
+    Warmth      = Warmth.AI
+)
+
+```
+
+
+
+### Merge
+
+Reducing Core Data Frame
+```{r}
+
+
+Health_Algorithm_Objectivity_2_Long <- Health_Algorithm_Objectivity_2_Tight %>% 
+  dplyr::select(
+  'ResponseId',  "ID",
+  #Demographics
+  'Age', 'IsMale', 'IsNonBinary','IsTrans',
+  'IsAsian','IsBlack','IsHispanic','IsNativeAmerican','IsPacificIslander','IsOther','IsWhite',
+  'EduAtt_College','EduAtt_Graduate','EduAtt_HighSchool','EduAtt_LessColl','EduAtt_LessGrad','EduAtt_LessHigh',
+  'EmpFull','EmpPart','EmpRet','EmpSelf','EmpStud','EmpUn',
+  'EnglishFirst',
+  'Income',
+  #Politics
+  'Religious',
+    # Experience
+  "Exp_AI_ChatGTP",  "Exp_AI_General", "Exp_AI_Medical", "Exp_ME_General", "Exp_ME_Hospital"
+)
+
+```
+
+Joining The Slim Data Frame With the Longest Trust Data Frame
+```{r}
+Health_Algorithm_Objectivity_2_Long <- full_join(Health_Algorithm_Objectivity_2_Long, Pivot_Ch1_St2_Trust)
+
+```
+
+Joining the Main DataFrame with Decisions info
+```{r}
+Health_Algorithm_Objectivity_2_Long <- left_join(Health_Algorithm_Objectivity_2_Long, Pivot_Ch1_St2_Decision)
+```
+
+
+Joining Both Quality of Decision-makers
+
+```{r}
+Health_Algorithm_Objectivity_2_Decision_Maker <- full_join(Pivot_Ch1_St2_Decision_Maker_Doc, Pivot_Ch1_St2_Decision_Maker_AI)
+```
+
+
+```{r}
+Health_Algorithm_Objectivity_2_Long <- left_join(Health_Algorithm_Objectivity_2_Long, Health_Algorithm_Objectivity_2_Decision_Maker)
+```
+
+```{r}
+describe(Health_Algorithm_Objectivity_2_Long)
+```
+
+
+Combining Mind Perception
+```{r}
+Health_Algorithm_Objectivity_2_Long %>%
+  dplyr::select("Antic", "Acct", "Understand", "General", "Familiar", "Transparent", "PUnder") %>%
+  alpha()
+  
+```
+
+```{r}
+Health_Algorithm_Objectivity_2_Long %>%
+  dplyr::select("Antic", "Acct", "Understand") %>%
+  alpha()
+  
+```
+
+```{r}
+Health_Algorithm_Objectivity_2_Long <- Health_Algorithm_Objectivity_2_Long %>%
+  rowwise() %>%
+    mutate(Mind_Perception = mean(c(Antic, Acct, Understand, General, Familiar, Transparent, PUnder), na.rm = TRUE))
+
+
+
+```
+
+```{r}
+Health_Algorithm_Objectivity_2_Long <- Health_Algorithm_Objectivity_2_Long %>%
+  rowwise() %>%
+    mutate(Mind_Perception_Alt = mean(c(Antic, Acct, Understand), na.rm = TRUE))
+
+
+
+```
+
+
+### Linear Mixed Effects Modeling
+
+Decision Maker can either be it's own nested value or just a covariate. The problem is that Decision_maker covaries with all these other covariates making them less effective. Not in a bad way but just something to think about.
+```{r}
+
+## *  Exp_AI_Medical + Decision_Maker * Exp_ME_General
+HealthAlgorithm_O2_LMER_1 <-
+  Health_Algorithm_Objectivity_2_Long %>%
+  lmer(Intuition ~ Decision_Maker + (1 + Decision_Maker|ResponseId), data = .)
+
+summary(HealthAlgorithm_O2_LMER_1)
+```
+
+```{r}
+tab_model(HealthAlgorithm_O2_LMER_1, show.std = TRUE)
+```
+
+
+The model with the interaction between decision maker and int_quant random effect makes this model explain 85% of the variance which is wild. Something to think about.
+Addendum - This change is because I used Decision_Maker as a random effect. Though the interaction does improve by 3% with the interaction. Very interesting indeed.
++ Intuition + Quant 
+```{r}
+HealthAlgorithm_O2_LMER_1 <- lmer(Trust ~  Age + IsMale + Int_Quant +Intuition + Quant +  Warmth + Competence + Age*Decision_Maker + (1 + Int_Quant|ResponseId), data = Health_Algorithm_Objectivity_2_Long)
+
+summary(HealthAlgorithm_O2_LMER_1)
+```
+
+
+```{r}
+tab_model(HealthAlgorithm_O2_LMER_1, show.std = TRUE)
+```
+
+```{r}
+vif(HealthAlgorithm_O2_LMER_1)
+```
+
+
+```{r}
+report(HealthAlgorithm_O2_LMER_1)
+```
+
+
+```{r}
+HealthAlgorithm_O2_LMER_1 <- lmer(Trust ~  Decision_Maker * Int_Quant + Intuition + Quant + Mind_Perception + Age + IsMale + (1 + Int_Quant|ResponseId), data = Health_Algorithm_Objectivity_2_Long)
+
+summary(HealthAlgorithm_O2_LMER_1)
+```
+ Warmth + Competence +
+
+```{r}
+vif(HealthAlgorithm_O2_LMER_1)
+```
+
+```{r}
+tab_model(HealthAlgorithm_O2_LMER_1, show.std = TRUE)
+```
+
+```{r}
+report(HealthAlgorithm_O2_LMER_1)
+```
+
+
+##### Psych of Tech Model
+
+```{r}
+HealthAlgorithm_O2_LMER_1 <- lmer(Trust ~ Decision_Maker * Int_Quant + Age + IsMale + Intuition + Quant + (1 + Int_Quant|ResponseId), data = Health_Algorithm_Objectivity_2_Long)
+
+summary(HealthAlgorithm_O2_LMER_1)
+```
+
+```{r}
+tab_model(HealthAlgorithm_O2_LMER_1, show.std = TRUE)
+```
+
+
+```{r}
+HealthAlgorithm_O2_LMER_1 <- lmer(Trust ~ Decision_Maker +  Age + IsMale + Intuition*Int_Quant + Quant*Int_Quant + (1 + Int_Quant|ResponseId), data = Health_Algorithm_Objectivity_2_Long)
+
+summary(HealthAlgorithm_O2_LMER_1)
+```
+
+```{r}
+tab_model(HealthAlgorithm_O2_LMER_1, show.std = TRUE)
+```
+
+#### Dissertation Model
+### Creating Person-Mean Centered and Person Mean Variables
+```{r}
+Health_Algorithm_Objectivity_2_Long <- Health_Algorithm_Objectivity_2_Long %>%
+  mutate(
+    Quantitative_Reasoning_PM = pmean(ResponseId, Quant),
+    Intuition_PM = pmean(ResponseId, Intuition)
+  )
+
+
+    Health_Algorithm_Objectivity_2_Long$Quantitative_Reasoning_PMC <- pcenter(Health_Algorithm_Objectivity_2_Long$ResponseId, Health_Algorithm_Objectivity_2_Long$Quant)
+    
+    Health_Algorithm_Objectivity_2_Long$Intuition_PMC <-  pcenter(Health_Algorithm_Objectivity_2_Long$ResponseId, Health_Algorithm_Objectivity_2_Long$Intuition)
+
+Health_Algorithm_Objectivity_2_Long %>%
+  dplyr::select(ResponseId, Quantitative_Reasoning_PM, Quantitative_Reasoning_PMC, Intuition_PM, Intuition_PMC) %>%
+  describe()
+
+
+```
+
+This creates a singularity.
+```{r}
+HealthAlgorithm_O2_LMER_1 <- lmer(Intuition ~ Decision_Maker * Int_Quant + Age + IsMale + Intuition_PM + Quantitative_Reasoning_PM + (1|ResponseId), data = Health_Algorithm_Objectivity_2_Long)
+
+summary(HealthAlgorithm_O2_LMER_1)
+```
+
+```{r}
+tab_model(HealthAlgorithm_O2_LMER_1, show.std = TRUE)
+```
+
+
+
+# Exporting to MPLus
+Need to create an IsDoc variable using Decision Maker
+```{r}
+Health_Algorithm_Objectivity_2_Long <- Health_Algorithm_Objectivity_2_Long %>%
+  mutate(
+    IsDoc = case_when(
+      Decision_Maker == "AI" ~ 0,
+      Decision_Maker == "Doc" ~ 1,
+      TRUE ~ NA_real_
+    )
+  )
+
+Health_Algorithm_Objectivity_2_Long$IsDoc
+
+
+```
+
+
+
+```{r}
+MPLus_HAO2_Long <- Health_Algorithm_Objectivity_2_Long %>%
+  dplyr::select(ID, Trust, Quant, Intuition, Int_Quant, IsDoc, Warmth, Competence) %>%
+  drop_na() #%>%
+ # write_csv(., "MPLus_Multilevel_Mediation.csv")
+```
+
+
+## MPLus Automation
+
+### Intuition
+#### C
+```{r}
+Mediation_Intuition_C <- mplusObject(
+  TITLE = "INTUITION MEDIATION C",
+
+VARIABLE = "
+USEVARIABLES ARE ID Trust IsDoc;
+
+CLUSTER IS ID;",
+
+ANALYSIS =  "TYPE IS TWOLEVEL RANDOM;",
+
+MODEL =  
+  "%WITHIN%
+	Trust IsDoc;
+	Trust ON IsDoc;
+	%BETWEEN%
+	Trust IsDoc;
+	Trust ON IsDoc;
+	IsDoc@0;",
+
+OUTPUT = "SAMPSTAT STANDARDIZED(CLUSTER) STDYX TECH1 TECH8 CINTERVAL;",
+
+usevariables = colnames(MPLus_HAO2_Long),
+
+rdata = MPLus_HAO2_Long)
+
+
+Mediation_Intuition_Output_C <-   mplusModeler(Mediation_Intuition_C, dataout = "Intuition_R_C.dat", modelout = "Intuition_R_C.inp", check = TRUE, run = TRUE, hashfilename = FALSE)
+
+
+Intuition_Output_Mplus <- readModels("Intuition_R_C.out")
+
+Intuition_Output_Mplus$parameters
+
+Intuition_Output_Mplus$data_summary
+```
+
+```{r}
+Mediation_Intuition <- mplusObject(
+  TITLE = "INTUITION MEDIATION",
+
+VARIABLE = "
+USEVARIABLES ARE ID Trust Intuition IsDoc;
+
+CLUSTER IS ID;",
+
+ANALYSIS =  "TYPE IS TWOLEVEL RANDOM;",
+
+MODEL =  
+  "%WITHIN%
+	Trust IsDoc;
+	IsDoc Intuition IsDoc;
+	Intuition ON IsDoc(a);
+	Trust ON Intuition(b);
+	Trust ON IsDoc;
+	%BETWEEN%
+	IsDoc Intuition IsDoc;
+	Intuition ON IsDoc;
+	Trust ON Intuition;
+	Trust ON IsDoc;
+	IsDoc@0;
+	MODEL CONSTRAINT:
+	NEW(indb);
+	indb=a*b;",
+
+OUTPUT = "SAMPSTAT STANDARDIZED(CLUSTER) STDYX TECH1 TECH8 CINTERVAL;",
+
+usevariables = colnames(MPLus_HAO2_Long),
+
+rdata = MPLus_HAO2_Long)
+
+
+Mediation_Intuition_Output <-   mplusModeler(Mediation_Intuition, dataout = "Intuition_R.dat", modelout = "Intuition_R.inp", check = TRUE, run = TRUE, hashfilename = FALSE)
+
+
+Intuition_Output_Mplus <- readModels("Intuition_R.out")
+
+Intuition_Output_Mplus$parameters
+
+Intuition_Output_Mplus$data_summary
+```
+
+### Double Mediation Int/Quant
+```{r}
+Mediation_Intuition <- mplusObject(
+  TITLE = "INTUITION MEDIATION",
+
+VARIABLE = "
+USEVARIABLES ARE ID Trust Intuition Quant IsDoc;
+
+CLUSTER IS ID;",
+
+ANALYSIS =  "TYPE IS TWOLEVEL RANDOM;",
+
+MODEL =  
+  "%WITHIN%
+	Trust IsDoc;
+	IsDoc Intuition IsDoc Quant;
+	Intuition ON IsDoc(a);
+	Trust ON Intuition(b);
+	Quant ON IsDoc(x);
+	Trust ON Quant(y);
+	Trust ON IsDoc;
+	%BETWEEN%
+	IsDoc Intuition IsDoc Quant;
+	Intuition ON IsDoc;
+	Trust ON Intuition;
+	Trust ON IsDoc;
+	Trust ON Quant;
+	IsDoc@0;
+	MODEL CONSTRAINT:
+	NEW(indb);
+	indb=a*b;
+  NEW(inxy);
+  inxy=x*y;",
+
+OUTPUT = "SAMPSTAT STANDARDIZED(CLUSTER) STDYX TECH1 TECH8 CINTERVAL;",
+
+usevariables = colnames(MPLus_HAO2_Long),
+
+rdata = MPLus_HAO2_Long)
+
+
+Mediation_Intuition_Output <-   mplusModeler(Mediation_Intuition, dataout = "Intuition_R.dat", modelout = "Intuition_R.inp", check = TRUE, run = TRUE, hashfilename = FALSE)
+
+
+Intuition_Output_Mplus <- readModels("Intuition_R.out")
+
+Intuition_Output_Mplus$parameters
+
+Intuition_Output_Mplus$data_summary
+```
+
+### Quant
+
+
+```{r}
+Mediation_Intuition <- mplusObject(
+  TITLE = "QUANT MEDIATION",
+
+VARIABLE = "
+USEVARIABLES ARE ID Trust Quant IsDoc;
+
+CLUSTER IS ID;",
+
+ANALYSIS =  "TYPE IS TWOLEVEL RANDOM;",
+
+MODEL =  
+  "%WITHIN%
+	Trust IsDoc;
+	Quant ON IsDoc(a);
+	Trust ON Quant(b);
+	Trust ON IsDoc;
+	%BETWEEN%
+	IsDoc Quant IsDoc;
+	Quant ON IsDoc;
+	Trust ON Quant;
+	Trust ON IsDoc;
+	IsDoc@0;
+	MODEL CONSTRAINT:
+	NEW(indb);
+	indb=a*b;",
+
+OUTPUT = "SAMPSTAT STANDARDIZED(CLUSTER) STDYX TECH1 TECH8 CINTERVAL;",
+
+usevariables = colnames(MPLus_HAO2_Long),
+
+rdata = MPLus_HAO2_Long)
+
+
+Mediation_Quant_Output <-   mplusModeler(Mediation_Intuition, dataout = "Quant_R.dat", modelout = "Quant_R.inp", check = TRUE, run = TRUE, hashfilename = FALSE)
+
+
+Quant_Output_Mplus <- readModels("Quant_R.out")
+
+Quant_Output_Mplus$parameters
+```
+
+### Competence
+```{r}
+Mediation_Competence <- mplusObject(
+  TITLE = "COMPETENCE MEDIATION",
+
+VARIABLE = "
+USEVARIABLES ARE ID Trust Competence IsDoc;
+
+CLUSTER IS ID;",
+
+ANALYSIS =  "TYPE IS TWOLEVEL RANDOM;",
+
+MODEL =  
+"%WITHIN%
+	Trust IsDoc;
+	IsDoc Competence IsDoc;
+	Competence ON IsDoc(a);
+	Trust ON Competence(b);
+	Trust ON IsDoc;
+	%BETWEEN%
+	IsDoc Competence IsDoc;
+	Competence ON IsDoc;
+	Trust ON Competence;
+	Trust ON IsDoc;
+	IsDoc@0;
+	MODEL CONSTRAINT:
+	NEW(indb);
+	indb=a*b;",
+
+OUTPUT = "SAMPSTAT STANDARDIZED(CLUSTER) STDYX TECH1 TECH8 CINTERVAL;",
+
+usevariables = colnames(MPLus_HAO2_Long),
+
+rdata = MPLus_HAO2_Long)
+
+
+Mediation_Competence_Output <-   mplusModeler(Mediation_Competence, dataout = "Competence_R.dat", modelout = "Competence_R.inp", check = TRUE, run = TRUE, hashfilename = FALSE)
+
+
+Test_Output_Mplus <- readModels("Competence_R.out")
+
+Test_Output_Mplus$parameters
+```
+
+
+### Warmth
+```{r}
+Mediation_Warmth <- mplusObject(
+  TITLE = "WARMTH MEDIATION",
+
+VARIABLE = "
+USEVARIABLES ARE ID Trust Warmth IsDoc;
+
+CLUSTER IS ID;",
+
+ANALYSIS =  "TYPE IS TWOLEVEL RANDOM;",
+
+MODEL =  
+"%WITHIN%
+	Trust IsDoc;
+	IsDoc Warmth IsDoc;
+	Warmth ON IsDoc(a);
+	Trust ON Warmth(b);
+	Trust ON IsDoc;
+	%BETWEEN%
+	IsDoc Warmth IsDoc;
+	Warmth ON IsDoc;
+	Trust ON Warmth;
+	Trust ON Warmth;
+	IsDoc@0;
+	MODEL CONSTRAINT:
+	NEW(indb);
+	indb=a*b;",
+
+OUTPUT = "SAMPSTAT STANDARDIZED(CLUSTER) STDYX TECH1 TECH8 CINTERVAL;",
+
+usevariables = colnames(MPLus_HAO2_Long),
+
+rdata = MPLus_HAO2_Long)
+
+
+Mediation_Warmth_Output <-   mplusModeler(Mediation_Warmth, dataout = "Warmth_R.dat", modelout = "Warmth_R.inp", check = TRUE, run = TRUE, hashfilename = FALSE)
+
+
+Test_Output_Mplus <- readModels("Warmth_R.out")
+
+Test_Output_Mplus$parameters
+```
+
+
+```{r}
+Mediation_Intuition <- mplusObject(
+  TITLE = "INTUITION MEDIATION",
+
+VARIABLE = "
+USEVARIABLES ARE ID Trust Warmth Competence IsDoc;
+
+CLUSTER IS ID;",
+
+ANALYSIS =  "TYPE IS TWOLEVEL RANDOM;",
+
+MODEL =  
+  "%WITHIN%
+	Trust IsDoc;
+	IsDoc Warmth IsDoc Competence;
+	Warmth ON IsDoc(a);
+	Trust ON Warmth(b);
+	Competence ON IsDoc(x);
+	Trust ON Competence(y);
+	Trust ON IsDoc;
+	%BETWEEN%
+	IsDoc Warmth IsDoc Competence;
+	Warmth ON IsDoc;
+	Trust ON Warmth;
+	Trust ON IsDoc;
+	Trust ON Competence;
+	IsDoc@0;
+	MODEL CONSTRAINT:
+	NEW(indb);
+	indb=a*b;
+  NEW(inxy);
+  inxy=x*y;",
+
+OUTPUT = "SAMPSTAT STANDARDIZED(CLUSTER) STDYX TECH1 TECH8 CINTERVAL;",
+
+usevariables = colnames(MPLus_HAO2_Long),
+
+rdata = MPLus_HAO2_Long)
+
+
+Mediation_Intuition_Output <-   mplusModeler(Mediation_Intuition, dataout = "Intuition_R.dat", modelout = "Intuition_R.inp", check = TRUE, run = TRUE, hashfilename = FALSE)
+
+
+Intuition_Output_Mplus <- readModels("Intuition_R.out")
+
+Intuition_Output_Mplus$parameters
+
+
+Intuition_Output_Mplus$data_summary
+
+
+```
+
+
+
+
+
+
+```{r}
+Health_Algorithm_Objectivity_2_Long %>%
+  mutate(Decision = fct_reorder(Decision, Int_Quant, .fun = "mean")) %>%
+  ggplot(aes(Int_Quant, Decision, color = Decision)) + geom_jitter() + stat_summary(fun.y=mean, geom="point", shape=17, size=4, color="white") + stat_summary(geom = "errorbar", fun.data = mean_cl_boot, width = 1, size = 1.5, color = "white") + xlab("Intuition (0) versus Quantative Reasoning (100) Needed for an Accurate Decision") + theme_apa()   +  theme(panel.background = element_rect("transparent"), plot.background = element_rect("transparent", color = NA), legend.position = "none",  axis.text = element_text(colour = "white"), axis.ticks = element_line(colour = "white"), axis.line = element_line(colour = "white"), axis.title = element_text(colour = "white")) 
+
+ggsave("Medical Decisions Matrix - Study 2 - Empty White.png", width = 12, height = 9)
+```
+
+
+```{r}
+Decision_Mean_Table <- Health_Algorithm_Objectivity_2_Longer_Decision %>%
+  mutate(Decision = fct_reorder(Decision, Int_Quant, .fun = "mean")) %>%
+  group_by(Decision) %>%
+  summarise(Mean = mean(Int_Quant, na.rm = TRUE))
+
+write_csv(Decision_Mean_Table, "Decision Mean Table - Study 2.csv")
+```
+
+## Within Subjects Correlation
+I need to rerun this test because I need to ensure that I'm not accidently compounding variance as I believe each of these should be repeated once within the data.
+This may be a bit difficult as the way I assembled the data would require me to put the row number in twice, potentially creating mismatched data. I don't believe I have missing values but I need to verify before I make any
+```{r}
+WithinCor_DM <- Health_Algorithm_Objectivity_2_Long %>%
+  dplyr::select("ID", "Competence","Quant", "Warmth","Intuition", "Mind_Perception", "Mind_Perception_Alt" ) %>%
+ statsBy(., group = "ID")
+```
+
+
+```{r}
+WithinCor_DM$rwg
+WithinCor_DM$pwg
+```
+
+```{r}
+WithinCor_DM$rbg
+WithinCor_DM$pbg
+```
+
+
+
+
+# Int_Quant Exploritation Corrlation
+
+
+```{r}
+IntQuant_DM <- Health_Algorithm_Objectivity_2_Long %>%
+  dplyr::select("ID", "Int_Quant", "Trust", "Mind_Perception", "IsDoc" ) %>%
+ statsBy(., group = "ID")
+```
+
+
+```{r}
+IntQuant_DM$rwg
+IntQuant_DM$pwg
+```
+
+```{r}
+IntQuant_DM$rbg
+IntQuant_DM$pbg
+```
+
+# Exploritory Analysis
+1. We will use add other covariates to our model, including age, gender, education, and religiosity.
+
+2. We will do a person-effect-size analysis for the differences in trust between doctors and artificial intelligence.
+
+
+# Plots
+## Differences in Trust
+###
+```{r}
+#Health_Algorithm_Objectivity_2_Long$Decision <- as.factor(Health_Algorithm_Objectivity_2_Long$Decision)
+
+Health_Algorithm_Objectivity_2_Long$Decision <- 
+  recode_factor(Health_Algorithm_Objectivity_2_Long$Decision, 
+         Rec_Ment    = 'Recommend Meditation',
+         Rec_Inj     = 'Recommend Stretching',
+         Rec_ChronS  = 'Recommend Strict Diet',
+         Rec_AcuS    = 'Recommend Vitimin C + Zinc',
+         Pres_Ment   = 'Prescribe Anti-Depressants + Therapy',
+         Pres_Inj    = 'Prescribe Pain Medication',
+         Pres_ChronS = 'Prescibe Insulin',
+         Pres_AcuS   = 'Prescribe Anti-Biotics',
+         Diag_Ment   = 'Diagnose Depression',
+         Diag_Inj    = 'Diagnose A Broken Bone',
+         Diag_ChronS = 'Diagnose Diabetes',
+         Diag_AcuS   = 'Diagnose Step Throat'
+         )
+```
+
+
+### Plot
+```{r}
+Health_Algorithm_Objectivity_2_Long %>%
+  ggplot(aes(Trust, Decision, fill = Decision_Maker, color = Decision_Maker)) + geom_jitter() + stat_summary(fun.y=mean, geom="point", shape= 17, size=4, color="white", stroke = 1) + stat_summary(geom = "errorbar", fun.data = mean_cl_boot, width = 1, size = 1, stroke = 4, color = "white") +
+theme_apa()  + theme(panel.background = element_rect("transparent"), plot.background = element_rect("transparent", color = NA), legend.background = element_blank(), legend.box.background = element_rect("transparent", colour = 'white'), legend.title = element_text(colour = "white"), legend.text = element_text(colour = "white"),  axis.text = element_text(colour = "white"), axis.ticks = element_line(colour = "white"), axis.line = element_line(colour = "white"), axis.title = element_text(colour = "white")) 
+
+ggsave("Medical Decision Maker Trust Matrix 2 - Empty White.png", width = 10, height = 6)
+```
+
+```{r}
+Health_Algorithm_Objectivity_2_Long %>%
+  mutate(Decision = factor(Decision, levels=c( 'Recommend Vitimin C + Zinc', 'Recommend Meditation',  'Recommend Strict Diet', 'Recommend Stretching', 'Prescribe Pain Medication', 'Prescribe Anti-Biotics', 'Diagnose Depression', 'Diagnose Diabetes', 'Prescibe Insulin', 'Prescribe Anti-Depressants + Therapy', 'Diagnose A Broken Bone', 'Diagnose Step Throat'))) %>%
+  ggplot(aes(Trust, Decision, fill = Decision_Maker, color = Decision_Maker)) + geom_jitter() +  stat_summary(geom = "errorbar", fun.data = mean_cl_boot, width = 1, size = 1.25, color = "black") + stat_summary(fun.y=mean, geom="point", stroke = 1, size = 3, color= "black", aes(shape= Decision_Maker)) + scale_shape_manual(values=c(25,24)) +  ggtitle("Trust in Medical Judgment by AI/Doctor") + xlab("Trust") + ylab("Medical Decision") +  theme_apa() +
+  theme(panel.background = element_rect("transparent"), plot.background = element_rect("transparent", color = NA), legend.background = element_blank(), legend.box.background = element_rect("transparent", colour = NA), axis.text = element_text(colour = "black", size = 8), axis.ticks = element_line(colour = "black"), axis.line = element_line(colour = "black"))
+
+ggsave("Medical Decision Maker Trust Matrix 2 - Empty.png", width = 10, height = 6)
+```
+
+```{r}
+Health_Algorithm_Objectivity_2_Long %>%
+  mutate(Decision = factor(Decision, levels=c( 'Recommend Vitimin C + Zinc', 'Recommend Meditation',  'Recommend Strict Diet', 'Recommend Stretching', 'Prescribe Pain Medication', 'Prescribe Anti-Biotics', 'Diagnose Depression', 'Diagnose Diabetes', 'Prescibe Insulin', 'Prescribe Anti-Depressants + Therapy', 'Diagnose A Broken Bone', 'Diagnose Step Throat'))) %>%
+  ggplot(aes(Trust, Decision, fill = Decision_Maker, color = Decision_Maker)) + geom_jitter(size = 2) +  stat_summary(geom = "errorbar", fun.data = mean_cl_boot, width = 1, size = 1.5, color = "black") + stat_summary(fun.y=mean, geom="point", stroke = 1.5, size = 3, color= "black", aes(shape= Decision_Maker)) + scale_shape_manual(values=c(25,24)) +  ggtitle("Trust in Medical Judgment by AI/Doctor") +
+  scale_fill_manual(values = c("#FCBB6D", "#475C7A")) +
+  scale_colour_manual(values = c("#FCBB6D", "#475C7A")) +
+  xlab("Trust") + ylab("Medical Decision") +  theme_apa()  + theme(plot.title = element_text(face = "bold", size = 16), axis.title = element_text(face = "bold", size = 14), panel.background = element_rect("transparent"), plot.background = element_rect("transparent", color = NA),  legend.background = element_blank(), legend.box.background = element_rect("transparent", color = "transparent"), axis.text = element_text(colour = "white", face = "bold"), axis.ticks = element_line(colour = "white"), axis.line = element_line(colour = "white")) 
+
+ggsave("Medical Decision Maker Trust Matrix 2 - Presentation.png", width = 12, height = 6.5)
+
+
+
+```
+
+
+```{r}
+Health_Algorithm_Objectivity_2_Long %>%
+  ggplot(aes(Decision, Trust, fill = Decision_Maker, color = Decision_Maker)) + geom_flat_violin(position = position_nudge(x = .2, y = 0), alpha = .6, adjust = 4) +  stat_summary(geom = "errorbar", fun.data = mean_cl_boot, width = 1, size = 1.25, color = "white") + stat_summary(fun.y=mean, geom="point", stroke = 1, size = 3, color= "white", aes(shape= Decision_Maker)) + scale_shape_manual(values=c(25,24)) +  ggtitle("Trust in Medical Judgment by AI/Doctor") + xlab("Trust") + ylab("Medical Decision") +  theme_apa() +
+  theme(panel.background = element_rect("transparent"), plot.background = element_rect("transparent", color = NA), legend.background = element_blank(), legend.box.background = element_rect("transparent", colour = 'white'), axis.text = element_text(colour = "black", size = 8), axis.ticks = element_line(colour = "black"), axis.line = element_line(colour = "black"))
+```
+
+
+ mutate(Decision_Maker = fct_reorder(Decision_Maker, Trust, .fun = "mean")) %>%
+```{r}
++
+  theme(panel.background = element_rect("transparent"), plot.background = element_rect("transparent", color = NA), legend.background = element_blank(), legend.box.background = element_rect("transparent"), axis.text = element_text(colour = 'white'), axis.title = element_text(colour = 'white'), legend.text = element_text(colour = "white"), legend.title = element_text(colour = "white"), axis.ticks = element_line(colour = "white"), axis.line = element_line(colour = "white"))
+```
+
+```{r}
+Health_Algorithm_Objectivity_2_Long %>% 
+  ungroup %>%
+  mutate(Decision = fct_reorder(Decision, Int_Quant, .fun = "mean")) %>%
+  ggplot(aes(Int_Quant, Decision, color = Decision)) + geom_jitter() +  stat_summary(geom = "errorbar", fun.data = mean_cl_boot, width = 1, size = 1.25, color = "black") + stat_summary(fun.y=mean, geom="point", shape=23, stroke = 1, size = 3, color="black", fill = "#FCBB6D") + ggtitle("Medical Judgments by Intuition/Quantiative Reasoning") + xlab("Intuition (0) versus Quantative Reasoning(100)") + ylab("Medical Judgment") + theme_apa() +
+  theme(panel.background = element_rect("transparent"), plot.background = element_rect("transparent", color = NA), legend.position="none" , axis.ticks = element_line(colour = "black"), axis.line = element_line(colour = "black"), axis.text = element_text(colour = "black", size = 12))
+
+
+ggsave("Medical Decisions Matrix Empty 2.png", width = 15, height = 10)
+```
+

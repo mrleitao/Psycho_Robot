@@ -1,0 +1,66 @@
+variable,description,scale,group,domain_or_type
+participant,"Anonymous participant number, assigned after a seeded shuffle",P001 to P106,,
+age_group,"Age group, in years",18-44 / 45-59 / 60-69 / 70+,demographic,
+gender,"Gender, as reported. Only woman and man were reported by 10 or more people, so smaller groups are left blank",Woman / Man,demographic,
+race,"Race, as reported. White only if that is the only group selected; everyone else, including anyone selecting more than one, is combined",White / Another or multiple,demographic,
+education,"Highest education completed, in two groups",No college degree / College degree or more,demographic,
+religiosity,"How religious the person considers themselves, from a 7-point scale: not at all to slightly (0 to 2), moderately (3), more than moderately (4 to 6)",Not at all to slightly / Moderately / More than moderately,demographic,
+ai_experience,"Experience with AI in general, from a 5-point scale: none or a little versus moderate to all the time",None or a little / Moderate or more,demographic,
+needs_quant_prevent_injury_stretching,Share of quantitative reasoning (versus intuition) a professional needs to: recommend stretching to prevent injury,0 to 100 slider,needs_quant,preventative; bodily injury
+needs_quant_diagnose_broken_bone,Share of quantitative reasoning (versus intuition) a professional needs to: diagnose a broken bone,0 to 100 slider,needs_quant,diagnostic; bodily injury
+needs_quant_prescribe_pain_medication,Share of quantitative reasoning (versus intuition) a professional needs to: prescribe pain medication for a knee injury,0 to 100 slider,needs_quant,prescriptive; bodily injury
+needs_quant_prevent_mental_meditation,Share of quantitative reasoning (versus intuition) a professional needs to: recommend meditation and exercise for mental health,0 to 100 slider,needs_quant,preventative; mental health
+needs_quant_diagnose_depression,Share of quantitative reasoning (versus intuition) a professional needs to: diagnose depression,0 to 100 slider,needs_quant,diagnostic; mental health
+needs_quant_prescribe_mental_therapy,Share of quantitative reasoning (versus intuition) a professional needs to: prescribe antidepressants and cognitive behavioral therapy,0 to 100 slider,needs_quant,prescriptive; mental health
+needs_quant_prevent_acute_vitamins,Share of quantitative reasoning (versus intuition) a professional needs to: recommend vitamin c and zinc to fight off infections,0 to 100 slider,needs_quant,preventative; acute sickness
+needs_quant_diagnose_strep_throat,Share of quantitative reasoning (versus intuition) a professional needs to: diagnose strep throat,0 to 100 slider,needs_quant,diagnostic; acute sickness
+needs_quant_prescribe_antibiotics,Share of quantitative reasoning (versus intuition) a professional needs to: prescribe antibiotics for strep throat,0 to 100 slider,needs_quant,prescriptive; acute sickness
+needs_quant_prevent_chronic_diet,Share of quantitative reasoning (versus intuition) a professional needs to: recommend a strict diet for better physical health,0 to 100 slider,needs_quant,preventative; chronic sickness
+needs_quant_diagnose_diabetes,Share of quantitative reasoning (versus intuition) a professional needs to: diagnose diabetes,0 to 100 slider,needs_quant,diagnostic; chronic sickness
+needs_quant_prescribe_insulin,Share of quantitative reasoning (versus intuition) a professional needs to: prescribe insulin and a change in diet for diabetes,0 to 100 slider,needs_quant,prescriptive; chronic sickness
+trust_doctor_prevent_injury_stretching,Doctor: how much do you trust each entity to accurately recommend stretching to prevent injury? (0 to 10),0 to 10,trust,doctor; preventative; bodily injury
+trust_doctor_diagnose_broken_bone,Doctor: how much do you trust each entity to accurately diagnose a broken bone? (0 to 10),0 to 10,trust,doctor; diagnostic; bodily injury
+trust_doctor_prescribe_pain_medication,Doctor: how much do you trust each entity to accurately prescribe pain medication for a knee injury? (0 to 10),0 to 10,trust,doctor; prescriptive; bodily injury
+trust_doctor_prevent_mental_meditation,Doctor: how much do you trust each entity to accurately recommend meditation and exercise for mental health? (0 to 10),0 to 10,trust,doctor; preventative; mental health
+trust_doctor_diagnose_depression,Doctor: how much do you trust each entity to accurately diagnose depression? (0 to 10),0 to 10,trust,doctor; diagnostic; mental health
+trust_doctor_prescribe_mental_therapy,Doctor: how much do you trust each entity to accurately prescribe antidepressants and cognitive behavioral therapy? (0 to 10),0 to 10,trust,doctor; prescriptive; mental health
+trust_doctor_prevent_acute_vitamins,Doctor: how much do you trust each entity to accurately recommend vitamin c and zinc to fight off infections? (0 to 10),0 to 10,trust,doctor; preventative; acute sickness
+trust_doctor_diagnose_strep_throat,Doctor: how much do you trust each entity to accurately diagnose strep throat? (0 to 10),0 to 10,trust,doctor; diagnostic; acute sickness
+trust_doctor_prescribe_antibiotics,Doctor: how much do you trust each entity to accurately prescribe antibiotics for strep throat? (0 to 10),0 to 10,trust,doctor; prescriptive; acute sickness
+trust_doctor_prevent_chronic_diet,Doctor: how much do you trust each entity to accurately recommend a strict diet for better physical health? (0 to 10),0 to 10,trust,doctor; preventative; chronic sickness
+trust_doctor_diagnose_diabetes,Doctor: how much do you trust each entity to accurately diagnose diabetes? (0 to 10),0 to 10,trust,doctor; diagnostic; chronic sickness
+trust_doctor_prescribe_insulin,Doctor: how much do you trust each entity to accurately prescribe insulin and a change in diet for diabetes? (0 to 10),0 to 10,trust,doctor; prescriptive; chronic sickness
+trust_ai_prevent_injury_stretching,Medical AI: how much do you trust each entity to accurately recommend stretching to prevent injury? (0 to 10),0 to 10,trust,ai; preventative; bodily injury
+trust_ai_diagnose_broken_bone,Medical AI: how much do you trust each entity to accurately diagnose a broken bone? (0 to 10),0 to 10,trust,ai; diagnostic; bodily injury
+trust_ai_prescribe_pain_medication,Medical AI: how much do you trust each entity to accurately prescribe pain medication for a knee injury? (0 to 10),0 to 10,trust,ai; prescriptive; bodily injury
+trust_ai_prevent_mental_meditation,Medical AI: how much do you trust each entity to accurately recommend meditation and exercise for mental health? (0 to 10),0 to 10,trust,ai; preventative; mental health
+trust_ai_diagnose_depression,Medical AI: how much do you trust each entity to accurately diagnose depression? (0 to 10),0 to 10,trust,ai; diagnostic; mental health
+trust_ai_prescribe_mental_therapy,Medical AI: how much do you trust each entity to accurately prescribe antidepressants and cognitive behavioral therapy? (0 to 10),0 to 10,trust,ai; prescriptive; mental health
+trust_ai_prevent_acute_vitamins,Medical AI: how much do you trust each entity to accurately recommend vitamin c and zinc to fight off infections? (0 to 10),0 to 10,trust,ai; preventative; acute sickness
+trust_ai_diagnose_strep_throat,Medical AI: how much do you trust each entity to accurately diagnose strep throat? (0 to 10),0 to 10,trust,ai; diagnostic; acute sickness
+trust_ai_prescribe_antibiotics,Medical AI: how much do you trust each entity to accurately prescribe antibiotics for strep throat? (0 to 10),0 to 10,trust,ai; prescriptive; acute sickness
+trust_ai_prevent_chronic_diet,Medical AI: how much do you trust each entity to accurately recommend a strict diet for better physical health? (0 to 10),0 to 10,trust,ai; preventative; chronic sickness
+trust_ai_diagnose_diabetes,Medical AI: how much do you trust each entity to accurately diagnose diabetes? (0 to 10),0 to 10,trust,ai; diagnostic; chronic sickness
+trust_ai_prescribe_insulin,Medical AI: how much do you trust each entity to accurately prescribe insulin and a change in diet for diabetes? (0 to 10),0 to 10,trust,ai; prescriptive; chronic sickness
+quantitative_reasoning_doctor,Doctor: How capable is each entity of using quantitative reasoning to make recommendations about health?,0 to 10,decision-maker quality,doctor
+intuition_doctor,Doctor: How capable is each entity of using intuition to make recommendations about health?,0 to 10,decision-maker quality,doctor
+general_accuracy_doctor,Doctor: How capable is each entity at making accurate recommendations about health in general?,0 to 10,mind perception item,doctor
+anticipate_needs_doctor,Doctor: How much do you believe each entity can anticipate your future health needs?,0 to 10,mind perception item,doctor
+understand_feelings_doctor,Doctor: How much do you believe each entity understands your feelings surrounding your health?,0 to 10,mind perception item,doctor
+account_for_needs_doctor,Doctor: How much do you believe each entity can account for your health needs?,0 to 10,mind perception item,doctor
+familiar_process_doctor,Doctor: How much does each entity's decision making process remind you of receiving other types of health recommendations?,0 to 10,mind perception item,doctor
+transparent_process_doctor,Doctor: How transparent is the decision making process for each entity?,0 to 10,mind perception item,doctor
+understand_process_doctor,Doctor: How much do you understand the process by which each entity comes up with a health recommendation?,0 to 10,mind perception item,doctor
+competence_doctor,Doctor: How much do you believe competent and capable describes the entity?,0 to 4,decision-maker quality,doctor
+warmth_doctor,Doctor: How much do you believe warm and friendly describes the entity?,0 to 4,decision-maker quality,doctor
+quantitative_reasoning_ai,Medical AI: How capable is each entity of using quantitative reasoning to make recommendations about health?,0 to 10,decision-maker quality,ai
+intuition_ai,Medical AI: How capable is each entity of using intuition to make recommendations about health?,0 to 10,decision-maker quality,ai
+general_accuracy_ai,Medical AI: How capable is each entity at making accurate recommendations about health in general?,0 to 10,mind perception item,ai
+anticipate_needs_ai,Medical AI: How much do you believe each entity can anticipate your future health needs?,0 to 10,mind perception item,ai
+understand_feelings_ai,Medical AI: How much do you believe each entity understands your feelings surrounding your health?,0 to 10,mind perception item,ai
+account_for_needs_ai,Medical AI: How much do you believe each entity can account for your health needs?,0 to 10,mind perception item,ai
+familiar_process_ai,Medical AI: How much does each entity's decision making process remind you of receiving other types of health recommendations?,0 to 10,mind perception item,ai
+transparent_process_ai,Medical AI: How transparent is the decision making process for each entity?,0 to 10,mind perception item,ai
+understand_process_ai,Medical AI: How much do you understand the process by which each entity comes up with a health recommendation?,0 to 10,mind perception item,ai
+competence_ai,Medical AI: How much do you believe competent and capable describes the entity?,0 to 4,decision-maker quality,ai
+warmth_ai,Medical AI: How much do you believe warm and friendly describes the entity?,0 to 4,decision-maker quality,ai

@@ -12,9 +12,15 @@
     "study1-full.json": "Study 1 (N = 188): every table and model on the Study 1 in full page. Computed by analysis/study1-full-results.py from public/data/study1-ratings.csv.",
     "study1-points.json": "Study 1: each person's value for the dot plots, with bootstrapped intervals and smoothed shapes. Computed by analysis/study1-full-results.py.",
     "public/docs/study1-preregistration.pdf": "Study 1 preregistration, from the author's Word file with a reviewer's margin comment removed.",
-    "public/code/study1-original-analysis.Rmd": "The author's original Study 1 analysis notebook, run on the raw export. Only the local file paths were replaced."
+    "public/code/study1-original-analysis.Rmd": "The author's original Study 1 analysis notebook, run on the raw export. Only the local file paths were replaced.",
+    "study2-full.json": "Study 2 (N = 106): every table and model on the Study 2 in full page. Computed by analysis/study2-full-results.py from public/data/study2-ratings.csv.",
+    "study2-points.json": "Study 2: each person's value for the dot plots, with bootstrapped intervals and smoothed shapes. Computed by analysis/study2-full-results.py.",
+    "public/data/study2-ratings.csv": "Study 2 participant-level ratings with six coarse demographic groups (age in four bands), de-identified (see analysis/study2-deidentify.py). Released by the author as open data.",
+    "public/docs/study2-preregistration.pdf": "Study 2 preregistration, converted from the author's Word file.",
+    "public/code/study2-original-analysis.Rmd": "The author's original Study 2 analysis notebook, run on the raw export. Only the two local file paths were replaced.",
+    "public/code/study2-analysis.R": "Study 2 tests and main mixed models in R, from the public file. Not yet run."
   },
-  "sharing": "Published summary statistics, plus the de-identified Study 1 file released by the author (public/data/, CC BY 4.0). No raw files, IDs, IP addresses, locations or timestamps, and no sensitive demographics. A demographic group is its own filter option only if at least 30 people are in it.",
+  "sharing": "Published summary statistics, plus the de-identified Study 1 and Study 2 files released by the author (public/data/, CC BY 4.0). No raw files, IDs, IP addresses, locations or timestamps, and no sensitive demographics. A demographic group is its own filter option only if at least 30 people are in it.",
   "publicLinks": {
     "study2Preregistration": "https://osf.io/k25g8",
     "study2DataAndAnalysis": "https://osf.io/7png8"

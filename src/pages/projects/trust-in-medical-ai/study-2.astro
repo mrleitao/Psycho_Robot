@@ -1,0 +1,494 @@
+---
+import Base from '../../../layouts/Base.astro';
+import StatTable from '../../../components/StatTable.astro';
+import Raincloud from '../../../components/Raincloud.astro';
+import DotPanels from '../../../components/DotPanels.astro';
+import GapScatter from '../../../components/GapScatter.astro';
+import MediationDiagram from '../../../components/MediationDiagram.astro';
+import full from '../../../data/trust-in-medical-ai/study2-full.json';
+import pts from '../../../data/trust-in-medical-ai/study2-points.json';
+import { href } from '../../../utils/url';
+
+const repo = 'https://github.com/mrleitao/Psycho_Robot';
+const f1 = (n: number | null) => (n == null ? '' : n.toFixed(1));
+const f2 = (n: number | null) => (n == null ? '' : n.toFixed(2));
+const noZero = (s: string) => s.replace(/^(-?)0\./, '$1.');
+const minus = (s: string) => s.replace(/^-/, '−').replace(/\[-/g, '[−').replace(/, -/g, ', −');
+const pv = (p: number) => (p < 0.001 ? '< .001' : noZero(p.toFixed(3)));
+const r3 = (n: number) => minus(noZero(n.toFixed(3)));
+
+// ---- sample
+const sampleRows = full.sample.variables.flatMap((v) =>
+  v.rows.map((r) => ({ label: `${v.variable}: ${r.group}`, n: r.n, pct: `${r.pct.toFixed(1)}%` })),
+);
+const missingNote = full.sample.variables.filter((v) => v.missing).map((v) => `${v.variable.toLowerCase()} (${v.missing})`).join(', ');
+
+// ---- need for quantitative reasoning
+const descCols = [
+  { key: 'label', label: 'Decision' },
+  { key: 'n', label: 'n', num: true, hint: 'People with an answer' },
+  { key: 'mean', label: 'Mean', num: true },
+  { key: 'sd', label: 'SD', num: true, hint: 'Standard deviation' },
+  { key: 'median', label: 'Median', num: true },
+  { key: 'min', label: 'Min', num: true },
+  { key: 'max', label: 'Max', num: true },
+  { key: 'skew', label: 'Skew', num: true },
+  { key: 'kurtosis', label: 'Kurtosis', num: true, hint: 'Excess kurtosis; 0 is a normal curve' },
+  { key: 'se', label: 'SE', num: true, hint: 'Standard error of the mean' },
+];
+const descRow = (r: any, label = r.label) => ({
+  label, n: r.n, mean: f2(r.mean), sd: f2(r.sd), median: f2(r.median), min: f2(r.min), max: f2(r.max),
+  skew: minus(f2(r.skew)), kurtosis: minus(f2(r.kurtosis)), se: f2(r.se),
+});
+const decisionRows = [...full.decisionDescriptives].sort((a, b) => b.mean - a.mean).map((r) => descRow(r));
+const compositeRows = full.compositeDescriptives.map((r) => descRow(r, `${r.label} (${r.items} decisions)`));
+const relRows = full.reliability.map((r) => ({ label: r.label, k: r.items.length, alpha: noZero(r.alpha.toFixed(2)), rbar: noZero(r.meanR.toFixed(2)) }));
+
+const byMean = (a: any, b: any) => b.mean - a.mean;
+const kindOf = () => 'plain' as const;
+const decisionCloud = [...pts.decisions].sort(byMean).map((r) => ({ ...r, kind: kindOf() }));
+const comp = Object.fromEntries(pts.composites.map((r: any) => [r.id, r]));
+const domainCloud = pts.domainOrder.map((k: string) => comp[k]).sort(byMean).map((r: any) => ({ ...r, kind: kindOf() }));
+const stageCloud = pts.stageOrder.map((k: string) => comp[k]).sort(byMean).map((r: any) => ({ ...r, kind: kindOf() }));
+
+// ---- trust: doctor vs AI
+const cell = (m: number, lo: number, hi: number, n: number) => ({ mean: m, lo, hi, n });
+// Intervals for each recommender's own mean: mean plus or minus 1.96 standard errors.
+const seInterval = (d: any) => {
+  const h = 1.96 * d.se;
+  return cell(d.mean, d.mean - h, d.mean + h, d.n);
+};
+const trustDots: any[] = [];
+for (const t of full.trustDescriptives) {
+  trustDots.push({ head: t.label });
+  trustDots.push({ label: 'Doctor', kind: 'human', cells: [seInterval(t.doctor)] });
+  trustDots.push({ label: 'AI', kind: 'ai', cells: [seInterval(t.ai)] });
+}
+const gapDots = full.tests.map((t) => ({
+  label: t.label, kind: 'plain', cells: [cell(t.diff, t.lo, t.hi, t.n), cell(t.d, t.dLo, t.dHi, t.n)],
+}));
+
+const testCols = [
+  { key: 'text', label: 'Comparison', wrap: true, minw: '12rem' },
+  { key: 'means', label: 'Doctor, AI: mean (SD)', num: true, wrap: true, minw: '9.5rem' },
+  { key: 'diff', label: 'Difference [95% CI]', num: true },
+  { key: 't', label: 't (df)', num: true },
+  { key: 'p', label: 'p', num: true },
+  { key: 'd', label: 'd [95% CI]', num: true, hint: 'Cohen’s d for paired data: the mean difference over the SD of the differences' },
+  { key: 'dir', label: 'Doctor higher / same / lower', num: true, hint: 'How many people trusted the doctor more, the same, or less than the AI' },
+];
+const testRow = (t: any) => ({
+  text: t.label,
+  means: `${f2(t.meanA)} (${f2(t.sdA)}), ${f2(t.meanB)} (${f2(t.sdB)})`,
+  diff: minus(`${f2(t.diff)} [${f2(t.lo)}, ${f2(t.hi)}]`),
+  t: minus(`${f2(t.t)} (${t.df})`),
+  p: pv(t.p),
+  d: minus(`${f2(t.d)} [${f2(t.dLo)}, ${f2(t.dHi)}]`),
+  dir: `${t.higher} / ${t.same} / ${t.lower}`,
+});
+const decisionTestRows = full.tests.map(testRow);
+const compTestRows = [full.overallTest, ...full.compositeTests].map(testRow);
+const qualityRows = full.qualityTests.map((t) => testRow({ ...t, label: `${t.label} (${t.scale})` }));
+
+// person-level split: how many people sit where
+const ov = full.overallTest;
+
+// ---- clouds
+const trustCloud = pts.trustOverall;
+const qualityClouds = pts.qualityClouds.map((q: any) => ({
+  ...q,
+  grid: Array.from({ length: 51 }, (_, i) => (i * q.top) / 50),
+}));
+
+// ---- H2 / gap by need
+const gn = full.gapByNeed;
+
+// ---- H3 correlations
+const corrRows = full.correlationsByTarget.flatMap((c: any) =>
+  c.vars.flatMap((a: string, i: number) =>
+    c.vars.slice(i + 1).map((b: string, j: number) => ({
+      who: c.who, pair: `${a} and ${b}`, r: r3(c.r[i][i + 1 + j]), p: pv(c.p[i][i + 1 + j]), n: c.n[i][i + 1 + j],
+    })),
+  ),
+);
+const wb = full.withinBetween;
+const wbRows: any[] = [];
+for (let i = 0; i < wb.vars.length; i++)
+  for (let j = i + 1; j < wb.vars.length; j++)
+    wbRows.push({
+      pair: `${wb.vars[i]} and ${wb.vars[j]}`,
+      between: `${r3(wb.between[i][j])} (${pv(wb.pBetween[i][j])})`,
+      within: `${r3(wb.within[i][j])} (${pv(wb.pWithin[i][j])})`,
+    });
+
+// ---- mixed models
+const models = full.mixedModels;
+const termName: Record<string, string> = {
+  Intercept: 'Intercept', IsDoc: 'Doctor (versus AI)', Int_Quant: 'Quantitative reasoning the decision needs',
+  'IsDoc:Int_Quant': 'Doctor × need for quantitative reasoning', Intuition: 'Intuition', Quant: 'Quantitative reasoning',
+  Warmth: 'Warmth', Competence: 'Competence', Mind: 'Mind perception', AgeGroup: 'Age group (1 to 4)', IsMale: 'Man (versus woman)',
+  'AgeGroup:IsDoc': 'Age group × doctor', 'Intuition:Int_Quant': 'Intuition × need', 'Quant:Int_Quant': 'Quantitative reasoning × need',
+};
+const modelCols = [
+  { key: 'term', label: 'Predictor', wrap: true, minw: '14rem' },
+  { key: 'b', label: 'b [95% CI]', num: true },
+  { key: 'beta', label: 'Standardized β', num: true, hint: 'b times the SD of the predictor over the SD of trust. Not given for interactions.' },
+  { key: 'z', label: 'z', num: true },
+  { key: 'p', label: 'p', num: true },
+  { key: 'vif', label: 'VIF', num: true, hint: 'Variance inflation factor. Values above 5 mean the predictor overlaps heavily with others; doctor and its interaction overlap by construction.' },
+];
+const modelRows = (m: any) =>
+  m.terms.map((t: any) => ({
+    term: termName[t.term] ?? t.term,
+    b: minus(`${f3(t.b)} [${f3(t.lo)}, ${f3(t.hi)}]`),
+    beta: t.beta == null ? '' : minus(f2(t.beta)),
+    z: minus(f2(t.z)),
+    p: pv(t.p),
+    vif: t.vif == null ? '' : f2(t.vif),
+  }));
+function f3(n: number) { return n.toFixed(3); }
+const modelFit = (m: any) =>
+  `${m.n.toLocaleString('en-US')} ratings from ${m.people} people. Person variance ${f2(m.varPerson)}${m.varSlope != null ? `, slope variance ${m.varSlope}` : ''}, residual ${f2(m.varResidual)}. Share of variance between people (ICC) ${noZero(f2(m.icc))}. R² ${noZero(f2(m.r2m))} from the predictors alone, ${noZero(f2(m.r2c))} with the person effects.${m.aic != null ? ` AIC ${m.aic}.` : ''}`;
+
+// ---- mediation
+const med = full.mediation;
+const medRows = med.flatMap((m: any) =>
+  m.mediators.map((r: any) => ({
+    model: m.label, mediator: r.name, a: minus(f2(r.a)), b: minus(f2(r.b)),
+    ind: minus(`${f2(r.indirect)} [${f2(r.lo)}, ${f2(r.hi)}]`), z: minus(f2(r.z)), p: pv(r.p),
+  })),
+);
+
+// ---- who differs
+const gapItems: any[] = [];
+for (const s of full.subgroups) {
+  gapItems.push({ head: s.variable });
+  for (const g of s.groups) gapItems.push({ label: g.label, sub: `n = ${g.n}`, kind: 'plain', cells: g.cells });
+}
+const subTestRows = full.subgroups.map((s: any) => ({
+  label: s.variable,
+  groups: s.groups.map((g: any) => g.label).join('; '),
+  ...Object.fromEntries(
+    ['trust', 'qr', 'int'].map((k, i) => {
+      const t = s.tests[i];
+      return [k, t ? `${t.stat === 'F' ? `F(${t.df[0]}, ${t.df[1]})` : `t(${t.df})`} = ${minus(f2(t.value))}, p ${pv(t.p).replace(/^</, '<').replace(/^(\d|\.)/, '= $1')}` : ''];
+    }),
+  ),
+}));
+const ageModel = models[6];
+const ageInt = ageModel.terms.find((t: any) => t.term === 'AgeGroup:IsDoc');
+
+const toc = [
+  ['sample', 'Who took part'],
+  ['decisions', 'Twelve medical decisions'],
+  ['trust', 'Doctor versus AI'],
+  ['views', 'How the doctor and the AI were seen'],
+  ['need', 'Does the gap depend on the decision?'],
+  ['qualities', 'What goes with trust'],
+  ['mediation', 'What explains the gap'],
+  ['who', 'Does the gap differ between people?'],
+  ['files', 'Files and methods'],
+];
+---
+
+<Base
+  title="Trust in medical AI: Study 2 in full"
+  description="Every table and figure from the Study 2 analysis of my dissertation, rebuilt from the public data with hover details."
+>
+  <div class="wrap">
+    <header class="page-head">
+      <p class="back small"><a href={href('/projects/trust-in-medical-ai/')}>Trust in medical AI</a></p>
+      <h1>Study 2 in full</h1>
+      <p class="lede">
+        {full.sample.n} adults said how much they would trust a doctor, and how much they would trust a medical AI, to make each of
+        twelve medical decisions, and then rated both on quantitative reasoning, intuition, warmth, competence and several
+        mind-perception items. This page rebuilds the tables and figures of that analysis from the released data. Hover over any mark for the details.
+      </p>
+    </header>
+
+    <nav class="toc" aria-label="On this page">
+      <ul>
+        {toc.map(([id, label]) => <li><a href={`#${id}`}>{label}</a></li>)}
+      </ul>
+    </nav>
+
+    <div class="prose">
+      <p class="how small muted">
+        How to read this page. Differences are always <em>doctor minus AI</em>, so a positive number means more trust in, or a higher rating of, the doctor.
+        Ratings are shown on the scales people saw: 0 to 10, except competence and warmth (0 to 4). The public file groups age into four bands, so the
+        models that used age in years use the band number (1 = 18 to 44, 4 = 70 and over) and the age results differ a little from the dissertation; the
+        “Does the gap differ between people?” section shows both.
+      </p>
+    </div>
+
+    <!-- ============================ sample ============================ -->
+    <section class="section" id="sample" aria-labelledby="sample-title">
+      <h2 id="sample-title">Who took part</h2>
+      <p class="intro">
+        {full.sample.n} adults, recruited through CloudResearch's Prime Panels, finished the study. Each answered the same questions about a doctor and
+        about an AI, so every comparison below is within a person.
+      </p>
+      <StatTable
+        id="table-sample"
+        title="Table 1. The people in the released file"
+        columns={[{ key: 'label', label: 'Group' }, { key: 'n', label: 'People', num: true }, { key: 'pct', label: 'Share', num: true }]}
+        rows={sampleRows}
+        note={`Shares are of all ${full.sample.n} people. Left blank in the file: ${missingNote}. Race is shown as White or another or multiple because no other group reached 30 people. Age is in bands; exact age is not released.`}
+      />
+    </section>
+
+    <!-- ============================ decisions ============================ -->
+    <section class="section" id="decisions" aria-labelledby="decisions-title">
+      <h2 id="decisions-title">Twelve medical decisions</h2>
+      <p class="intro">
+        The twelve decisions cross four kinds of health problem (bodily injury, mental health, acute sickness, chronic sickness) with three stages of care
+        (preventing, diagnosing and prescribing). For each, people slid from 0 (needs only intuition) to 100 (needs only quantitative reasoning).
+      </p>
+      <StatTable
+        id="table-decisions"
+        title="Table 2. Quantitative reasoning needed, by decision (0 to 100)"
+        columns={descCols}
+        rows={decisionRows}
+        note="Sorted from most to least quantitative reasoning needed. Skew and kurtosis are the estimates psych::describe reports."
+      />
+      <h3 class="fig-title" id="fig-decisions">Figure 1. Every decision, every person</h3>
+      <Raincloud rows={decisionCloud} grid={pts.densityGrid100} domain={[0, 100]} tickStep={20}
+        xLabel="Needs intuition (0) versus needs quantitative reasoning (100)" ariaLabel="Distribution of ratings for each of twelve medical decisions, ordered by average" />
+
+      <StatTable
+        id="table-composites"
+        title="Table 3. The decision groups (0 to 100)"
+        columns={descCols.map((c) => (c.key === 'label' ? { ...c, label: 'Group' } : c))}
+        rows={compositeRows}
+        note="Each group is the average of its decisions. A person missing any decision in a group is missing for that group. Physical health is every decision except the mental health ones."
+      />
+      <h3 class="fig-title" id="fig-domain">Figure 2. By kind of health problem</h3>
+      <Raincloud rows={domainCloud} grid={pts.densityGrid100} domain={[0, 100]} tickStep={20}
+        xLabel="Intuition (0) versus quantitative reasoning (100)" ariaLabel="Distribution of ratings by kind of health problem" />
+      <h3 class="fig-title" id="fig-stage">Figure 3. By stage of care</h3>
+      <Raincloud rows={stageCloud} grid={pts.densityGrid100} domain={[0, 100]} tickStep={20}
+        xLabel="Intuition (0) versus quantitative reasoning (100)" ariaLabel="Distribution of ratings by stage of care" />
+
+      <StatTable
+        id="table-reliability"
+        title="Table 4. Do the decisions in each group hang together?"
+        columns={[
+          { key: 'label', label: 'Group' }, { key: 'k', label: 'Decisions', num: true },
+          { key: 'alpha', label: 'Alpha', num: true, hint: 'Cronbach’s alpha: 0 to 1, higher means people answered the decisions alike' },
+          { key: 'rbar', label: 'Mean inter-item r', num: true },
+        ]}
+        rows={relRows}
+      />
+    </section>
+
+    <!-- ============================ trust ============================ -->
+    <section class="section" id="trust" aria-labelledby="trust-title">
+      <h2 id="trust-title">Doctor versus AI</h2>
+      <p class="intro">
+        On average people would trust a doctor about {f1(ov.diff)} points more than an AI on the 0 to 10 scale (d = {f2(ov.d)}).
+        {ov.higher} of {ov.n} people trusted the doctor more across the twelve decisions, {ov.same} trusted both the same, and {ov.lower} trusted the AI more.
+        The preregistered tests (H1) ask this for each decision.
+      </p>
+      <h3 class="fig-title" id="fig-trust-overall">Figure 4. Each person's average trust, doctor and AI</h3>
+      <Raincloud rows={trustCloud} grid={pts.densityGrid10} domain={[0, 10]} tickStep={1} xJitter={0.1}
+        xLabel="Average trust over twelve decisions (0 to 10)" ariaLabel="Distribution of each person's average trust in a doctor and in an AI" />
+
+      <StatTable id="table-tests" title="Table 5. Trust in a doctor versus an AI, by decision (0 to 10)" columns={testCols} rows={decisionTestRows}
+        note="Paired t tests, two-sided. The 95% interval for d inverts the noncentral t distribution. The gap is large for every decision and smallest for the three preventative ones." />
+      <h3 class="fig-title" id="fig-trust-dots">Figure 5. Trust in a doctor and in an AI, decision by decision</h3>
+      <DotPanels
+        items={trustDots}
+        panels={[{ title: 'Trust', domain: [0, 10], tickStep: 1, axisLabel: 'Average trust (0 to 10)' }]}
+        ariaLabel="Average trust in a doctor and in an AI for each of twelve decisions, with 95% intervals"
+        tableLabel="Decision"
+        valueLabel="Average"
+      />
+      <h3 class="fig-title" id="fig-gap-dots">Figure 6. The gap and its size, decision by decision</h3>
+      <DotPanels
+        items={gapDots}
+        panels={[
+          { title: 'Trust gap (doctor − AI)', domain: [0, 6], tickStep: 1, zero: true, axisLabel: 'Points of trust (0 to 10)' },
+          { title: 'Effect size (d)', domain: [0, 2], tickStep: 0.5, zero: true, axisLabel: 'Cohen’s d' },
+        ]}
+        ariaLabel="The doctor-minus-AI trust gap and its effect size for each of twelve decisions, with 95% intervals"
+        tableLabel="Decision"
+        valueLabel="Value"
+      />
+      <StatTable id="table-comp-tests" title="Table 6. The same test for the decision groups" columns={testCols.map((c) => (c.key === 'text' ? { ...c, label: 'Group' } : c))} rows={compTestRows}
+        note="Trust is the average of the decisions in the group." />
+    </section>
+
+    <!-- ============================ views ============================ -->
+    <section class="section" id="views" aria-labelledby="views-title">
+      <h2 id="views-title">How the doctor and the AI were seen</h2>
+      <p class="intro">
+        People also rated the doctor and the AI on eleven qualities. The doctor was rated higher on every one. The gaps are largest for warmth,
+        understanding feelings, competence and intuition, and smallest for transparency, anticipating needs and quantitative reasoning.
+      </p>
+      <StatTable id="table-qualities" title="Table 7. The doctor and the AI on each quality" columns={testCols.map((c) => (c.key === 'text' ? { ...c, label: 'Quality (scale)' } : c))} rows={qualityRows}
+        note="Competence and warmth are on a 0 to 4 scale, the rest on 0 to 10, so differences are not comparable across scales; effect sizes (d) are. The seven mind-perception items are the last seven rows." />
+      {qualityClouds.map((q: any, i: number) => (
+        <div class="cloud">
+          <h3 class="fig-title mini" id={`fig-quality-${q.key}`}>Figure {7 + i}. {q.label}</h3>
+          <Raincloud rows={q.rows} grid={q.grid} domain={[0, q.top]} tickStep={q.top === 4 ? 1 : 1} xJitter={0.15}
+            xLabel={`${q.label}, rating (0 to ${q.top})`} ariaLabel={`${q.label}: each person's rating of the doctor and of the AI`} />
+        </div>
+      ))}
+    </section>
+
+    <!-- ============================ need ============================ -->
+    <section class="section" id="need" aria-labelledby="need-title">
+      <h2 id="need-title">Does the gap depend on the decision?</h2>
+      <p class="intro">
+        The second preregistered hypothesis (H2) asked whether people trust the AI more, relative to the doctor, for decisions they think need more quantitative
+        reasoning. The mixed model says yes, a little: for every extra 10 points of needed quantitative reasoning, the doctor's edge shrinks by
+        {f2(Math.abs(models[1].terms[3].b) * 10)} points (Table 8). Comparing the twelve decisions to each other, though, the pattern runs the other
+        way (Figure 11), because the three preventative decisions are both rated as needing less quantitative reasoning and show the smallest gaps.
+        Across people and decisions, the first pattern is the one that tests H2.
+      </p>
+      <StatTable id="table-h2" title="Table 8. Trust predicted from doctor versus AI, and from how much quantitative reasoning the decision needs" columns={modelCols} rows={modelRows(models[1])} note={`${models[1].label}. ${modelFit(models[1])} ${full.mixedNote}`} />
+      <h3 class="fig-title" id="fig-gap-need">Figure 11. The gap and the need for quantitative reasoning, by decision</h3>
+      <GapScatter
+        points={gn.points} slope={gn.slope} intercept={gn.intercept} r={gn.r}
+        xDomain={[50, 70]} yDomain={[2, 5.5]}
+        xTitle="Average quantitative reasoning the decision needs (0 to 100)" yTitle="Doctor minus AI trust"
+        ariaLabel="For each of twelve decisions, the quantitative reasoning it needs against the doctor-minus-AI trust gap"
+      />
+    </section>
+
+    <!-- ============================ qualities ============================ -->
+    <section class="section" id="qualities" aria-labelledby="qualities-title">
+      <h2 id="qualities-title">What goes with trust</h2>
+      <p class="intro">
+        The third hypothesis (H3) asked whether trust follows how people see the recommender. Quantitative reasoning, intuition, competence and warmth are
+        all positively correlated for the doctor and for the AI. Because every person rated both, I also separate the part of each correlation that
+        comes from who the person is (between people) from the part that comes from whether the recommender is the doctor or the AI (within people).
+      </p>
+      <StatTable id="table-corr" title="Table 9. Correlations among the four qualities, for the doctor and for the AI" columns={[
+        { key: 'who', label: 'Recommender' }, { key: 'pair', label: 'Pair', wrap: true, minw: '16rem' }, { key: 'r', label: 'r', num: true }, { key: 'p', label: 'p', num: true }, { key: 'n', label: 'n', num: true },
+      ]} rows={corrRows} note="Pearson correlations among the people who answered both items." />
+      <StatTable id="table-wb" title="Table 10. Between-person and within-person correlations" columns={[
+        { key: 'pair', label: 'Pair', wrap: true, minw: '16rem' },
+        { key: 'between', label: 'Between people, r (p)', num: true, hint: 'Do people who rate the doctor and AI high on one thing rate them high on the other, on average?' },
+        { key: 'within', label: 'Within people, r (p)', num: true, hint: 'For one person, is the target rated higher on one quality also rated higher on the other?' },
+      ]} rows={wbRows} note={full.withinBetweenNote} />
+      <p class="small muted note">
+        Reliability of the mind-perception items: {full.mindReliability.map((m) => `${m.label}, alpha ${noZero(m.alpha.toFixed(2))}`).join('; ')}.
+      </p>
+
+      <h3 class="fig-title" id="models">Mixed models of trust</h3>
+      <p class="intro">
+        These add the qualities to the model above. Every version keeps the doctor-versus-AI gap large, and competence and quantitative reasoning carry the most weight.
+        Adding the qualities cuts the unexplained gap in trust by more than half, from {f2(models[0].terms[1].b)} to {f2(models[2].terms[1].b)} points.
+      </p>
+      {models.slice(2, 6).map((m: any, i: number) => (
+        <StatTable id={`table-model-${i + 9}`} title={`Table ${11 + i}. ${m.label}`} columns={modelCols} rows={modelRows(m)} note={`${modelFit(m)}`} />
+      ))}
+      <p class="small muted note">{full.mixedNote}</p>
+    </section>
+
+    <!-- ============================ mediation ============================ -->
+    <section class="section" id="mediation" aria-labelledby="mediation-title">
+      <h2 id="mediation-title">What explains the gap?</h2>
+      <p class="intro">
+        If people trust doctors more because they see them as warmer, more competent, more intuitive or better at quantitative reasoning, then those
+        ratings should carry part of the gap (H4). Taken together, competence carries a clear share (warmth's interval includes zero once competence is in the model), and so do intuition and quantitative reasoning.
+      </p>
+      <StatTable id="table-mediation" title="Table 15. Indirect effects of doctor versus AI on trust, through each quality" columns={[
+        { key: 'model', label: 'Model', wrap: true, minw: '12rem' }, { key: 'mediator', label: 'Through' },
+        { key: 'a', label: 'a', num: true, hint: 'Effect of doctor (versus AI) on the quality' },
+        { key: 'b', label: 'b', num: true, hint: 'Effect of the quality on trust, holding doctor versus AI fixed' },
+        { key: 'ind', label: 'a × b [95% CI]', num: true }, { key: 'z', label: 'z', num: true }, { key: 'p', label: 'p', num: true },
+      ]} rows={medRows} note={full.mediationNote} />
+      {med.slice(0, 2).map((m: any, i: number) => (
+        <>
+          <h3 class="fig-title" id={`fig-med-${i}`}>Figure {12 + i}. {m.label}</h3>
+          <MediationDiagram title={m.label} mediators={m.mediators} direct={m.direct} total={m.total} />
+        </>
+      ))}
+    </section>
+
+    <!-- ============================ who ============================ -->
+    <section class="section" id="who" aria-labelledby="who-title">
+      <h2 id="who-title">Does the gap differ between people?</h2>
+      <p class="intro">
+        The gap is large in every group, and the intervals overlap throughout. Nothing here is a finding on its own, but I report it so readers can see how
+        steady the result is.
+      </p>
+      <h3 class="fig-title" id="fig-who">Figure 14. The doctor-minus-AI gap, by group of people</h3>
+      <DotPanels
+        items={gapItems}
+        panels={[
+          { title: 'Trust', domain: [0, 7], tickStep: 1, zero: true, axisLabel: 'Doctor minus AI (0 to 10)' },
+          { title: 'Quantitative reasoning', domain: [-1, 6], tickStep: 1, zero: true, axisLabel: 'Doctor minus AI (0 to 10)' },
+          { title: 'Intuition', domain: [0, 7], tickStep: 1, zero: true, axisLabel: 'Doctor minus AI (0 to 10)' },
+        ]}
+        ariaLabel="The doctor-minus-AI gap in trust, quantitative reasoning and intuition for each group of people"
+        tableLabel="Group"
+        valueLabel="Average gap"
+      />
+      <StatTable id="table-who" title="Table 16. Does the gap differ between groups?" columns={[
+        { key: 'label', label: 'Compared by' }, { key: 'groups', label: 'Groups', wrap: true, minw: '12rem' },
+        { key: 'trust', label: 'Trust', num: true, wrap: true, minw: '12rem' },
+        { key: 'qr', label: 'Quantitative reasoning', num: true, wrap: true, minw: '12rem' },
+        { key: 'int', label: 'Intuition', num: true, wrap: true, minw: '12rem' },
+      ]} rows={subTestRows} note={full.subgroupNote} />
+      <div class="prose">
+        <h3>Age: two versions</h3>
+        <p>
+          The one result that moves with age is in the last model (Table 17): the doctor's edge grows with age band (b = {f3(ageInt.b)} per band, p {pv(ageInt.p)}).
+          The dissertation's Table 8 used age in years. Rerunning that model privately with exact age gives the same main results as here (doctor 1.683, intuition .140,
+          quantitative reasoning .272, warmth .134, competence .578, age .002, man .037), so the age bands lose nothing important. Exact age stays out of the public file
+          because with a sample this size, an exact age together with gender and education could point to one person.
+        </p>
+      </div>
+      <StatTable id="table-age" title="Table 17. Age band by doctor interaction" columns={modelCols} rows={modelRows(ageModel)} note={modelFit(ageModel)} />
+    </section>
+
+    <!-- ============================ files ============================ -->
+    <section class="section" id="files" aria-labelledby="files-title">
+      <h2 id="files-title">Files and methods</h2>
+      <div class="prose">
+        <ul class="filelist">
+          <li><a href={href('/data/study2-ratings.csv')}>study2-ratings.csv</a>, the de-identified ratings</li>
+          <li><a href={href('/data/study2-codebook.csv')}>study2-codebook.csv</a>, what every column means</li>
+          <li><a href={href('/code/study2-analysis.R')}>study2-analysis.R</a>, the main tests in R, from the public file</li>
+          <li><a href={href('/code/study2-original-analysis.Rmd')}>study2-original-analysis.Rmd</a>, my original notebook, run on the raw export</li>
+          <li><a href={href('/docs/study2-preregistration.pdf')}>Preregistration (PDF)</a>, written before data collection</li>
+          <li><a href={`${repo}/blob/main/analysis/study2-full-results.py`}>study2-full-results.py</a>, the code behind every table and figure on this page</li>
+          <li><a href={`${repo}/blob/main/analysis/study2-deidentify.py`}>study2-deidentify.py</a>, how the raw export became the public file</li>
+        </ul>
+        <p>
+          Everything above was computed in Python from the released file. Where the notebook used an R package or Mplus I used the closest equivalent: descriptives and
+          reliability follow psych, the mixed models follow lme4 with a random intercept and a random slope for the decision's need for quantitative reasoning, and
+          the mediation models are within-person regressions with a bootstrap over people. The main results match the dissertation: for example the doctor
+          effect of 1.68 and the weights on intuition (.14), quantitative reasoning (.27), warmth (.14) and competence (.58).
+        </p>
+        <p>
+          Four differences are worth knowing. People's ratings here are on the scales they saw, whereas the notebook kept some of the survey's stored codes, so
+          means and intercepts differ while differences, slopes and correlations match. Composites are missing when any item is missing. Age is in bands. And the
+          mediation tests are close to, not identical to, the Mplus output. I have not run the R code on the released file to compare line by line.
+        </p>
+        <p class="small muted">
+          The data, codebook and preregistration are shared under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>; the code under the MIT license. Please do not use the file to try to identify anyone.
+          Please cite the dissertation: Leitao, M. R. (2024). <em>Artificial Intelligence, Humanization, and Health Beliefs</em>. Georgetown University.
+        </p>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .cloud { margin-top: 1.5rem; }
+  .mini { margin: 0 0 -0.4rem; font-size: 0.98rem; }
+  .toc { margin-top: 2rem; }
+  .toc ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; font-family: var(--display); font-size: 0.95rem; }
+  .toc a { text-decoration-color: var(--rule); }
+  .how { margin-top: 1.5rem; font-family: var(--display); }
+  .intro { max-width: 64ch; color: var(--muted); }
+  .fig-title { margin-top: 3rem; font-size: 1.15rem; }
+  .note { margin-top: 0.75rem; max-width: 70ch; font-family: var(--display); }
+  .filelist { padding-left: 1.2rem; font-family: var(--display); }
+  .filelist li { margin-bottom: 0.3rem; }
+  section :global(h2) { margin-bottom: 0.75rem; }
+</style>

@@ -1,6 +1,6 @@
 # License for the released data and documents
 
-The Study 1 data, codebook, preregistration and other documents in this repository are licensed under
+The Study 1 and Study 2 data, codebooks, preregistration and other documents in this repository are licensed under
 [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/).
 
 You may share and adapt them, including for commercial use, if you give credit, link to the license and say if you
@@ -10,14 +10,17 @@ This covers:
 
 - `public/data/study1-ratings.csv` and `public/data/study1-codebook.csv`
 - `public/docs/study1-preregistration.pdf`
+- `public/data/study2-ratings.csv` and `public/data/study2-codebook.csv`
+- `public/docs/study2-preregistration.pdf`
 
-The code in this repository (the website, the analysis scripts, `public/code/study1-analysis.R` and
-`public/code/study1-original-analysis.Rmd`) is licensed under the MIT license, see [LICENSE](LICENSE).
+The code in this repository (the website, the analysis scripts, `public/code/study1-analysis.R`,
+`public/code/study1-original-analysis.Rmd`, `public/code/study2-analysis.R` and
+`public/code/study2-original-analysis.Rmd`) is licensed under the MIT license, see [LICENSE](LICENSE).
 
 ## How to credit
 
 > Leitao, M. R. (2024). *Artificial Intelligence, Humanization, and Health Beliefs* [Doctoral dissertation, Georgetown
-> University]. Study 1 data released at https://github.com/mrleitao/Psycho_Robot.
+> University]. Study 1 and Study 2 data released at https://github.com/mrleitao/Psycho_Robot.
 
 ## What the license does not change
 
