@@ -30,10 +30,8 @@ const fmt = (b: number) => {
   if (b >= 1) return b.toFixed(1);
   return b.toFixed(2);
 };
-const fmtShort = (b: number) => {
-  if (b >= 1e4) return `10^${Math.floor(Math.log10(b))}`.replace('^', ' ^');
-  return fmt(b);
-};
+const sup = (n: number) => String(n).split('').map((c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[Number(c)]).join('');
+const fmtShort = (b: number) => (b >= 1e4 ? `10${sup(Math.floor(Math.log10(b)))}` : fmt(b));
 const wrap = (s: string, n = 46) => {
   if (s.length <= n) return [s];
   const words = s.split(' '); let a = '', b = '';
