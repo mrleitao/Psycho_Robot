@@ -3,17 +3,92 @@ import Base from '../layouts/Base.astro';
 import ForestPlot from '../components/ForestPlot.astro';
 import data from '../data/trust-in-medical-ai/trust-by-domain.json';
 import { href } from '../utils/url';
+import topics from '../data/topics.json';
+import evidence from '../data/evidence.json';
+const kindOf = (id: string) => evidence.find((e) => e.id === id)!.kind;
+const expertise = topics.filter((t) => t.evidence.some((id) => kindOf(id) !== 'course')).map((t) => t.name);
+const stats = [
+  { n: '13+', l: 'years in behavioral science' },
+  { n: '6', l: 'experiments in my dissertation' },
+  { n: '3,000+', l: 'participants studied' },
+  { n: '10', l: 'papers published, accepted, or under review' },
+];
+const doors = [
+  { t: 'Projects', d: 'Case studies built from the data, with every figure rebuilt so you can check it.', p: '/projects/', c: 'var(--coral)' },
+  { t: 'Skills', d: '87 skills, each tied to the work that shows it.', p: '/skills/', c: 'var(--steel)' },
+  { t: 'Research', d: 'Ten papers on trust in AI, smartphones, and clinical research.', p: '/research/', c: 'var(--peach)' },
+  { t: 'CV', d: 'The short version of my training and roles.', p: '/cv/', c: 'var(--deep)' },
+];
 ---
 
-<Base description="Behavioral scientist studying how people decide whether to trust AI. Interactive evidence from my own research.">
+<Base description="Matthew Leitao is a behavioral scientist who studies how people decide whether to trust AI. Interactive evidence from his own research.">
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="kicker">Matthew Leitao, behavioral scientist</p>
+        <h1>People trust AI less than doctors, even when the advice is identical.</h1>
+        <p class="lede">
+          I design experiments on how people decide whether to trust AI, then report what the data support, including
+          the null results. I am a postdoctoral researcher at the National Institutes of Health.
+        </p>
+        <p class="cta">
+          <a class="btn primary" href={href('/projects/trust-in-medical-ai/')}>See the evidence</a>
+          <a class="btn" href={href('/skills/')}>Browse my skills</a>
+        </p>
+      </div>
+      <figure class="art" aria-label="Two circles, one for a doctor and one for an AI, drawn apart by the size of the trust gap">
+        <svg viewBox="0 0 520 380" role="img" aria-hidden="true">
+          <line class="axis" x1="30" y1="215" x2="490" y2="215" />
+          <g class="dot d"><circle cx="150" cy="215" r="84" /><text x="150" y="222" text-anchor="middle">Doctor</text></g>
+          <g class="dot a"><circle cx="370" cy="215" r="84" /><text x="370" y="222" text-anchor="middle">AI</text></g>
+          <g class="gap">
+            <path d="M150 92 V74 H370 V92" />
+            <text x="260" y="58" text-anchor="middle">Same advice. A gap of 1.3 standard deviations.</text>
+          </g>
+          <text class="foot" x="260" y="352" text-anchor="middle">Trust ratings, dissertation Study 2, 106 adults</text>
+        </svg>
+      </figure>
+    </div>
+  </section>
+
   <div class="wrap">
-    <header class="hero">
-      <h1>People trust AI less than doctors, even when the advice is identical.</h1>
-      <p class="lede">
-        I'm Matthew Leitao, a behavioral scientist. I design experiments on how people decide whether to trust AI,
-        analyze the data in R, and report what the numbers support, including the null results.
-      </p>
-    </header>
+    <ul class="stats" aria-label="At a glance">
+      {stats.map((x) => <li><strong>{x.n}</strong><span>{x.l}</span></li>)}
+    </ul>
+
+    <section class="section about" aria-labelledby="about-h">
+      <h2 id="about-h">I turn questions about people and AI into evidence</h2>
+      <div class="about-grid">
+        <p>
+          I am a behavioral scientist with a PhD in psychology from Georgetown and a master's in public policy. I study
+          how people trust, interpret, and make decisions with AI, especially in health. At the National Human Genome
+          Research Institute, I study how people read AI-generated health information, how uncertainty changes trust, and
+          how virtual reality can fit into clinical research.
+        </p>
+        <p>
+          My dissertation ran six experiments with more than 3,000 people. I build the study, analyze the data in R, and
+          explain the result in plain words. I have also led teams of up to 15 and managed six concurrent projects.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="do-title">
+      <h2 id="do-title">What I do</h2>
+      <ul class="cards">
+        <li><span class="bar b1"></span><h3>Design experiments</h3><p>Randomized studies, registered in advance, from the first hypothesis through recruitment, analysis, and write-up.</p></li>
+        <li><span class="bar b2"></span><h3>Model messy human data</h3><p>Multilevel, longitudinal, and causal models in R, applied to surveys, daily diaries, and clinical-trial data.</p></li>
+        <li><span class="bar b3"></span><h3>Lead research teams</h3><p>I managed five research assistants across six or seven projects at Georgetown. I now manage six projects at NIH.</p></li>
+        <li><span class="bar b4"></span><h3>Build with AI</h3><p>I build research tools on LLM APIs, test AI output with blind ratings, and use AI to speed up analysis and code.</p></li>
+      </ul>
+    </section>
+
+    <section class="section" aria-labelledby="exp-h">
+      <h2 id="exp-h">Where I have expertise</h2>
+      <ul class="chips">
+        {expertise.map((t) => <li>{t}</li>)}
+      </ul>
+      <p class="next"><a href={href('/skills/topics/')}>See the work behind each topic</a></p>
+    </section>
 
     <section class="section gap" aria-labelledby="gap-title">
       <h2 id="gap-title">The gap shows up in every kind of medical decision</h2>
@@ -23,116 +98,95 @@ import { href } from '../utils/url';
         a row or tab to it for the exact statistics.
       </p>
       <div class="gap-grid">
-      <ForestPlot
-        rows={data.rows}
-        xMin={-1}
-        xMax={5}
-        xLabel="Doctor minus AI, in trust rating points"
-        leftLabel="AI trusted more"
-        rightLabel="Doctor trusted more"
-        animate
-      />
-      <div>
-      <p class="takeaway">
-        The gap is large in all five domains, with effect sizes from d = 1.24 to 1.33. It barely moves with the type
-        of decision, so the cause is more likely in how people see the decision-maker than in the medical content.
-        The rest of the dissertation tests that idea.
-      </p>
-      <p class="small muted">
-        Source: Leitao (2024), Georgetown University dissertation, Study 2, Table 7.
-        <a href={href('/projects/trust-in-medical-ai/')}>Read the full case study</a>.
-      </p>
-      </div>
+        <ForestPlot rows={data.rows} xMin={-1} xMax={5} xLabel="Doctor minus AI, in trust rating points" leftLabel="AI trusted more" rightLabel="Doctor trusted more" animate />
+        <div>
+          <p class="takeaway">
+            The gap is large in all five domains, with effect sizes from d = 1.24 to 1.33. It barely moves with the type
+            of decision, so the cause is more likely in how people see the decision-maker than in the medical content.
+            The rest of the dissertation tests that idea.
+          </p>
+          <p class="small muted">
+            Source: Leitao (2024), Georgetown University dissertation, Study 2, Table 7.
+            <a href={href('/projects/trust-in-medical-ai/')}>Read the full case study</a>.
+          </p>
+        </div>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="do-title">
-      <h2 id="do-title">What I do</h2>
-      <ul class="rows do">
-        <li>
-          <h3>Design experiments</h3>
-          <p>
-            Preregistered, randomized studies, from the first hypothesis through recruitment, analysis and write-up.
-            My dissertation ran six of them and recruited more than 3,000 participants.
-          </p>
-        </li>
-        <li>
-          <h3>Model messy human data</h3>
-          <p>
-            Multilevel, longitudinal and causal models in R, applied to surveys, daily diaries and clinical-trial data.
-          </p>
-        </li>
-        <li>
-          <h3>Lead research teams</h3>
-          <p>
-            Managed five research assistants across six or seven concurrent projects at Georgetown. Now manage six
-            projects at the National Institutes of Health.
-          </p>
-        </li>
+    <section class="section" aria-labelledby="go-h">
+      <h2 id="go-h">Keep exploring</h2>
+      <ul class="doors">
+        {doors.map((d) => <li style={`--c:${d.c}`}><a href={href(d.p)}><strong>{d.t}</strong><span>{d.d}</span></a></li>)}
       </ul>
-      <p class="next">
-        See all the <a href={href('/projects/')}>projects</a>, or check the
-        <a href={href('/skills/')}>evidence behind each skill</a>.
-      </p>
+      <p class="next">Looking to talk? <a href={href('/contact/')}>Get in touch</a>.</p>
     </section>
   </div>
 </Base>
 
 <style>
-  .hero {
-    padding-top: clamp(40px, 8vw, 96px);
-  }
+  .hero { padding: clamp(32px, 6vw, 72px) 0 clamp(8px, 2vw, 24px); }
+  .hero-grid { display: grid; gap: 2.5rem; align-items: center; }
+  @media (min-width: 960px) { .hero-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 3rem; } }
+  .kicker { font-family: var(--display); font-weight: 600; font-size: 1rem; color: var(--deep); margin: 0 0 1rem; }
+  :global([data-theme='dark']) .kicker, .kicker { color: var(--muted); }
+  .hero h1 { font-size: clamp(2.4rem, 5vw, 4rem); line-height: 1.04; letter-spacing: -0.03em; max-width: 18ch; }
+  .hero .lede { margin-top: 1.4rem; max-width: 34rem; }
+  .cta { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1.8rem 0 0; }
+  .btn { font-family: var(--display); font-weight: 600; font-size: 1rem; padding: 0.7rem 1.2rem; border-radius: 8px; border: 2px solid var(--ink); color: var(--ink); text-decoration: none; }
+  .btn:hover { color: var(--ink); background: var(--wash); }
+  .btn.primary { background: var(--ink); color: var(--paper); }
+  .btn.primary:hover { background: var(--deep); border-color: var(--deep); color: #fff; }
 
-  .hero h1 {
-    font-size: clamp(2.5rem, 6.4vw, 4.6rem);
-    line-height: 1.02;
-    letter-spacing: -0.03em;
-    max-width: 20ch;
-  }
+  .art { margin: 0; max-width: 40rem; justify-self: center; width: 100%; }
+  .art svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .axis { stroke: var(--rule); stroke-width: 2; }
+  .dot circle { stroke: none; }
+  .dot.d circle { fill: var(--doctor); }
+  .dot.a circle { fill: var(--ai); }
+  .dot text { font-family: var(--display); font-weight: 700; font-size: 26px; fill: #fff; }
+  .gap path { fill: none; stroke: var(--ink); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+  .gap text { font-family: var(--display); font-weight: 600; font-size: 17px; fill: var(--ink); }
+  .foot { font-family: var(--display); font-size: 14px; fill: var(--muted); }
+  .dot.d { transform: translateX(110px); animation: apartL 1.1s 0.35s cubic-bezier(.2,.7,.2,1) forwards; }
+  .dot.a { transform: translateX(-110px); animation: apartR 1.1s 0.35s cubic-bezier(.2,.7,.2,1) forwards; mix-blend-mode: normal; }
+  .gap { opacity: 0; animation: fade 0.6s 1.25s ease forwards; }
+  @keyframes apartL { to { transform: translateX(0); } }
+  @keyframes apartR { to { transform: translateX(0); } }
+  @keyframes fade { to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .dot.d, .dot.a { transform: none; animation: none; } .gap { opacity: 1; animation: none; } }
 
-  .hero .lede {
-    margin-top: 1.5rem;
-  }
+  .stats { list-style: none; margin: clamp(28px, 5vw, 56px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: 0.75rem; }
+  .stats li { display: grid; gap: 0.2rem; padding: 1rem 1.1rem; background: var(--wash); border-radius: 10px; border-top: 5px solid var(--coral); font-family: var(--display); }
+  .stats li:nth-child(2) { border-color: var(--peach); } .stats li:nth-child(3) { border-color: var(--steel); } .stats li:nth-child(4) { border-color: var(--deep); }
+  .stats strong { font-size: clamp(2rem, 4vw, 2.8rem); line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .stats span { font-size: 0.95rem; color: var(--muted); line-height: 1.3; }
 
-  .gap-grid {
-    display: grid;
-    gap: 2rem 4rem;
-    align-items: start;
-  }
+  .about h2 { max-width: 28ch; }
+  .about-grid { display: grid; gap: 1rem 3rem; margin-top: 1rem; }
+  .about-grid p { margin: 0; max-width: 60ch; }
+  @media (min-width: 900px) { .about-grid { grid-template-columns: 1fr 1fr; } }
 
-  @media (min-width: 1000px) {
-    .gap-grid {
-      grid-template-columns: minmax(0, 480px) minmax(0, 1fr);
-    }
-  }
+  .cards { list-style: none; margin: 1.2rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(12.5rem, 1fr)); gap: 1.25rem; }
+  .cards li { padding: 0 0 0.3rem; }
+  .cards .bar { display: block; height: 5px; width: 3rem; border-radius: 3px; margin-bottom: 0.9rem; }
+  .b1 { background: var(--coral); } .b2 { background: var(--peach); } .b3 { background: var(--steel); } .b4 { background: var(--deep); }
+  .cards h3 { margin-bottom: 0.4rem; }
+  .cards p { margin: 0; font-size: 1rem; line-height: 1.55; color: var(--muted); }
 
-  .sub {
-    color: var(--muted);
-    font-size: 1rem;
-    margin: 0.75rem 0 1.75rem;
-  }
+  .chips { list-style: none; margin: 1.2rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .chips li { font-family: var(--display); font-weight: 500; font-size: 0.95rem; padding: 0.4rem 0.85rem; border-radius: 999px; background: var(--wash); border: 1.5px solid var(--rule); }
+  .chips li:nth-child(5n + 1) { border-color: var(--coral); } .chips li:nth-child(5n + 2) { border-color: var(--peach); } .chips li:nth-child(5n + 3) { border-color: var(--steel); } .chips li:nth-child(5n + 4) { border-color: var(--deep); }
 
-  .takeaway {
-    margin-top: 0;
-  }
+  .gap-grid { display: grid; gap: 2rem 4rem; align-items: start; }
+  @media (min-width: 1000px) { .gap-grid { grid-template-columns: minmax(0, 480px) minmax(0, 1fr); } }
+  .sub { color: var(--muted); font-size: 1rem; margin: 0.75rem 0 1.75rem; }
+  .takeaway { margin-top: 0; }
 
-  .do > li {
-    display: grid;
-    gap: 0.35rem 2rem;
-  }
-
-  .do p {
-    margin: 0;
-    max-width: 58ch;
-  }
-
-  @media (min-width: 760px) {
-    .do > li {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-    }
-  }
-
-  .next {
-    margin-top: 1.5rem;
-  }
+  .doors { list-style: none; margin: 1.2rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 0.9rem; }
+  .doors a { display: grid; gap: 0.35rem; height: 100%; padding: 1.1rem 1.2rem; border-radius: 10px; background: var(--wash); border-top: 6px solid var(--c); text-decoration: none; color: var(--ink); font-family: var(--display); transition: transform 0.15s; }
+  .doors a:hover { transform: translateY(-3px); color: var(--ink); }
+  .doors strong { font-size: 1.25rem; }
+  .doors span { font-size: 0.95rem; color: var(--muted); line-height: 1.4; }
+  .next { margin-top: 1.5rem; }
+  @media (prefers-reduced-motion: reduce) { .doors a { transition: none; } }
 </style>
