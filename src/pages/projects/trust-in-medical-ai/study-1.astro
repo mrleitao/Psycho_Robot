@@ -7,6 +7,7 @@ import LoadingsTable from '../../../components/LoadingsTable.astro';
 import MakerMap from '../../../components/MakerMap.astro';
 import SlopesPlot from '../../../components/SlopesPlot.astro';
 import DirectionBars from '../../../components/DirectionBars.astro';
+import ChapterIntro from '../../../components/ChapterIntro.astro';
 import DotPanels from '../../../components/DotPanels.astro';
 import LinkScatter from '../../../components/LinkScatter.astro';
 import FactorDiagram from '../../../components/FactorDiagram.astro';
@@ -290,6 +291,7 @@ const toc = [
   ['tests', 'The tests'],
   ['makers', 'Eleven recommenders'],
   ['trust', 'What goes with trust'],
+  ['implications', 'What this means'],
   ['files', 'Files and methods'],
 ];
 ---
@@ -308,6 +310,8 @@ const toc = [
         page rebuilds every table and figure of that analysis from the released data. Hover over any mark for the details.
       </p>
     </header>
+
+    <ChapterIntro current="1" />
 
     <div class="tabs" role="tablist" aria-label="Views of Study 1">
       <button role="tab" id="tab-full" aria-controls="panel-full" aria-selected="true" data-tab="full">All of Study 1</button>
@@ -681,6 +685,28 @@ const toc = [
         rows={wbRows}
         note={full.withinBetweenNote}
       />
+    </section>
+
+    <!-- ============================ implications ============================ -->
+    <section class="section" id="implications" aria-labelledby="implications-title">
+      <h2 id="implications-title">What this means</h2>
+      <div class="prose">
+        <p>
+          <strong>The gap replicates.</strong> People trusted a doctor more than a medical AI, as earlier research found, which gave the later studies a
+          foundation to build on. These were medical decisions at their most hypothetical, so the next study used concrete decisions to see whether the gap holds when
+          the decision is specific.
+        </p>
+        <p>
+          <strong>People credit doctors with more of both kinds of reasoning.</strong> The doctor was rated higher than the AI on intuition and on quantitative reasoning,
+          so in these two respects the AI starts at a deficit. Ratings of both abilities went with trust, and the model explained more than half of the variance in trust. It did
+          not explain all of it, so these abilities look like part of how people evaluate a recommender, not the whole of it.
+        </p>
+        <p>
+          <strong>Medical decisions are not one thing.</strong> Preventative decisions and mental health decisions were seen as needing relatively more intuition, and less quantitative reasoning, than the other
+          decisions. That variation suggests the character of a decision may also shape how much a recommender is trusted, which Study 2
+          put to the test.
+        </p>
+      </div>
     </section>
 
     <!-- ============================ files ============================ -->

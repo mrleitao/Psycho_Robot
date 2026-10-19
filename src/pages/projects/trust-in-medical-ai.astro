@@ -6,6 +6,7 @@ import RankDots from '../../components/RankDots.astro';
 import OutcomePairs from '../../components/OutcomePairs.astro';
 import Study1Live from '../../components/Study1Live.astro';
 import PowerCurve from '../../components/PowerCurve.astro';
+import ChapterIntro from '../../components/ChapterIntro.astro';
 import Placeholder from '../../components/Placeholder.astro';
 import data from '../../data/trust-in-medical-ai/trust-by-domain.json';
 import effects from '../../data/trust-in-medical-ai/effects-by-study.json';
@@ -143,6 +144,8 @@ import { href } from '../../utils/url';
         Hover over a row or tab to it for the details.
       </p>
     </section>
+
+    <ChapterIntro />
 
     <section class="section chart" id="study1-data" aria-labelledby="data-title">
       <h2 id="data-title">Filter the data and rerun the results</h2>

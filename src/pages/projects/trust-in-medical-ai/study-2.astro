@@ -3,6 +3,7 @@ import Base from '../../../layouts/Base.astro';
 import StatTable from '../../../components/StatTable.astro';
 import Raincloud from '../../../components/Raincloud.astro';
 import DotPanels from '../../../components/DotPanels.astro';
+import ChapterIntro from '../../../components/ChapterIntro.astro';
 import GapScatter from '../../../components/GapScatter.astro';
 import MediationDiagram from '../../../components/MediationDiagram.astro';
 import full from '../../../data/trust-in-medical-ai/study2-full.json';
@@ -187,6 +188,7 @@ const toc = [
   ['qualities', 'What goes with trust'],
   ['mediation', 'What explains the gap'],
   ['who', 'Does the gap differ between people?'],
+  ['implications', 'What this means'],
   ['files', 'Files and methods'],
 ];
 ---
@@ -205,6 +207,8 @@ const toc = [
         mind-perception items. This page rebuilds the tables and figures of that analysis from the released data. Hover over any mark for the details.
       </p>
     </header>
+
+    <ChapterIntro current="2" />
 
     <nav class="toc" aria-label="On this page">
       <ul>
@@ -340,12 +344,12 @@ const toc = [
     <section class="section" id="need" aria-labelledby="need-title">
       <h2 id="need-title">Does the gap depend on the decision?</h2>
       <p class="intro">
-        The second preregistered hypothesis (H2) asked whether people trust the AI more, relative to the doctor, for decisions they think need more quantitative
-        reasoning. The mixed model says yes, a little: for every extra 10 points of needed quantitative reasoning, the doctor's edge shrinks by
-        {f2(Math.abs(models[1].terms[3].b) * 10)} points (Table 8). Comparing the twelve decisions to each other, though, the pattern runs the other
-        way (Figure 11), because the three preventative decisions are both rated as needing less quantitative reasoning and show the smallest gaps.
-        Across people and decisions, the first pattern is the one that tests H2.
-      </p>
+        The second preregistered hypothesis (H2) asked whether the doctor's edge changes with how much quantitative reasoning a decision needs. On its own,
+        that need shifts the gap a little: for every extra 10 points the doctor's edge shrinks by {f2(Math.abs(models[1].terms[3].b) * 10)} points (Table 8).
+        The dissertation tests H2 with intuition, quantitative reasoning, warmth, competence, age and gender in the model, and there the interaction disappears
+        (b = {f3(models[2].terms.find((t) => t.term === 'IsDoc:Int_Quant').b)}, p = {noZero(f2(models[2].terms.find((t) => t.term === 'IsDoc:Int_Quant').p))}; Table 11). I read that as no evidence that the need for quantitative reasoning moderates the gap.
+        Comparing the twelve decisions with each other (Figure 11) shows a different pattern, because the three preventative decisions are rated as needing less
+        quantitative reasoning and also show the smallest gaps; that comparison is descriptive and does not test H2.</p>
       <StatTable id="table-h2" title="Table 8. Trust predicted from doctor versus AI, and from how much quantitative reasoning the decision needs" columns={modelCols} rows={modelRows(models[1])} note={`${models[1].label}. ${modelFit(models[1])} ${full.mixedNote}`} />
       <h3 class="fig-title" id="fig-gap-need">Figure 11. The gap and the need for quantitative reasoning, by decision</h3>
       <GapScatter
@@ -443,6 +447,38 @@ const toc = [
         </p>
       </div>
       <StatTable id="table-age" title="Table 17. Age band by doctor interaction" columns={modelCols} rows={modelRows(ageModel)} note={modelFit(ageModel)} />
+    </section>
+
+    <!-- ============================ implications ============================ -->
+    <section class="section" id="implications" aria-labelledby="implications-title">
+      <h2 id="implications-title">What this means</h2>
+      <div class="prose">
+        <p>
+          <strong>The gap is robust.</strong> People trusted a doctor more than an AI on every one of the twelve decisions, in every kind of health problem and
+          at every stage of care, and the result survives correction for twelve tests. It is large (d from {f2(Math.min(...full.tests.map((t) => t.d)))} to {f2(Math.max(...full.tests.map((t) => t.d)))}),
+          and smallest for the preventative decisions, such as recommending stretching or vitamins. Together with Study 1, this is a double replication, which is why
+          the later studies could take the gap as given and try to change it. It does not mean people give an AI no trust: the average for the AI was about 4 on the 0 to 10 scale, not zero. They give it a more skeptical reading than they give a doctor.
+        </p>
+        <p>
+          <strong>What a decision needs does not explain the gap.</strong> The gap varied from decision to decision, but not in step with how much quantitative
+          reasoning people said the decision needed. So whatever makes some decisions feel better suited to an AI, it is something other than the
+          quantitative-versus-intuition trade-off I measured. That measure is a single slider that treats the two as opposites, and a future version should rate
+          them separately.
+        </p>
+        <p>
+          <strong>How people see the recommender explains part of it.</strong> Doctors were rated higher than the AI on quantitative reasoning, intuition, warmth,
+          competence and every mind-perception item. Quantitative reasoning and intuition each carried a significant share of the gap, even together, whereas
+          warmth did not once competence was in the model. Neither explains the whole gap: about half of it remained after the mediators were
+          included ({f2(med[1].direct)} of {f2(med[1].total)} points). Still, it gives a framework for how people judge a recommender, and so for predicting and perhaps
+          shifting their trust. If an AI is to earn more trust, it will do so by being seen as capable of both kinds of reasoning, not by changing what it recommends.
+        </p>
+        <p>
+          <strong>Cautions.</strong> The qualities people rated are strongly correlated, so some of what looks like separate mechanisms may be a general
+          positive impression of the recommender; each still carries a unique share in the model, which argues against that being the whole story. The decisions
+          were abstract, so people supplied their own picture of the situation. The sample is 106 online-panel adults with an older average age (63 in the dissertation), and
+          the results are about stated trust, not behavior. Chapters 3 and 4 take up the first and last of these.
+        </p>
+      </div>
     </section>
 
     <!-- ============================ files ============================ -->

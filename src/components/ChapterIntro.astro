@@ -1,0 +1,31 @@
+---
+// A short introduction to Chapter 2 of the dissertation, the chapter that holds Studies 1 and 2.
+import { href } from '../utils/url';
+interface Props { current?: '1' | '2' }
+const { current } = Astro.props;
+---
+<aside class="chapter" aria-labelledby="chapter-title">
+  <h2 id="chapter-title">Chapter 2: Is the gap real, and what is behind it?</h2>
+  <p>
+    The first chapter of the experiments asks a plain question. When a doctor and a medical AI are judged on the same
+    health decision, do people trust the doctor more, and is that true for every kind of decision? Both studies take the
+    view of an ordinary patient, using broad medical decisions rather than one specific scenario.
+  </p>
+  <p>
+    The chapter also tests a first explanation. Clinical expertise blends quantitative reasoning (data and statistics) with
+    intuition (experience and judgment), and an AI is usually thought to have only the first. If people trust doctors more
+    because they credit them with both, ratings of these two abilities should track trust.
+  </p>
+  <p>
+    {current === '1' ? <strong>Study 1</strong> : <a href={href('/projects/trust-in-medical-ai/study-1/')}>Study 1</a>} (188 adults) rated fifteen decisions and
+    eleven recommenders, from a doctor to an AI fitness coach.
+    {current === '2' ? <strong>Study 2</strong> : <a href={href('/projects/trust-in-medical-ai/study-2/')}>Study 2</a>} (106 adults) replicated the gap on twelve
+    concrete decisions, rated a doctor and an AI side by side, and added warmth, competence and mind perception. Together they set up Chapters 3 and 4,
+    where I try to close the gap by making an AI seem more human.
+  </p>
+</aside>
+<style>
+  .chapter { margin: 2rem 0 0; padding: 1.1rem 1.4rem 0.4rem; border-left: 4px solid var(--doctor); background: var(--wash); max-width: 70ch; }
+  .chapter h2 { font-size: 1.15rem; margin: 0 0 0.6rem; }
+  .chapter p { margin: 0 0 0.8rem; }
+</style>
