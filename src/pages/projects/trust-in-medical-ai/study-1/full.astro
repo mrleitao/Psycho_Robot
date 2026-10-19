@@ -1,0 +1,853 @@
+---
+import DeepNav from '../../../../components/DeepNav.astro';
+import Base from '../../../../layouts/Base.astro';
+import StatTable from '../../../../components/StatTable.astro';
+import Raincloud from '../../../../components/Raincloud.astro';
+import ScreePlot from '../../../../components/ScreePlot.astro';
+import LoadingsTable from '../../../../components/LoadingsTable.astro';
+import MakerMap from '../../../../components/MakerMap.astro';
+import SlopesPlot from '../../../../components/SlopesPlot.astro';
+import DirectionBars from '../../../../components/DirectionBars.astro';
+import MainFindings from '../../../../components/MainFindings.astro';
+import Glossary from '../../../../components/Glossary.astro';
+import ranked from '../../../../data/trust-in-medical-ai/trust-by-recommender.json';
+import outcomes1 from '../../../../data/trust-in-medical-ai/study1-outcomes.json';
+import ChapterIntro from '../../../../components/ChapterIntro.astro';
+import DotPanels from '../../../../components/DotPanels.astro';
+import LinkScatter from '../../../../components/LinkScatter.astro';
+import FactorDiagram from '../../../../components/FactorDiagram.astro';
+import full from '../../../../data/trust-in-medical-ai/study1-full.json';
+import pts from '../../../../data/trust-in-medical-ai/study1-points.json';
+import hva from '../../../../data/trust-in-medical-ai/study1-human-vs-ai.json';
+import { href } from '../../../../utils/url';
+import Contents from '../../../../components/Contents.astro';
+import DotRows from '../../../../components/DotRows.astro';
+import CorrGrid from '../../../../components/CorrGrid.astro';
+import BayesPlot from '../../../../components/BayesPlot.astro';
+import { times } from '../../../../utils/bayes';
+import BayesGuide from '../../../../components/BayesGuide.astro';
+import FigureMap from '../../../../components/FigureMap.astro';
+import bayes from '../../../../data/trust-in-medical-ai/bayes.json';
+
+const repo = 'https://github.com/mrleitao/Psycho_Robot';
+const f1 = (n: number | null) => (n == null ? '' : n.toFixed(1));
+const f2 = (n: number | null) => (n == null ? '' : n.toFixed(2));
+const f3 = (n: number | null) => (n == null ? '' : n.toFixed(3));
+const noZero = (s: string) => s.replace(/^(-?)0\./, '$1.');
+const pv = (p: number) => (p < 0.001 ? '< .001' : noZero(p.toFixed(3)));
+const r3 = (n: number) => noZero(n.toFixed(3)).replace('-.', '−.');
+const minus = (s: string) => s.replace(/^-/, '−');
+
+const kindOf = (l: string) => (/^AI/.test(l) ? 'ai' : l === 'Doctor using AI' ? 'hybrid' : 'human') as 'ai' | 'hybrid' | 'human';
+const oc = outcomes1.outcomes;
+const compById = Object.fromEntries(full.compositeDescriptives.map((c: any) => [c.id, c]));
+const findings = [
+  {
+    head: 'A doctor is the most trusted of eleven recommenders, and AI sits near the bottom',
+    body: [
+      `${full.sample.n} adults rated how much they would trust eleven recommenders for medical decisions, from a doctor to an AI fitness coach. The doctor came first, then the nurse. Every AI landed below the human experts, close to where people put a layperson.`,
+      'A doctor who uses AI landed in the middle, which suggests that AI in a doctor\'s hands is trusted more than AI on its own.',
+    ],
+    visual: { type: 'ranks', max: 10, rows: ranked.rows.map((r: any) => ({ label: r.label, value: r.mean, kind: kindOf(r.label) })), caption: 'Average trust, 0 to 10. Blue: human. Coral: AI. Grey: doctor using AI.' },
+  },
+  {
+    head: 'The doctor beat the AI on trust, and on both kinds of thinking',
+    body: [
+      `The doctor scored ${oc[0].doctor.mean.toFixed(1)} on trust against ${oc[0].ai.mean.toFixed(1)} for a general medical AI. People also rated the doctor as better at using quantitative reasoning and at using intuition.`,
+      'The trust gap was the largest of the three. That fits the idea that people credit doctors with both numbers and judgment, and trust them for it.',
+    ],
+    visual: { type: 'pairs', aName: 'Doctor', bName: 'AI', rows: [
+      { label: 'Trust', a: oc[0].doctor.mean, b: oc[0].ai.mean, max: 10 },
+      { label: 'Quantitative reasoning', a: oc[1].doctor.mean, b: oc[1].ai.mean, max: 10 },
+      { label: 'Intuition', a: oc[2].doctor.mean, b: oc[2].ai.mean, max: 10 },
+    ], caption: 'Average ratings, 0 to 10.' },
+  },
+  {
+    head: 'Most people trusted humans over AI, but not everyone',
+    body: [
+      `I averaged each person's trust in the six human recommenders and in the four AI ones. ${hva.tests[0].human_vs_ai.higher} of ${hva.tests[0].human_vs_ai.n} people trusted the humans more. ${hva.tests[0].human_vs_ai.lower} trusted the AI more, and ${hva.tests[0].human_vs_ai.same} rated them the same.`,
+      'So the gap is a strong tendency, not a rule. About one in four people leaned the other way.',
+    ],
+    visual: { type: 'people', total: hva.tests[0].human_vs_ai.n, count: hva.tests[0].human_vs_ai.higher, label: 'trusted humans more than AI', caption: 'Each dot is one person. Blue dots trusted humans more.' },
+  },
+  {
+    head: 'People do not treat all medical decisions alike',
+    body: [
+      'I asked how much a professional would need numbers versus intuition for each decision. Diagnosing and prescribing leaned on numbers. Prevention, such as advice to stretch or take vitamins, leaned on intuition, as did decisions about mental health.',
+      'That suggested the kind of decision might change how people judge an AI, which Study 2 tested.',
+    ],
+    visual: { type: 'ranks', max: 100, rows: ['q_prescription', 'q_diagnosis', 'q_chronic', 'q_injury', 'q_acute', 'q_mental', 'q_preventative'].map((id) => ({ label: compById[id].label, value: compById[id].mean, kind: 'plain' as const })), caption: '0 means only intuition is needed, 100 means only quantitative reasoning.' },
+  },
+];
+// ---- sample
+const sampleRows = full.sample.variables.flatMap((v) =>
+  v.rows.map((r) => ({ label: `${v.variable}: ${r.group}`, n: r.n, pct: `${r.pct.toFixed(1)}%` })),
+);
+const missingNote = full.sample.variables
+  .filter((v) => v.missing)
+  .map((v) => `${v.variable.toLowerCase()} (${v.missing})`)
+  .join(', ');
+
+// ---- descriptives
+const descCols = [
+  { key: 'label', label: 'Measure' },
+  { key: 'n', label: 'n', num: true, hint: 'People with an answer' },
+  { key: 'mean', label: 'Mean', num: true },
+  { key: 'sd', label: 'SD', num: true, hint: 'Standard deviation' },
+  { key: 'median', label: 'Median', num: true },
+  { key: 'min', label: 'Min', num: true },
+  { key: 'max', label: 'Max', num: true },
+  { key: 'skew', label: 'Skew', num: true, hint: 'Negative means a longer tail of low answers' },
+  { key: 'kurtosis', label: 'Kurtosis', num: true, hint: 'Excess kurtosis; 0 is a normal curve' },
+  { key: 'se', label: 'SE', num: true, hint: 'Standard error of the mean' },
+];
+const descRow = (r: any) => ({
+  label: r.label, n: r.n, mean: f2(r.mean), sd: f2(r.sd), median: f2(r.median), min: f2(r.min), max: f2(r.max),
+  skew: minus(f2(r.skew)), kurtosis: minus(f2(r.kurtosis)), se: f2(r.se),
+});
+const decisionRows = [...full.decisionDescriptives].sort((a, b) => b.mean - a.mean).map(descRow);
+const compositeRows = full.compositeDescriptives.map((r) => descRow({ ...r, label: `${r.label} (${r.items} decisions)` }));
+
+// ---- raincloud data
+const grid100 = pts.densityGrid100;
+const grid10 = pts.densityGrid10;
+const byMean = (a: any, b: any) => b.mean - a.mean;
+const decisionCloud = [...pts.decisions].sort(byMean).map((r) => ({ ...r, kind: 'plain' as const }));
+const comp = Object.fromEntries(pts.composites.map((r) => [r.id, r]));
+const domainCloud = pts.domainOrder.map((k) => comp[k]).sort(byMean).map((r) => ({ ...r, kind: 'plain' as const }));
+const stageCloud = pts.stageOrder.map((k) => comp[k]).sort(byMean).map((r) => ({ ...r, kind: 'plain' as const }));
+const trustCloud = [...pts.trust].sort(byMean).map((r: any) => ({
+  ...r,
+  kind: (r.id === 'doctor_using_ai' ? 'hybrid' : r.ai ? 'ai' : 'human') as 'hybrid' | 'ai' | 'human',
+}));
+
+// ---- reliability
+const relRows = full.reliability.map((r) => ({
+  label: r.label, k: r.items.length, alpha: noZero(r.alpha.toFixed(2)), rbar: noZero(r.meanR.toFixed(2)),
+}));
+
+// ---- factor analysis
+const efa = full.efa;
+const factorNames = ['Diagnosing and treating physical illness', 'Preventing illness and promoting health', 'Treating mental health'];
+
+// ---- tests
+const testCols = [
+  { key: 'id', label: 'Test', hint: 'Numbering follows the dissertation. E was not preregistered.' },
+  { key: 'text', label: 'Comparison', wrap: true, minw: '10rem' },
+  { key: 'means', label: 'Means (SD)', num: true, wrap: true, minw: '9.5rem', hint: 'First item, then second item' },
+  { key: 'diff', label: 'Difference [95% CI]', num: true },
+  { key: 't', label: 't (df)', num: true },
+  { key: 'p', label: 'p', num: true },
+  { key: 'd', label: 'd [95% CI]', num: true, hint: 'Cohen’s d for paired data: the mean difference over the SD of the differences' },
+];
+const testRow = (t: any) => ({
+  id: t.id,
+  text: `${t.aLabel} versus ${t.bLabel}`,
+  means: `${f2(t.meanA)} (${f2(t.sdA)}), ${f2(t.meanB)} (${f2(t.sdB)})`,
+  diff: minus(`${f2(t.diff)} [${f2(t.lo)}, ${f2(t.hi)}]`),
+  t: minus(`${f2(t.t)} (${t.df})`),
+  p: pv(t.p),
+  d: minus(`${f2(t.d)} [${f2(t.dLo)}, ${f2(t.dHi)}]`),
+});
+const testRows = full.tests.map((t) => {
+  const r = testRow(t);
+  const what: Record<string, string> = {
+    H1: 'Diagnostic vs prescriptive',
+    H2: 'Diagnostic vs preventative',
+    H3: 'Prescriptive vs preventative',
+    H4: 'Physical vs mental health',
+    H5: 'Bodily injury vs acute sickness',
+    H6: 'Doctor vs AI: intuition',
+    H7: 'Doctor vs AI: trust',
+    E: 'Doctor vs AI: quantitative reasoning (exploratory)',
+  };
+  return { ...r, text: what[t.id] };
+});
+const extraRows = full.extraTests.map((t) => ({ ...testRow(t), text: t.text }));
+
+const dirRows = [...full.tests, ...full.extraTests].map((t: any) => {
+  const left = ['H6', 'H7', 'E', 'X4'].includes(t.id) ? 'doctor' : t.id === 'X1' || t.id === 'X2' ? 'doctor' : 'plain';
+  const right = ['H6', 'H7', 'E'].includes(t.id) || ['X1', 'X2'].includes(t.id) ? 'ai' : t.id === 'X4' ? 'hybrid' : 'plain';
+  const wording: Record<string, string> = {
+    H1: 'Diagnostic vs prescriptive', H2: 'Diagnostic vs preventative', H3: 'Prescriptive vs preventative',
+    H4: 'Physical vs mental health', H5: 'Bodily injury vs acute sickness', H6: 'Intuition: doctor vs AI',
+    H7: 'Trust: doctor vs AI', E: 'Quantitative reasoning: doctor vs AI', X1: 'Trust: layperson vs AI',
+    X2: 'Intuition: layperson vs AI', X3: 'AI: quantitative reasoning vs intuition', X4: 'Trust: doctor vs doctor using AI',
+  };
+  return {
+    id: t.id, text: `${t.id}. ${wording[t.id]}`, aLabel: t.aLabel, bLabel: t.bLabel, n: t.n,
+    higher: t.dir.higher, same: t.dir.same, lower: t.dir.lower, left, right,
+  } as any;
+});
+
+// ---- recommenders
+const mkRows = full.makerDescriptives.map((m: any) => ({
+  label: m.label,
+  trust: `${f2(m.trust.mean)} (${f2(m.trust.sd)})`,
+  qr: `${f2(m.capability.mean)} (${f2(m.capability.sd)})`,
+  intuition: `${f2(m.intuition.mean)} (${f2(m.intuition.sd)})`,
+  n: m.trust.n,
+}));
+const mkFull = (key: 'trust' | 'capability' | 'intuition') =>
+  full.makerDescriptives.map((m: any) => descRow({ ...m[key], label: m.label }));
+
+// ---- trust models
+const fit = full.regressions.map((r) => ({
+  label: r.maker, n: r.n, r2: noZero(r.r2.toFixed(2)), adj: noZero(r.adjR2.toFixed(2)),
+  F: `${f2(r.F)} (${r.df1}, ${r.df2})`, p: pv(r.p),
+}));
+const regRows = full.regressions.flatMap((r) =>
+  r.terms.map((t) => ({
+    label: `${r.maker}: ${t.term}`, b: minus(f2(t.b)), se: f2(t.se), t: minus(f2(t.t)), p: pv(t.p),
+    beta: t.beta == null ? '' : minus(noZero(f2(t.beta))),
+  })),
+);
+const corRows = full.correlationsByMaker.flatMap((c) => {
+  const pairs = [[0, 1], [0, 2], [1, 2]];
+  return pairs.map(([i, j]) => ({
+    label: `${c.maker}: ${c.vars[i]} and ${c.vars[j]}`, r: r3(c.r[i][j]), p: pv(c.p[i][j]), n: c.n,
+  }));
+});
+const modelRows = full.mixedModels.map((m, i) => ({
+  label: `${i + 1}. ${m.label}`, r2m: noZero(m.r2m.toFixed(2)), r2c: noZero(m.r2c.toFixed(2)), icc: noZero(m.icc.toFixed(2)), aic: m.aic.toFixed(0),
+}));
+const termLabel: Record<string, string> = {
+  Intercept: 'Intercept', IsAI: 'AI recommender (vs human)', QR: 'Quantitative reasoning', Int: 'Intuition',
+  'QR:IsAI': 'Quantitative reasoning × AI', 'Int:IsAI': 'Intuition × AI',
+  QR_PM: 'Quantitative reasoning, person average', QR_PMC: 'Quantitative reasoning, vs own average',
+  Int_PM: 'Intuition, person average', Int_PMC: 'Intuition, vs own average',
+};
+const lrtLabels = ['Model 2 to Model 3: add AI versus human', 'Model 3 to Model 4: let the slopes differ for AI', 'Model 5 to Model 6: add AI versus human'];
+const lrtRows = full.modelComparisons.map((c, i) => ({
+  label: lrtLabels[i], chi: f2(c.chi2), df: c.df, p: pv(c.p),
+}));
+const wbPairs = [[0, 1], [0, 2], [1, 2]];
+const wbRows = full.withinBetween.flatMap((g) =>
+  wbPairs.map(([i, j]) => ({
+    label: `${g.label}: ${g.vars[i]} and ${g.vars[j]}`,
+    between: `${r3(g.between[i][j])} (${pv(g.pBetween[i][j])})`,
+    within: `${r3(g.within[i][j])} (${pv(g.pWithin[i][j])})`,
+  })),
+);
+const slopes = full.slopes.lines;
+const F = (label: string, href: string) => ({ label, href, kind: 'figure' as const });
+const Tb = (label: string, href: string) => ({ label, href, kind: 'table' as const });
+const contents = [
+  { title: 'Who took part', href: '#sample', items: [Tb('1. The people in the released file', '#table-sample')] },
+  { title: 'Fifteen medical decisions', href: '#decisions', items: [Tb('2. Quantitative reasoning needed, by decision', '#table-decisions'), F('1. Every decision, every person', '#fig-decisions'), Tb('3. The decision groups', '#table-composites'), F('2. By kind of health problem', '#fig-domain'), F('3. By stage of care', '#fig-stage')] },
+  { title: 'Do the decision ratings hang together?', href: '#structure', items: [Tb('4. Reliability of each group of decisions', '#table-reliability'), F('4. How many factors?', '#structure'), Tb('5. A three-factor solution', '#structure'), F('4b. The factor diagram', '#structure')] },
+  { title: 'The tests', href: '#tests', items: [Tb('6. Paired t tests', '#table-tests'), Tb('7. Follow-up comparisons', '#table-extra'), F('5. Person as effect size', '#fig-direction')] },
+  { title: 'Eleven recommenders', href: '#makers', items: [Tb('8. Ratings of each recommender', '#table-makers'), F('6. Trust in each recommender', '#fig-trust'), F('7. Where each recommender sits', '#fig-map')] },
+  { title: 'What goes with trust', href: '#trust', items: [Tb('9. Trust predicted by two ratings', '#table-regression'), Tb('10. How well each model fits', '#table-fit'), Tb('11. Correlations among the ratings', '#table-correlations'), Tb('12. The models side by side', '#table-models'), Tb('13. Does adding a term improve the fit?', '#table-lrt'), F('8. What lifts trust, AI and humans', '#fig-slopes'), Tb('14. Between and within people', '#table-wb')] },
+];
+const contentsAi = [
+  { title: 'The gap', href: '#hva-gap', items: [Tb('15. Humans versus AI, paired by person', '#table-hva'), F('9. Every person, humans against AI', '#fig-hva-clouds'), F('10. How many people show the gap?', '#fig-hva-dir'), Tb('16. Other ways to draw the line', '#table-hva-alt')] },
+  { title: 'Recommender by recommender', href: '#hva-each', items: [F('11. Each recommender on all three ratings', '#fig-hva-profile')] },
+  { title: 'Do people who trust humans also trust AI?', href: '#hva-link', items: [F('12. Trust in humans and in AI', '#fig-hva-link'), Tb('17. How closely the two go together', '#table-hva-link'), Tb('18. Consistency within each group', '#table-hva-cons')] },
+  { title: 'Who shows the gap?', href: '#hva-who', items: [F('13. The gap, group by group', '#fig-hva-who'), Tb('19. Does the gap differ between groups?', '#table-hva-who')] },
+  { title: 'What goes with trust, for humans and for AI', href: '#hva-model', items: [Tb('20. Trust predicted from the other ratings', '#table-hva-coef'), F('14. Predicted trust', '#fig-hva-slopes')] },
+];
+// ---- companion figures
+const betaRefs = [{ v: 0.1, label: 'small' }, { v: 0.2, label: 'medium' }, { v: 0.3, label: 'large' }];
+const sampleFig = full.sample.variables.flatMap((v: any) => [{ head: v.variable }, ...v.rows.map((r: any) => ({ label: `${r.group} (n = ${r.n})`, v: r.pct, tip: `${r.n} of ${full.sample.n} people (${r.pct}%)` }))]);
+const reliabilityFig = full.reliability.map((r: any) => ({ label: `${r.label} (${r.items.length} items)`, v: r.alpha, tip: `alpha = ${r.alpha.toFixed(2)}` }));
+const regFig = full.regressions.flatMap((r: any) => [{ head: r.maker }, ...r.terms.filter((t: any) => t.beta != null).map((t: any) => {
+  const k = t.beta / t.b, lo = t.beta - 1.96 * t.se * Math.abs(k), hi = t.beta + 1.96 * t.se * Math.abs(k);
+  return { label: t.term, v: t.beta, lo, hi, tip: `β = ${t.beta.toFixed(2)} (95% CI ${lo.toFixed(2)} to ${hi.toFixed(2)})` };
+})]);
+const fitFig = full.regressions.flatMap((r: any) => [{ label: r.maker, v: r.r2, tip: `R² = ${r.r2.toFixed(2)}, adjusted ${r.adjR2.toFixed(2)}` }]);
+const modelFig = [{ head: 'Predictors alone (marginal R²)' }, ...full.mixedModels.map((m: any, i: number) => ({ label: `${i + 1}. ${m.label}`, v: m.r2m })), { head: 'Predictors plus each person (conditional R²)' }, ...full.mixedModels.map((m: any, i: number) => ({ label: `${i + 1}. ${m.label}`, v: m.r2c }))];
+const lrtMax = Math.ceil(Math.max(...full.modelComparisons.map((c: any) => c.chi2)) / 10) * 10;
+const lrtFig = full.modelComparisons.map((c: any, i: number) => ({ label: lrtLabels[i], v: c.chi2, tip: `χ² = ${c.chi2.toFixed(1)} on ${c.df} df` }));
+const aiModel = full.mixedModels[6];
+const huModel = full.mixedModels[7];
+
+// ---- humans versus AI (second tab)
+const hv = hva.tests.map((t: any) => ({ key: t.key, measure: t.measure, ...t.human_vs_ai }));
+const hvCols = [
+  { key: 'measure', label: 'Rating' },
+  { key: 'human', label: 'Humans, mean (SD)', num: true, hint: 'Average of the six human recommenders' },
+  { key: 'ai', label: 'AI, mean (SD)', num: true, hint: 'Average of the four AI recommenders' },
+  { key: 'diff', label: 'Difference [95% CI]', num: true, hint: 'Humans minus AI' },
+  { key: 't', label: 't (df)', num: true },
+  { key: 'p', label: 'p', num: true },
+  { key: 'd', label: 'd [95% CI]', num: true, hint: 'Cohen’s d for paired data' },
+];
+const hvRow = (label: string, t: any) => ({
+  measure: label,
+  human: `${f2(t.meanA)} (${f2(t.sdA)})`,
+  ai: `${f2(t.meanB)} (${f2(t.sdB)})`,
+  diff: minus(`${f2(t.diff)} [${f2(t.lo)}, ${f2(t.hi)}]`),
+  t: minus(`${f2(t.t)} (${t.df})`),
+  p: pv(t.p),
+  d: minus(`${f2(t.d)} [${f2(t.dLo)}, ${f2(t.dHi)}]`),
+});
+const hvRows = hva.tests.map((t: any) => hvRow(t.measure, t.human_vs_ai));
+const hvAltCols = [
+  { key: 'label', label: 'Comparison', wrap: true, minw: '14rem' },
+  { key: 'means', label: 'Means (SD)', num: true, wrap: true, minw: '9.5rem', hint: 'First group, then second group' },
+  { key: 'diff', label: 'Difference [95% CI]', num: true },
+  { key: 't', label: 't (df)', num: true },
+  { key: 'p', label: 'p', num: true },
+  { key: 'd', label: 'd [95% CI]', num: true },
+];
+const altDefs: [string, string, string][] = [
+  ['human_vs_hybrid', 'humans versus a doctor using AI', 'First group is the six human recommenders'],
+  ['hybrid_vs_ai', 'a doctor using AI versus the four AI tools', ''],
+  ['human_vs_ai5', 'humans versus AI, counting a doctor using AI as AI (the notebook’s rule)', ''],
+];
+const hvAltRows = hva.tests.flatMap((t: any) =>
+  altDefs.map(([k, what]) => {
+    const r: any = t[k];
+    return {
+      label: `${t.measure}: ${what}`,
+      means: `${f2(r.meanA)} (${f2(r.sdA)}), ${f2(r.meanB)} (${f2(r.sdB)})`,
+      diff: minus(`${f2(r.diff)} [${f2(r.lo)}, ${f2(r.hi)}]`),
+      t: minus(`${f2(r.t)} (${r.df})`),
+      p: pv(r.p),
+      d: minus(`${f2(r.d)} [${f2(r.dLo)}, ${f2(r.dHi)}]`),
+    };
+  }),
+);
+const hvCloud = hva.clouds.map((c: any) => ({ ...c, rows: c.rows }));
+const hvDir = hva.tests.map((t: any) => ({
+  id: t.key, text: `${t.measure}: humans versus AI`, aLabel: 'humans', bLabel: 'AI', n: t.human_vs_ai.n,
+  higher: t.human_vs_ai.higher, same: t.human_vs_ai.same, lower: t.human_vs_ai.lower, left: 'doctor', right: 'ai',
+})) as any[];
+const hvT = hva.tests[0].human_vs_ai;
+const groupHead = { human: 'Human recommenders', hybrid: 'Human with AI', ai: 'AI recommenders' } as const;
+const profileItems: any[] = [];
+(['human', 'hybrid', 'ai'] as const).forEach((g) => {
+  profileItems.push({ head: groupHead[g] });
+  hva.profile.filter((r: any) => r.group === g).forEach((r: any) =>
+    profileItems.push({ label: r.label, kind: g, cells: r.cells }),
+  );
+});
+const profilePanels = [
+  { title: 'Trust', domain: [3, 8], tickStep: 1, axisLabel: 'Average rating, 0 to 10' },
+  { title: 'Quantitative reasoning', domain: [3, 8], tickStep: 1, axisLabel: 'Average rating, 0 to 10' },
+  { title: 'Intuition', domain: [3, 8], tickStep: 1, axisLabel: 'Average rating, 0 to 10' },
+] as any[];
+const gapPanels = [
+  { title: 'Trust', domain: [-1, 4], tickStep: 1, zero: true, axisLabel: 'Humans minus AI' },
+  { title: 'Quantitative reasoning', domain: [-1, 4], tickStep: 1, zero: true, axisLabel: 'Humans minus AI' },
+  { title: 'Intuition', domain: [-1, 4], tickStep: 1, zero: true, axisLabel: 'Humans minus AI' },
+] as any[];
+const gapItems: any[] = [];
+hva.subgroups.forEach((sv: any) => {
+  gapItems.push({ head: sv.variable });
+  sv.groups.forEach((g: any) => gapItems.push({ label: g.label, sub: `n = ${g.n}`, kind: 'plain', cells: g.cells }));
+});
+const subTestRows = hva.subgroups.map((sv: any) => ({
+  label: sv.variable,
+  groups: sv.groups.map((g: any) => g.label).join(', '),
+  ...Object.fromEntries(
+    ['trust', 'qr', 'int'].map((k, i) => {
+      const t = sv.tests[i];
+      return [k, t ? `${t.stat} = ${minus(f2(t.value))}, p ${pv(t.p)}` : ''];
+    }),
+  ),
+}));
+const linkRows = hva.links.map((l: any) => ({
+  label: l.measure, n: l.n, r: r3(l.r), ci: `${r3(l.lo)} to ${r3(l.hi)}`, p: pv(l.p),
+}));
+const consRows = hva.consistency.map((c: any) => ({
+  label: `${c.measure}: ${c.group}`, alpha: noZero(c.alpha.toFixed(2)), rbar: noZero(c.meanR.toFixed(2)),
+}));
+const coefRows = [
+  ['Quantitative reasoning', 1],
+  ['Intuition', 2],
+].map(([lab, i]: any) => {
+  const h = huModel.terms[i];
+  const a = aiModel.terms[i];
+  return {
+    label: lab,
+    hum: `${minus(f2(h.b))} [${minus(f2(h.lo))}, ${minus(f2(h.hi))}]`,
+    ai: `${minus(f2(a.b))} [${minus(f2(a.lo))}, ${minus(f2(a.hi))}]`,
+  };
+});
+
+const toc = [
+  ['sample', 'Who took part'],
+  ['decisions', 'Fifteen medical decisions'],
+  ['structure', 'Do the decision ratings hang together?'],
+  ['tests', 'The tests'],
+  ['makers', 'Eleven recommenders'],
+  ['trust', 'What goes with trust'],
+  ['implications', 'What this means'],
+  ['dig-deeper', 'Dig deeper'],
+  ['files', 'Files and methods'],
+];
+
+const bayesRows = bayes.rows
+  .filter((r) => r.study === 'Study 1')
+  .map((r) => ({ ...r, text: /^(H\d|E)$/.test(r.id) ? `${r.id === 'E' ? 'Exploratory' : r.id}: ${r.text}` : r.text }));
+const bf = (id: string) => bayes.rows.find((r) => r.id === id)!;
+const figureMap1 = [
+  { diss: 'Table 1', what: 'The fifteen medical decisions and how they were grouped', here: 'Tables 2 and 3', href: '#table-decisions' },
+  { diss: 'Table 2', what: 'The eleven medical recommenders', here: 'Table 8', href: '#table-makers' },
+  { diss: 'Figure 3', what: 'Quantitative reasoning needed, decision by decision', here: 'Figure 1', href: '#fig-decisions', note: 'Every person is plotted, not only the mean and interval' },
+  { diss: 'Figure 4', what: 'The same, by stage of care', here: 'Figure 3', href: '#fig-stage' },
+  { diss: 'Figure 5', what: 'The same, by kind of health problem', here: 'Figure 2', href: '#fig-domain' },
+  { diss: 'Figure 6', what: 'Quantitative reasoning and intuition for each recommender', here: 'Figures 6 and 7', href: '#fig-map', note: 'Plus Figure 11 for the human-versus-AI split' },
+  { diss: 'Figure 7', what: 'Trust in each recommender', here: 'Figure 6', href: '#fig-trust' },
+  { diss: 'Hypotheses 1 to 7, exploratory test', what: 'Paired t tests', here: 'Tables 6 and 7, Figure 5', href: '#table-tests' },
+  { diss: 'Table 3', what: 'Mixed model of trust, with within-person and between-person terms', here: 'Tables 9 to 14, Figure 8', href: '#table-models', note: 'The released file groups age, so some terms differ in the third decimal' },
+];
+---
+
+<Base
+  title="Trust in medical AI: Study 1, every table and figure"
+  description="Every table and figure from the Study 1 analysis, rebuilt from the public data with hover details."
+>
+  <div class="wrap">
+    <header class="page-head">
+      <p class="back small"><a href={href('/projects/trust-in-medical-ai/study-1/')}>Study 1</a> · <a href={href('/projects/trust-in-medical-ai/')}>Trust in medical AI</a></p>
+      <h1>Study 1: every table and figure</h1>
+      <p class="lede">Each analysis from the dissertation, rebuilt from the released data, with a figure beside every table. Hover over any mark for the details.</p>
+    </header>
+    <DeepNav study="1" current="full" />
+    <div class="deep">
+      <h2 id="deep-dive">Deep dive: every table and figure</h2>
+      <p>
+        The rest of this page rebuilds each analysis from the public data. Hover over any mark for the details, and open the guide below if a term is unfamiliar.
+      </p>
+      <Glossary />
+    </div>
+
+
+    <Contents groups={contents} />
+
+    <div class="prose">
+      <p class="how small muted">
+        How to read this page. The seven preregistered tests (H1 to H7) and one exploratory test (E) match the dissertation.
+        Everything else was run in my exploratory analysis notebook and is recomputed here from the public file. The
+        public file groups demographics into broad categories, so the sample table is coarser than the one in the
+        dissertation.
+      </p>
+    </div>
+
+    <!-- ============================ sample ============================ -->
+    <section class="section" id="sample" aria-labelledby="sample-title">
+      <h2 id="sample-title">Who took part</h2>
+      <p class="intro">
+        The study was preregistered with a target of 186 people recruited through CloudResearch's Prime Panels. After
+        removing preview responses and anyone who did not consent, {full.sample.n} remain.
+      </p>
+      <StatTable
+        id="table-sample"
+        look="The share in each group. Ages are spread fairly evenly across the four bands, and women are the larger group."
+        title="Table 1. The people in the released file"
+        columns={[
+          { key: 'label', label: 'Group' },
+          { key: 'n', label: 'People', num: true },
+          { key: 'pct', label: 'Share', num: true },
+        ]}
+        rows={sampleRows}
+        note={`Shares are of all ${full.sample.n} people. Left blank in the file: ${missingNote}. Gender had only woman and man responses, so smaller groups do not appear. Race is White or Black only when that is the only group chosen; every other answer, including choosing more than one, is combined because no other group reached 30 people.`}
+      />
+      <h3 class="fig-title mini">Table 1 as a figure</h3>
+      <p class="leadin">Each bar is the share of the people in that group. Longer means more of the sample. Hover a bar for the head count.</p>
+      <DotRows rows={sampleFig} domain={[0, 100]} tickStep={20} axisLabel="Share of people (%)" bars unit="%" digits={0} ariaLabel="Share of participants in each age, gender, race and education group" />
+    </section>
+
+    <!-- ============================ decisions ============================ -->
+    <section class="section" id="decisions" aria-labelledby="decisions-title">
+      <h2 id="decisions-title">Fifteen medical decisions</h2>
+      <p class="intro">
+        For each decision, people slid from 0 (a professional needs only intuition and personal experience) to 100 (needs
+        only quantitative reasoning). Every decision fell above the middle except general wellbeing advice, which sat just
+        below it.
+      </p>
+      <StatTable
+        id="table-decisions"
+        look="Every decision sits above the middle of the 0 to 100 scale except general wellbeing advice, which sits just below it."
+        title="Table 2. Quantitative reasoning needed, by decision (0 to 100)"
+        columns={descCols}
+        rows={decisionRows}
+        note="Sorted from most to least quantitative reasoning needed. Skew and kurtosis are the estimates psych::describe reports."
+      />
+
+      <h3 class="fig-title" id="fig-decisions">Figure 1. Every decision, every person</h3>
+      <p class="leadin">Each row is one of the fifteen decisions. Every dot is one person's answer on a 0 to 100 slider, from needs only intuition (0) to needs only quantitative reasoning (100). The curve shows where answers pile up.</p>
+      <Raincloud
+        rows={decisionCloud}
+        grid={grid100}
+        domain={[0, 100]}
+        tickStep={20}
+        xLabel="Needs intuition (0) versus needs quantitative reasoning (100)"
+        ariaLabel="Distribution of ratings for each of fifteen medical decisions, ordered by average"
+      />
+
+      <StatTable
+        id="table-composites"
+        look="The same ratings averaged into the groups used later. Compare the means across rows; preventative decisions need the least quantitative reasoning."
+        title="Table 3. The decision groups used in the tests (0 to 100)"
+        columns={descCols}
+        rows={compositeRows}
+        note={`Each group is the average of its decisions. A person missing any one decision in a group is missing for that group, so n runs from ${Math.min(...full.compositeDescriptives.map((c: any) => c.n))} to ${Math.max(...full.compositeDescriptives.map((c: any) => c.n))}.`}
+      />
+
+      <div>
+        <div>
+          <h3 class="fig-title" id="fig-domain">Figure 2. By kind of health problem</h3>
+          <p class="leadin">The same slider ratings, grouped by kind of health problem. Each dot is one person; the curve shows where answers cluster.</p>
+          <Raincloud
+            rows={domainCloud}
+            grid={grid100}
+            domain={[0, 100]}
+            tickStep={20}
+            xLabel="Intuition (0) versus quantitative reasoning (100)"
+            ariaLabel="Distribution of ratings by kind of health problem"
+          />
+        </div>
+        <div>
+          <h3 class="fig-title" id="fig-stage">Figure 3. By stage of care</h3>
+          <p class="leadin">The same slider ratings, grouped by stage of care: preventing, diagnosing or prescribing.</p>
+          <Raincloud
+            rows={stageCloud}
+            grid={grid100}
+            domain={[0, 100]}
+            tickStep={20}
+            xLabel="Intuition (0) versus quantitative reasoning (100)"
+            ariaLabel="Distribution of ratings by stage of care: diagnostic, prescriptive and preventative"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ structure ============================ -->
+    <section class="section" id="structure" aria-labelledby="structure-title">
+      <h2 id="structure-title">Do the decision ratings hang together?</h2>
+      <p class="intro">
+        Before averaging decisions into groups, I checked how closely the items in each group move together. Alpha runs
+        from 0 to 1; higher means people answered the items in a group alike. The bodily injury group is the weakest
+        (alpha {noZero(full.reliability[5].alpha.toFixed(2))}), so results that rest on it deserve more caution.
+      </p>
+      <StatTable
+        id="table-reliability"
+        look="Alpha near or above .80 means the items in a group can safely be averaged. The bodily injury group is the weakest, so lean on it less."
+        title="Table 4. Reliability of each group of decisions"
+        columns={[
+          { key: 'label', label: 'Group' },
+          { key: 'k', label: 'Items', num: true },
+          { key: 'alpha', label: 'Cronbach’s alpha', num: true, hint: 'Raw alpha, from pairwise covariances' },
+          { key: 'rbar', label: 'Average item correlation', num: true },
+        ]}
+        rows={relRows}
+      />
+      <h3 class="fig-title mini">Table 4 as a figure</h3>
+      <p class="leadin">Each dot is the alpha for one group of decisions: how alike people answered the items inside it. The dashed lines mark .70, .80 and .90; above .70 is usually taken as acceptable and above .80 as good.</p>
+      <DotRows rows={reliabilityFig} domain={[0.5, 1]} tickStep={0.1} bars axisLabel="Cronbach's alpha" refs={[{ v: 0.7, label: '.70' }, { v: 0.8, label: '.80' }, { v: 0.9, label: '.90' }]} ariaLabel="Reliability of each group of decisions" />
+      <details class="more">
+        <summary>Item correlations behind each alpha</summary>
+        {
+          full.reliability.map((r) => (
+            <StatTable
+              title={`${r.label}`}
+              columns={[{ key: 'item', label: 'Item' }, ...r.items.map((_, i) => ({ key: `c${i}`, label: String(i + 1), num: true }))]}
+              rows={r.items.map((name, i) => ({
+                item: `${i + 1}. ${name}`,
+                ...Object.fromEntries(r.items.map((_, j) => [`c${j}`, i === j ? '' : r3(r.r[i][j])])),
+              }))}
+            />
+          ))
+        }
+      </details>
+
+      <h3 class="fig-title">Figure 4. How many factors?</h3>
+      <p class="intro">
+        A scree plot lists the strength of each possible factor in the twelve decisions that make up the groups
+        ({efa.n} people answered all twelve). Three factors stand above 1, the usual cut-off, and a fourth falls short.
+      </p>
+      <ScreePlot eigenvalues={efa.eigenvalues} />
+
+      <h3 class="fig-title">Table 5. A three-factor solution</h3>
+      <p class="intro">
+        Three factors, allowed to correlate, sort the twelve decisions by what they ask of a clinician. The names are my
+        reading of the pattern, not part of the analysis. Pain medication for a knee injury is the one decision that
+        splits across factors.
+      </p>
+      <LoadingsTable
+        items={efa.items}
+        loadings={efa.loadings}
+        communalities={efa.communalities}
+        factorNames={factorNames}
+        variance={efa.variance}
+        phi={efa.factorCorrelations}
+      />
+      <p class="small muted note">{efa.note}</p>
+
+      <h3 class="fig-title">Figure 4b. The factor diagram</h3>
+      <p class="intro">
+        The same solution as a diagram, as the notebook’s factor diagram drew it. Each decision points to the factor it loads on
+        most (solid line); dashed lines are smaller loadings of .30 or more. The curves give the correlations between factors.
+      </p>
+      <FactorDiagram items={efa.items} loadings={efa.loadings} factorNames={factorNames} phi={efa.factorCorrelations} />
+    </section>
+
+    <!-- ============================ tests ============================ -->
+    <section class="section" id="tests" aria-labelledby="tests-title">
+      <h2 id="tests-title">The tests</h2>
+      <p class="intro">
+        The preregistered plan was a series of paired t tests, since each person answered every item. H1 to H5 compare
+        kinds of decision; H6 and H7 compare a doctor with an AI. The AI here is the general medical AI. Test E asks the
+        same of quantitative reasoning and was not preregistered.
+      </p>
+      <StatTable
+        id="table-tests"
+        look="The difference column and p. H1 shows no gap, H2 and H3 show a clear gap, and H6, H7 and E show the doctor rated well above the AI."
+        title="Table 6. Paired t tests"
+        columns={testCols}
+        rows={testRows}
+        note="H1 to H5 compare how much quantitative reasoning decisions need (0 to 100); H6, H7 and E compare ratings of a doctor and an AI (0 to 10). A positive difference means the first item was rated higher. Tests are two-sided at alpha = .05, the criterion in the preregistration."
+      />
+
+      <h3 class="fig-title" id="fig-direction">Figure 5. Person as effect size</h3>
+      <p class="intro">
+        An average can hide how many people actually differ. For each comparison, this counts people who rated the first
+        item higher, the same, or lower. Even for the largest gap, trust in a doctor over an AI, {Math.round((100 * full.tests[6].dir.lower) / full.tests[6].n)}% of people trusted the AI more
+        and {Math.round((100 * full.tests[6].dir.same) / full.tests[6].n)}% rated the two the same. The notebook counted this for trust (doctor versus AI, and layperson versus AI); I ran the same count for every test.
+      </p>
+      <DirectionBars rows={dirRows} />
+
+      <StatTable
+        id="table-extra"
+        look="Which comparisons show a clear gap and which do not: look at whether the interval for the difference stays away from zero."
+        title="Table 7. Follow-up comparisons from the notebook"
+        columns={testCols}
+        rows={extraRows}
+        note="Exploratory comparisons the notebook ran after the preregistered tests: a layperson against the AI, the AI's quantitative reasoning against its intuition, and a doctor against a doctor using AI."
+      />
+    </section>
+
+    <!-- ============================ makers ============================ -->
+    <section class="section" id="makers" aria-labelledby="makers-title">
+      <h2 id="makers-title">Eleven recommenders</h2>
+      <p class="intro">
+        Each person rated all eleven recommenders on three things, each from 0 to 10: how much they trust it to make health
+        recommendations, how capable it is of quantitative reasoning, and how capable it is of intuition. A doctor using AI is
+        treated as AI in the models later on, as in the notebook.
+      </p>
+      <StatTable
+        id="table-makers"
+        look="Read down the trust column. Doctors and nurses sit near the top, the AI recommenders sit below the human experts, and a doctor using AI sits in between."
+        title="Table 8. Ratings of each recommender, mean (SD)"
+        columns={[
+          { key: 'label', label: 'Recommender' },
+          { key: 'trust', label: 'Trust', num: true },
+          { key: 'qr', label: 'Quantitative reasoning', num: true },
+          { key: 'intuition', label: 'Intuition', num: true },
+          { key: 'n', label: 'n (trust)', num: true },
+        ]}
+        rows={mkRows}
+        note="Sorted from most to least trusted."
+      />
+      <details class="more">
+        <summary>Full descriptives for each rating</summary>
+        <StatTable title="Trust (0 to 10)" columns={descCols} rows={mkFull('trust')} />
+        <StatTable title="Quantitative reasoning (0 to 10)" columns={descCols} rows={mkFull('capability')} />
+        <StatTable title="Intuition (0 to 10)" columns={descCols} rows={mkFull('intuition')} />
+      </details>
+
+      <h3 class="fig-title" id="fig-trust">Figure 6. Trust in each recommender, every person</h3>
+      <p class="leadin">Each row is a recommender. Every dot is one person's trust rating on a 0 to 10 scale, and the curve shows where ratings cluster. Higher means more trust.</p>
+      <Raincloud
+        rows={trustCloud}
+        grid={grid10}
+        domain={[0, 10]}
+        tickStep={2}
+        xJitter={0.12}
+        xLabel="Trust, from 0 (not at all) to 10 (completely)"
+        ariaLabel="Distribution of trust ratings for each of eleven medical recommenders"
+      />
+
+      <h3 class="fig-title" id="fig-map">Figure 7. Where each recommender sits</h3>
+      <p class="intro">
+        Doctors sit highest on both kinds of capability. Every AI is seen as less capable of intuition than of
+        quantitative reasoning, and sits below the doctor on both. A doctor using AI lands between the doctor and the AIs.
+      </p>
+      <MakerMap items={full.makerMap} />
+    </section>
+
+    <!-- ============================ trust ============================ -->
+    <section class="section" id="trust" aria-labelledby="trust-title">
+      <h2 id="trust-title">What goes with trust</h2>
+      <p class="intro">
+        Trust tracks both kinds of perceived capability. These analyses are exploratory, and they show what moves together, not
+        what causes what. First, one recommender at a time.
+      </p>
+      <StatTable
+        id="table-regression"
+        look="The β column. Both intuition and quantitative reasoning go with trust for all three recommenders; for the doctor quantitative reasoning is stronger, and for the AI intuition is."
+        title="Table 9. Trust predicted by intuition and quantitative reasoning, for three recommenders"
+        columns={[
+          { key: 'label', label: 'Recommender and predictor' },
+          { key: 'b', label: 'b', num: true, hint: 'Change in trust for one more point on the rating' },
+          { key: 'se', label: 'SE', num: true },
+          { key: 't', label: 't', num: true },
+          { key: 'p', label: 'p', num: true },
+          { key: 'beta', label: 'β', num: true, hint: 'Standardized: the change in trust, in SDs, for a one SD change in the rating' },
+        ]}
+        rows={regRows}
+      />
+      <h3 class="fig-title mini">Table 9 as a figure</h3>
+      <p class="leadin">Each dot is how strongly a rating goes with trust, in standardized units (β), with a 95% interval. Dashed lines mark a small, medium and large effect on the Funder and Ozer scale. Intervals that stay right of zero mean the rating reliably goes with trust.</p>
+      <DotRows rows={regFig} domain={[0, 0.8]} tickStep={0.1} zero axisLabel="Standardized effect on trust (β)" refs={betaRefs} ariaLabel="Standardized effects of intuition and quantitative reasoning on trust, for three recommenders" />
+      <StatTable
+        id="table-fit"
+        look="R² is the share of the variation in trust the two ratings explain. About half, so the ratings matter but are not the whole story."
+        title="Table 10. How well each model fits"
+        columns={[
+          { key: 'label', label: 'Recommender' },
+          { key: 'n', label: 'n', num: true },
+          { key: 'r2', label: 'R²', num: true },
+          { key: 'adj', label: 'Adjusted R²', num: true },
+          { key: 'F', label: 'F (df)', num: true },
+          { key: 'p', label: 'p', num: true },
+        ]}
+        rows={fit}
+      />
+      <h3 class="fig-title mini">Table 10 as a figure</h3>
+      <p class="leadin">Each bar is the share of the variation in trust that the two ratings explain (R²). A bar at 50% means the ratings account for half of why people trusted one recommender more than another.</p>
+      <DotRows rows={fitFig.map((r: any) => ({ ...r, v: r.v * 100 }))} domain={[0, 100]} tickStep={20} bars unit="%" digits={0} axisLabel="Variation in trust explained (R², %)" ariaLabel="Variation in trust explained by the model, for three recommenders" />
+      <StatTable
+        id="table-correlations"
+        look="Every correlation is positive: people who rate a recommender high on one thing tend to rate it high on the others."
+        title="Table 11. Correlations among the three ratings"
+        columns={[
+          { key: 'label', label: 'Recommender and pair' },
+          { key: 'r', label: 'r', num: true },
+          { key: 'p', label: 'p', num: true },
+          { key: 'n', label: 'n', num: true },
+        ]}
+        rows={corRows}
+      />
+      <h3 class="fig-title mini">Table 11 as a figure</h3>
+      <p class="leadin">Each square is the correlation between two ratings for one recommender. Darker blue means the two move together more strongly.</p>
+      <div class="grids">
+        {full.correlationsByMaker.map((c: any) => (<CorrGrid title={c.maker} vars={c.vars} r={c.r} ariaLabel={`Correlations among trust and the two ratings for ${c.maker}`} />))}
+      </div>
+
+      <h3 class="fig-title">Mixed models across all eleven recommenders</h3>
+      <p class="intro">
+        Each person rated eleven recommenders, so their ratings are not independent. These models give every person their own
+        baseline level of trust. The AI recommenders are the four AI tools plus a doctor using AI, as in the notebook.
+      </p>
+      <StatTable
+        id="table-models"
+        look={`Marginal R² jumps from ${noZero(full.mixedModels[0].r2m.toFixed(2))} to ${noZero(full.mixedModels[1].r2m.toFixed(2))} once the two ratings enter. A lower AIC means a better balance of fit and simplicity.`}
+        title="Table 12. The models side by side"
+        columns={[
+          { key: 'label', label: 'Model' },
+          { key: 'r2m', label: 'Marginal R²', num: true, hint: 'Variation explained by the predictors alone' },
+          { key: 'r2c', label: 'Conditional R²', num: true, hint: 'Variation explained by the predictors and each person’s own baseline' },
+          { key: 'icc', label: 'Person share', num: true, hint: 'Share of leftover variation that is stable differences between people' },
+          { key: 'aic', label: 'AIC', num: true, hint: 'Lower is a better balance of fit and simplicity. Only compare models fitted to the same data.' },
+        ]}
+        rows={modelRows}
+        note={full.mixedNote}
+      />
+      <p class="leadin">Table 12 as a figure. Each bar is the share of the variation in trust a model explains: first by its predictors alone, then with each person's own baseline added. Longer is a better fit.</p>
+      <DotRows rows={modelFig.map((r: any) => (r.v == null ? r : { ...r, v: r.v * 100 }))} domain={[0, 100]} tickStep={20} bars unit="%" digits={0} axisLabel="Variation in trust explained (%)" ariaLabel="Variation in trust explained by each mixed model" />
+      <details class="more" id="model-details">
+        <summary>Coefficients for each model</summary>
+        {
+          full.mixedModels.map((m, i) => (
+            <StatTable
+              title={`Model ${i + 1}. ${m.label}`}
+              columns={[
+                { key: 'term', label: 'Predictor' },
+                { key: 'b', label: 'b', num: true },
+                { key: 'se', label: 'SE', num: true },
+                { key: 'ci', label: '95% CI', num: true },
+                { key: 'z', label: 'z', num: true },
+                { key: 'p', label: 'p', num: true },
+                { key: 'beta', label: 'β', num: true },
+              ]}
+              rows={m.terms.map((t) => ({
+                term: termLabel[t.term] ?? t.term,
+                b: minus(f2(t.b)),
+                se: f2(t.se),
+                ci: minus(`${f2(t.lo)} to ${f2(t.hi)}`),
+                z: minus(f2(t.z)),
+                p: pv(t.p),
+                beta: t.beta == null ? '' : minus(noZero(f2(t.beta))),
+              }))}
+              note={`${m.n.toLocaleString('en-US')} ratings from ${m.people} people. Person share ${noZero(m.icc.toFixed(2))}.`}
+            />
+          ))
+        }
+      </details>
+      <StatTable
+        id="table-lrt"
+        look="Every p is below .001, so each added term improved the model."
+        title="Table 13. Does adding a term improve the fit?"
+        columns={[
+          { key: 'label', label: 'Comparison' },
+          { key: 'chi', label: 'χ²', num: true },
+          { key: 'df', label: 'df', num: true },
+          { key: 'p', label: 'p', num: true },
+        ]}
+        rows={lrtRows}
+        note="Likelihood ratio tests, refit by maximum likelihood."
+      />
+      <p class="leadin">Table 13 as a figure. Each bar is how much a model improves when a term is added (χ²). Longer means a bigger improvement; with one degree of freedom, anything over 3.8 is past the usual cutoff.</p>
+      <DotRows rows={lrtFig} domain={[0, lrtMax]} tickStep={10} bars axisLabel="Improvement in fit (χ²)" refs={[{ v: 3.84, label: 'p = .05' }]} digits={1} ariaLabel="Improvement in model fit when each term is added" />
+
+      <h3 class="fig-title" id="fig-slopes">Figure 8. What lifts trust differs for AI and for humans</h3>
+      <p class="intro">
+        For human recommenders, perceived quantitative reasoning is the stronger partner of trust (b = {f2(huModel.terms[1].b)} against {f2(huModel.terms[2].b)} for
+        intuition). For AI, it is intuition (b = {f2(aiModel.terms[2].b)} against {f2(aiModel.terms[1].b)}). The interaction model agrees: the two slopes differ by
+        recommender type (Model 4: both interaction terms, p {pv(Math.max(full.mixedModels[3].terms[3].p, full.mixedModels[3].terms[5].p))}).
+      </p>
+      <SlopesPlot lines={slopes} />
+      <p class="small muted note">{full.slopes.note}</p>
+
+      <StatTable
+        id="table-wb"
+        look="Compare the two columns. Between-people values reflect who the person is; within-people values reflect which recommender is being rated."
+        title="Table 14. Correlations between people and within people"
+        columns={[
+          { key: 'label', label: 'Recommenders and pair' },
+          { key: 'between', label: 'Between people, r (p)', num: true, hint: 'Do people who rate recommenders high on one thing rate them high on the other, averaged over all recommenders?' },
+          { key: 'within', label: 'Within people, r (p)', num: true, hint: 'For one person, do recommenders rated higher on one thing also get rated higher on the other?' },
+        ]}
+        rows={wbRows}
+        note={full.withinBetweenNote}
+      />
+      <p class="leadin">Table 14 as a figure, for all recommenders together. The left grid is between people: do people who rate recommenders high on one thing rate them high on the other? The right grid is within people: for one person, do recommenders rated higher on one thing also get rated higher on the other?</p>
+      <div class="grids">
+        <CorrGrid title="Between people" vars={full.withinBetween[0].vars} r={full.withinBetween[0].between} ariaLabel="Between-person correlations among trust and the two ratings" />
+        <CorrGrid title="Within people" vars={full.withinBetween[0].vars} r={full.withinBetween[0].within} ariaLabel="Within-person correlations among trust and the two ratings" />
+      </div>
+    </section>
+
+  </div>
+</Base>
+
+<style>
+  .tabs { display: flex; gap: 0.25rem; margin-top: 2rem; border-bottom: 2px solid var(--rule); font-family: var(--display); }
+  .tabs button { appearance: none; background: none; border: 0; border-bottom: 3px solid transparent; margin-bottom: -2px; padding: 0.6rem 1rem; font: inherit; font-weight: 600; font-size: 1rem; color: var(--muted); cursor: pointer; }
+  .tabs button:hover { color: var(--ink); }
+  .tabs button[aria-selected='true'] { color: var(--ink); border-bottom-color: var(--doctor); }
+  .tabs button:focus-visible { outline: 3px solid var(--doctor); outline-offset: -3px; border-radius: 4px; }
+  .panel[hidden] { display: none; }
+  .cloud { margin-top: 1.5rem; }
+  .deep { margin-top: 4rem; padding-top: 2rem; border-top: 5px solid; border-image: var(--five) 1; }
+  .deep h2 { margin-bottom: 0.5rem; }
+  .deep p { max-width: 62ch; color: var(--muted); }
+  .mini { margin: 0 0 -0.4rem; font-size: 0.98rem; }
+  .toc { margin-top: 2rem; }
+  .toc ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; font-family: var(--display); font-size: 0.95rem; }
+  .toc a { text-decoration-color: var(--rule); }
+  .how { margin-top: 1.5rem; font-family: var(--display); }
+  .intro { max-width: 64ch; color: var(--muted); }
+  .fig-title { margin-top: 3rem; font-size: 1.15rem; }
+  .more { margin-top: 1.5rem; font-family: var(--display); }
+  .more > summary { cursor: pointer; color: var(--muted); font-size: 0.95rem; }
+  .note { margin-top: 0.75rem; max-width: 70ch; font-family: var(--display); }
+  .filelist { padding-left: 1.2rem; font-family: var(--display); }
+  .filelist li { margin-bottom: 0.3rem; }
+  section :global(h2) { margin-bottom: 0.75rem; }
+</style>

@@ -1,6 +1,13 @@
 ---
 // A short introduction to Chapter 2 of the dissertation, the chapter that holds Studies 1 and 2.
 import { href } from '../utils/url';
+import s1 from '../data/trust-in-medical-ai/study1-full.json';
+import s2 from '../data/trust-in-medical-ai/study2-full.json';
+const nDec1 = s1.decisionDescriptives.length;
+const nDec2 = s2.decisionDescriptives.length;
+const nMakers = s1.makerDescriptives.length;
+const words: Record<number, string> = { 11: 'eleven', 12: 'twelve', 15: 'fifteen' };
+const w = (n: number) => words[n] ?? String(n);
 interface Props { current?: '1' | '2' }
 const { current } = Astro.props;
 ---
@@ -17,15 +24,15 @@ const { current } = Astro.props;
     because they credit them with both, ratings of these two abilities should track trust.
   </p>
   <p>
-    {current === '1' ? <strong>Study 1</strong> : <a href={href('/projects/trust-in-medical-ai/study-1/')}>Study 1</a>} (188 adults) rated fifteen decisions and
-    eleven recommenders, from a doctor to an AI fitness coach.
-    {current === '2' ? <strong>Study 2</strong> : <a href={href('/projects/trust-in-medical-ai/study-2/')}>Study 2</a>} (106 adults) replicated the gap on twelve
+    {current === '1' ? <strong>Study 1</strong> : <a href={href('/projects/trust-in-medical-ai/study-1/')}>Study 1</a>} ({s1.sample.n} adults) rated {w(nDec1)} decisions and
+    {w(nMakers)} recommenders, from a doctor to an AI fitness coach.
+    {current === '2' ? <strong>Study 2</strong> : <a href={href('/projects/trust-in-medical-ai/study-2/')}>Study 2</a>} ({s2.sample.n} adults) replicated the gap on {w(nDec2)}
     concrete decisions, rated a doctor and an AI side by side, and added warmth, competence and mind perception. Together they set up Chapters 3 and 4,
     where I try to close the gap by making an AI seem more human.
   </p>
 </aside>
 <style>
-  .chapter { margin: 2rem 0 0; padding: 1.1rem 1.4rem 0.4rem; border-left: 4px solid var(--doctor); background: var(--wash); max-width: 70ch; }
+  .chapter { margin: 2rem 0 0; padding: 1.1rem 1.4rem 0.4rem; border-left: 4px solid var(--coral); background: var(--wash); max-width: 70ch; }
   .chapter h2 { font-size: 1.15rem; margin: 0 0 0.6rem; }
   .chapter p { margin: 0 0 0.8rem; }
 </style>

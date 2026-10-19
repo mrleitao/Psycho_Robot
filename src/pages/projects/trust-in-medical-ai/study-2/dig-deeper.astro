@@ -1,0 +1,379 @@
+---
+import DeepNav from '../../../../components/DeepNav.astro';
+import Base from '../../../../layouts/Base.astro';
+import StatTable from '../../../../components/StatTable.astro';
+import Raincloud from '../../../../components/Raincloud.astro';
+import DotPanels from '../../../../components/DotPanels.astro';
+import MainFindings from '../../../../components/MainFindings.astro';
+import Glossary from '../../../../components/Glossary.astro';
+import ChapterIntro from '../../../../components/ChapterIntro.astro';
+import GapScatter from '../../../../components/GapScatter.astro';
+import MediationDiagram from '../../../../components/MediationDiagram.astro';
+import full from '../../../../data/trust-in-medical-ai/study2-full.json';
+import pts from '../../../../data/trust-in-medical-ai/study2-points.json';
+import { href } from '../../../../utils/url';
+const FULL = href('/projects/trust-in-medical-ai/study-2/full/');
+import Contents from '../../../../components/Contents.astro';
+import DotRows from '../../../../components/DotRows.astro';
+import CorrGrid from '../../../../components/CorrGrid.astro';
+import BayesPlot from '../../../../components/BayesPlot.astro';
+import { times } from '../../../../utils/bayes';
+import BayesGuide from '../../../../components/BayesGuide.astro';
+import FigureMap from '../../../../components/FigureMap.astro';
+import bayes from '../../../../data/trust-in-medical-ai/bayes.json';
+
+const repo = 'https://github.com/mrleitao/Psycho_Robot';
+const f1 = (n: number | null) => (n == null ? '' : n.toFixed(1));
+const f2 = (n: number | null) => (n == null ? '' : n.toFixed(2));
+const noZero = (s: string) => s.replace(/^(-?)0\./, '$1.');
+const minus = (s: string) => s.replace(/^-/, '−').replace(/\[-/g, '[−').replace(/, -/g, ', −');
+const pv = (p: number) => (p < 0.001 ? '< .001' : noZero(p.toFixed(3)));
+const r3 = (n: number) => minus(noZero(n.toFixed(3)));
+
+const nPrev = full.tests.filter((t: any) => t.id.startsWith('prevent_')).length;
+const numWord = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight'];
+const tt = Object.fromEntries(full.tests.map((t: any) => [t.id, t]));
+const qt = Object.fromEntries(full.qualityTests.map((t: any) => [t.id, t]));
+const ctest = Object.fromEntries(full.compositeTests.map((t: any) => [t.id, t]));
+const findings = [
+  {
+    head: 'Almost everyone trusted the doctor more',
+    body: [
+      `${full.sample.n} adults rated how much they would trust a doctor, and how much they would trust a medical AI, for twelve decisions. Of the ${full.overallTest.n} people who answered every question, ${full.overallTest.higher} trusted the doctor more on average. ${full.overallTest.same} trusted both the same, and ${full.overallTest.lower} trusted the AI more.`,
+      'The result held for diagnosing, prescribing and preventing, and for injuries, mental health, short illnesses and long ones.',
+    ],
+    visual: { type: 'people', total: full.overallTest.n, count: full.overallTest.higher, label: 'trusted the doctor more than the AI', caption: 'Each dot is one person. Blue dots trusted the doctor more.' },
+  },
+  {
+    head: 'The gap is smallest for advice about prevention',
+    body: [
+      `Asked about a strep throat diagnosis, people trusted the doctor at ${tt.diagnose_strep_throat.meanA.toFixed(1)} and the AI at ${tt.diagnose_strep_throat.meanB.toFixed(1)}. Asked about advice to stretch, the scores were ${tt.prevent_injury_stretching.meanA.toFixed(1)} and ${tt.prevent_injury_stretching.meanB.toFixed(1)}.`,
+      'People gave AI its best showing on everyday advice like stretching, vitamins and meditation. They gave it its worst when the decision was about finding out what is wrong, or about prescribing.',
+    ],
+    visual: { type: 'pairs', aName: 'Doctor', bName: 'AI', rows: [
+      { label: 'Diagnose strep throat', a: tt.diagnose_strep_throat.meanA, b: tt.diagnose_strep_throat.meanB, max: 10 },
+      { label: 'Prescribe antibiotics', a: tt.prescribe_antibiotics.meanA, b: tt.prescribe_antibiotics.meanB, max: 10 },
+      { label: 'Recommend vitamin C and zinc', a: tt.prevent_acute_vitamins.meanA, b: tt.prevent_acute_vitamins.meanB, max: 10 },
+      { label: 'Recommend stretching', a: tt.prevent_injury_stretching.meanA, b: tt.prevent_injury_stretching.meanB, max: 10 },
+    ], caption: 'Average trust, 0 to 10.' },
+  },
+  {
+    head: 'People rated the doctor higher on everything, not only skill',
+    body: [
+      'The doctor beat the AI on quantitative reasoning and intuition, and also on being warm and being competent. The biggest gaps were in warmth and in understanding how a person feels.',
+      'The AI scored lowest on warmth, about 1 out of 4, against about 3 for the doctor. People did not just see a less skilled tool. They saw a colder one.',
+    ],
+    visual: { type: 'pairs', aName: 'Doctor', bName: 'AI', rows: [
+      { label: 'Warmth (0 to 4)', a: qt.warmth.meanA, b: qt.warmth.meanB, max: 4 },
+      { label: 'Competence (0 to 4)', a: qt.competence.meanA, b: qt.competence.meanB, max: 4 },
+      { label: 'Intuition (0 to 10)', a: qt.intuition.meanA, b: qt.intuition.meanB, max: 10 },
+      { label: 'Quantitative reasoning (0 to 10)', a: qt.quantitative_reasoning.meanA, b: qt.quantitative_reasoning.meanB, max: 10 },
+    ], caption: 'Average ratings. Each bar is scaled to its own maximum.' },
+  },
+  {
+    head: 'How people see the two explains about half the gap',
+    body: [
+      `Doctors were trusted ${full.mediation[1].total.toFixed(1)} points more on average. When I accounted for how capable people thought each one was at using numbers and judgment, ${(full.mediation[1].total - full.mediation[1].direct).toFixed(1)} of those points were accounted for. Competence mattered most of the four qualities I measured.`,
+      'The rest remains unexplained. Some quality of doctors that I did not measure is also at work.',
+    ],
+    visual: { type: 'stat', value: `${full.mediation[1].total.toFixed(1)} to ${full.mediation[1].direct.toFixed(1)}`, label: 'points of trust gap, before and after accounting for how capable people thought each one was', caption: 'Intuition and quantitative reasoning together.' },
+  },
+  {
+    head: 'It did not matter how number-driven the decision was',
+    body: [
+      'I expected people to be more open to an AI for decisions they see as needing data and statistics. They were not. The doctor kept the edge whether a decision seemed to call for numbers or for judgment.',
+      'So the explanation lies in how people see the advice-giver, not in what kind of decision it is.',
+    ],
+  },
+];
+// ---- sample
+const sampleRows = full.sample.variables.flatMap((v) =>
+  v.rows.map((r) => ({ label: `${v.variable}: ${r.group}`, n: r.n, pct: `${r.pct.toFixed(1)}%` })),
+);
+const missingNote = full.sample.variables.filter((v) => v.missing).map((v) => `${v.variable.toLowerCase()} (${v.missing})`).join(', ');
+
+// ---- need for quantitative reasoning
+const descCols = [
+  { key: 'label', label: 'Decision' },
+  { key: 'n', label: 'n', num: true, hint: 'People with an answer' },
+  { key: 'mean', label: 'Mean', num: true },
+  { key: 'sd', label: 'SD', num: true, hint: 'Standard deviation' },
+  { key: 'median', label: 'Median', num: true },
+  { key: 'min', label: 'Min', num: true },
+  { key: 'max', label: 'Max', num: true },
+  { key: 'skew', label: 'Skew', num: true },
+  { key: 'kurtosis', label: 'Kurtosis', num: true, hint: 'Excess kurtosis; 0 is a normal curve' },
+  { key: 'se', label: 'SE', num: true, hint: 'Standard error of the mean' },
+];
+const descRow = (r: any, label = r.label) => ({
+  label, n: r.n, mean: f2(r.mean), sd: f2(r.sd), median: f2(r.median), min: f2(r.min), max: f2(r.max),
+  skew: minus(f2(r.skew)), kurtosis: minus(f2(r.kurtosis)), se: f2(r.se),
+});
+const decisionRows = [...full.decisionDescriptives].sort((a, b) => b.mean - a.mean).map((r) => descRow(r));
+const compositeRows = full.compositeDescriptives.map((r) => descRow(r, `${r.label} (${r.items} decisions)`));
+const relRows = full.reliability.map((r) => ({ label: r.label, k: r.items.length, alpha: noZero(r.alpha.toFixed(2)), rbar: noZero(r.meanR.toFixed(2)) }));
+
+const byMean = (a: any, b: any) => b.mean - a.mean;
+const kindOf = () => 'plain' as const;
+const decisionCloud = [...pts.decisions].sort(byMean).map((r) => ({ ...r, kind: kindOf() }));
+const comp = Object.fromEntries(pts.composites.map((r: any) => [r.id, r]));
+const domainCloud = pts.domainOrder.map((k: string) => comp[k]).sort(byMean).map((r: any) => ({ ...r, kind: kindOf() }));
+const stageCloud = pts.stageOrder.map((k: string) => comp[k]).sort(byMean).map((r: any) => ({ ...r, kind: kindOf() }));
+
+// ---- trust: doctor vs AI
+const cell = (m: number, lo: number, hi: number, n: number) => ({ mean: m, lo, hi, n });
+// Intervals for each recommender's own mean: mean plus or minus 1.96 standard errors.
+const seInterval = (d: any) => {
+  const h = 1.96 * d.se;
+  return cell(d.mean, d.mean - h, d.mean + h, d.n);
+};
+const trustDots: any[] = [];
+for (const t of full.trustDescriptives) {
+  trustDots.push({ head: t.label });
+  trustDots.push({ label: 'Doctor', kind: 'human', cells: [seInterval(t.doctor)] });
+  trustDots.push({ label: 'AI', kind: 'ai', cells: [seInterval(t.ai)] });
+}
+const gapDots = full.tests.map((t) => ({
+  label: t.label, kind: 'plain', cells: [cell(t.diff, t.lo, t.hi, t.n), cell(t.d, t.dLo, t.dHi, t.n)],
+}));
+
+const testCols = [
+  { key: 'text', label: 'Comparison', wrap: true, minw: '12rem' },
+  { key: 'means', label: 'Doctor, AI: mean (SD)', num: true, wrap: true, minw: '9.5rem' },
+  { key: 'diff', label: 'Difference [95% CI]', num: true },
+  { key: 't', label: 't (df)', num: true },
+  { key: 'p', label: 'p', num: true },
+  { key: 'd', label: 'd [95% CI]', num: true, hint: 'Cohen’s d for paired data: the mean difference over the SD of the differences' },
+  { key: 'dir', label: 'Doctor higher / same / lower', num: true, hint: 'How many people trusted the doctor more, the same, or less than the AI' },
+];
+const testRow = (t: any) => ({
+  text: t.label,
+  means: `${f2(t.meanA)} (${f2(t.sdA)}), ${f2(t.meanB)} (${f2(t.sdB)})`,
+  diff: minus(`${f2(t.diff)} [${f2(t.lo)}, ${f2(t.hi)}]`),
+  t: minus(`${f2(t.t)} (${t.df})`),
+  p: pv(t.p),
+  d: minus(`${f2(t.d)} [${f2(t.dLo)}, ${f2(t.dHi)}]`),
+  dir: `${t.higher} / ${t.same} / ${t.lower}`,
+});
+const decisionTestRows = full.tests.map(testRow);
+const compTestRows = [full.overallTest, ...full.compositeTests].map(testRow);
+const qualityRows = full.qualityTests.map((t) => testRow({ ...t, label: `${t.label} (${t.scale})` }));
+
+// person-level split: how many people sit where
+const ov = full.overallTest;
+
+// ---- clouds
+const trustCloud = pts.trustOverall;
+const qualityClouds = pts.qualityClouds.map((q: any) => ({
+  ...q,
+  grid: Array.from({ length: 51 }, (_, i) => (i * q.top) / 50),
+}));
+
+// ---- H2 / gap by need
+const gn = full.gapByNeed;
+
+// ---- H3 correlations
+const corrRows = full.correlationsByTarget.flatMap((c: any) =>
+  c.vars.flatMap((a: string, i: number) =>
+    c.vars.slice(i + 1).map((b: string, j: number) => ({
+      who: c.who, pair: `${a} and ${b}`, r: r3(c.r[i][i + 1 + j]), p: pv(c.p[i][i + 1 + j]), n: c.n[i][i + 1 + j],
+    })),
+  ),
+);
+const wb = full.withinBetween;
+const wbRows: any[] = [];
+for (let i = 0; i < wb.vars.length; i++)
+  for (let j = i + 1; j < wb.vars.length; j++)
+    wbRows.push({
+      pair: `${wb.vars[i]} and ${wb.vars[j]}`,
+      between: `${r3(wb.between[i][j])} (${pv(wb.pBetween[i][j])})`,
+      within: `${r3(wb.within[i][j])} (${pv(wb.pWithin[i][j])})`,
+    });
+
+// ---- mixed models
+const models = full.mixedModels;
+const termName: Record<string, string> = {
+  Intercept: 'Intercept', IsDoc: 'Doctor (versus AI)', Int_Quant: 'Quantitative reasoning the decision needs',
+  'IsDoc:Int_Quant': 'Doctor × need for quantitative reasoning', Intuition: 'Intuition', Quant: 'Quantitative reasoning',
+  Warmth: 'Warmth', Competence: 'Competence', Mind: 'Mind perception', AgeGroup: 'Age group (1 to 4)', IsMale: 'Man (versus woman)',
+  'AgeGroup:IsDoc': 'Age group × doctor', 'Intuition:Int_Quant': 'Intuition × need', 'Quant:Int_Quant': 'Quantitative reasoning × need',
+};
+const modelCols = [
+  { key: 'term', label: 'Predictor', wrap: true, minw: '14rem' },
+  { key: 'b', label: 'b [95% CI]', num: true },
+  { key: 'beta', label: 'Standardized β', num: true, hint: 'b times the SD of the predictor over the SD of trust. Not given for interactions.' },
+  { key: 'z', label: 'z', num: true },
+  { key: 'p', label: 'p', num: true },
+  { key: 'vif', label: 'VIF', num: true, hint: 'Variance inflation factor. Values above 5 mean the predictor overlaps heavily with others; doctor and its interaction overlap by construction.' },
+];
+const modelRows = (m: any) =>
+  m.terms.map((t: any) => ({
+    term: termName[t.term] ?? t.term,
+    b: minus(`${f3(t.b)} [${f3(t.lo)}, ${f3(t.hi)}]`),
+    beta: t.beta == null ? '' : minus(f2(t.beta)),
+    z: minus(f2(t.z)),
+    p: pv(t.p),
+    vif: t.vif == null ? '' : f2(t.vif),
+  }));
+function f3(n: number) { return n.toFixed(3); }
+const modelFit = (m: any) =>
+  `${m.n.toLocaleString('en-US')} ratings from ${m.people} people. Person variance ${f2(m.varPerson)}${m.varSlope != null ? `, slope variance ${m.varSlope}` : ''}, residual ${f2(m.varResidual)}. Share of variance between people (ICC) ${noZero(f2(m.icc))}. R² ${noZero(f2(m.r2m))} from the predictors alone, ${noZero(f2(m.r2c))} with the person effects.${m.aic != null ? ` AIC ${m.aic}.` : ''}`;
+
+const F = (label: string, href: string) => ({ label, href, kind: 'figure' as const });
+const Tb = (label: string, href: string) => ({ label, href, kind: 'table' as const });
+const contents = [
+  { title: 'Who took part', href: FULL + '#sample', items: [Tb('1. The people in the released file', '#table-sample')] },
+  { title: 'Twelve medical decisions', href: FULL + '#decisions', items: [
+    Tb('2. Quantitative reasoning needed, by decision', '#table-decisions'), F('1. Every decision, every person', '#fig-decisions'),
+    Tb('3. The same, by group of decisions', '#table-composites'), F('2. By kind of health problem', '#fig-domain'), F('3. By stage of care', '#fig-stage'),
+    Tb('4. Do the decisions in each group hang together?', '#table-reliability')] },
+  { title: 'Doctor versus AI', href: FULL + '#trust', items: [
+    F('4. Each person\'s average trust', '#fig-trust-overall'), Tb('5. Trust in a doctor versus an AI, by decision', '#table-tests'),
+    F('5. Trust, decision by decision', '#fig-trust-dots'), F('6. The gap and its size', '#fig-gap-dots'), Tb('6. The same test for the decision groups', '#table-comp-tests')] },
+  { title: 'How the doctor and the AI were seen', href: FULL + '#views', items: [Tb('7. The doctor and the AI on each quality', '#table-qualities'), F('7 to 10. Each quality, every person', '#table-qualities')] },
+  { title: 'Does the gap depend on the decision?', href: FULL + '#need', items: [Tb('8. Trust predicted by doctor and by need', '#table-h2'), F('11. The gap and the need for quantitative reasoning', '#fig-gap-need')] },
+  { title: 'What goes with trust', href: FULL + '#qualities', items: [Tb('9. Correlations among the four qualities', '#table-corr'), Tb('10. Between-person and within-person correlations', '#table-wb'), Tb('11 to 14. Mixed models of trust', '#models')] },
+  { title: 'What explains the gap?', href: FULL + '#mediation', items: [Tb('15. Indirect effects through each quality', '#table-mediation'), F('12 to 13. Mediation diagrams', '#fig-med-0')] },
+  { title: 'Does the gap differ between people?', href: FULL + '#who', items: [F('14. The gap, by group of people', '#fig-who'), Tb('16. Does the gap differ between groups?', '#table-who'), Tb('17. Age band by doctor', '#table-age')] },
+  { title: 'More', href: FULL + '#implications', items: [{ label: 'What this means', href: FULL + '#implications', kind: 'page' as const }, { label: 'Dig deeper: figure map and Bayes factors', href: FULL + '#dig-deeper', kind: 'page' as const }, { label: 'Files and methods', href: FULL + '#files', kind: 'page' as const }] },
+];
+// ---- companion figures
+const coefRows = (m: any) => m.terms.filter((t: any) => t.beta != null && t.term !== 'Intercept').map((t: any) => {
+  const k = t.b ? t.beta / t.b : 0;
+  const lo = Math.min(t.lo * k, t.hi * k), hi = Math.max(t.lo * k, t.hi * k);
+  return { label: termName[t.term] ?? t.term, v: t.beta, lo, hi, tip: `β = ${t.beta.toFixed(2)} (95% CI ${lo.toFixed(2)} to ${hi.toFixed(2)})` };
+});
+const coefDomain = (m: any): [number, number] => {
+  const r = coefRows(m); const a = Math.min(0, ...r.map((x: any) => x.lo)), b = Math.max(0.2, ...r.map((x: any) => x.hi));
+  return [Math.floor(a * 10) / 10, Math.ceil(b * 10) / 10];
+};
+const betaRefs = [{ v: 0.1, label: 'small' }, { v: 0.2, label: 'medium' }, { v: 0.3, label: 'large' }];
+const dRefs = [{ v: 0.2, label: 'small' }, { v: 0.41, label: 'medium' }, { v: 0.63, label: 'large' }];
+const sampleFig = full.sample.variables.flatMap((v: any) => [{ head: v.variable }, ...v.rows.map((r: any) => ({ label: `${r.group} (n = ${r.n})`, v: r.pct, tip: `${r.n} of ${full.sample.n} people (${r.pct}%)` }))]);
+const reliabilityFig = full.reliability.map((r: any) => ({ label: `${r.label} (${r.items.length} items)`, v: r.alpha, tip: `alpha = ${r.alpha.toFixed(2)}` }));
+const compD = full.compositeTests.map((t: any) => ({ label: t.label, v: t.d, lo: t.dLo, hi: t.dHi, tip: `d = ${t.d.toFixed(2)} (95% CI ${t.dLo.toFixed(2)} to ${t.dHi.toFixed(2)})` }));
+// ---- mediation
+const med = full.mediation;
+const medFig = med.flatMap((m: any) => [{ head: m.label }, ...m.mediators.map((r: any) => ({ label: r.name, v: r.indirect, lo: r.lo, hi: r.hi }))]);
+const medRows = med.flatMap((m: any) =>
+  m.mediators.map((r: any) => ({
+    model: m.label, mediator: r.name, a: minus(f2(r.a)), b: minus(f2(r.b)),
+    ind: minus(`${f2(r.indirect)} [${f2(r.lo)}, ${f2(r.hi)}]`), z: minus(f2(r.z)), p: pv(r.p),
+  })),
+);
+
+// ---- who differs
+const gapItems: any[] = [];
+for (const s of full.subgroups) {
+  gapItems.push({ head: s.variable });
+  for (const g of s.groups) gapItems.push({ label: g.label, sub: `n = ${g.n}`, kind: 'plain', cells: g.cells });
+}
+const subTestRows = full.subgroups.map((s: any) => ({
+  label: s.variable,
+  groups: s.groups.map((g: any) => g.label).join('; '),
+  ...Object.fromEntries(
+    ['trust', 'qr', 'int'].map((k, i) => {
+      const t = s.tests[i];
+      return [k, t ? `${t.stat === 'F' ? `F(${t.df[0]}, ${t.df[1]})` : `t(${t.df})`} = ${minus(f2(t.value))}, p ${pv(t.p).replace(/^</, '<').replace(/^(\d|\.)/, '= $1')}` : ''];
+    }),
+  ),
+}));
+const ageModel = models[6];
+const ageInt = ageModel.terms.find((t: any) => t.term === 'AgeGroup:IsDoc');
+
+const toc = [
+  ['sample', 'Who took part'],
+  ['decisions', 'Twelve medical decisions'],
+  ['trust', 'Doctor versus AI'],
+  ['views', 'How the doctor and the AI were seen'],
+  ['need', 'Does the gap depend on the decision?'],
+  ['qualities', 'What goes with trust'],
+  ['mediation', 'What explains the gap'],
+  ['who', 'Does the gap differ between people?'],
+  ['implications', 'What this means'],
+  ['dig-deeper', 'Dig deeper'],
+  ['files', 'Files and methods'],
+];
+
+const bayesRows = bayes.rows
+  .filter((r) => r.study === 'Study 2')
+  .map((r) => ({ ...r, text: r.id === 'H2-interaction' ? 'H2: Does the gap depend on the need for quantitative reasoning?' : r.id === 'H5-warmth' ? 'H5: Does warmth explain the gap? (indirect effect)' : r.text }));
+const kindIds = ['gap-Physical health-Mental health','gap-Bodily injury-Acute sickness','gap-Bodily injury-Chronic sickness','gap-Acute sickness-Chronic sickness'];
+const bf = (id: string) => bayes.rows.find((r) => r.id === id)!;
+const figureMap2 = [
+  { diss: 'Table 4', what: 'The twelve medical decisions and how they were grouped', here: 'Tables 2 and 3', href: FULL + '#table-decisions' },
+  { diss: 'Figure 9', what: 'Quantitative reasoning needed, decision by decision', here: 'Figure 1', href: FULL + '#fig-decisions' },
+  { diss: 'Figure 10', what: 'Trust in the doctor and the AI, decision by decision', here: 'Figures 5 and 6', href: FULL + '#fig-trust-dots', note: 'Figure 4 shows each person' },
+  { diss: 'Table 5 and Hypothesis 1', what: 'Paired t tests of trust, decision by decision', here: 'Table 5', href: FULL + '#table-tests', note: 'The dissertation text and its Table 5 differ slightly in a few means; this page reports the data' },
+  { diss: 'Tables 6 and 7', what: 'The same test for the stage and domain composites', here: 'Table 6', href: FULL + '#table-comp-tests' },
+  { diss: 'Table 8 and Hypothesis 2', what: 'Mixed model with the doctor-by-need interaction', here: 'Table 8, Figure 11', href: FULL + '#table-h2', note: 'Full model, with warmth and competence, is in the mixed models below' },
+  { diss: 'Tables 9 and 10', what: 'Correlations among quantitative reasoning, intuition, warmth, competence, for each recommender', here: 'Table 9', href: FULL + '#table-corr' },
+  { diss: 'Tables 11 and 12', what: 'Within-person and between-person correlations', here: 'Table 10', href: FULL + '#table-wb' },
+  { diss: 'Figure 11', what: 'Mediation through warmth and competence', here: 'Figure 12', href: FULL + '#fig-med-0' },
+  { diss: 'Figure 12 and Additional Mediation Models', what: 'Mediation through intuition and quantitative reasoning', here: 'Figure 13 and Table 15', href: FULL + '#fig-med-1' },
+];
+---
+
+<Base
+  title="Trust in medical AI: Study 2, dig deeper"
+  description="Where each dissertation figure and table lives, and Bayes factors for every comparison."
+>
+  <div class="wrap">
+    <header class="page-head">
+      <p class="back small"><a href={href('/projects/trust-in-medical-ai/study-2/')}>Study 2</a> · <a href={href('/projects/trust-in-medical-ai/')}>Trust in medical AI</a></p>
+      <h1>Study 2: dig deeper</h1>
+    </header>
+    <DeepNav study="2" current="dig" />
+    <!-- ============================ dig deeper ============================ -->
+    <section class="section" id="dig-deeper" aria-labelledby="dig-title">
+      <div class="deep">
+        <h2 id="dig-title">Dig deeper</h2>
+        <p>Two more things for readers who want them: where each figure and table of the dissertation sits on this page, and a Bayesian check on every comparison that found no difference.</p>
+      </div>
+      <h3 class="fig-title">Where each dissertation figure and table lives</h3>
+      <FigureMap rows={figureMap2} />
+
+      <h3 class="fig-title" id="bayes">When the test found no difference</h3>
+      <BayesGuide />
+      <BayesPlot rows={bayesRows} />
+      <div class="prose">
+        <p>
+          <strong>The gap does not depend on how much quantitative reasoning a decision needs.</strong> The doctor-by-need interaction (hypothesis 2) was not significant. The data are {times(bf('H2-interaction').bf01)} if the gap is the same
+          whether a decision leans on numbers or on judgment than if it changes by a medium-sized amount. That is moderate evidence for no change, a firmer reading than the p value alone gives.
+        </p>
+        <p>
+          <strong>The gap is the same size across kinds of health problem.</strong> Physical against mental health, and bodily injury, acute sickness and chronic sickness against each other,
+          each come out roughly {Math.round(Math.min(...kindIds.map((i) => bf(i).bf01)))} to {Math.round(Math.max(...kindIds.map((i) => bf(i).bf01)))} times more likely under no difference, moderate evidence.
+          Stage of care is different: the gap for preventative decisions is clearly smaller than for diagnostic or prescriptive ones, with the data millions of times more likely under a difference. Diagnostic and prescriptive gaps match ({times(bf('gap-Diagnostic-Prescriptive').bf01)} under no difference).
+        </p>
+        <p>
+          <strong>Gender made no difference to trust; age is unclear.</strong> The data are {times(bf('gender').bf01)} under no gender difference, moderate evidence. Age by itself is similar ({times(bf('age').bf01)} under no difference),
+          but whether the gap grows with age is inconclusive: the data are only {times(bf('age-by-doctor').bf10)} under a difference, despite p = .013, so I would not lean on that finding.
+        </p>
+        <p>
+          <strong>Warmth did not explain the gap, but the evidence is thin.</strong> The warmth pathway was not significant in the model that also included competence. The data are {times(bf('H5-warmth').bf01)} under no indirect effect, which is anecdotal.
+          This one assumes the indirect effect is roughly bell-shaped, which indirect effects often are not, so treat it as a guide.
+        </p>
+      </div>
+    </section>
+
+  </div>
+</Base>
+
+<style>
+  .cloud { margin-top: 1.5rem; }
+  .deep { margin-top: 4rem; padding-top: 2rem; border-top: 5px solid; border-image: var(--five) 1; }
+  .deep h2 { margin-bottom: 0.5rem; }
+  .deep p { max-width: 62ch; color: var(--muted); }
+  .mini { margin: 0 0 -0.4rem; font-size: 0.98rem; }
+  .toc { margin-top: 2rem; }
+  .toc ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; font-family: var(--display); font-size: 0.95rem; }
+  .toc a { text-decoration-color: var(--rule); }
+  .how { margin-top: 1.5rem; font-family: var(--display); }
+  .intro { max-width: 64ch; color: var(--muted); }
+  .fig-title { margin-top: 3rem; font-size: 1.15rem; }
+  .note { margin-top: 0.75rem; max-width: 70ch; font-family: var(--display); }
+  .filelist { padding-left: 1.2rem; font-family: var(--display); }
+  .filelist li { margin-bottom: 0.3rem; }
+  section :global(h2) { margin-bottom: 0.75rem; }
+</style>

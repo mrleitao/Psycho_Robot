@@ -41,6 +41,7 @@ const favicon =
   <body>
     <a class="skip" href="#main">Skip to content</a>
     <header class="site-header">
+      <div class="stripe" aria-hidden="true"></div>
       <div class="wrap bar">
         <a class="mark" href={href('/')}>Matthew Leitao</a>
         <nav aria-label="Main">
@@ -73,6 +74,7 @@ const favicon =
 </html>
 
 <style>
+  .stripe { height: 6px; background: var(--five); }
   .bar {
     display: flex;
     flex-wrap: wrap;

@@ -1,4 +1,5 @@
 ---
+import DeepNav from '../../../components/DeepNav.astro';
 import Base from '../../../layouts/Base.astro';
 import StatTable from '../../../components/StatTable.astro';
 import Raincloud from '../../../components/Raincloud.astro';
@@ -37,6 +38,9 @@ const pv = (p: number) => (p < 0.001 ? '< .001' : noZero(p.toFixed(3)));
 const r3 = (n: number) => noZero(n.toFixed(3)).replace('-.', '−.');
 const minus = (s: string) => s.replace(/^-/, '−');
 
+const r2s = full.regressions.map((r: any) => r.r2);
+const r2lo = noZero(Math.min(...r2s).toFixed(2));
+const r2hi = noZero(Math.max(...r2s).toFixed(2));
 const kindOf = (l: string) => (/^AI/.test(l) ? 'ai' : l === 'Doctor using AI' ? 'hybrid' : 'human') as 'ai' | 'hybrid' | 'human';
 const oc = outcomes1.outcomes;
 const compById = Object.fromEntries(full.compositeDescriptives.map((c: any) => [c.id, c]));
@@ -47,7 +51,7 @@ const findings = [
       `${full.sample.n} adults rated how much they would trust eleven recommenders for medical decisions, from a doctor to an AI fitness coach. The doctor came first, then the nurse. Every AI landed below the human experts, close to where people put a layperson.`,
       'A doctor who uses AI landed in the middle, which suggests that AI in a doctor\'s hands is trusted more than AI on its own.',
     ],
-    visual: { type: 'ranks', max: 10, rows: ranked.rows.map((r: any) => ({ label: r.label, value: r.mean, kind: kindOf(r.label) })), caption: 'Average trust, 0 to 10. Blue: human. Gold: AI. Grey: doctor using AI.' },
+    visual: { type: 'ranks', max: 10, rows: ranked.rows.map((r: any) => ({ label: r.label, value: r.mean, kind: kindOf(r.label) })), caption: 'Average trust, 0 to 10. Blue: human. Coral: AI. Grey: doctor using AI.' },
   },
   {
     head: 'The doctor beat the AI on trust, and on both kinds of thinking',
@@ -65,7 +69,7 @@ const findings = [
     head: 'Most people trusted humans over AI, but not everyone',
     body: [
       `I averaged each person's trust in the six human recommenders and in the four AI ones. ${hva.tests[0].human_vs_ai.higher} of ${hva.tests[0].human_vs_ai.n} people trusted the humans more. ${hva.tests[0].human_vs_ai.lower} trusted the AI more, and ${hva.tests[0].human_vs_ai.same} rated them the same.`,
-      'So the gap is a strong tendency, not a rule. About one in four people leaned the other way.',
+      `So the gap is a strong tendency, not a rule. About ${Math.round((100 * hva.tests[0].human_vs_ai.lower) / hva.tests[0].human_vs_ai.n)} percent of people trusted the AI more.`,
     ],
     visual: { type: 'people', total: hva.tests[0].human_vs_ai.n, count: hva.tests[0].human_vs_ai.higher, label: 'trusted humans more than AI', caption: 'Each dot is one person. Blue dots trusted humans more.' },
   },
@@ -397,446 +401,25 @@ const figureMap1 = [
 ---
 
 <Base
-  title="Trust in medical AI: Study 1 in full"
+  title="Trust in medical AI: Study 1"
   description="Every table and figure from the Study 1 analysis of my dissertation, rebuilt from the public data with hover details."
 >
   <div class="wrap">
     <header class="page-head">
       <p class="back small"><a href={href('/projects/trust-in-medical-ai/')}>Trust in medical AI</a></p>
-      <h1>Study 1 in full</h1>
+      <h1>Study 1</h1>
       <p class="lede">
         {full.sample.n} adults rated how much quantitative reasoning fifteen medical decisions need, then rated eleven
         medical recommenders, from a doctor to an AI fitness coach, on trust, quantitative reasoning and intuition. This
-        page rebuilds every table and figure of that analysis from the released data. Hover over any mark for the details.
+        page gives the main findings and what they mean. Every table and figure is on the next page, rebuilt from the released data.
       </p>
     </header>
-
     <ChapterIntro current="1" />
+    <DeepNav study="1" current="overview" />
 
     <section class="section" id="main-findings" aria-labelledby="mf-title">
       <h2 id="mf-title">Main findings</h2>
       <MainFindings findings={findings} />
-    </section>
-
-    <div class="deep">
-      <h2 id="deep-dive">Deep dive: every table and figure</h2>
-      <p>
-        The rest of this page rebuilds each analysis from the public data. Hover over any mark for the details, and open the guide below if a term is unfamiliar.
-      </p>
-      <Glossary />
-    </div>
-
-    <div class="tabs" role="tablist" aria-label="Views of Study 1">
-      <button role="tab" id="tab-full" aria-controls="panel-full" aria-selected="true" data-tab="full">All of Study 1</button>
-      <button role="tab" id="tab-ai" aria-controls="panel-ai" aria-selected="false" tabindex="-1" data-tab="ai">Humans versus AI</button>
-    </div>
-
-    <div role="tabpanel" id="panel-full" aria-labelledby="tab-full" class="panel">
-    <Contents groups={contents} />
-
-    <div class="prose">
-      <p class="how small muted">
-        How to read this page. The seven preregistered tests (H1 to H7) and one exploratory test (E) match the dissertation.
-        Everything else was run in my exploratory analysis notebook and is recomputed here from the public file. The
-        public file groups demographics into broad categories, so the sample table is coarser than the one in the
-        dissertation.
-      </p>
-    </div>
-
-    <!-- ============================ sample ============================ -->
-    <section class="section" id="sample" aria-labelledby="sample-title">
-      <h2 id="sample-title">Who took part</h2>
-      <p class="intro">
-        The study was preregistered with a target of 186 people recruited through CloudResearch's Prime Panels. After
-        removing preview responses and anyone who did not consent, {full.sample.n} remain.
-      </p>
-      <StatTable
-        id="table-sample"
-        look="The share in each group. Ages are spread fairly evenly across the four bands, and women are the larger group."
-        title="Table 1. The people in the released file"
-        columns={[
-          { key: 'label', label: 'Group' },
-          { key: 'n', label: 'People', num: true },
-          { key: 'pct', label: 'Share', num: true },
-        ]}
-        rows={sampleRows}
-        note={`Shares are of all ${full.sample.n} people. Left blank in the file: ${missingNote}. Gender had only woman and man responses, so smaller groups do not appear. Race is White or Black only when that is the only group chosen; every other answer, including choosing more than one, is combined because no other group reached 30 people.`}
-      />
-      <h3 class="fig-title mini">Table 1 as a figure</h3>
-      <p class="leadin">Each bar is the share of the people in that group. Longer means more of the sample. Hover a bar for the head count.</p>
-      <DotRows rows={sampleFig} domain={[0, 100]} tickStep={20} axisLabel="Share of people (%)" bars unit="%" digits={0} ariaLabel="Share of participants in each age, gender, race and education group" />
-    </section>
-
-    <!-- ============================ decisions ============================ -->
-    <section class="section" id="decisions" aria-labelledby="decisions-title">
-      <h2 id="decisions-title">Fifteen medical decisions</h2>
-      <p class="intro">
-        For each decision, people slid from 0 (a professional needs only intuition and personal experience) to 100 (needs
-        only quantitative reasoning). Every decision fell above the middle except general wellbeing advice, which sat just
-        below it.
-      </p>
-      <StatTable
-        id="table-decisions"
-        look="Every decision sits above the middle of the 0 to 100 scale except general wellbeing advice, which sits just below it."
-        title="Table 2. Quantitative reasoning needed, by decision (0 to 100)"
-        columns={descCols}
-        rows={decisionRows}
-        note="Sorted from most to least quantitative reasoning needed. Skew and kurtosis are the estimates psych::describe reports."
-      />
-
-      <h3 class="fig-title" id="fig-decisions">Figure 1. Every decision, every person</h3>
-      <p class="leadin">Each row is one of the fifteen decisions. Every dot is one person's answer on a 0 to 100 slider, from needs only intuition (0) to needs only quantitative reasoning (100). The curve shows where answers pile up.</p>
-      <Raincloud
-        rows={decisionCloud}
-        grid={grid100}
-        domain={[0, 100]}
-        tickStep={20}
-        xLabel="Needs intuition (0) versus needs quantitative reasoning (100)"
-        ariaLabel="Distribution of ratings for each of fifteen medical decisions, ordered by average"
-      />
-
-      <StatTable
-        id="table-composites"
-        look="The same ratings averaged into the groups used later. Compare the means across rows; preventative decisions need the least quantitative reasoning."
-        title="Table 3. The decision groups used in the tests (0 to 100)"
-        columns={descCols}
-        rows={compositeRows}
-        note="Each group is the average of its decisions. A person missing any one decision in a group is missing for that group, so n runs from 185 to 186."
-      />
-
-      <div>
-        <div>
-          <h3 class="fig-title" id="fig-domain">Figure 2. By kind of health problem</h3>
-          <p class="leadin">The same slider ratings, grouped by kind of health problem. Each dot is one person; the curve shows where answers cluster.</p>
-          <Raincloud
-            rows={domainCloud}
-            grid={grid100}
-            domain={[0, 100]}
-            tickStep={20}
-            xLabel="Intuition (0) versus quantitative reasoning (100)"
-            ariaLabel="Distribution of ratings by kind of health problem"
-          />
-        </div>
-        <div>
-          <h3 class="fig-title" id="fig-stage">Figure 3. By stage of care</h3>
-          <p class="leadin">The same slider ratings, grouped by stage of care: preventing, diagnosing or prescribing.</p>
-          <Raincloud
-            rows={stageCloud}
-            grid={grid100}
-            domain={[0, 100]}
-            tickStep={20}
-            xLabel="Intuition (0) versus quantitative reasoning (100)"
-            ariaLabel="Distribution of ratings by stage of care: diagnostic, prescriptive and preventative"
-          />
-        </div>
-      </div>
-    </section>
-
-    <!-- ============================ structure ============================ -->
-    <section class="section" id="structure" aria-labelledby="structure-title">
-      <h2 id="structure-title">Do the decision ratings hang together?</h2>
-      <p class="intro">
-        Before averaging decisions into groups, I checked how closely the items in each group move together. Alpha runs
-        from 0 to 1; higher means people answered the items in a group alike. The bodily injury group is the weakest
-        (alpha {noZero(full.reliability[5].alpha.toFixed(2))}), so results that rest on it deserve more caution.
-      </p>
-      <StatTable
-        id="table-reliability"
-        look="Alpha near or above .80 means the items in a group can safely be averaged. The bodily injury group is the weakest, so lean on it less."
-        title="Table 4. Reliability of each group of decisions"
-        columns={[
-          { key: 'label', label: 'Group' },
-          { key: 'k', label: 'Items', num: true },
-          { key: 'alpha', label: 'Cronbach’s alpha', num: true, hint: 'Raw alpha, from pairwise covariances' },
-          { key: 'rbar', label: 'Average item correlation', num: true },
-        ]}
-        rows={relRows}
-      />
-      <h3 class="fig-title mini">Table 4 as a figure</h3>
-      <p class="leadin">Each dot is the alpha for one group of decisions: how alike people answered the items inside it. The dashed lines mark .70, .80 and .90; above .70 is usually taken as acceptable and above .80 as good.</p>
-      <DotRows rows={reliabilityFig} domain={[0.5, 1]} tickStep={0.1} bars axisLabel="Cronbach's alpha" refs={[{ v: 0.7, label: '.70' }, { v: 0.8, label: '.80' }, { v: 0.9, label: '.90' }]} ariaLabel="Reliability of each group of decisions" />
-      <details class="more">
-        <summary>Item correlations behind each alpha</summary>
-        {
-          full.reliability.map((r) => (
-            <StatTable
-              title={`${r.label}`}
-              columns={[{ key: 'item', label: 'Item' }, ...r.items.map((_, i) => ({ key: `c${i}`, label: String(i + 1), num: true }))]}
-              rows={r.items.map((name, i) => ({
-                item: `${i + 1}. ${name}`,
-                ...Object.fromEntries(r.items.map((_, j) => [`c${j}`, i === j ? '' : r3(r.r[i][j])])),
-              }))}
-            />
-          ))
-        }
-      </details>
-
-      <h3 class="fig-title">Figure 4. How many factors?</h3>
-      <p class="intro">
-        A scree plot lists the strength of each possible factor in the twelve decisions that make up the groups
-        ({efa.n} people answered all twelve). Three factors stand above 1, the usual cut-off, and a fourth falls short.
-      </p>
-      <ScreePlot eigenvalues={efa.eigenvalues} />
-
-      <h3 class="fig-title">Table 5. A three-factor solution</h3>
-      <p class="intro">
-        Three factors, allowed to correlate, sort the twelve decisions by what they ask of a clinician. The names are my
-        reading of the pattern, not part of the analysis. Pain medication for a knee injury is the one decision that
-        splits across factors.
-      </p>
-      <LoadingsTable
-        items={efa.items}
-        loadings={efa.loadings}
-        communalities={efa.communalities}
-        factorNames={factorNames}
-        variance={efa.variance}
-        phi={efa.factorCorrelations}
-      />
-      <p class="small muted note">{efa.note}</p>
-
-      <h3 class="fig-title">Figure 4b. The factor diagram</h3>
-      <p class="intro">
-        The same solution as a diagram, as the notebook’s factor diagram drew it. Each decision points to the factor it loads on
-        most (solid line); dashed lines are smaller loadings of .30 or more. The curves give the correlations between factors.
-      </p>
-      <FactorDiagram items={efa.items} loadings={efa.loadings} factorNames={factorNames} phi={efa.factorCorrelations} />
-    </section>
-
-    <!-- ============================ tests ============================ -->
-    <section class="section" id="tests" aria-labelledby="tests-title">
-      <h2 id="tests-title">The tests</h2>
-      <p class="intro">
-        The preregistered plan was a series of paired t tests, since each person answered every item. H1 to H5 compare
-        kinds of decision; H6 and H7 compare a doctor with an AI. The AI here is the general medical AI. Test E asks the
-        same of quantitative reasoning and was not preregistered.
-      </p>
-      <StatTable
-        id="table-tests"
-        look="The difference column and p. H1 shows no gap, H2 and H3 show a clear gap, and H6, H7 and E show the doctor rated well above the AI."
-        title="Table 6. Paired t tests"
-        columns={testCols}
-        rows={testRows}
-        note="H1 to H5 compare how much quantitative reasoning decisions need (0 to 100); H6, H7 and E compare ratings of a doctor and an AI (0 to 10). A positive difference means the first item was rated higher. Tests are two-sided at alpha = .05, the criterion in the preregistration."
-      />
-
-      <h3 class="fig-title" id="fig-direction">Figure 5. Person as effect size</h3>
-      <p class="intro">
-        An average can hide how many people actually differ. For each comparison, this counts people who rated the first
-        item higher, the same, or lower. Even for the largest gap, trust in a doctor over an AI, {Math.round((100 * full.tests[6].dir.lower) / full.tests[6].n)}% of people trusted the AI more
-        and {Math.round((100 * full.tests[6].dir.same) / full.tests[6].n)}% rated the two the same. The notebook counted this for trust (doctor versus AI, and layperson versus AI); I ran the same count for every test.
-      </p>
-      <DirectionBars rows={dirRows} />
-
-      <StatTable
-        id="table-extra"
-        look="Which comparisons show a clear gap and which do not: look at whether the interval for the difference stays away from zero."
-        title="Table 7. Follow-up comparisons from the notebook"
-        columns={testCols}
-        rows={extraRows}
-        note="Exploratory comparisons the notebook ran after the preregistered tests: a layperson against the AI, the AI's quantitative reasoning against its intuition, and a doctor against a doctor using AI."
-      />
-    </section>
-
-    <!-- ============================ makers ============================ -->
-    <section class="section" id="makers" aria-labelledby="makers-title">
-      <h2 id="makers-title">Eleven recommenders</h2>
-      <p class="intro">
-        Each person rated all eleven recommenders on three things, each from 0 to 10: how much they trust it to make health
-        recommendations, how capable it is of quantitative reasoning, and how capable it is of intuition. A doctor using AI is
-        treated as AI in the models later on, as in the notebook.
-      </p>
-      <StatTable
-        id="table-makers"
-        look="Read down the trust column. Doctors and nurses sit near the top, the AI recommenders sit below the human experts, and a doctor using AI sits in between."
-        title="Table 8. Ratings of each recommender, mean (SD)"
-        columns={[
-          { key: 'label', label: 'Recommender' },
-          { key: 'trust', label: 'Trust', num: true },
-          { key: 'qr', label: 'Quantitative reasoning', num: true },
-          { key: 'intuition', label: 'Intuition', num: true },
-          { key: 'n', label: 'n (trust)', num: true },
-        ]}
-        rows={mkRows}
-        note="Sorted from most to least trusted."
-      />
-      <details class="more">
-        <summary>Full descriptives for each rating</summary>
-        <StatTable title="Trust (0 to 10)" columns={descCols} rows={mkFull('trust')} />
-        <StatTable title="Quantitative reasoning (0 to 10)" columns={descCols} rows={mkFull('capability')} />
-        <StatTable title="Intuition (0 to 10)" columns={descCols} rows={mkFull('intuition')} />
-      </details>
-
-      <h3 class="fig-title" id="fig-trust">Figure 6. Trust in each recommender, every person</h3>
-      <p class="leadin">Each row is a recommender. Every dot is one person's trust rating on a 0 to 10 scale, and the curve shows where ratings cluster. Higher means more trust.</p>
-      <Raincloud
-        rows={trustCloud}
-        grid={grid10}
-        domain={[0, 10]}
-        tickStep={2}
-        xJitter={0.12}
-        xLabel="Trust, from 0 (not at all) to 10 (completely)"
-        ariaLabel="Distribution of trust ratings for each of eleven medical recommenders"
-      />
-
-      <h3 class="fig-title" id="fig-map">Figure 7. Where each recommender sits</h3>
-      <p class="intro">
-        Doctors sit highest on both kinds of capability. Every AI is seen as less capable of intuition than of
-        quantitative reasoning, and sits below the doctor on both. A doctor using AI lands between the doctor and the AIs.
-      </p>
-      <MakerMap items={full.makerMap} />
-    </section>
-
-    <!-- ============================ trust ============================ -->
-    <section class="section" id="trust" aria-labelledby="trust-title">
-      <h2 id="trust-title">What goes with trust</h2>
-      <p class="intro">
-        Trust tracks both kinds of perceived capability. These analyses are exploratory, and they show what moves together, not
-        what causes what. First, one recommender at a time.
-      </p>
-      <StatTable
-        id="table-regression"
-        look="The β column. Both intuition and quantitative reasoning go with trust for all three recommenders; for the doctor quantitative reasoning is stronger, and for the AI intuition is."
-        title="Table 9. Trust predicted by intuition and quantitative reasoning, for three recommenders"
-        columns={[
-          { key: 'label', label: 'Recommender and predictor' },
-          { key: 'b', label: 'b', num: true, hint: 'Change in trust for one more point on the rating' },
-          { key: 'se', label: 'SE', num: true },
-          { key: 't', label: 't', num: true },
-          { key: 'p', label: 'p', num: true },
-          { key: 'beta', label: 'β', num: true, hint: 'Standardized: the change in trust, in SDs, for a one SD change in the rating' },
-        ]}
-        rows={regRows}
-      />
-      <h3 class="fig-title mini">Table 9 as a figure</h3>
-      <p class="leadin">Each dot is how strongly a rating goes with trust, in standardized units (β), with a 95% interval. Dashed lines mark a small, medium and large effect on the Funder and Ozer scale. Intervals that stay right of zero mean the rating reliably goes with trust.</p>
-      <DotRows rows={regFig} domain={[0, 0.8]} tickStep={0.1} zero axisLabel="Standardized effect on trust (β)" refs={betaRefs} ariaLabel="Standardized effects of intuition and quantitative reasoning on trust, for three recommenders" />
-      <StatTable
-        id="table-fit"
-        look="R² is the share of the variation in trust the two ratings explain. About half, so the ratings matter but are not the whole story."
-        title="Table 10. How well each model fits"
-        columns={[
-          { key: 'label', label: 'Recommender' },
-          { key: 'n', label: 'n', num: true },
-          { key: 'r2', label: 'R²', num: true },
-          { key: 'adj', label: 'Adjusted R²', num: true },
-          { key: 'F', label: 'F (df)', num: true },
-          { key: 'p', label: 'p', num: true },
-        ]}
-        rows={fit}
-      />
-      <h3 class="fig-title mini">Table 10 as a figure</h3>
-      <p class="leadin">Each bar is the share of the variation in trust that the two ratings explain (R²). A bar at 50% means the ratings account for half of why people trusted one recommender more than another.</p>
-      <DotRows rows={fitFig.map((r: any) => ({ ...r, v: r.v * 100 }))} domain={[0, 100]} tickStep={20} bars unit="%" digits={0} axisLabel="Variation in trust explained (R², %)" ariaLabel="Variation in trust explained by the model, for three recommenders" />
-      <StatTable
-        id="table-correlations"
-        look="Every correlation is positive: people who rate a recommender high on one thing tend to rate it high on the others."
-        title="Table 11. Correlations among the three ratings"
-        columns={[
-          { key: 'label', label: 'Recommender and pair' },
-          { key: 'r', label: 'r', num: true },
-          { key: 'p', label: 'p', num: true },
-          { key: 'n', label: 'n', num: true },
-        ]}
-        rows={corRows}
-      />
-      <h3 class="fig-title mini">Table 11 as a figure</h3>
-      <p class="leadin">Each square is the correlation between two ratings for one recommender. Darker blue means the two move together more strongly.</p>
-      <div class="grids">
-        {full.correlationsByMaker.map((c: any) => (<CorrGrid title={c.maker} vars={c.vars} r={c.r} ariaLabel={`Correlations among trust and the two ratings for ${c.maker}`} />))}
-      </div>
-
-      <h3 class="fig-title">Mixed models across all eleven recommenders</h3>
-      <p class="intro">
-        Each person rated eleven recommenders, so their ratings are not independent. These models give every person their own
-        baseline level of trust. The AI recommenders are the four AI tools plus a doctor using AI, as in the notebook.
-      </p>
-      <StatTable
-        id="table-models"
-        look="Marginal R² jumps from .05 to about .52 once the two ratings enter. A lower AIC means a better balance of fit and simplicity."
-        title="Table 12. The models side by side"
-        columns={[
-          { key: 'label', label: 'Model' },
-          { key: 'r2m', label: 'Marginal R²', num: true, hint: 'Variation explained by the predictors alone' },
-          { key: 'r2c', label: 'Conditional R²', num: true, hint: 'Variation explained by the predictors and each person’s own baseline' },
-          { key: 'icc', label: 'Person share', num: true, hint: 'Share of leftover variation that is stable differences between people' },
-          { key: 'aic', label: 'AIC', num: true, hint: 'Lower is a better balance of fit and simplicity. Only compare models fitted to the same data.' },
-        ]}
-        rows={modelRows}
-        note={full.mixedNote}
-      />
-      <p class="leadin">Table 12 as a figure. Each bar is the share of the variation in trust a model explains: first by its predictors alone, then with each person's own baseline added. Longer is a better fit.</p>
-      <DotRows rows={modelFig.map((r: any) => (r.v == null ? r : { ...r, v: r.v * 100 }))} domain={[0, 100]} tickStep={20} bars unit="%" digits={0} axisLabel="Variation in trust explained (%)" ariaLabel="Variation in trust explained by each mixed model" />
-      <details class="more" id="model-details">
-        <summary>Coefficients for each model</summary>
-        {
-          full.mixedModels.map((m, i) => (
-            <StatTable
-              title={`Model ${i + 1}. ${m.label}`}
-              columns={[
-                { key: 'term', label: 'Predictor' },
-                { key: 'b', label: 'b', num: true },
-                { key: 'se', label: 'SE', num: true },
-                { key: 'ci', label: '95% CI', num: true },
-                { key: 'z', label: 'z', num: true },
-                { key: 'p', label: 'p', num: true },
-                { key: 'beta', label: 'β', num: true },
-              ]}
-              rows={m.terms.map((t) => ({
-                term: termLabel[t.term] ?? t.term,
-                b: minus(f2(t.b)),
-                se: f2(t.se),
-                ci: minus(`${f2(t.lo)} to ${f2(t.hi)}`),
-                z: minus(f2(t.z)),
-                p: pv(t.p),
-                beta: t.beta == null ? '' : minus(noZero(f2(t.beta))),
-              }))}
-              note={`${m.n.toLocaleString('en-US')} ratings from ${m.people} people. Person share ${noZero(m.icc.toFixed(2))}.`}
-            />
-          ))
-        }
-      </details>
-      <StatTable
-        id="table-lrt"
-        look="Every p is below .001, so each added term improved the model."
-        title="Table 13. Does adding a term improve the fit?"
-        columns={[
-          { key: 'label', label: 'Comparison' },
-          { key: 'chi', label: 'χ²', num: true },
-          { key: 'df', label: 'df', num: true },
-          { key: 'p', label: 'p', num: true },
-        ]}
-        rows={lrtRows}
-        note="Likelihood ratio tests, refit by maximum likelihood."
-      />
-      <p class="leadin">Table 13 as a figure. Each bar is how much a model improves when a term is added (χ²). Longer means a bigger improvement; with one degree of freedom, anything over 3.8 is past the usual cutoff.</p>
-      <DotRows rows={lrtFig} domain={[0, lrtMax]} tickStep={10} bars axisLabel="Improvement in fit (χ²)" refs={[{ v: 3.84, label: 'p = .05' }]} digits={1} ariaLabel="Improvement in model fit when each term is added" />
-
-      <h3 class="fig-title" id="fig-slopes">Figure 8. What lifts trust differs for AI and for humans</h3>
-      <p class="intro">
-        For human recommenders, perceived quantitative reasoning is the stronger partner of trust (b = {f2(huModel.terms[1].b)} against {f2(huModel.terms[2].b)} for
-        intuition). For AI, it is intuition (b = {f2(aiModel.terms[2].b)} against {f2(aiModel.terms[1].b)}). The interaction model agrees: the two slopes differ by
-        recommender type (Model 4: both interaction terms, p {pv(Math.max(full.mixedModels[3].terms[3].p, full.mixedModels[3].terms[5].p))}).
-      </p>
-      <SlopesPlot lines={slopes} />
-      <p class="small muted note">{full.slopes.note}</p>
-
-      <StatTable
-        id="table-wb"
-        look="Compare the two columns. Between-people values reflect who the person is; within-people values reflect which recommender is being rated."
-        title="Table 14. Correlations between people and within people"
-        columns={[
-          { key: 'label', label: 'Recommenders and pair' },
-          { key: 'between', label: 'Between people, r (p)', num: true, hint: 'Do people who rate recommenders high on one thing rate them high on the other, averaged over all recommenders?' },
-          { key: 'within', label: 'Within people, r (p)', num: true, hint: 'For one person, do recommenders rated higher on one thing also get rated higher on the other?' },
-        ]}
-        rows={wbRows}
-        note={full.withinBetweenNote}
-      />
-      <p class="leadin">Table 14 as a figure, for all recommenders together. The left grid is between people: do people who rate recommenders high on one thing rate them high on the other? The right grid is within people: for one person, do recommenders rated higher on one thing also get rated higher on the other?</p>
-      <div class="grids">
-        <CorrGrid title="Between people" vars={full.withinBetween[0].vars} r={full.withinBetween[0].between} ariaLabel="Between-person correlations among trust and the two ratings" />
-        <CorrGrid title="Within people" vars={full.withinBetween[0].vars} r={full.withinBetween[0].within} ariaLabel="Within-person correlations among trust and the two ratings" />
-      </div>
     </section>
 
     <!-- ============================ implications ============================ -->
@@ -850,45 +433,13 @@ const figureMap1 = [
         </p>
         <p>
           <strong>People credit doctors with more of both kinds of reasoning.</strong> The doctor was rated higher than the AI on intuition and on quantitative reasoning,
-          so in these two respects the AI starts at a deficit. Ratings of both abilities went with trust, and the model explained more than half of the variance in trust. It did
+          so in these two respects the AI starts at a deficit. Ratings of both abilities went with trust, and the two ratings explained about half of the variance in trust (R² from {r2lo} to {r2hi}, depending on the recommender). It did
           not explain all of it, so these abilities look like part of how people evaluate a recommender, not the whole of it.
         </p>
         <p>
           <strong>Medical decisions are not one thing.</strong> Preventative decisions and mental health decisions were seen as needing relatively more intuition, and less quantitative reasoning, than the other
           decisions. That variation suggests the character of a decision may also shape how much a recommender is trusted, which Study 2
           put to the test.
-        </p>
-      </div>
-    </section>
-
-    <!-- ============================ dig deeper ============================ -->
-    <section class="section" id="dig-deeper" aria-labelledby="dig-title">
-      <div class="deep">
-        <h2 id="dig-title">Dig deeper</h2>
-        <p>Two more things for readers who want them: where each figure and table of the dissertation sits on this page, and a Bayesian check on every comparison, with extra attention to the ones that found no difference.</p>
-      </div>
-      <h3 class="fig-title">Where each dissertation figure and table lives</h3>
-      <FigureMap rows={figureMap1} />
-
-      <h3 class="fig-title" id="bayes">When the test found no difference</h3>
-      <BayesGuide />
-      <BayesPlot rows={bayesRows} />
-      <div class="prose">
-        <p>
-          <strong>Diagnostic and prescriptive decisions are rated alike.</strong> Hypothesis 1 found no difference (p = .68). The data are {times(bf('H1').bf01)} if the two stages need the same amount of quantitative reasoning than if they differ by a medium-sized amount.
-          That is moderate evidence for no difference, a firmer conclusion than "not significant." It holds if you expect a small or a large difference instead.
-        </p>
-        <p>
-          <strong>Bodily injury versus acute sickness is unsettled.</strong> Hypothesis 5 missed the usual cutoff (p = .061). The data are only {times(bf('H5').bf01)} under no difference than under a medium difference, which is the same as saying they lean neither way.
-          A larger sample is the only way to settle it.
-        </p>
-        <p>
-          <strong>One result is weaker than its p value suggests.</strong> Physical health versus mental health reached p = .010, yet the data are only {times(bf('H4').bf10)} under a medium difference than under none, which is anecdotal.
-          I would call that difference suggestive. The comparisons behind hypotheses 2, 3, 6 and 7 are another matter: the data are many thousands to many billions of times more likely under a difference.
-        </p>
-        <p>
-          <strong>A layperson and an AI are trusted about equally.</strong> People trusted a layperson (M = 4.3) about as much as a medical AI (M = 4.7). The data are {times(bf('X1').bf01)} under no difference, which is anecdotal, so I would not claim the two are the same, only that no gap showed up.
-          The AI is trusted well below a doctor.
         </p>
       </div>
     </section>
@@ -903,8 +454,8 @@ const figureMap1 = [
           <li><a href={href('/code/study1-analysis.R')}>study1-analysis.R</a>, the main tests in R, from the public file</li>
           <li><a href={href('/code/study1-original-analysis.Rmd')}>study1-original-analysis.Rmd</a>, my original notebook, run on the raw export</li>
           <li><a href={href('/docs/study1-preregistration.pdf')}>Preregistration (PDF)</a>, written before data collection</li>
-          <li><a href={`${repo}/blob/main/analysis/study1-full-results.py`}>study1-full-results.py</a>, the code behind the tables and figures in “All of Study 1”</li>
-          <li><a href={`${repo}/blob/main/analysis/study1-human-vs-ai.py`}>study1-human-vs-ai.py</a>, the code behind the “Humans versus AI” tab</li>
+          <li><a href={`${repo}/blob/main/analysis/study1-full-results.py`}>study1-full-results.py</a>, the code behind the tables and figures on the full analysis page</li>
+          <li><a href={`${repo}/blob/main/analysis/study1-human-vs-ai.py`}>study1-human-vs-ai.py</a>, the code behind the “Humans versus AI” page</li>
         </ul>
         <p>
           Everything above was computed in Python from the released file. Where the notebook used an R package, I used the
@@ -918,228 +469,8 @@ const figureMap1 = [
         </p>
       </div>
     </section>
-    </div>
-
-    <div role="tabpanel" id="panel-ai" aria-labelledby="tab-ai" class="panel" hidden>
-      <div class="prose">
-        <p class="how small muted">
-          This tab sets the two kinds of recommender side by side. <strong>Humans</strong> are the doctor, nurse, remote doctor,
-          therapist, personal trainer and layperson (six). <strong>AI</strong> is AI in general, an AI diagnostic tool, an AI chatbot and an
-          AI fitness coach (four). A doctor using AI is a person plus a tool, so it is shown on its own. Each person’s score for a
-          group is the average of their ratings of its recommenders. The doctor-versus-AI comparison in the dissertation (H6, H7, E)
-          is one pair; this is the exploratory version across all of them. It was not preregistered.
-        </p>
-      </div>
-
-      <Contents groups={contentsAi} />
-
-      <section class="section" id="hva-gap" aria-labelledby="hva-gap-title">
-        <h2 id="hva-gap-title">The gap</h2>
-        <p class="intro">
-          People rated humans higher than AI on all three things. On average, trust was {f1(hv[0].diff)} points higher for humans
-          (d = {f2(hv[0].d)}), intuition {f1(hv[2].diff)} points higher (d = {f2(hv[2].d)}), and perceived quantitative reasoning
-          {f1(hv[1].diff)} points higher (d = {f2(hv[1].d)}), the smallest of the three.
-        </p>
-        <StatTable
-          id="table-hva"
-        look="The difference and d columns. Humans were rated higher than AI on trust, intuition and quantitative reasoning."
-          title="Table 15. Humans versus AI, paired by person"
-          columns={hvCols}
-          rows={hvRows}
-          note={`Paired t tests on each person’s average rating. Only people who rated every recommender in both groups are included (${Math.min(...hva.tests.map((t: any) => t.human_vs_ai.n))} to ${Math.max(...hva.tests.map((t: any) => t.human_vs_ai.n))} of ${full.sample.n}). d is the mean difference over the SD of the differences.`}
-        />
-
-        <h3 class="fig-title" id="fig-hva-clouds">Figure 9. Every person, humans against AI</h3>
-        <p class="intro">
-          Each outline is how people’s averages are spread, each dot is one person, and the diamond is the group average with its
-          bootstrapped 95% interval. The doctor using AI sits between the two groups on all three.
-        </p>
-        {
-          hvCloud.map((c: any) => (
-            <div class="cloud">
-              <h4 class="mini">{c.measure}</h4>
-              <Raincloud rows={c.rows} grid={hva.densityGrid10} domain={[0, 10]} tickStep={1} xJitter={0.2} xLabel={`${c.measure}, average rating (0 to 10)`} ariaLabel={`${c.measure}: each person's average for human recommenders, a doctor using AI, and AI recommenders`} />
-            </div>
-          ))
-        }
-
-        <h3 class="fig-title" id="fig-hva-dir">Figure 10. How many people show the gap?</h3>
-        <p class="intro">
-          The averages hide the people who go the other way. Counting each person’s own difference: {hvDir[0].higher} of
-          {' '}{hvDir[0].higher + hvDir[0].same + hvDir[0].lower} rated humans higher on trust, {hvDir[0].lower} rated AI higher, and
-          {' '}{hvDir[0].same} rated them equal.
-        </p>
-        <DirectionBars rows={hvDir} />
-
-        <details class="more">
-          <summary>If a doctor using AI is counted differently</summary>
-          <StatTable
-            id="table-hva-alt"
-        look="Humans stay above AI however the doctor using AI is counted. Humans against a doctor using AI differ little on trust and not at all on quantitative reasoning."
-            title="Table 16. Other ways to draw the line"
-            columns={hvAltCols}
-            rows={hvAltRows}
-            note="The same paired tests with the doctor using AI shown on its own, compared with each group, or counted as AI as the notebook does. The conclusion does not change."
-          />
-        </details>
-      </section>
-
-      <section class="section" id="hva-each" aria-labelledby="hva-each-title">
-        <h2 id="hva-each-title">Recommender by recommender</h2>
-        <p class="intro">
-          The groups are not uniform. The doctor is trusted most and the layperson about as little as the AI tools. The gap is
-          widest against the doctor and the nurse, and nearly closes against the layperson. The four AI tools are close to one
-          another.
-        </p>
-        <h3 class="fig-title" id="fig-hva-profile">Figure 11. Each recommender on all three ratings</h3>
-        <p class="leadin">Each row is a recommender, with one panel each for trust, intuition and quantitative reasoning. The dot is the average rating, with a bar for the 95% interval.</p>
-        <DotPanels
-          items={profileItems}
-          panels={profilePanels}
-          ariaLabel="Average trust, quantitative reasoning and intuition for each of the eleven recommenders, grouped as human, human with AI, and AI"
-          tableLabel="Recommender"
-          valueLabel="Average"
-        />
-        <p class="small muted note">Dots are averages and bars are 95% confidence intervals. Blue is human, marigold is AI, grey is a doctor using AI.</p>
-      </section>
-
-      <section class="section" id="hva-link" aria-labelledby="hva-link-title">
-        <h2 id="hva-link-title">Do people who trust humans also trust AI?</h2>
-        <p class="intro">
-          Yes, moderately: the more someone trusts human recommenders, the more they tend to trust AI (r = {r3(hva.trustLink.r)},
-          n = {hva.trustLink.n}). Most dots fall under the equal-trust line, which is the same gap seen person by person.
-        </p>
-        <h3 class="fig-title" id="fig-hva-link">Figure 12. Trust in humans and trust in AI, one dot per person</h3>
-        <p class="leadin">Each dot is one person. Left to right is how much they trusted human recommenders; bottom to top is how much they trusted AI. A line rising to the right means people who trust humans also tend to trust AI.</p>
-        <LinkScatter points={hva.trustLink.points} slope={hva.trustLink.slope} intercept={hva.trustLink.intercept} r={hva.trustLink.r} />
-        <StatTable
-          id="table-hva-link"
-        look="The correlation. A positive value means people who trust humans also tend to trust AI."
-          title="Table 17. How closely the two go together"
-          columns={[
-            { key: 'label', label: 'Rating' },
-            { key: 'n', label: 'n', num: true },
-            { key: 'r', label: 'r', num: true, hint: 'Pearson correlation between a person’s human average and AI average' },
-            { key: 'ci', label: '95% CI', num: true },
-            { key: 'p', label: 'p', num: true },
-          ]}
-          rows={linkRows}
-        />
-        <StatTable
-          id="table-hva-cons"
-        look="Alpha shows how consistently each person rated the recommenders inside a group. Higher means the group average is a fair summary."
-          title="Table 18. How consistent people are within each group"
-          columns={[
-            { key: 'label', label: 'Rating and group' },
-            { key: 'alpha', label: 'Alpha', num: true, hint: 'Cronbach’s alpha across the recommenders in the group' },
-            { key: 'rbar', label: 'Average r', num: true, hint: 'Average correlation between two recommenders in the group' },
-          ]}
-          rows={consRows}
-          note="Alpha rises with the number of items, so compare the average correlations instead: about .75 between two AI tools and about .43 between two human recommenders. People rate the AI tools much more alike than they rate the humans."
-        />
-      </section>
-
-      <section class="section" id="hva-who" aria-labelledby="hva-who-title">
-        <h2 id="hva-who-title">Who shows the gap?</h2>
-        <p class="intro">
-          The gap points the same way in every group of people shown for trust and intuition, but its size varies. In this sample
-          it is largest among people aged 60 and over, among White participants compared with Black participants, and among people
-          with little experience of AI. It does not differ much by education or political views.
-        </p>
-        <h3 class="fig-title" id="fig-hva-who">Figure 13. The gap, group by group</h3>
-        <p class="leadin">Each row is a group of people. The dot is the average human-minus-AI gap in that group, with a bar for the 95% interval; the right panel gives the gap in standard deviations (Cohen's d), which can be read against the Funder and Ozer small (0.20), medium (0.41) and large (0.63).</p>
-        <DotPanels
-          items={gapItems}
-          panels={gapPanels}
-          ariaLabel="Average gap between human and AI ratings for trust, quantitative reasoning and intuition, in each group of participants"
-          tableLabel="Group"
-          valueLabel="Average gap"
-        />
-        <p class="small muted note">{hva.subgroupNote}</p>
-        <StatTable
-          id="table-hva-who"
-        look="For trust, age, race and experience with AI show p values below .05; gender, education and political views do not. Treat single small p values as leads, since 18 tests were run."
-          title="Table 19. Does the gap differ between groups?"
-          columns={[
-            { key: 'label', label: 'Compared by' },
-            { key: 'groups', label: 'Groups', wrap: true, minw: '12rem' },
-            { key: 'trust', label: 'Trust', num: true, wrap: true, minw: '8.5rem' },
-            { key: 'qr', label: 'Quantitative reasoning', num: true, wrap: true, minw: '8.5rem' },
-            { key: 'int', label: 'Intuition', num: true, wrap: true, minw: '8.5rem' },
-          ]}
-          rows={subTestRows}
-          note="t tests for two groups and one-way F tests for more. Exploratory, and not adjusted for running 18 tests, so treat a single small p as a lead, not a finding. The groups overlap (for example, older people and people with less AI experience), so this does not say which characteristic matters."
-        />
-      </section>
-
-      <section class="section" id="hva-model" aria-labelledby="hva-model-title">
-        <h2 id="hva-model-title">What goes with trust, for humans and for AI</h2>
-        <p class="intro">
-          For humans, perceived quantitative reasoning is the stronger partner of trust. For AI, it is perceived intuition. Letting the
-          two slopes differ by recommender type improves the model (Table 13 in “All of Study 1”: χ² = {f2(full.modelComparisons[1].chi2)},
-          p {pv(full.modelComparisons[1].p)}).
-        </p>
-        <StatTable
-          id="table-hva-coef"
-        look="The coefficients for humans and for AI. Compare which rating carries more weight in each group."
-          title="Table 20. Trust predicted from the other two ratings, humans and AI"
-          columns={[
-            { key: 'label', label: 'Predictor' },
-            { key: 'hum', label: 'Humans, b [95% CI]', num: true },
-            { key: 'ai', label: 'AI, b [95% CI]', num: true },
-          ]}
-          rows={coefRows}
-          note="Mixed models with a random intercept for each person, fitted separately to the human and AI recommenders (the doctor using AI counts as AI, as in the notebook). b is the change in trust for one more point on the predictor, holding the other predictor fixed."
-        />
-        <h3 class="fig-title" id="fig-hva-slopes">Figure 14. Predicted trust, humans and AI</h3>
-        <p class="leadin">Each line shows predicted trust as a rating rises, for human recommenders and for AI. Steeper means that rating goes with trust more strongly.</p>
-        <SlopesPlot lines={slopes} />
-        <p class="small muted note">{full.slopes.note}</p>
-      </section>
-    </div>
   </div>
 </Base>
-
-<script>
-  // Two tabs. Both panels are in the page, so without scripting everything is simply shown.
-  const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
-  const panels = new Map(tabs.map((t) => [t.dataset.tab as string, document.getElementById(`panel-${t.dataset.tab}`) as HTMLElement]));
-  function select(name: string, focus = false) {
-    tabs.forEach((t) => {
-      const on = t.dataset.tab === name;
-      t.setAttribute('aria-selected', String(on));
-      t.tabIndex = on ? 0 : -1;
-      if (on && focus) t.focus();
-    });
-    panels.forEach((p, k) => (p.hidden = k !== name));
-  }
-  function fromHash() {
-    const id = decodeURIComponent(location.hash.slice(1));
-    if (!id) return;
-    if (id === 'humans-vs-ai') return select('ai');
-    const el = document.getElementById(id);
-    const name = el?.closest('[role="tabpanel"]')?.id.replace('panel-', '');
-    if (name) {
-      select(name);
-      el?.scrollIntoView();
-    }
-  }
-  tabs.forEach((t, i) => {
-    t.addEventListener('click', () => {
-      select(t.dataset.tab as string);
-      history.replaceState(null, '', t.dataset.tab === 'ai' ? '#humans-vs-ai' : location.pathname + location.search);
-    });
-    t.addEventListener('keydown', (e) => {
-      const j = e.key === 'ArrowRight' ? i + 1 : e.key === 'ArrowLeft' ? i - 1 : e.key === 'Home' ? 0 : e.key === 'End' ? tabs.length - 1 : -1;
-      if (j < 0) return;
-      e.preventDefault();
-      select(tabs[(j + tabs.length) % tabs.length].dataset.tab as string, true);
-    });
-  });
-  addEventListener('hashchange', fromHash);
-  select('full');
-  fromHash();
-</script>
 
 <style>
   .tabs { display: flex; gap: 0.25rem; margin-top: 2rem; border-bottom: 2px solid var(--rule); font-family: var(--display); }
@@ -1149,7 +480,7 @@ const figureMap1 = [
   .tabs button:focus-visible { outline: 3px solid var(--doctor); outline-offset: -3px; border-radius: 4px; }
   .panel[hidden] { display: none; }
   .cloud { margin-top: 1.5rem; }
-  .deep { margin-top: 4rem; padding-top: 2rem; border-top: 3px solid var(--ink); }
+  .deep { margin-top: 4rem; padding-top: 2rem; border-top: 5px solid; border-image: var(--five) 1; }
   .deep h2 { margin-bottom: 0.5rem; }
   .deep p { max-width: 62ch; color: var(--muted); }
   .mini { margin: 0 0 -0.4rem; font-size: 0.98rem; }

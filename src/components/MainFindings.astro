@@ -72,7 +72,10 @@ const n1 = (v: number) => v.toFixed(1);
   .item:first-child { border-top: 0; padding-top: 0; }
   .text h3 { font-size: 1.3rem; line-height: 1.25; margin: 0 0 0.6rem; }
   .text p { margin: 0 0 0.7rem; max-width: 52ch; }
-  .viz { font-family: var(--display); font-size: 0.9rem; background: var(--wash); border-radius: 8px; padding: 1rem 1.1rem; }
+  .viz { font-family: var(--display); font-size: 0.9rem; background: var(--wash); border-radius: 8px; padding: 1rem 1.1rem; border-top: 4px solid var(--coral); }
+  .item:nth-child(4n+2) .viz { border-top-color: var(--steel); }
+  .item:nth-child(4n+3) .viz { border-top-color: var(--peach); }
+  .item:nth-child(4n+4) .viz { border-top-color: var(--deep); }
   .legend { margin: 0 0 0.7rem; display: flex; align-items: center; gap: 0.4rem; color: var(--muted); }
   .sw { display: inline-block; width: 0.8rem; height: 0.8rem; border-radius: 2px; }
   .sw.b { margin-left: 0.8rem; }

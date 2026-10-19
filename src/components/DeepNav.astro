@@ -1,0 +1,35 @@
+---
+// Links between the pages of one study: the overview, the full tables and figures, and the extras.
+import { href } from '../utils/url';
+interface Page { key: string; label: string; blurb: string; path: string }
+interface Props { study: '1' | '2'; current: string }
+const { study, current } = Astro.props;
+const base = `/projects/trust-in-medical-ai/study-${study}/`;
+const pages: Page[] = [
+  { key: 'overview', label: 'Overview', blurb: 'Main findings and what they mean', path: base },
+  { key: 'full', label: 'Every table and figure', blurb: `The full analysis of Study ${study}, rebuilt from the data`, path: `${base}full/` },
+  ...(study === '1' ? [{ key: 'hva', label: 'Humans versus AI', blurb: 'All human recommenders against all AI ones', path: `${base}humans-vs-ai/` }] : []),
+  { key: 'dig', label: 'Dig deeper', blurb: 'Where each dissertation figure lives, and Bayes factors', path: `${base}dig-deeper/` },
+];
+---
+<nav class="deepnav" aria-label={`Pages for Study ${study}`}>
+  <ul>
+    {pages.map((p) => (
+      <li class={p.key === current ? 'on' : ''}>
+        <a href={href(p.path)} aria-current={p.key === current ? 'page' : undefined}>
+          <strong>{p.label}</strong>
+          <span>{p.blurb}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
+<style>
+  .deepnav { margin: 1.75rem 0 0.5rem; font-family: var(--display); }
+  ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 0.75rem; }
+  li a { display: grid; gap: 0.2rem; height: 100%; padding: 0.85rem 1rem; background: var(--wash); border-radius: 8px; border-top: 4px solid var(--peach); text-decoration: none; color: var(--ink); }
+  li a strong { font-size: 1rem; }
+  li a span { font-size: 0.88rem; color: var(--muted); line-height: 1.35; }
+  li a:hover { border-top-color: var(--coral); }
+  li.on a { border-top-color: var(--deep); background: color-mix(in srgb, var(--steel) 14%, var(--paper)); }
+</style>

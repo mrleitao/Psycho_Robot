@@ -64,7 +64,8 @@ const { title, id, columns, rows, note, look } = Astro.props;
   .table-wrap { overflow-x: auto; border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); }
   table { width: 100%; border-collapse: collapse; font-family: var(--display); font-size: 0.92rem; font-variant-numeric: tabular-nums; }
   th, td { padding: 0.45rem 0.7rem; text-align: left; white-space: nowrap; }
-  thead th { font-weight: 600; border-bottom: 1px solid var(--ink); color: var(--ink); vertical-align: bottom; }
+  thead th { font-weight: 600; border-bottom: 1px solid var(--ink); color: var(--ink); vertical-align: bottom; background: var(--thead); }
+  tbody tr:hover > * { background: color-mix(in srgb, var(--peach) 16%, var(--paper)); }
   tbody th { font-weight: 500; white-space: normal; min-width: 11rem; }
   tbody tr + tr > * { border-top: 1px solid var(--rule); }
   tbody tr:hover > * { background: var(--wash); }

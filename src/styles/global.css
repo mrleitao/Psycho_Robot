@@ -17,6 +17,9 @@
   --muted: #4f6b78;
   --rule: #e6d5c5;
   --wash: #f6e8da;
+  --glow: #f7e2d0;
+  --thead: #f4e4d3;
+  --five: linear-gradient(90deg, #f18c8e 0 20%, #f0b7a4 20% 40%, #f1d1b5 40% 60%, #568ea6 60% 80%, #305f72 80% 100%);
   --doctor: #3b92c2;
   --ai: #e5686d;
   --null: #3f7f9a;
@@ -32,6 +35,8 @@
     --muted: #a3b8c1;
     --rule: #264452;
     --wash: #173440;
+    --glow: #14303b;
+    --thead: #1d4150;
     --doctor: #4896c8;
     --ai: #e06a70;
     --null: #7db3cb;
@@ -45,6 +50,8 @@
   --muted: #a3b8c1;
   --rule: #264452;
   --wash: #173440;
+  --glow: #14303b;
+  --thead: #1d4150;
   --doctor: #4896c8;
   --ai: #e06a70;
   --null: #7db3cb;
@@ -67,7 +74,7 @@ html {
 
 body {
   margin: 0;
-  background: var(--paper);
+  background: linear-gradient(var(--glow), var(--paper) 620px) no-repeat var(--paper);
   color: var(--ink);
   font-family: var(--text);
   font-size: 1.125rem;
@@ -103,8 +110,8 @@ p {
 a {
   color: inherit;
   text-decoration: underline;
-  text-decoration-color: var(--doctor);
-  text-decoration-thickness: 1.5px;
+  text-decoration-color: var(--coral);
+  text-decoration-thickness: 2px;
   text-underline-offset: 0.2em;
 }
 
@@ -201,5 +208,5 @@ li[hidden] {
 }
 
 /* A short "what you are looking at" paragraph placed before a figure. */
-.leadin { max-width: 66ch; margin: 0.4rem 0 0.2rem; color: var(--muted); font-family: var(--display); font-size: 0.97rem; line-height: 1.5; }
+.leadin { max-width: 66ch; margin: 0.4rem 0 0.2rem; padding-left: 0.8rem; border-left: 3px solid var(--peach); color: var(--muted); font-family: var(--display); font-size: 0.97rem; line-height: 1.5; }
 .grids { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 0.5rem 1.5rem; }
