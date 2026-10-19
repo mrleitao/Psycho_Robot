@@ -199,3 +199,7 @@ li[hidden] {
   clip: rect(0 0 0 0);
   white-space: nowrap;
 }
+
+/* A short "what you are looking at" paragraph placed before a figure. */
+.leadin { max-width: 66ch; margin: 0.4rem 0 0.2rem; color: var(--muted); font-family: var(--display); font-size: 0.97rem; line-height: 1.5; }
+.grids { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 0.5rem 1.5rem; }

@@ -1,0 +1,62 @@
+---
+// One row per item: a dot (or bar) with an optional interval, on one shared axis, with optional reference lines.
+// Used as the companion figure for tables of coefficients, reliabilities, indirect effects and shares.
+interface Row { head?: string; label?: string; v?: number; lo?: number; hi?: number; tip?: string }
+interface Ref { v: number; label: string }
+interface Props { rows: Row[]; domain: [number, number]; tickStep: number; axisLabel: string; refs?: Ref[]; zero?: boolean; bars?: boolean; ariaLabel: string; unit?: string; digits?: number }
+const { rows, domain, tickStep, axisLabel, refs = [], zero = false, bars = false, ariaLabel, unit = '', digits = 2 } = Astro.props;
+const W = 780, labelW = 270, padR = 24, rowH = 28, headH = 28, top = 30;
+const pw = W - labelW - padR;
+const x = (v: number) => labelW + ((Math.max(domain[0], Math.min(domain[1], v)) - domain[0]) / (domain[1] - domain[0])) * pw;
+let y = top;
+const placed = rows.map((r) => { const h = r.head ? headH : rowH; const o = { r, y0: y, h }; y += h; return o; });
+const bottom = y + 2, H = bottom + 46;
+const ticks: number[] = [];
+for (let t = domain[0]; t <= domain[1] + 1e-9; t += tickStep) ticks.push(Math.round(t * 1000) / 1000);
+const fmt = (n: number) => (digits === 0 ? String(Math.round(n)) : n.toFixed(digits)).replace('-', '−');
+---
+<figure class="dr" data-fig>
+  <div class="scroll" tabindex="0" role="region" aria-label="Chart. Scrolls sideways on narrow screens.">
+    <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-label={ariaLabel}>
+      {refs.map((rf) => (<g><line class="ref" x1={x(rf.v)} x2={x(rf.v)} y1={top - 8} y2={bottom} /><text class="reflab" x={x(rf.v)} y="12" text-anchor="middle">{rf.label}</text></g>))}
+      {ticks.map((t) => (<g><line class="grid" x1={x(t)} x2={x(t)} y1={top - 8} y2={bottom} /><text class="tick" x={x(t)} y={bottom + 16} text-anchor="middle">{fmt(t)}{unit}</text></g>))}
+      {zero && domain[0] < 0 && <line class="zero" x1={x(0)} x2={x(0)} y1={top - 8} y2={bottom} />}
+      {placed.map(({ r, y0, h }) => {
+        if (r.head) return <text class="head" x="8" y={y0 + 18}>{r.head}</text>;
+        const cy = y0 + h / 2;
+        const tip = r.tip ?? `${fmt(r.v!)}${unit}${r.lo != null ? ` (95% CI ${fmt(r.lo)} to ${fmt(r.hi!)})` : ''}`;
+        return (
+          <g class="row" data-tip tabindex="0" role="group" aria-label={`${r.label}: ${tip}`} data-label={r.label} data-lines={tip}>
+            <rect class="hit" x="0" y={y0} width={W} height={h} />
+            <text class="name" x="8" y={cy + 4.5}>{r.label}</text>
+            {bars && <line class="bar" x1={x(domain[0])} x2={x(r.v!)} y1={cy} y2={cy} />}
+            {r.lo != null && <line class="ci" x1={x(r.lo)} x2={x(r.hi!)} y1={cy} y2={cy} />}
+            <circle class="dot" cx={x(r.v!)} cy={cy} r="5.5" />
+          </g>
+        );
+      })}
+      <text class="axlab" x={labelW + pw / 2} y={bottom + 36} text-anchor="middle">{axisLabel}</text>
+    </svg>
+  </div>
+  <div class="tip" hidden></div>
+</figure>
+<script>
+  import { attachTips } from '../utils/figtip';
+  document.querySelectorAll<HTMLElement>('[data-fig]').forEach(attachTips);
+</script>
+<style>
+  .dr { margin: 1rem 0 1.8rem; position: relative; max-width: 800px; }
+  .scroll { overflow-x: auto; }
+  svg { display: block; width: 100%; min-width: 640px; height: auto; overflow: visible; }
+  .grid { stroke: var(--rule); stroke-dasharray: 2 4; } .zero { stroke: var(--ink); stroke-width: 1.5; }
+  .ref { stroke: var(--coral); stroke-width: 1.5; stroke-dasharray: 5 4; } .reflab { font-family: var(--display); font-size: 11px; fill: var(--muted); }
+  .tick, .axlab { font-family: var(--display); font-size: 11.5px; fill: var(--muted); } .axlab { font-size: 12px; }
+  .head { font-family: var(--display); font-size: 12.5px; font-weight: 700; fill: var(--ink); }
+  .name { font-family: var(--display); font-size: 13px; fill: var(--ink); }
+  .hit { fill: transparent; } .row:hover .hit, .row:focus .hit { fill: var(--wash); }
+  .row:focus { outline: none; } .row:focus-visible .hit { stroke: var(--doctor); stroke-width: 2; }
+  .bar { stroke: var(--steel); stroke-width: 6; stroke-linecap: round; opacity: 0.45; }
+  .ci { stroke: var(--deep); stroke-width: 2; } .dot { fill: var(--doctor); stroke: var(--paper); stroke-width: 2; }
+  .tip { position: absolute; transform: translate(-50%, -100%); display: grid; gap: 0.1rem; padding: 0.55rem 0.8rem; background: var(--ink); color: var(--paper); border-radius: 6px; font-family: var(--display); font-size: 0.85rem; white-space: nowrap; pointer-events: none; z-index: 2; }
+  .tip[hidden] { display: none; }
+</style>

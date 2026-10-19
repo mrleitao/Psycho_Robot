@@ -11,6 +11,8 @@ import MediationDiagram from '../../../components/MediationDiagram.astro';
 import full from '../../../data/trust-in-medical-ai/study2-full.json';
 import pts from '../../../data/trust-in-medical-ai/study2-points.json';
 import { href } from '../../../utils/url';
+import DotRows from '../../../components/DotRows.astro';
+import CorrGrid from '../../../components/CorrGrid.astro';
 import BayesPlot from '../../../components/BayesPlot.astro';
 import { times } from '../../../utils/bayes';
 import BayesGuide from '../../../components/BayesGuide.astro';
@@ -212,8 +214,24 @@ function f3(n: number) { return n.toFixed(3); }
 const modelFit = (m: any) =>
   `${m.n.toLocaleString('en-US')} ratings from ${m.people} people. Person variance ${f2(m.varPerson)}${m.varSlope != null ? `, slope variance ${m.varSlope}` : ''}, residual ${f2(m.varResidual)}. Share of variance between people (ICC) ${noZero(f2(m.icc))}. R² ${noZero(f2(m.r2m))} from the predictors alone, ${noZero(f2(m.r2c))} with the person effects.${m.aic != null ? ` AIC ${m.aic}.` : ''}`;
 
+// ---- companion figures
+const coefRows = (m: any) => m.terms.filter((t: any) => t.beta != null && t.term !== 'Intercept').map((t: any) => {
+  const k = t.b ? t.beta / t.b : 0;
+  const lo = Math.min(t.lo * k, t.hi * k), hi = Math.max(t.lo * k, t.hi * k);
+  return { label: termName[t.term] ?? t.term, v: t.beta, lo, hi, tip: `β = ${t.beta.toFixed(2)} (95% CI ${lo.toFixed(2)} to ${hi.toFixed(2)})` };
+});
+const coefDomain = (m: any): [number, number] => {
+  const r = coefRows(m); const a = Math.min(0, ...r.map((x: any) => x.lo)), b = Math.max(0.2, ...r.map((x: any) => x.hi));
+  return [Math.floor(a * 10) / 10, Math.ceil(b * 10) / 10];
+};
+const betaRefs = [{ v: 0.1, label: 'small' }, { v: 0.2, label: 'medium' }, { v: 0.3, label: 'large' }];
+const dRefs = [{ v: 0.2, label: 'small' }, { v: 0.41, label: 'medium' }, { v: 0.63, label: 'large' }];
+const sampleFig = full.sample.variables.flatMap((v: any) => [{ head: v.variable }, ...v.rows.map((r: any) => ({ label: `${r.group} (n = ${r.n})`, v: r.pct, tip: `${r.n} of ${full.sample.n} people (${r.pct}%)` }))]);
+const reliabilityFig = full.reliability.map((r: any) => ({ label: `${r.label} (${r.items.length} items)`, v: r.alpha, tip: `alpha = ${r.alpha.toFixed(2)}` }));
+const compD = full.compositeTests.map((t: any) => ({ label: t.label, v: t.d, lo: t.dLo, hi: t.dHi, tip: `d = ${t.d.toFixed(2)} (95% CI ${t.dLo.toFixed(2)} to ${t.dHi.toFixed(2)})` }));
 // ---- mediation
 const med = full.mediation;
+const medFig = med.flatMap((m: any) => [{ head: m.label }, ...m.mediators.map((r: any) => ({ label: r.name, v: r.indirect, lo: r.lo, hi: r.hi }))]);
 const medRows = med.flatMap((m: any) =>
   m.mediators.map((r: any) => ({
     model: m.label, mediator: r.name, a: minus(f2(r.a)), b: minus(f2(r.b)),
@@ -281,7 +299,7 @@ const figureMap2 = [
     <header class="page-head">
       <p class="back small"><a href={href('/projects/trust-in-medical-ai/')}>Trust in medical AI</a></p>
       <h1>Study 2 in full</h1>
-      <p class="lede">
+      <p class="leadin">
         {full.sample.n} adults said how much they would trust a doctor, and how much they would trust a medical AI, to make each of
         twelve medical decisions, and then rated both on quantitative reasoning, intuition, warmth, competence and several
         mind-perception items. This page rebuilds the tables and figures of that analysis from the released data. Hover over any mark for the details.
@@ -332,6 +350,9 @@ const figureMap2 = [
         rows={sampleRows}
         note={`Shares are of all ${full.sample.n} people. Left blank in the file: ${missingNote}. Race is shown as White or another or multiple because no other group reached 30 people. Age is in bands; exact age is not released.`}
       />
+      <h3 class="fig-title mini">Table 1 as a figure</h3>
+      <p class="leadin">Each bar is the share of the 106 people in that group. Longer means more of the sample. Hover a bar for the head count.</p>
+      <DotRows rows={sampleFig} domain={[0, 100]} tickStep={20} axisLabel="Share of people (%)" bars unit="%" digits={0} ariaLabel="Share of participants in each age, gender, race and education group" />
     </section>
 
     <!-- ============================ decisions ============================ -->
@@ -349,6 +370,7 @@ const figureMap2 = [
         note="Sorted from most to least quantitative reasoning needed. Skew and kurtosis are the estimates psych::describe reports."
       />
       <h3 class="fig-title" id="fig-decisions">Figure 1. Every decision, every person</h3>
+      <p class="leadin">Each row is one decision. Every dot is one person's answer on a 0 to 100 slider, from needs only intuition (0) to needs only quantitative reasoning (100), and the curve shows where answers pile up.</p>
       <Raincloud rows={decisionCloud} grid={pts.densityGrid100} domain={[0, 100]} tickStep={20}
         xLabel="Needs intuition (0) versus needs quantitative reasoning (100)" ariaLabel="Distribution of ratings for each of twelve medical decisions, ordered by average" />
 
@@ -360,9 +382,11 @@ const figureMap2 = [
         note="Each group is the average of its decisions. A person missing any decision in a group is missing for that group. Physical health is every decision except the mental health ones."
       />
       <h3 class="fig-title" id="fig-domain">Figure 2. By kind of health problem</h3>
+      <p class="leadin">The same slider ratings, grouped by kind of health problem. Each dot is one person; the curve shows where answers cluster.</p>
       <Raincloud rows={domainCloud} grid={pts.densityGrid100} domain={[0, 100]} tickStep={20}
         xLabel="Intuition (0) versus quantitative reasoning (100)" ariaLabel="Distribution of ratings by kind of health problem" />
       <h3 class="fig-title" id="fig-stage">Figure 3. By stage of care</h3>
+      <p class="leadin">The same slider ratings, grouped by stage of care: preventing, diagnosing or prescribing.</p>
       <Raincloud rows={stageCloud} grid={pts.densityGrid100} domain={[0, 100]} tickStep={20}
         xLabel="Intuition (0) versus quantitative reasoning (100)" ariaLabel="Distribution of ratings by stage of care" />
 
@@ -376,6 +400,9 @@ const figureMap2 = [
         ]}
         rows={relRows}
       />
+      <h3 class="fig-title mini">Table 4 as a figure</h3>
+      <p class="leadin">Each dot is the alpha for one group of decisions: how alike people answered the decisions inside it. The dashed lines mark .70, .80 and .90; above .70 is usually taken as acceptable and above .80 as good.</p>
+      <DotRows rows={reliabilityFig} domain={[0.5, 1]} tickStep={0.1} bars axisLabel="Cronbach's alpha" refs={[{ v: 0.7, label: '.70' }, { v: 0.8, label: '.80' }, { v: 0.9, label: '.90' }]} ariaLabel="Reliability of each group of decisions" />
     </section>
 
     <!-- ============================ trust ============================ -->
@@ -387,12 +414,14 @@ const figureMap2 = [
         The preregistered tests (H1) ask this for each decision.
       </p>
       <h3 class="fig-title" id="fig-trust-overall">Figure 4. Each person's average trust, doctor and AI</h3>
+      <p class="leadin">Each dot is one person's average trust across the twelve decisions, once for the doctor and once for the AI, on a 0 to 10 scale. Higher means more trust.</p>
       <Raincloud rows={trustCloud} grid={pts.densityGrid10} domain={[0, 10]} tickStep={1} xJitter={0.1}
         xLabel="Average trust over twelve decisions (0 to 10)" ariaLabel="Distribution of each person's average trust in a doctor and in an AI" />
 
       <StatTable id="table-tests" title="Table 5. Trust in a doctor versus an AI, by decision (0 to 10)" columns={testCols} rows={decisionTestRows}
         note="Paired t tests, two-sided. The 95% interval for d inverts the noncentral t distribution. The gap is large for every decision and smallest for the three preventative ones." />
       <h3 class="fig-title" id="fig-trust-dots">Figure 5. Trust in a doctor and in an AI, decision by decision</h3>
+      <p class="leadin">Each row is a decision. The two dots show the average trust in the doctor and in the AI, with a bar for the 95% interval. The farther apart the dots, the bigger the gap.</p>
       <DotPanels
         items={trustDots}
         panels={[{ title: 'Trust', domain: [0, 10], tickStep: 1, axisLabel: 'Average trust (0 to 10)' }]}
@@ -401,6 +430,7 @@ const figureMap2 = [
         valueLabel="Average"
       />
       <h3 class="fig-title" id="fig-gap-dots">Figure 6. The gap and its size, decision by decision</h3>
+      <p class="leadin">Each dot is the gap for one decision: average trust in the doctor minus average trust in the AI. The right panel puts the gap in standard deviations (Cohen's d). The dashed lines mark a small, medium and large effect on the Funder and Ozer scale.</p>
       <DotPanels
         items={gapDots}
         panels={[
@@ -413,6 +443,9 @@ const figureMap2 = [
       />
       <StatTable id="table-comp-tests" title="Table 6. The same test for the decision groups" columns={testCols.map((c) => (c.key === 'text' ? { ...c, label: 'Group' } : c))} rows={compTestRows}
         note="Trust is the average of the decisions in the group." />
+      <h3 class="fig-title mini">Table 6 as a figure</h3>
+      <p class="leadin">Each dot is how much more people trusted a doctor than an AI, in standard deviations (Cohen's d), with a 95% interval. The dashed lines mark a small, medium and large effect on the Funder and Ozer scale. Every dot sits far to the right of all three.</p>
+      <DotRows rows={compD} domain={[0, 2]} tickStep={0.5} axisLabel="Cohen's d, doctor minus AI" refs={dRefs} ariaLabel="Effect size of the doctor-versus-AI trust gap for each group of decisions" />
     </section>
 
     <!-- ============================ views ============================ -->
@@ -427,6 +460,7 @@ const figureMap2 = [
       {qualityClouds.map((q: any, i: number) => (
         <div class="cloud">
           <h3 class="fig-title mini" id={`fig-quality-${q.key}`}>Figure {7 + i}. {q.label}</h3>
+          <p class="leadin">Each dot is one person's rating of this quality, for the doctor and for the AI. Where the two clouds sit apart, people saw the two recommenders differently.</p>
           <Raincloud rows={q.rows} grid={q.grid} domain={[0, q.top]} tickStep={q.top === 4 ? 1 : 1} xJitter={0.15}
             xLabel={`${q.label}, rating (0 to ${q.top})`} ariaLabel={`${q.label}: each person's rating of the doctor and of the AI`} />
         </div>
@@ -444,7 +478,11 @@ const figureMap2 = [
         Comparing the twelve decisions with each other (Figure 11) shows a different pattern, because the three preventative decisions are rated as needing less
         quantitative reasoning and also show the smallest gaps; that comparison is descriptive and does not test H2.</p>
       <StatTable id="table-h2" title="Table 8. Trust predicted from doctor versus AI, and from how much quantitative reasoning the decision needs" columns={modelCols} rows={modelRows(models[1])} note={`${models[1].label}. ${modelFit(models[1])} ${full.mixedNote}`} />
+      <h3 class="fig-title mini">Table 8 as a figure</h3>
+      <p class="leadin">Each dot is one predictor's standardized effect on trust (β) with a 95% interval; the dashed lines mark a small, medium and large effect. An interval that crosses zero means the data cannot rule out no effect. Interactions have no standardized β, so they appear only in the table.</p>
+      <DotRows rows={coefRows(models[1])} domain={coefDomain(models[1])} tickStep={0.1} zero axisLabel="Standardized effect on trust (β)" refs={betaRefs} ariaLabel="Standardized effects on trust in the doctor-by-need model" />
       <h3 class="fig-title" id="fig-gap-need">Figure 11. The gap and the need for quantitative reasoning, by decision</h3>
+      <p class="leadin">Each dot is one decision. Left to right is how much quantitative reasoning people said it needs; bottom to top is how much more they trusted the doctor than the AI. A flat cloud means the gap does not depend on the need.</p>
       <GapScatter
         points={gn.points} slope={gn.slope} intercept={gn.intercept} r={gn.r}
         xDomain={[50, 70]} yDomain={[2, 5.5]}
@@ -464,11 +502,19 @@ const figureMap2 = [
       <StatTable id="table-corr" title="Table 9. Correlations among the four qualities, for the doctor and for the AI" columns={[
         { key: 'who', label: 'Recommender' }, { key: 'pair', label: 'Pair', wrap: true, minw: '16rem' }, { key: 'r', label: 'r', num: true }, { key: 'p', label: 'p', num: true }, { key: 'n', label: 'n', num: true },
       ]} rows={corrRows} note="Pearson correlations among the people who answered both items." />
+      <h3 class="fig-title mini">Table 9 as a figure</h3>
+      <p class="leadin">Each square is the correlation between two qualities. Darker blue means the two move together more strongly. The left grid is ratings of the doctor, the right is ratings of the AI.</p>
+      <div class="grids">
+        {full.correlationsByTarget.map((c: any) => (<CorrGrid title={c.who} vars={c.vars} r={c.r} ariaLabel={`Correlations among four qualities for the ${c.who}`} />))}
+      </div>
       <StatTable id="table-wb" title="Table 10. Between-person and within-person correlations" columns={[
         { key: 'pair', label: 'Pair', wrap: true, minw: '16rem' },
         { key: 'between', label: 'Between people, r (p)', num: true, hint: 'Do people who rate the doctor and AI high on one thing rate them high on the other, on average?' },
         { key: 'within', label: 'Within people, r (p)', num: true, hint: 'For one person, is the target rated higher on one quality also rated higher on the other?' },
       ]} rows={wbRows} note={full.withinBetweenNote} />
+      <h3 class="fig-title mini">Table 10 as a figure</h3>
+      <p class="leadin">The same idea for the between-person correlations: people who rate the doctor and AI high on one quality tend to rate them high on the others. Darker blue is a stronger link.</p>
+      <CorrGrid vars={full.withinBetween.vars.slice(0, 5)} r={full.withinBetween.between.slice(0, 5).map((row: number[]) => row.slice(0, 5))} title="Between people" ariaLabel="Between-person correlations among the qualities" />
       <p class="small muted note">
         Reliability of the mind-perception items: {full.mindReliability.map((m) => `${m.label}, alpha ${noZero(m.alpha.toFixed(2))}`).join('; ')}.
       </p>
@@ -480,6 +526,8 @@ const figureMap2 = [
       </p>
       {models.slice(2, 6).map((m: any, i: number) => (
         <StatTable id={`table-model-${i + 9}`} title={`Table ${11 + i}. ${m.label}`} columns={modelCols} rows={modelRows(m)} note={`${modelFit(m)}`} />
+        <p class="leadin">Table {11 + i} as a figure. Each dot is one predictor's standardized effect on trust (β) with a 95% interval. The dashed lines mark a small, medium and large effect. Intervals that cross zero are not distinguishable from no effect.</p>
+        <DotRows rows={coefRows(m)} domain={coefDomain(m)} tickStep={0.1} zero axisLabel="Standardized effect on trust (β)" refs={betaRefs} ariaLabel={`Standardized effects on trust: ${m.label}`} />
       ))}
       <p class="small muted note">{full.mixedNote}</p>
     </section>
@@ -497,9 +545,13 @@ const figureMap2 = [
         { key: 'b', label: 'b', num: true, hint: 'Effect of the quality on trust, holding doctor versus AI fixed' },
         { key: 'ind', label: 'a × b [95% CI]', num: true }, { key: 'z', label: 'z', num: true }, { key: 'p', label: 'p', num: true },
       ]} rows={medRows} note={full.mediationNote} />
+      <h3 class="fig-title mini">Table 15 as a figure</h3>
+      <p class="leadin">Each dot is the part of the doctor-versus-AI gap that runs through one quality, in points of trust, with a 95% interval. An interval that stays right of zero means that quality carries a real share of the gap.</p>
+      <DotRows rows={medFig} domain={[-0.5, 3.5]} tickStep={0.5} zero axisLabel="Indirect effect on trust (points, 0 to 10)" ariaLabel="Indirect effects of doctor versus AI on trust through each quality" />
       {med.slice(0, 2).map((m: any, i: number) => (
         <>
           <h3 class="fig-title" id={`fig-med-${i}`}>Figure {12 + i}. {m.label}</h3>
+          <p class="leadin">Arrows show how doctor versus AI changes trust directly and through each quality. The numbers on the arrows are effect estimates; an arrow with a starred or bold number is reliably different from zero.</p>
           <MediationDiagram title={m.label} mediators={m.mediators} direct={m.direct} total={m.total} />
         </>
       ))}
@@ -513,6 +565,7 @@ const figureMap2 = [
         steady the result is.
       </p>
       <h3 class="fig-title" id="fig-who">Figure 14. The doctor-minus-AI gap, by group of people</h3>
+      <p class="leadin">Each row is a group of people. The dot is the average doctor-minus-AI gap in that group, with a bar for the 95% interval. A dot right of the zero line means the doctor was trusted more.</p>
       <DotPanels
         items={gapItems}
         panels={[
@@ -540,6 +593,9 @@ const figureMap2 = [
         </p>
       </div>
       <StatTable id="table-age" title="Table 17. Age band by doctor interaction" columns={modelCols} rows={modelRows(ageModel)} note={modelFit(ageModel)} />
+      <h3 class="fig-title mini">Table 17 as a figure</h3>
+      <p class="leadin">Each dot is one predictor's standardized effect on trust (β) with a 95% interval. The age-by-doctor term has no standardized β, so look to the table for it.</p>
+      <DotRows rows={coefRows(ageModel)} domain={coefDomain(ageModel)} tickStep={0.1} zero axisLabel="Standardized effect on trust (β)" refs={betaRefs} ariaLabel="Standardized effects on trust in the age model" />
     </section>
 
     <!-- ============================ implications ============================ -->

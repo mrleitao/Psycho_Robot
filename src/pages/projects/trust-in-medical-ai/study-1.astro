@@ -19,6 +19,8 @@ import full from '../../../data/trust-in-medical-ai/study1-full.json';
 import pts from '../../../data/trust-in-medical-ai/study1-points.json';
 import hva from '../../../data/trust-in-medical-ai/study1-human-vs-ai.json';
 import { href } from '../../../utils/url';
+import DotRows from '../../../components/DotRows.astro';
+import CorrGrid from '../../../components/CorrGrid.astro';
 import BayesPlot from '../../../components/BayesPlot.astro';
 import { times } from '../../../utils/bayes';
 import BayesGuide from '../../../components/BayesGuide.astro';
@@ -226,6 +228,18 @@ const wbRows = full.withinBetween.flatMap((g) =>
   })),
 );
 const slopes = full.slopes.lines;
+// ---- companion figures
+const betaRefs = [{ v: 0.1, label: 'small' }, { v: 0.2, label: 'medium' }, { v: 0.3, label: 'large' }];
+const sampleFig = full.sample.variables.flatMap((v: any) => [{ head: v.variable }, ...v.rows.map((r: any) => ({ label: `${r.group} (n = ${r.n})`, v: r.pct, tip: `${r.n} of ${full.sample.n} people (${r.pct}%)` }))]);
+const reliabilityFig = full.reliability.map((r: any) => ({ label: `${r.label} (${r.items.length} items)`, v: r.alpha, tip: `alpha = ${r.alpha.toFixed(2)}` }));
+const regFig = full.regressions.flatMap((r: any) => [{ head: r.maker }, ...r.terms.filter((t: any) => t.beta != null).map((t: any) => {
+  const k = t.beta / t.b, lo = t.beta - 1.96 * t.se * Math.abs(k), hi = t.beta + 1.96 * t.se * Math.abs(k);
+  return { label: t.term, v: t.beta, lo, hi, tip: `β = ${t.beta.toFixed(2)} (95% CI ${lo.toFixed(2)} to ${hi.toFixed(2)})` };
+})]);
+const fitFig = full.regressions.flatMap((r: any) => [{ label: r.maker, v: r.r2, tip: `R² = ${r.r2.toFixed(2)}, adjusted ${r.adjR2.toFixed(2)}` }]);
+const modelFig = [{ head: 'Predictors alone (marginal R²)' }, ...full.mixedModels.map((m: any, i: number) => ({ label: `${i + 1}. ${m.label}`, v: m.r2m })), { head: 'Predictors plus each person (conditional R²)' }, ...full.mixedModels.map((m: any, i: number) => ({ label: `${i + 1}. ${m.label}`, v: m.r2c }))];
+const lrtMax = Math.ceil(Math.max(...full.modelComparisons.map((c: any) => c.chi2)) / 10) * 10;
+const lrtFig = full.modelComparisons.map((c: any, i: number) => ({ label: lrtLabels[i], v: c.chi2, tip: `χ² = ${c.chi2.toFixed(1)} on ${c.df} df` }));
 const aiModel = full.mixedModels[6];
 const huModel = full.mixedModels[7];
 
@@ -432,6 +446,9 @@ const figureMap1 = [
         rows={sampleRows}
         note={`Shares are of all ${full.sample.n} people. Left blank in the file: ${missingNote}. Gender had only woman and man responses, so smaller groups do not appear. Race is White or Black only when that is the only group chosen; every other answer, including choosing more than one, is combined because no other group reached 30 people.`}
       />
+      <h3 class="fig-title mini">Table 1 as a figure</h3>
+      <p class="leadin">Each bar is the share of the people in that group. Longer means more of the sample. Hover a bar for the head count.</p>
+      <DotRows rows={sampleFig} domain={[0, 100]} tickStep={20} axisLabel="Share of people (%)" bars unit="%" digits={0} ariaLabel="Share of participants in each age, gender, race and education group" />
     </section>
 
     <!-- ============================ decisions ============================ -->
@@ -451,6 +468,7 @@ const figureMap1 = [
       />
 
       <h3 class="fig-title" id="fig-decisions">Figure 1. Every decision, every person</h3>
+      <p class="leadin">Each row is one of the fifteen decisions. Every dot is one person's answer on a 0 to 100 slider, from needs only intuition (0) to needs only quantitative reasoning (100). The curve shows where answers pile up.</p>
       <Raincloud
         rows={decisionCloud}
         grid={grid100}
@@ -471,6 +489,7 @@ const figureMap1 = [
       <div>
         <div>
           <h3 class="fig-title" id="fig-domain">Figure 2. By kind of health problem</h3>
+          <p class="leadin">The same slider ratings, grouped by kind of health problem. Each dot is one person; the curve shows where answers cluster.</p>
           <Raincloud
             rows={domainCloud}
             grid={grid100}
@@ -482,6 +501,7 @@ const figureMap1 = [
         </div>
         <div>
           <h3 class="fig-title" id="fig-stage">Figure 3. By stage of care</h3>
+          <p class="leadin">The same slider ratings, grouped by stage of care: preventing, diagnosing or prescribing.</p>
           <Raincloud
             rows={stageCloud}
             grid={grid100}
@@ -513,6 +533,9 @@ const figureMap1 = [
         ]}
         rows={relRows}
       />
+      <h3 class="fig-title mini">Table 4 as a figure</h3>
+      <p class="leadin">Each dot is the alpha for one group of decisions: how alike people answered the items inside it. The dashed lines mark .70, .80 and .90; above .70 is usually taken as acceptable and above .80 as good.</p>
+      <DotRows rows={reliabilityFig} domain={[0.5, 1]} tickStep={0.1} bars axisLabel="Cronbach's alpha" refs={[{ v: 0.7, label: '.70' }, { v: 0.8, label: '.80' }, { v: 0.9, label: '.90' }]} ariaLabel="Reliability of each group of decisions" />
       <details class="more">
         <summary>Item correlations behind each alpha</summary>
         {
@@ -622,6 +645,7 @@ const figureMap1 = [
       </details>
 
       <h3 class="fig-title" id="fig-trust">Figure 6. Trust in each recommender, every person</h3>
+      <p class="leadin">Each row is a recommender. Every dot is one person's trust rating on a 0 to 10 scale, and the curve shows where ratings cluster. Higher means more trust.</p>
       <Raincloud
         rows={trustCloud}
         grid={grid10}
@@ -660,6 +684,9 @@ const figureMap1 = [
         ]}
         rows={regRows}
       />
+      <h3 class="fig-title mini">Table 9 as a figure</h3>
+      <p class="leadin">Each dot is how strongly a rating goes with trust, in standardized units (β), with a 95% interval. Dashed lines mark a small, medium and large effect on the Funder and Ozer scale. Intervals that stay right of zero mean the rating reliably goes with trust.</p>
+      <DotRows rows={regFig} domain={[0, 0.8]} tickStep={0.1} zero axisLabel="Standardized effect on trust (β)" refs={betaRefs} ariaLabel="Standardized effects of intuition and quantitative reasoning on trust, for three recommenders" />
       <StatTable
         id="table-fit"
         title="Table 10. How well each model fits"
@@ -673,6 +700,9 @@ const figureMap1 = [
         ]}
         rows={fit}
       />
+      <h3 class="fig-title mini">Table 10 as a figure</h3>
+      <p class="leadin">Each bar is the share of the variation in trust that the two ratings explain (R²). A bar at 50% means the ratings account for half of why people trusted one recommender more than another.</p>
+      <DotRows rows={fitFig.map((r: any) => ({ ...r, v: r.v * 100 }))} domain={[0, 100]} tickStep={20} bars unit="%" digits={0} axisLabel="Variation in trust explained (R², %)" ariaLabel="Variation in trust explained by the model, for three recommenders" />
       <StatTable
         id="table-correlations"
         title="Table 11. Correlations among the three ratings"
@@ -684,6 +714,11 @@ const figureMap1 = [
         ]}
         rows={corRows}
       />
+      <h3 class="fig-title mini">Table 11 as a figure</h3>
+      <p class="leadin">Each square is the correlation between two ratings for one recommender. Darker blue means the two move together more strongly.</p>
+      <div class="grids">
+        {full.correlationsByMaker.map((c: any) => (<CorrGrid title={c.maker} vars={c.vars} r={c.r} ariaLabel={`Correlations among trust and the two ratings for ${c.maker}`} />))}
+      </div>
 
       <h3 class="fig-title">Mixed models across all eleven recommenders</h3>
       <p class="intro">
@@ -703,6 +738,8 @@ const figureMap1 = [
         rows={modelRows}
         note={full.mixedNote}
       />
+      <p class="leadin">Table 12 as a figure. Each bar is the share of the variation in trust a model explains: first by its predictors alone, then with each person's own baseline added. Longer is a better fit.</p>
+      <DotRows rows={modelFig.map((r: any) => (r.v == null ? r : { ...r, v: r.v * 100 }))} domain={[0, 100]} tickStep={20} bars unit="%" digits={0} axisLabel="Variation in trust explained (%)" ariaLabel="Variation in trust explained by each mixed model" />
       <details class="more" id="model-details">
         <summary>Coefficients for each model</summary>
         {
@@ -744,6 +781,8 @@ const figureMap1 = [
         rows={lrtRows}
         note="Likelihood ratio tests, refit by maximum likelihood."
       />
+      <p class="leadin">Table 13 as a figure. Each bar is how much a model improves when a term is added (χ²). Longer means a bigger improvement; with one degree of freedom, anything over 3.8 is past the usual cutoff.</p>
+      <DotRows rows={lrtFig} domain={[0, lrtMax]} tickStep={10} bars axisLabel="Improvement in fit (χ²)" refs={[{ v: 3.84, label: 'p = .05' }]} digits={1} ariaLabel="Improvement in model fit when each term is added" />
 
       <h3 class="fig-title" id="fig-slopes">Figure 8. What lifts trust differs for AI and for humans</h3>
       <p class="intro">
@@ -765,6 +804,11 @@ const figureMap1 = [
         rows={wbRows}
         note={full.withinBetweenNote}
       />
+      <p class="leadin">Table 14 as a figure, for all recommenders together. The left grid is between people: do people who rate recommenders high on one thing rate them high on the other? The right grid is within people: for one person, do recommenders rated higher on one thing also get rated higher on the other?</p>
+      <div class="grids">
+        <CorrGrid title="Between people" vars={full.withinBetween[0].vars} r={full.withinBetween[0].between} ariaLabel="Between-person correlations among trust and the two ratings" />
+        <CorrGrid title="Within people" vars={full.withinBetween[0].vars} r={full.withinBetween[0].within} ariaLabel="Within-person correlations among trust and the two ratings" />
+      </div>
     </section>
 
     <!-- ============================ implications ============================ -->
@@ -916,6 +960,7 @@ const figureMap1 = [
           another.
         </p>
         <h3 class="fig-title" id="fig-hva-profile">Figure 11. Each recommender on all three ratings</h3>
+        <p class="leadin">Each row is a recommender, with one panel each for trust, intuition and quantitative reasoning. The dot is the average rating, with a bar for the 95% interval.</p>
         <DotPanels
           items={profileItems}
           panels={profilePanels}
@@ -933,6 +978,7 @@ const figureMap1 = [
           n = {hva.trustLink.n}). Most dots fall under the equal-trust line, which is the same gap seen person by person.
         </p>
         <h3 class="fig-title" id="fig-hva-link">Figure 12. Trust in humans and trust in AI, one dot per person</h3>
+        <p class="leadin">Each dot is one person. Left to right is how much they trusted human recommenders; bottom to top is how much they trusted AI. A line rising to the right means people who trust humans also tend to trust AI.</p>
         <LinkScatter points={hva.trustLink.points} slope={hva.trustLink.slope} intercept={hva.trustLink.intercept} r={hva.trustLink.r} />
         <StatTable
           id="table-hva-link"
@@ -967,6 +1013,7 @@ const figureMap1 = [
           with little experience of AI. It does not differ much by education or political views.
         </p>
         <h3 class="fig-title" id="fig-hva-who">Figure 13. The gap, group by group</h3>
+        <p class="leadin">Each row is a group of people. The dot is the average human-minus-AI gap in that group, with a bar for the 95% interval; the right panel gives the gap in standard deviations (Cohen's d), which can be read against the Funder and Ozer small (0.20), medium (0.41) and large (0.63).</p>
         <DotPanels
           items={gapItems}
           panels={gapPanels}
@@ -1009,6 +1056,7 @@ const figureMap1 = [
           note="Mixed models with a random intercept for each person, fitted separately to the human and AI recommenders (the doctor using AI counts as AI, as in the notebook). b is the change in trust for one more point on the predictor, holding the other predictor fixed."
         />
         <h3 class="fig-title" id="fig-hva-slopes">Figure 14. Predicted trust, humans and AI</h3>
+        <p class="leadin">Each line shows predicted trust as a rating rises, for human recommenders and for AI. Steeper means that rating goes with trust more strongly.</p>
         <SlopesPlot lines={slopes} />
         <p class="small muted note">{full.slopes.note}</p>
       </section>
