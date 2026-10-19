@@ -4,9 +4,12 @@ import MainFindings from '../../components/MainFindings.astro';
 import StatTable from '../../components/StatTable.astro';
 import DotRows from '../../components/DotRows.astro';
 import GroupDots from '../../components/GroupDots.astro';
-import { dInterval, sg } from '../../utils/papers';
+import Terms from '../../components/Terms.astro';
+import Contents from '../../components/Contents.astro';
+import { dInterval, sg, ci } from '../../utils/papers';
+import { href } from '../../utils/url';
 
-const cite = '<strong>Leitao, M. R.</strong>, Proulx, J. D. E., &amp; Kushlev, K. (2024). Smartphones undermine social connectedness more in men than women: A mini mega-analysis. <em>Technology, Mind, and Behavior, 5</em>(1). <a href="https://doi.org/10.1037/tmb0000125">doi:10.1037/tmb0000125</a>';
+const cite = '<strong>Leitao, M. R.</strong>, Proulx, J. D. E., &amp; Kushlev, K. (2024). Smartphones undermine social connectedness more in men than women: A mini mega-analysis. <em>Technology, Mind, and Behavior, 5</em>(1), 15–27. <a href="https://doi.org/10.1037/tmb0000125">doi:10.1037/tmb0000125</a>';
 
 const paradigms = [
   { name: 'Getting directions', n: 287, conn: -0.43, aff: 0.18 },
@@ -20,60 +23,146 @@ const row = (label: string, d: number, n: number) => { const [lo, hi] = dInterva
 const connRows = [...paradigms.map((p) => row(`${p.name} (n = ${p.n})`, p.conn, p.n)), row('All eight experiments (n = 1,778)', -0.181, 1778)];
 const affRows = [...paradigms.map((p) => row(`${p.name} (n = ${p.n})`, p.aff, p.n)), row('Without getting directions (n = 1,491)', -0.106, 1491)];
 
-const models = [
-  { head: 'Phone effect on connectedness (b)' },
-  { label: 'Model 1: phone only', v: -0.26, lo: -0.38, hi: -0.14 },
-  { label: 'Model 2: adds gender and age', v: -0.24, lo: -0.37, hi: -0.11 },
-  { label: 'Model 3: adds phone by gender', v: -0.15, lo: -0.29, hi: -0.01 },
-  { head: 'Phone by gender (Model 3)' },
-  { label: 'Phone by gender interaction', v: -0.31, lo: -0.52, hi: -0.11 },
+// Table 2 of the paper: the initial regression that asks whether the phone effect on connectedness differs by situation.
+const t2 = [
+  ['Intercept', '.01', '[−.20, .22]', '.09'], ['Age', '.00', '[−.00, .01]', '.93'], ['Condition (phone = 1)', '−.14', '[−.25, −.02]', '−2.33*'],
+  ['Gender (man = 1)', '.02', '[−.12, .16]', '.27'], ['Getting directions', '.12', '[−.03, .28]', '1.54'], ['Strong ties meal', '−.09', '[−.25, .07]', '−1.15'],
+  ['Waiting alone', '−.06', '[−.26, .15]', '−.54'], ['Waiting together', '−.03', '[−.17, .11]', '−.40'], ['Parents with children', '.04', '[−.13, .20]', '.44'],
+  ['Condition × Gender', '−.32', '[−.52, −.11]', '−3.03**'], ['Condition × Getting directions', '−.20', '[−.41, .01]', '−1.88'],
+  ['Condition × Strong ties meal', '.16', '[−.06, .38]', '1.45'], ['Condition × Waiting alone', '.11', '[−.19, .41]', '.73'],
+  ['Condition × Waiting together', '.11', '[−.08, .30]', '1.16'], ['Condition × Parents with children', '−.17', '[−.36, .02]', '−1.79'],
 ];
+const t2int = [
+  { label: 'Condition × Gender', v: -0.32, lo: -0.52, hi: -0.11 }, { label: 'Condition × Getting directions', v: -0.2, lo: -0.41, hi: 0.01 },
+  { label: 'Condition × Strong ties meal', v: 0.16, lo: -0.06, hi: 0.38 }, { label: 'Condition × Waiting alone', v: 0.11, lo: -0.19, hi: 0.41 },
+  { label: 'Condition × Waiting together', v: 0.11, lo: -0.08, hi: 0.3 }, { label: 'Condition × Parents with children', v: -0.17, lo: -0.36, hi: 0.02 },
+];
+// Table 4: same model for affect valence.
+const t4 = [
+  ['Intercept', '−.09', '[−.31, .12]', '−.85'], ['Age', '.01', '[−.00, .01]', '1.38'], ['Condition (phone = 1)', '−.01', '[−.13, .11]', '−.21'],
+  ['Gender (man = 1)', '−.05', '[−.20, .09]', '−.71'], ['Getting directions', '−.10', '[−.26, .06]', '−1.22'], ['Strong ties meal', '.00', '[−.17, .16]', '−.03'],
+  ['Waiting alone', '.07', '[−.14, .28]', '.65'], ['Waiting together', '.09', '[−.06, .23]', '1.16'], ['Parents with children', '−.07', '[−.24, .10]', '−.81'],
+  ['Condition × Gender', '−.20', '[−.41, .01]', '−1.88'], ['Condition × Getting directions', '.25', '[.03, .47]', '2.27*'],
+  ['Condition × Strong ties meal', '−.07', '[−.29, .15]', '−.61'], ['Condition × Waiting alone', '−.10', '[−.40, .21]', '−.64'],
+  ['Condition × Waiting together', '−.09', '[−.29, .10]', '−.93'], ['Condition × Parents with children', '.00', '[−.19, .19]', '−.02'],
+];
+const t4int = [
+  { label: 'Condition × Gender', v: -0.2, lo: -0.41, hi: 0.01 }, { label: 'Condition × Getting directions', v: 0.25, lo: 0.03, hi: 0.47 },
+  { label: 'Condition × Strong ties meal', v: -0.07, lo: -0.29, hi: 0.15 }, { label: 'Condition × Waiting alone', v: -0.1, lo: -0.4, hi: 0.21 },
+  { label: 'Condition × Waiting together', v: -0.09, lo: -0.29, hi: 0.1 }, { label: 'Condition × Parents with children', v: 0, lo: -0.19, hi: 0.19 },
+];
+const m = (rows: string[][]) => rows.map(([e, b, c, t]) => ({ e, b, c, t }));
+const olsCols = [{ key: 'e', label: 'Effect' }, { key: 'b', label: 'b', num: true }, { key: 'c', label: '95% CI', num: true }, { key: 't', label: 't', num: true }];
+
+// Table 3 and Table 5: multilevel models.
+const mlmCols = (a: string, b: string, c: string) => [{ key: 'e', label: 'Effect' }, { key: 'm1', label: a, num: true }, { key: 'm2', label: b, num: true }, { key: 'm3', label: c, num: true }];
+const t3 = [
+  { e: 'Intercept', m1: '.13** [.06, .20]', m2: '.10 [−.05, .25]', m3: '.07 [−.09, .22]' },
+  { e: 'Condition (phone = 1)', m1: '−.26*** [−.38, −.14]', m2: '−.24*** [−.37, −.11]', m3: '−.15* [−.29, −.01]' },
+  { e: 'Gender (man = 1)', m1: '', m2: '−.13* [−.24, −.03]', m3: '.02 [−.12, .16]' },
+  { e: 'Age', m1: '', m2: '.00 [−.00, .01]', m3: '.00 [−.00, .01]' },
+  { e: 'Condition × Gender', m1: '', m2: '', m3: '−.31** [−.52, −.11]' },
+  { e: 'Residual variance (σ²)', m1: '.98', m2: '.94', m3: '.94' },
+  { e: 'Variance explained, fixed effects (R²)', m1: '.02', m2: '.02', m3: '.02' },
+  { e: 'Variance explained, whole model (R²)', m1: '.02', m2: '.02', m3: '.03' },
+  { e: 'AIC', m1: '4967.41', m2: '4741.66', m3: '4737.18' },
+  { e: 'People in model', m1: '1,756', m2: '1,694', m3: '1,694' },
+];
+const t5 = [
+  { e: 'Intercept', m1: '.06 [−.02, .13]', m2: '.06 [−.10, .23]', m3: '.04 [−.12, .21]' },
+  { e: 'Condition (phone = 1)', m1: '−.11* [−.21, .00]', m2: '−.12* [−.22, −.01]', m3: '−.07 [−.20, .06]' },
+  { e: 'Gender (man = 1)', m1: '', m2: '−.19** [−.30, −.07]', m3: '−.11 [−.27, .05]' },
+  { e: 'Age', m1: '', m2: '.00 [−.00, .01]', m3: '.00 [−.00, .01]' },
+  { e: 'Condition × Gender', m1: '', m2: '', m3: '−.16 [−.39, .07]' },
+  { e: 'Residual variance (σ²)', m1: '.99', m2: '.99', m3: '.99' },
+  { e: 'Variance explained, whole model (R²)', m1: '.00', m2: '.01', m3: '.01' },
+  { e: 'AIC', m1: '4098.84', m2: '3996.28', m3: '3998.86' },
+  { e: 'People in model', m1: '1,442', m2: '1,400', m3: '1,400' },
+];
+const t3fig = [
+  { head: 'Phone effect, by model' },
+  { label: 'Model 1: phone only', v: -0.26, lo: -0.38, hi: -0.14 }, { label: 'Model 2: adds gender and age', v: -0.24, lo: -0.37, hi: -0.11 },
+  { label: 'Model 3: adds phone by gender', v: -0.15, lo: -0.29, hi: -0.01 },
+  { head: 'Gender terms' },
+  { label: 'Gender, Model 2', v: -0.13, lo: -0.24, hi: -0.03 }, { label: 'Phone by gender, Model 3', v: -0.31, lo: -0.52, hi: -0.11 },
+];
+const t5fig = [
+  { head: 'Phone effect on affect, by model' },
+  { label: 'Model 1: phone only', v: -0.11, lo: -0.21, hi: 0.0 }, { label: 'Model 2: adds gender and age', v: -0.12, lo: -0.22, hi: -0.01 },
+  { label: 'Model 3: adds phone by gender', v: -0.07, lo: -0.2, hi: 0.06 },
+  { head: 'Gender terms' },
+  { label: 'Gender, Model 2', v: -0.19, lo: -0.3, hi: -0.07 }, { label: 'Phone by gender, Model 3', v: -0.16, lo: -0.39, hi: 0.07 },
+];
+
+const se = (m: number, s: number) => ({ v: m, lo: m - 1.96 * s, hi: m + 1.96 * s });
 const series = [{ name: 'With phone' }, { name: 'Without phone' }];
 const cells = [
-  { label: 'Men', cells: [{ v: -0.33 }, { v: 0.13 }] },
-  { label: 'Women', cells: [{ v: -0.036 }, { v: 0.11 }] },
+  { label: 'Men', cells: [se(-0.33, 0.07), se(0.13, 0.06)] },
+  { label: 'Women', cells: [se(-0.036, 0.048), se(0.11, 0.05)] },
+];
+const simple = [
+  { label: 'Phone effect for men', v: -0.473 }, { label: 'Phone effect for women', v: -0.152 }, { label: 'Men against women, no phone', v: -0.019 },
+];
+const stats = [
+  { label: 'Model 1 (phone only)', v: -0.207 }, { label: 'Model 2 (adds gender and age)', v: -0.181 }, { label: 'Model 3, interaction', v: -0.148 },
+];
+
+const toc = [
+  { title: 'What I did', href: '#method', items: [{ label: 'The eight experiments and six situations', href: '#t-paradigms', kind: 'table' as const }, { label: 'Measures, design and analysis plan', href: '#measures', kind: 'page' as const }] },
+  { title: 'Connectedness', href: '#connectedness', items: [
+    { label: 'Does the effect differ by situation?', href: '#t-ols-conn', kind: 'table' as const },
+    { label: 'Effect size in each situation', href: '#f-forest-conn', kind: 'figure' as const },
+    { label: 'The three multilevel models', href: '#t-mlm-conn', kind: 'table' as const },
+    { label: 'Men and women, with and without a phone', href: '#f-gender', kind: 'figure' as const }] },
+  { title: 'Affect valence', href: '#affect', items: [
+    { label: 'Does the effect differ by situation?', href: '#t-ols-aff', kind: 'table' as const },
+    { label: 'Effect size in each situation', href: '#f-forest-aff', kind: 'figure' as const },
+    { label: 'Models without getting directions', href: '#t-mlm-aff', kind: 'table' as const },
+    { label: 'Getting directions alone', href: '#t-gd', kind: 'table' as const }] },
+  { title: 'What it means', href: '#implications', items: [] },
 ];
 
 const findings = [
   {
     head: 'A phone nearby made people feel less connected',
-    body: [
-      'I pooled eight experiments, 1,778 people in all, that put a phone in view during a short social moment. Those moments included a meal, a wait, and a walk to get directions.',
-      'People with a phone present felt less connected than people without one (b = −.241, d = −.181). That is a small effect, and it pointed the same way in all six kinds of situation.',
-    ],
-    visual: { type: 'stat', value: 'd = −.18', label: 'effect of a phone on connectedness', caption: '1,778 people, eight experiments.' },
+    body: ['I pooled eight experiments, 1,778 people in all, that put a phone in view during a short social moment. The moments included a meal, a wait, and a walk to get directions.', 'People with a phone felt less connected than people without one (b = −.241, d = −.181). The effect is small and it pointed the same way in all six kinds of situation.'],
+    visual: { type: 'stat', value: 'd = −.18', label: 'effect of a phone on connectedness', caption: 'With age and gender in the model, 1,694 people.' },
   },
   {
-    head: 'The effect was bigger for men than for women',
-    body: [
-      'Men with a phone felt clearly less connected than men without one (d = −.473). Women showed a smaller drop (d = −.152).',
-      'The difference between the two was reliable (interaction d = −.148). I report it as a pattern in these data, not as an explanation of why.',
-    ],
-    visual: { type: 'pairs', aName: 'Men', bName: 'Women', rows: [{ label: 'Effect size, d (flipped to positive)', a: 0.473, b: 0.152, max: 0.6, fmt: 2 }], caption: 'Size of the drop in connectedness with a phone present.' },
+    head: 'The drop was about three times larger for men',
+    body: ['Men with a phone felt clearly less connected than men without one (d = −.473). Women showed a smaller drop (d = −.152).', 'Without phones, men and women felt equally connected (d = −.019). The gender gap appeared only when a phone was present. We had not registered a hypothesis about gender, so I treat this as exploratory.'],
+    visual: { type: 'pairs', aName: 'Men', bName: 'Women', rows: [{ label: 'Drop in connectedness, d (sign flipped)', a: 0.473, b: 0.152, max: 0.6, fmt: 2 }], caption: 'Effect of a phone on connectedness, by gender.' },
   },
   {
-    head: 'Mood told a weaker story',
-    body: [
-      'Once I set aside the getting-directions experiments, a phone went with slightly lower positive mood (b = −.105, p = .045, d = −.106). There was no gender difference (p = .169).',
-      'In the getting-directions experiments alone, mood did not change (b = .18, p = .174), which is why I report the two results separately.',
-    ],
-    visual: { type: 'stat', value: 'd = −.11', label: 'effect of a phone on affect, without getting directions', caption: 'Small, and close to the p = .05 line.' },
+    head: 'Mood fell slightly, except when the phone helped find something',
+    body: ['Without the getting-directions experiments, a phone went with lower affect valence, meaning more negative feelings (b = −.105, p = .045, d = −.106). The gender difference was not reliable (p = .169).', 'In the getting-directions experiments, mood did not fall (b = .18, p = .174). The phone helped people find the building and also cost them a chance to talk to someone, and the two effects may have cancelled out.'],
+    visual: { type: 'stat', value: 'd = −.11', label: 'effect of a phone on affect valence, without getting directions', caption: '1,442 people. Close to the p = .05 line.' },
   },
+];
+const terms = [
+  { term: 'Mega-analysis', meaning: 'A pooled analysis that uses the raw data from several studies, not each study’s summary result. That lets us test things no single study could, such as differences by gender. We call ours “mini” because the studies came from one lab, not from a systematic literature search.' },
+  { term: 'Paradigm', meaning: 'A type of situation with the same procedure. Eight experiments became six paradigms, because some were replications and one study manipulated a second variable.' },
+  { term: 'Intent to treat', meaning: 'Everyone counts in the condition they were randomly assigned to, even if they did not follow it. This keeps the comparison fair and makes the effects a little smaller.' },
+  { term: 'Affect valence', meaning: 'How good or bad a person feels, from unpleasant to pleasant. Higher is more pleasant.' },
+  { term: 'Standardized score', meaning: 'A score rescaled within each situation so that the average is 0 and one unit is one standard deviation. This puts different scales on the same footing.' },
+  { term: 'Multilevel model', meaning: 'A regression that allows each situation to have its own baseline and its own phone effect, and then averages across them.' },
+  { term: 'Cohen’s d', meaning: 'The size of a difference in standard deviations. Around .2 is small, .5 medium and .8 large by Cohen’s old rule of thumb.' },
+  { term: 'Interaction', meaning: 'One effect depends on another. Here, the phone effect depends on gender.' },
 ];
 ---
 <PaperPage
   title="Smartphones and social connection"
-  description="A mega-analysis of eight experiments on how a phone in view affects feeling connected."
-  heading="Smartphones and social connection: men and women"
+  description="A mini mega-analysis of eight experiments on how a phone in view affects feeling connected, and for whom."
+  heading="Smartphones undermine social connectedness more in men than women"
   cite={cite}
   role="First author"
   status="Published, Technology, Mind, and Behavior, 2024"
-  lede="I pooled eight experiments run over several years into one analysis. The question was whether a phone in view changes how connected people feel in the moment."
-  links={[{ label: 'Read the paper (DOI)', href: 'https://doi.org/10.1037/tmb0000125' }, { label: 'Data, code and materials on OSF', href: 'https://doi.org/10.17605/OSF.IO/X73M9' }]}
+  lede="I pooled eight experiments run over several years into one analysis. The question was whether a phone in view changes how connected and how good people feel in the moment, and whether that depends on the situation or the person."
+  links={[{ label: 'Read the paper (DOI)', href: 'https://doi.org/10.1037/tmb0000125' }, { label: 'Data, code and materials on OSF', href: 'https://doi.org/10.17605/OSF.IO/X73M9' }, { label: 'Project page', href: href('/projects/phone-use-and-social-connection/') }]}
 >
   <dl class="facts">
-    <div><dt>Who</dt><dd>1,778 people. 70.4% women, mean age 25.8.</dd></div>
-    <div><dt>Design</dt><dd>Eight experiments in six kinds of situation, each with a phone-present and a phone-absent group.</dd></div>
+    <div><dt>Who</dt><dd>1,778 people. 70.4% women, mean age 25.8 (range 13 to 74), mostly University of British Columbia students.</dd></div>
+    <div><dt>Design</dt><dd>Eight experiments in six situations. Each randomly gave some people their phones and took them from others.</dd></div>
     <div><dt>Data</dt><dd>Public on OSF. These figures are rebuilt from the printed paper, with intervals derived as noted below.</dd></div>
   </dl>
 
@@ -82,53 +171,123 @@ const findings = [
     <MainFindings findings={findings} />
   </section>
 
-  <section class="section" id="evidence" aria-labelledby="ev-title">
-    <h2 id="ev-title">The evidence</h2>
+  <Contents groups={toc} />
+  <Terms terms={terms} />
 
-    <StatTable title="Table 1. The six situations" look="The effect on connectedness is negative in every row. It is largest where people got directions or were parents with children."
-      columns={[{ key: 'p', label: 'Situation' }, { key: 'n', label: 'n', num: true }, { key: 'c', label: 'Connectedness d', num: true }, { key: 'a', label: 'Affect d', num: true }]}
-      rows={paradigms.map((p) => ({ p: p.name, n: p.n, c: sg(p.conn), a: sg(p.aff) }))}
-      note="Effect sizes (d) are from the paper's figures. Negative means lower with a phone present." />
+  <section class="section" id="method" aria-labelledby="method-title">
+    <h2 id="method-title">What I did</h2>
+    <div class="prose">
+      <p>Earlier experiments on phones and well-being each studied one situation. They were also usually too small to ask who is affected most. We had run eight experiments in our own lab, four published (n = 809) and four unpublished (n = 969). I combined the raw data from all of them. Including the unpublished studies guards against publication bias, which favors small studies that found large effects.</p>
+      <p>The theory behind the work is the displacement, interference and complementarity framework from our review paper. It predicts that phones lower well-being when they interrupt pleasant social time, and can help when they give us information we need right now. We registered two predictions. People with a phone would report lower well-being (H1) and lower social connection (H2) than people without one, in every situation except waiting alone, where there was nobody to interrupt.</p>
+    </div>
 
-    <p class="figcap">Connectedness, by situation</p>
-    <p class="figlook"><strong>What to look for.</strong> Every dot sits left of zero. The interval for each situation is wide, and the pooled interval is the narrowest.</p>
+    <StatTable id="t-paradigms" title="Table 1. The eight experiments and six situations" look="Five situations compared phone with no phone. The parenting situation compared more phone use with less."
+      columns={[{ key: 'p', label: 'Situation' }, { key: 's', label: 'Experiments' }, { key: 'n', label: 'n', num: true }, { key: 'w', label: 'What people did', wrap: true, minw: '18rem' }]}
+      rows={[
+        { p: 'Getting directions', s: '1 and 2', n: '287', w: 'College students looked for an unfamiliar campus building with or without a phone.' },
+        { p: 'Parents with children', s: '3 and 4', n: '408', w: 'Parents and guardians visiting a science museum (3) or a children’s festival (4) used their phones a lot or limited them.' },
+        { p: 'Meal with strong ties', s: '5', n: '305', w: 'Groups of friends and family ate at a local café. Half kept a phone on the table, half put it away.' },
+        { p: 'Meal with weak ties', s: '6', n: '271', w: 'Groups of strangers got to know each other over lunch, with phones on the table or put away.' },
+        { p: 'Waiting alone', s: '7', n: '130', w: 'People waited 10 minutes in a room alone, with or without a phone.' },
+        { p: 'Waiting together', s: '7 and 8', n: '377', w: 'People waited 10 minutes with a stranger, with or without a phone.' },
+      ]} note="Sample sizes count everyone randomly assigned, whether or not the manipulation worked. All experiments except one were preregistered. From the paper’s Table 1." />
+
+    <div class="prose" id="measures">
+      <h3>Measures and design</h3>
+      <p><strong>Social connectedness</strong> combined two items on a 7-point scale, adapted from the Social Connectedness Scale: “I feel close to people” minus “I feel distant from people.” The two items correlated between −.41 and −.59 across experiments.</p>
+      <p><strong>Affect valence</strong> was how often people felt good, positive and pleasant minus bad, negative and unpleasant (reliability α = .85 to .90). The parenting experiments used one overall item instead. Both measures were standardized within each situation before pooling.</p>
+      <p><strong>Design.</strong> People were randomly assigned to phone or no phone (50.1% had a phone). Whole tables and groups shared a condition. The purpose of each study was disguised. We counted everyone as assigned, which is the conservative choice. A sensitivity analysis showed the full sample could detect an effect as small as f² = .007 with 95% power.</p>
+      <p><strong>Analysis plan.</strong> We first asked with ordinary regressions whether the effect differed by situation, then pooled the situations that did not differ. Because six situations are few clusters, we avoided a complex model at that step. We then ran multilevel models with people nested in situations, adding phone condition, then gender and age, then their interaction. Our first registration used ordinary regression throughout. We updated it, before looking at the pooled results, to multilevel models and dropped covariates that were not measured in every study (ethnicity was measured in 1,065 people, phone dependence in 713).</p>
+    </div>
+  </section>
+
+  <section class="section" id="connectedness" aria-labelledby="conn-title">
+    <h2 id="conn-title">Results: social connectedness</h2>
+    <h3>Step 1. Does the effect differ by situation?</h3>
+    <div class="prose"><p>No. In the first regression no situation changed the phone effect on connectedness, so I pooled all six. The one interaction that stands out is phone by gender.</p></div>
+    <StatTable id="t-ols-conn" title="Table 2. Does the phone effect on connectedness differ by situation? (ordinary regression)" look="Only Condition × Gender is reliable. None of the situation interactions are."
+      columns={olsCols} rows={m(t2)} note="N = 1,694. Deviation coding compares each situation with the others. Meal with weak ties is the reference. * p < .05, ** p < .01. The interval for the gender row is the one consistent with its t value." />
+    <p class="figlook"><strong>What to look for.</strong> Every situation interval crosses zero. The gender interval does not.</p>
+    <DotRows rows={t2int} domain={[-0.6, 0.6]} tickStep={0.2} zero digits={2} axisLabel="Interaction with phone condition (b), connectedness"
+      ariaLabel="Interactions between phone condition and situation or gender for connectedness, with 95% intervals." />
+
+    <h3>Step 2. How big is the effect in each situation?</h3>
+    <p class="figcap" id="f-forest-conn">Connectedness, by situation</p>
+    <p class="figlook"><strong>What to look for.</strong> Every dot sits left of zero. Getting directions and parenting show the largest drops. The pooled estimate is the most precise.</p>
     <DotRows rows={connRows} domain={[-0.8, 0.2]} tickStep={0.2} zero digits={2} axisLabel="Effect of a phone on connectedness (d)"
       ariaLabel="Effect of a phone on connectedness for six situations and for all experiments pooled, with 95% intervals." />
 
-    <p class="figcap">Affect, by situation</p>
-    <p class="figlook"><strong>What to look for.</strong> The dots scatter around zero. Getting directions is the only one to the right.</p>
-    <DotRows rows={affRows} domain={[-0.8, 0.6]} tickStep={0.2} zero digits={2} axisLabel="Effect of a phone on affect (d)"
-      ariaLabel="Effect of a phone on affect for six situations and pooled without getting directions, with 95% intervals." />
+    <h3>Step 3. The multilevel models</h3>
+    <StatTable id="t-mlm-conn" title="Table 3. Multilevel models of connectedness" look="The phone row stays negative as terms are added. The Condition × Gender row is the new finding."
+      columns={mlmCols('Model 1', 'Model 2', 'Model 3')} rows={t3}
+      note="Estimates are b with 95% interval. * p < .05, ** p < .01, *** p < .001. Variation between situations was near zero in every model, so each situation’s own baseline barely mattered. From the paper’s Table 3." />
+    <DotRows rows={t3fig} domain={[-0.6, 0.1]} tickStep={0.1} zero digits={2} axisLabel="Coefficient on connectedness"
+      ariaLabel="Phone and gender coefficients across three multilevel models for connectedness, with 95% intervals." />
+    <div class="prose">
+      <p>People with a phone were less connected than people without one (phone −.13, no phone .13 on the standardized scale; b = −.259, t(1749) = −4.33, p &lt; .001, d = −.207). Adding gender and age barely changed it (b = −.241, d = −.181). Men reported less connection than women overall (b = −.134, p = .010, d = −.126), and age did not matter (p = .368).</p>
+    </div>
 
-    <StatTable title="Table 2. Regression models of connectedness (Table 3 in the paper)" look="The phone effect stays negative in all three models. The phone by gender row is the one that changes the story."
-      columns={[{ key: 'm', label: 'Model' }, { key: 'b', label: 'Phone, b [95% CI]', num: true }, { key: 'x', label: 'Other terms', wrap: true, minw: '12rem' }]}
+    <h3>Step 4. Men and women, with and without a phone</h3>
+    <div class="prose"><p>Model 3 added the interaction (b = −.313, SE = .103, t(1684) = −3.03, p = .003, d = −.148). The simple effects show where it comes from: the phone effect was larger for men (b = −.461, p &lt; .001, d = −.473) than for women (b = −.148, p = .041, d = −.152). Men and women who had no phone did not differ (b = −.018, p = .799, d = −.019).</p></div>
+    <p class="figcap" id="f-gender">Average connectedness, by gender and condition</p>
+    <p class="figlook"><strong>What to look for.</strong> Without phones the two groups sit together. With phones, men’s average falls well below women’s. The paper shows the full distributions as rain plots, which need the raw data. Here I show the printed averages with intervals of 1.96 standard errors.</p>
+    <GroupDots rows={cells} series={series} domain={[-0.6, 0.4]} tickStep={0.2} digits={2} zero axisLabel="Average connectedness (standardized)"
+      ariaLabel="Average connectedness with and without a phone, for men and for women, with 95% intervals." />
+    <p class="figlook"><strong>Effect sizes behind it.</strong></p>
+    <DotRows rows={simple} domain={[-0.6, 0.2]} tickStep={0.1} zero digits={3} axisLabel="Cohen’s d (as printed in the paper)"
+      ariaLabel="Cohen's d for the phone effect in men, in women, and for men against women without phones." />
+  </section>
+
+  <section class="section" id="affect" aria-labelledby="aff-title">
+    <h2 id="aff-title">Results: affect valence</h2>
+    <h3>Step 1. Does the effect differ by situation?</h3>
+    <div class="prose"><p>For mood, one situation stood out: getting directions (Condition × Getting directions, b = .251, p = .024, d = .204). Once I removed that situation, no other interaction was reliable. As registered, I analyzed getting directions separately from the other five.</p></div>
+    <StatTable id="t-ols-aff" title="Table 4. Does the phone effect on affect valence differ by situation? (ordinary regression)" look="Only getting directions departs from the others."
+      columns={olsCols} rows={m(t4)} note="N = 1,680. Same coding as Table 2. * p < .05. From the paper’s Table 4." />
+    <DotRows rows={t4int} domain={[-0.6, 0.6]} tickStep={0.2} zero digits={2} axisLabel="Interaction with phone condition (b), affect valence"
+      ariaLabel="Interactions between phone condition and situation or gender for affect valence, with 95% intervals." />
+
+    <p class="figcap" id="f-forest-aff">Affect valence, by situation</p>
+    <p class="figlook"><strong>What to look for.</strong> Five dots sit at or left of zero. Getting directions is the one on the right.</p>
+    <DotRows rows={affRows} domain={[-0.8, 0.6]} tickStep={0.2} zero digits={2} axisLabel="Effect of a phone on affect valence (d)"
+      ariaLabel="Effect of a phone on affect valence for six situations and pooled without getting directions, with 95% intervals." />
+
+    <h3>Step 2. Models without getting directions</h3>
+    <StatTable id="t-mlm-aff" title="Table 5. Multilevel models of affect valence, without getting directions" look="The phone effect is small and close to the p = .05 line in the first two models."
+      columns={mlmCols('Model 1', 'Model 2', 'Model 3')} rows={t5}
+      note="* p < .05, ** p < .01. Variation between situations was zero. From the paper’s Table 5." />
+    <DotRows rows={t5fig} domain={[-0.5, 0.2]} tickStep={0.1} zero digits={2} axisLabel="Coefficient on affect valence"
+      ariaLabel="Phone and gender coefficients across three multilevel models for affect valence, with 95% intervals." />
+    <div class="prose"><p>People with a phone reported more negative affect (b = −.105, t(1436) = −2.009, p = .045, d = −.106). With gender and age in the model it held (b = −.118, p = .027, d = −.119). Men reported more negative affect than women (b = −.185, p = .002, d = −.171). Age did not matter (p = .461). The interaction with gender was not reliable (b = −.159, p = .169, d = −.074).</p></div>
+
+    <h3>Step 3. Getting directions on its own</h3>
+    <StatTable id="t-gd" title="Table 6. Getting directions only (ordinary regression, results printed in the text)" look="The phone does not change mood. Older students reported feeling better."
+      columns={[{ key: 'e', label: 'Effect' }, { key: 'v', label: 'Result', wrap: true, minw: '16rem' }]}
       rows={[
-        { m: 'Model 1: phone only', b: '−.26 [−.38, −.14]', x: 'None' },
-        { m: 'Model 2: with gender and age', b: '−.24 [−.37, −.11]', x: 'Gender and age not significant' },
-        { m: 'Model 3: with phone by gender', b: '−.15 [−.29, −.01]', x: 'Gender .02, age .00, phone by gender −.31 [−.52, −.11]' },
-      ]} note="Intervals are as printed." />
-    <DotRows rows={models} domain={[-0.6, 0.1]} tickStep={0.1} zero digits={2} axisLabel="Coefficient on connectedness"
-      ariaLabel="Phone coefficients in three models and the phone by gender interaction, with 95% intervals." />
-
-    <p class="figcap">Connectedness by gender</p>
-    <p class="figlook"><strong>What to look for.</strong> For men the two dots are far apart. For women they are close.</p>
-    <GroupDots rows={cells} series={series} domain={[-0.5, 0.3]} tickStep={0.1} digits={2} zero axisLabel="Average connectedness (as printed in the paper)"
-      ariaLabel="Average connectedness with and without a phone, for men and for women." />
+        { e: 'Phone, Model 1', v: 'b = .18, SE = .119, t(281) = 1.508, p = .133, d = .180' },
+        { e: 'Phone, Model 2', v: 'b = .162, SE = .119, t(276) = 1.362, p = .174, d = .163' },
+        { e: 'Gender, Model 2', v: 'b = .009, p = .947' },
+        { e: 'Age, Model 2', v: 'b = .059, SE = .024, t(276) = 2.423, p = .016, d = .293' },
+        { e: 'Phone × Gender, Model 3', v: 'b = −.519, SE = .270, t(275) = −1.921, p = .056, d = −.231' },
+      ]} note="N = 283, 280 and 280 across the three models." />
   </section>
 
   <section class="section" id="implications" aria-labelledby="imp-title">
     <h2 id="imp-title">What this means</h2>
     <div class="prose">
-      <p><strong>A phone in view costs a little connection.</strong> The effect is small and consistent across situations. It does not say that phones harm relationships over time, because these were short moments.</p>
-      <p><strong>Gender differences need replication.</strong> The interaction was reliable in these data. A new set of experiments should test it directly.</p>
-      <p><strong>Limits.</strong> Samples were mostly young adults, and the effect on mood was small and sensitive to which experiments I included.</p>
+      <p><strong>Phones cost connection even in unpublished studies.</strong> Pooling the nonsignificant studies did not erase the effect. It is small (d from −.15 to −.21 in the models), but small effects can add up. A person who is a little less connected at every meal and wait could notice the difference over a day.</p>
+      <p><strong>The waiting-alone result was not what we predicted.</strong> We expected no phone cost when nobody else was there. The effect was not reliably different, and a phone did not make waiting alone feel better either. Our one nonsocial situation cannot settle this.</p>
+      <p><strong>Mood depends on what the phone is for.</strong> Phones lowered affect valence when they competed with people. They did not when the phone served a current goal. The published getting-directions study found two paths that point in opposite directions: finding the building faster felt good, and feeling less connected felt bad. A null main effect is consistent with those two cancelling.</p>
+      <p><strong>Why men?</strong> We did not test the reasons. The paper lists four candidates. Men may use phones more in social settings, though earlier research suggests women use phones more. Men may be more distractible, though earlier research finds no gender gap in attention. Women may follow stricter norms about phones in company. Or women may use phones in more social ways, such as messaging. Each could be tested by measuring how people use their phones during a conversation.</p>
+      <p><strong>Limits.</strong> The samples were mostly college-aged people from British Columbia, and most situations were pleasant social ones. Taking a phone away may add confounds. We analyzed data we had already seen, so our registered plans could have been shaped by that. The gender result was not registered and needs a new, confirmatory test. We kept everyone as randomly assigned, which makes the effect for people who actually followed instructions a little larger than the numbers here.</p>
     </div>
   </section>
 
   <section class="section" id="files" aria-labelledby="files-title">
     <h2 id="files-title">How this page was made</h2>
     <div class="prose">
-      <p>Effect sizes and model results come from the printed paper. The paper's own data and code are public on OSF. For the situation-level figures I derived the 95% intervals from each group size. The standard error was the square root of 4 over N plus d squared over 2N. This approach reproduces the intervals in the paper's forest plot. I have not re-run the models on the raw data.</p>
+      <p>Every coefficient and test comes from the printed paper. The paper’s data, code and materials are public on <a href="https://doi.org/10.17605/OSF.IO/X73M9">OSF</a>, including the supplemental tables and the preregistrations. I have not re-run the models on the raw data.</p>
+      <p>For the by-situation forest plots, I derived each 95% interval from the group size, with the standard error equal to the square root of 4 over N plus d squared over 2N. The same approach reproduces the paper’s own forest plot. The gender averages carry intervals of 1.96 standard errors from the printed standard errors. The paper’s Table 6 is partly garbled in my copy, so I used the values the text prints. The rain plots in the paper’s Figure 2 need the individual data, so I show the averages instead.</p>
     </div>
   </section>
 </PaperPage>

@@ -1,0 +1,18 @@
+---
+// A short plain-language guide to the terms a page uses. Each term gets one or two sentences.
+interface Props { terms: { term: string; meaning: string }[]; title?: string }
+const { terms, title = 'Plain-language guide to the terms' } = Astro.props;
+---
+<details class="terms">
+  <summary>{title}</summary>
+  <dl>
+    {terms.map((t) => (<><dt>{t.term}</dt><dd set:html={t.meaning} /></>))}
+  </dl>
+</details>
+<style>
+  .terms { margin: 1.2rem 0 1.8rem; max-width: 66ch; font-family: var(--display); }
+  summary { cursor: pointer; color: var(--muted); font-size: 0.95rem; }
+  dl { margin: 0.7rem 0 0; display: grid; gap: 0.15rem 0; }
+  dt { font-weight: 650; margin-top: 0.6rem; }
+  dd { margin: 0; line-height: 1.5; color: var(--ink); }
+</style>
