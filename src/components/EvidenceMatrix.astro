@@ -8,14 +8,41 @@ interface Skill {
   includes?: string[];
   fields?: string[];
   type?: 'hard' | 'soft';
+  icon?: string;
+  evidence?: string[];
+}
+
+interface Ev {
+  id: string;
+  name: string;
+  kind: string;
+  from: number;
+  to: number;
+  href?: string;
 }
 
 interface Props {
   skills: Skill[];
   fields: { id: string; name: string }[];
+  evidence: Ev[];
 }
 
-const { skills, fields } = Astro.props;
+import SkillIcon from './SkillIcon.astro';
+import { href } from '../utils/url';
+
+const { skills, fields, evidence } = Astro.props;
+const evOf = (id: string) => evidence.find((e) => e.id === id)!;
+const yearsOf = (s: Skill) => {
+  const set = new Set<number>();
+  for (const id of s.evidence ?? []) {
+    const e = evOf(id);
+    for (let y = e.from; y <= e.to; y++) set.add(y);
+  }
+  return [...set].sort((a, b) => a - b);
+};
+const span = (e: Ev) => (e.from === e.to ? `${e.from}` : `${e.from} to ${e.to}`);
+const kindLabel: Record<string, string> = { project: 'Project', role: 'Role', workshop: 'Workshop I taught', training: 'Training', teaching: 'Teaching', course: 'Course' };
+const YEARS = Array.from({ length: 14 }, (_, i) => 2013 + i);
 
 const levels = [
   { id: 'have', label: 'Have', note: 'I have done this work, on my own or as part of a published project.' },
@@ -23,19 +50,24 @@ const levels = [
 ] as const;
 
 const slug = (s: string) => s.toLowerCase().replace(/\W+/g, '-').replace(/^-|-$/g, '');
-const tone = ['var(--ai)', 'var(--doctor)', 'var(--coral)', 'var(--muted)'];
 const labelOf = Object.fromEntries(levels.map((l) => [l.id, l.label]));
 const counts = Object.fromEntries(levels.map((l) => [l.id, skills.filter((s) => s.level === l.id).length]));
 
-const groups: { name: string; items: Skill[]; color: string }[] = [];
+const groups: { name: string; items: Skill[]; i: number }[] = [];
 for (const s of skills) {
   let g = groups.find((x) => x.name === s.group);
   if (!g) {
-    g = { name: s.group, items: [], color: tone[groups.length % tone.length] };
+    g = { name: s.group, items: [], i: groups.length };
     groups.push(g);
   }
   g.items.push(s);
 }
+const gi = (name: string) => groups.find((g) => g.name === name)!.i;
+const timeline = groups.map((g) => ({
+  ...g,
+  cells: YEARS.map((y) => g.items.filter((s) => yearsOf(s).includes(y)).length),
+}));
+const maxCell = Math.max(...timeline.flatMap((t) => t.cells));
 const fieldRows = fields
   .map((f) => ({
     ...f,
@@ -50,20 +82,47 @@ const nSoft = skills.length - nHard;
 
 <div class="matrix" data-matrix data-total={skills.length}>
   <section class="viz" aria-labelledby="map-h">
-    <h2 id="map-h">Skill map</h2>
-    <p class="viz-lead">Each dot is one skill. Filled means I have it, a ring means I am developing it. Select a dot to jump to the evidence.</p>
-    <div class="clusters">
+    <h2 id="map-h">Every skill, by area</h2>
+    <p class="viz-lead">Each tile is one skill, colored by area. A solid tile is a skill I have. A dashed tile is one I am developing. Select a tile to jump to the evidence, or select an area to show only its skills.</p>
+    <ul class="areas" aria-label="Areas">
       {groups.map((g) => (
-        <div class="cluster" style={`--tone:${g.color}`}>
-          <h3>{g.name} <span class="n">{g.items.length}</span></h3>
-          <div class="dots">
-            {g.items.map((s) => (
-              <a class={`dot ${s.level}`} href={`#s-${slug(s.name)}`} data-name={s.name} aria-label={`${s.name}, ${labelOf[s.level]}`}></a>
-            ))}
-          </div>
+        <li><button type="button" class={`area a${g.i}`} data-area={g.name} aria-pressed="false"><span class="sw" aria-hidden="true"></span>{g.name} <span class="n">{g.items.length}</span></button></li>
+      ))}
+    </ul>
+    <ul class="grid" aria-label="All skills">
+      {skills.map((s) => (
+        <li class={`tile a${gi(s.group)} ${s.level}`} data-tile={`s-${slug(s.name)}`}>
+          <a href={`#s-${slug(s.name)}`} aria-label={`${s.name}, ${s.group}, ${labelOf[s.level]}`}>
+            <span class="chip"><SkillIcon name={s.icon ?? 'spark'} size={20} /></span>
+            <span class="tname">{s.name}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="viz" aria-labelledby="time-h">
+    <h2 id="time-h">When the evidence happened</h2>
+    <p class="viz-lead">Darker cells mean more skills with documented work in that year. Select a cell to show those skills, or a year to show every area. A year counts when a project, role, course or workshop in my record documents the skill. Papers with no start date I have are placed at their publication year.</p>
+    <div class="tl" role="group" aria-label="Skills by area and year">
+      <div class="tl-head" aria-hidden="true">
+        <span></span>
+        {YEARS.map((y) => <span class="yr">{String(y).slice(2)}</span>)}
+      </div>
+      {timeline.map((t) => (
+        <div class={`tl-row a${t.i}`}>
+          <span class="tl-name">{t.name}</span>
+          {t.cells.map((n, k) => (
+            <button type="button" class="cell" data-cell-area={t.name} data-cell-year={YEARS[k]} disabled={n === 0} style={`--v:${n / maxCell}`} aria-label={`${t.name}, ${YEARS[k]}: ${n} skills`} title={`${t.name}, ${YEARS[k]}: ${n} skills`}>{n || ''}</button>
+          ))}
         </div>
       ))}
+      <div class="tl-head tl-foot">
+        <span></span>
+        {YEARS.map((y) => <button type="button" class="yr yr-pick" data-year-pick={y} aria-label={`Show skills from ${y}`}>{String(y).slice(2)}</button>)}
+      </div>
     </div>
+    <p class="tl-key">Years are 2013 to 2026, shown as two digits.</p>
   </section>
 
   <section class="viz" aria-labelledby="fields-h">
@@ -127,6 +186,7 @@ const nSoft = skills.length - nHard;
   <p class="hint">Hover over or tap a skill name to see what else it is called and what it covers.</p>
 
   <p class="count" aria-live="polite" data-count>Showing all {skills.length} skills.</p>
+  <button type="button" class="reset" data-reset hidden>Show all skills</button>
 
   {
     groups.map((g) => (
@@ -134,8 +194,9 @@ const nSoft = skills.length - nHard;
         <h2>{g.name}</h2>
         <ul class="rows">
           {g.items.map((s) => (
-            <li class="skill" id={`s-${slug(s.name)}`} data-level={s.level} data-type={s.type ?? "hard"} data-fields={(s.fields ?? []).join(" ")}>
+            <li class={`skill a${g.i}`} id={`s-${slug(s.name)}`} data-level={s.level} data-type={s.type ?? "hard"} data-fields={(s.fields ?? []).join(" ")} data-area={s.group} data-years={yearsOf(s).join(" ")}>
               <h3>
+                <span class="chip chip-s"><SkillIcon name={s.icon ?? 'spark'} size={18} /></span>
                 {s.also?.length ? (
                   <span class="has-tip" tabindex="0" aria-describedby={`tip-${s.name.replace(/\W+/g, '-')}`}>
                     {s.name}
@@ -162,6 +223,22 @@ const nSoft = skills.length - nHard;
                 {labelOf[s.level]}
               </p>
               <p class="proof">{s.proof}</p>
+              <p class="ev">
+                <span class="ev-h">Where it shows up</span>
+                {(s.evidence ?? []).length ? (
+                  (s.evidence ?? []).map((id, k) => {
+                    const e = evOf(id);
+                    return (
+                      <>
+                        {k > 0 ? '; ' : ''}
+                        {e.href ? <a href={href(e.href)}>{e.name}</a> : e.name} <span class="ev-m">({kindLabel[e.kind].toLowerCase()}, {span(e)})</span>
+                      </>
+                    );
+                  })
+                ) : (
+                  <span class="ev-m">No project, role or course tied to it yet.</span>
+                )}
+              </p>
             </li>
           ))}
         </ul>
@@ -174,43 +251,64 @@ const nSoft = skills.length - nHard;
   document.querySelectorAll<HTMLElement>('[data-matrix]').forEach((root) => {
     const total = Number(root.dataset.total);
     const items = root.querySelectorAll<HTMLElement>('.skill');
+    const tiles = root.querySelectorAll<HTMLElement>('[data-tile]');
     const groups = root.querySelectorAll<HTMLElement>('[data-group]');
     const count = root.querySelector<HTMLElement>('[data-count]')!;
     const select = root.querySelector<HTMLSelectElement>('[data-field]')!;
-    const state = { level: 'all', type: 'all', field: 'all' };
+    const reset = root.querySelector<HTMLButtonElement>('[data-reset]')!;
+    const state = { level: 'all', type: 'all', field: 'all', area: 'all', year: 'all' };
+
+    const matches = (li: HTMLElement) =>
+      (state.level === 'all' || li.dataset.level === state.level) &&
+      (state.type === 'all' || li.dataset.type === state.type) &&
+      (state.field === 'all' || (li.dataset.fields ?? '').split(' ').includes(state.field)) &&
+      (state.area === 'all' || li.dataset.area === state.area) &&
+      (state.year === 'all' || (li.dataset.years ?? '').split(' ').includes(state.year));
 
     const apply = () => {
       let shown = 0;
+      const ok = new Set<string>();
       items.forEach((li) => {
-        const match =
-          (state.level === 'all' || li.dataset.level === state.level) &&
-          (state.type === 'all' || li.dataset.type === state.type) &&
-          (state.field === 'all' || (li.dataset.fields ?? '').split(' ').includes(state.field));
-        li.hidden = !match;
-        if (match) shown += 1;
+        const m = matches(li);
+        li.hidden = !m;
+        if (m) { shown += 1; ok.add(li.id); }
       });
+      tiles.forEach((t) => t.classList.toggle('dim', !ok.has(t.dataset.tile ?? '')));
       groups.forEach((g) => {
         g.hidden = !g.querySelector('.skill:not([hidden])');
       });
       root.querySelectorAll<HTMLButtonElement>('[data-filter]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.filter === state.level)));
       root.querySelectorAll<HTMLButtonElement>('[data-type]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.type === state.type)));
+      root.querySelectorAll<HTMLButtonElement>('button[data-area]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.area === state.area)));
+      root.querySelectorAll<HTMLButtonElement>('[data-year-pick]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.yearPick === state.year)));
+      root.querySelectorAll<HTMLButtonElement>('.cell').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.cellArea === state.area && b.dataset.cellYear === state.year)));
       select.value = state.field;
-      count.textContent = shown === total ? `Showing all ${total} skills.` : `Showing ${shown} of ${total} skills.`;
+      const filtered = Object.values(state).some((v) => v !== 'all');
+      reset.hidden = !filtered;
+      const bits = [] as string[];
+      if (state.area !== 'all') bits.push(state.area);
+      if (state.year !== 'all') bits.push(state.year);
+      count.textContent = (shown === total ? `Showing all ${total} skills.` : `Showing ${shown} of ${total} skills`) + (bits.length && shown !== total ? ` (${bits.join(', ')}).` : shown !== total ? '.' : '');
     };
+    const toList = () => root.querySelector('.list-h')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     root.querySelectorAll<HTMLButtonElement>('[data-filter]').forEach((b) => b.addEventListener('click', () => { state.level = b.dataset.filter ?? 'all'; apply(); }));
     root.querySelectorAll<HTMLButtonElement>('[data-type]').forEach((b) => b.addEventListener('click', () => { state.type = b.dataset.type ?? 'all'; apply(); }));
+    root.querySelectorAll<HTMLButtonElement>('button[data-area]').forEach((b) => b.addEventListener('click', () => { state.area = state.area === b.dataset.area ? 'all' : (b.dataset.area ?? 'all'); apply(); }));
+    root.querySelectorAll<HTMLButtonElement>('[data-year-pick]').forEach((b) => b.addEventListener('click', () => { state.year = state.year === b.dataset.yearPick ? 'all' : (b.dataset.yearPick ?? 'all'); state.area = 'all'; apply(); toList(); }));
+    root.querySelectorAll<HTMLButtonElement>('.cell').forEach((b) => b.addEventListener('click', () => { state.area = b.dataset.cellArea ?? 'all'; state.year = b.dataset.cellYear ?? 'all'; apply(); toList(); }));
     select.addEventListener('change', () => { state.field = select.value; apply(); });
+    reset.addEventListener('click', () => { state.level = 'all'; state.type = 'all'; state.field = 'all'; state.area = 'all'; state.year = 'all'; apply(); });
     root.querySelectorAll<HTMLButtonElement>('[data-field-pick]').forEach((b) =>
       b.addEventListener('click', () => {
         state.field = b.dataset.fieldPick ?? 'all';
         apply();
-        root.querySelector('.list-h')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        toList();
       })
     );
-    root.querySelectorAll<HTMLAnchorElement>('.dot').forEach((a) =>
+    root.querySelectorAll<HTMLAnchorElement>('.tile a').forEach((a) =>
       a.addEventListener('click', () => {
-        state.level = 'all'; state.type = 'all'; state.field = 'all';
+        state.level = 'all'; state.type = 'all'; state.field = 'all'; state.area = 'all'; state.year = 'all';
         apply();
       })
     );
@@ -220,15 +318,35 @@ const nSoft = skills.length - nHard;
 <style>
   .viz { margin-top: 2.5rem; }
   .viz-lead { margin: 0.3rem 0 1.1rem; color: var(--muted); max-width: 46rem; }
-  .clusters { display: grid; grid-template-columns: repeat(auto-fit, minmax(13.5rem, 1fr)); gap: 0.9rem; }
-  .cluster { background: var(--wash); border-radius: 10px; padding: 0.8rem 0.9rem 1rem; border-top: 4px solid var(--tone); }
-  .cluster h3 { font-size: 0.95rem; margin: 0 0 0.6rem; }
-  .dots { display: flex; flex-wrap: wrap; gap: 0.45rem; }
-  .dot { position: relative; width: 1.35rem; height: 1.35rem; border-radius: 50%; border: 2px solid var(--tone); background: var(--tone); display: block; }
-  .dot.developing { background: transparent; }
-  .dot:hover, .dot:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
-  .dot::after { content: attr(data-name); position: absolute; left: 50%; bottom: calc(100% + 0.45rem); transform: translateX(-50%); width: max-content; max-width: 14rem; padding: 0.35rem 0.55rem; background: var(--ink); color: var(--paper); border-radius: 5px; font-family: var(--display); font-size: 0.82rem; line-height: 1.3; display: none; pointer-events: none; z-index: 6; }
-  .dot:hover::after, .dot:focus-visible::after { display: block; }
+  .areas { list-style: none; margin: 0 0 1rem; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .area { display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.86rem; padding: 0.3rem 0.65rem; }
+  .area .sw { width: 0.8rem; height: 0.8rem; border-radius: 3px; background: var(--c); flex: none; }
+  .area[aria-pressed='true'] .sw { box-shadow: 0 0 0 2px var(--paper); }
+  .grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(10.2rem, 1fr)); gap: 0.5rem; }
+  .tile a { display: flex; align-items: center; gap: 0.55rem; height: 100%; padding: 0.45rem 0.6rem 0.45rem 0.45rem; border-radius: 9px; border: 2px solid var(--c); background: color-mix(in srgb, var(--c) 14%, var(--paper)); color: var(--ink); text-decoration: none; font-family: var(--display); font-size: 0.84rem; line-height: 1.22; font-weight: 500; }
+  .tile.developing a { border-style: dashed; background: transparent; }
+  .tile a:hover, .tile a:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+  .tile.dim a { opacity: 0.25; }
+  .chip { flex: none; display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 7px; background: var(--c); color: #fff; }
+  .chip-s { display: inline-grid; width: 1.7rem; height: 1.7rem; margin-right: 0.45rem; vertical-align: -0.35em; }
+  .tname { min-width: 0; overflow-wrap: anywhere; }
+  .tl { display: grid; gap: 3px; max-width: 54rem; }
+  .tl-head, .tl-row { display: grid; grid-template-columns: 8.5rem repeat(14, minmax(0, 1fr)); gap: 3px; align-items: center; }
+  .yr { font-family: var(--display); font-size: 0.72rem; color: var(--muted); text-align: center; font-variant-numeric: tabular-nums; }
+  .yr-pick { border: 0; padding: 0.2rem 0; border-radius: 4px; font-weight: 500; background: transparent; }
+  .yr-pick[aria-pressed='true'] { background: var(--ink); color: var(--paper); }
+  .tl-name { font-family: var(--display); font-size: 0.8rem; line-height: 1.15; padding-right: 0.3rem; }
+  .cell { height: 1.7rem; padding: 0; border: 0; border-radius: 4px; font-size: 0.72rem; font-variant-numeric: tabular-nums; color: transparent; background: color-mix(in srgb, var(--c) calc(12% + var(--v) * 88%), var(--paper)); }
+  .cell:disabled { background: var(--wash); cursor: default; }
+  .cell:not(:disabled):hover, .cell[aria-pressed='true'] { color: #fff; outline: 2px solid var(--ink); outline-offset: 1px; background: var(--c); }
+  .tl-key { margin: 0.6rem 0 0; font-family: var(--display); font-size: 0.82rem; color: var(--muted); }
+  .a0 { --c: #3b6ea8; } .a1 { --c: #1f8582; } .a2 { --c: #6a4fa3; } .a3 { --c: #55606e; } .a4 { --c: #c4553a; } .a5 { --c: #a87912; } .a6 { --c: #3d8a4a; } .a7 { --c: #a8387a; } .a8 { --c: #8a5a2b; } .a9 { --c: #6f7f1f; } .a10 { --c: #2f3f7a; }
+  .skill h3 .chip { color: #fff; }
+  .ev { grid-column: 1 / -1; margin: 0.35rem 0 0; font-size: 0.92rem; line-height: 1.5; color: var(--muted); }
+  .ev-h { font-family: var(--display); font-weight: 600; color: var(--ink); margin-right: 0.4rem; }
+  .ev-m { white-space: nowrap; }
+  .reset { margin-top: 0.7rem; }
+  @media (max-width: 520px) { .tl-head, .tl-row { grid-template-columns: repeat(14, minmax(0, 1fr)); } .tl-head > span:first-child { display: none; } .tl-name { grid-column: 1 / -1; padding-top: 0.5rem; font-weight: 600; } .cell { height: 1.9rem; } .grid { grid-template-columns: repeat(auto-fill, minmax(9.2rem, 1fr)); } }
   .fbars { list-style: none; margin: 0; padding: 0; max-width: 46rem; }
   .frow { width: 100%; display: grid; grid-template-columns: minmax(8rem, 15rem) 1fr 2rem; gap: 0.7rem; align-items: center; text-align: left; border: 0; border-radius: 6px; padding: 0.3rem 0.4rem; font-size: 0.93rem; }
   .frow:hover { background: var(--wash); border: 0; }

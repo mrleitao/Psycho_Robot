@@ -4,6 +4,7 @@ import EvidenceMatrix from '../components/EvidenceMatrix.astro';
 import Analyses from '../components/Analyses.astro';
 import skills from '../data/skills.json';
 import fields from '../data/fields.json';
+import evidence from '../data/evidence.json';
 ---
 
 <Base
@@ -19,7 +20,7 @@ import fields from '../data/fields.json';
     </header>
 
     <div class="body">
-      <EvidenceMatrix skills={skills} fields={fields}>
+      <EvidenceMatrix skills={skills} fields={fields} evidence={evidence}>
         <Analyses />
       </EvidenceMatrix>
     </div>

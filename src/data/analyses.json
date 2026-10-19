@@ -11,6 +11,10 @@
     "level": "have"
    },
    {
+    "name": "Chi-square tests",
+    "level": "have"
+   },
+   {
     "name": "Planned contrasts",
     "level": "have"
    }
@@ -183,11 +187,11 @@
   "items": [
    {
     "name": "Bayes factors",
-    "level": "developing"
+    "level": "have"
    },
    {
     "name": "Bayesian t-tests",
-    "level": "developing"
+    "level": "have"
    }
   ]
  },

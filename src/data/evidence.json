@@ -1,0 +1,409 @@
+[
+ {
+  "id": "diss",
+  "name": "Dissertation, six studies",
+  "kind": "project",
+  "from": 2019,
+  "to": 2024,
+  "href": "/projects/trust-in-medical-ai"
+ },
+ {
+  "id": "thesis",
+  "name": "Master's thesis on computer authority",
+  "kind": "project",
+  "from": 2018,
+  "to": 2019
+ },
+ {
+  "id": "mega",
+  "name": "Smartphone mega-analysis",
+  "kind": "project",
+  "from": 2020,
+  "to": 2024
+ },
+ {
+  "id": "genai",
+  "name": "Generative AI work study",
+  "kind": "project",
+  "from": 2026,
+  "to": 2026
+ },
+ {
+  "id": "riskcreep",
+  "name": "Risk Creep, COVID-19 field study",
+  "kind": "project",
+  "from": 2020,
+  "to": 2022
+ },
+ {
+  "id": "covid",
+  "name": "COVID-19 social interactions study",
+  "kind": "project",
+  "from": 2020,
+  "to": 2021
+ },
+ {
+  "id": "parasocial",
+  "name": "Parasocial identification study",
+  "kind": "project",
+  "from": 2022,
+  "to": 2022
+ },
+ {
+  "id": "phonereview",
+  "name": "Smartphone wellbeing review",
+  "kind": "project",
+  "from": 2020,
+  "to": 2020
+ },
+ {
+  "id": "vrq",
+  "name": "VR questionnaire validation",
+  "kind": "project",
+  "from": 2020,
+  "to": 2020
+ },
+ {
+  "id": "gaming",
+  "name": "Gaming motivation scale",
+  "kind": "project",
+  "from": 2025,
+  "to": 2025
+ },
+ {
+  "id": "vrbuffet",
+  "name": "VR buffet trial analysis at NIH",
+  "kind": "project",
+  "from": 2025,
+  "to": 2026
+ },
+ {
+  "id": "prs",
+  "name": "Polygenic risk and virtual patients",
+  "kind": "project",
+  "from": 2026,
+  "to": 2026
+ },
+ {
+  "id": "nihprot",
+  "name": "NIH genomics-outcomes protocol",
+  "kind": "project",
+  "from": 2026,
+  "to": 2026
+ },
+ {
+  "id": "genetic",
+  "name": "Genetic determinism and body weight paper",
+  "kind": "project",
+  "from": 2026,
+  "to": 2026
+ },
+ {
+  "id": "ema",
+  "name": "Seven-day student diary studies",
+  "kind": "project",
+  "from": 2019,
+  "to": 2023
+ },
+ {
+  "id": "phonesleep",
+  "name": "Phone and sleep poster",
+  "kind": "project",
+  "from": 2021,
+  "to": 2021
+ },
+ {
+  "id": "autonomy",
+  "name": "AI autonomy study",
+  "kind": "project",
+  "from": 2023,
+  "to": 2023
+ },
+ {
+  "id": "iss",
+  "name": "Smartphone self-inclusion scale",
+  "kind": "project",
+  "from": 2019,
+  "to": 2019
+ },
+ {
+  "id": "apppost",
+  "name": "App-usage prediction poster",
+  "kind": "project",
+  "from": 2019,
+  "to": 2019
+ },
+ {
+  "id": "datajam",
+  "name": "CSUN Data Jam entries",
+  "kind": "project",
+  "from": 2017,
+  "to": 2018
+ },
+ {
+  "id": "csunir",
+  "name": "CSUN Institutional Research analyst",
+  "kind": "role",
+  "from": 2018,
+  "to": 2019
+ },
+ {
+  "id": "aims2",
+  "name": "AIMS2 summer-skills evaluation",
+  "kind": "role",
+  "from": 2018,
+  "to": 2019
+ },
+ {
+  "id": "visn",
+  "name": "VISN Lab at CSUN",
+  "kind": "role",
+  "from": 2018,
+  "to": 2019
+ },
+ {
+  "id": "ucr",
+  "name": "UC Riverside research labs",
+  "kind": "role",
+  "from": 2013,
+  "to": 2017
+ },
+ {
+  "id": "csunlab",
+  "name": "CSUN Applied Social Psychology Lab",
+  "kind": "role",
+  "from": 2017,
+  "to": 2019
+ },
+ {
+  "id": "gtteam",
+  "name": "Georgetown research team, six to seven projects",
+  "kind": "role",
+  "from": 2019,
+  "to": 2023
+ },
+ {
+  "id": "nih",
+  "name": "NIH postdoctoral fellowship",
+  "kind": "role",
+  "from": 2024,
+  "to": 2026
+ },
+ {
+  "id": "sona",
+  "name": "Georgetown participant pool coordinator",
+  "kind": "role",
+  "from": 2021,
+  "to": 2023
+ },
+ {
+  "id": "dei",
+  "name": "Georgetown diversity committee and GRE initiative",
+  "kind": "role",
+  "from": 2020,
+  "to": 2022
+ },
+ {
+  "id": "pronoun",
+  "name": "Gender identity and pronoun task force",
+  "kind": "role",
+  "from": 2021,
+  "to": 2022
+ },
+ {
+  "id": "gios",
+  "name": "Open-science group and journal club",
+  "kind": "role",
+  "from": 2022,
+  "to": 2024
+ },
+ {
+  "id": "honors",
+  "name": "Honors thesis and student mentoring",
+  "kind": "role",
+  "from": 2021,
+  "to": 2023
+ },
+ {
+  "id": "grants",
+  "name": "Grants and fellowships",
+  "kind": "role",
+  "from": 2014,
+  "to": 2021
+ },
+ {
+  "id": "w-open",
+  "name": "Introduction to Open Science workshop",
+  "kind": "workshop",
+  "from": 2022,
+  "to": 2022
+ },
+ {
+  "id": "w-r",
+  "name": "R From Scratch workshop",
+  "kind": "workshop",
+  "from": 2023,
+  "to": 2023
+ },
+ {
+  "id": "w-power",
+  "name": "Power Analysis workshop",
+  "kind": "workshop",
+  "from": 2023,
+  "to": 2023
+ },
+ {
+  "id": "w-nih",
+  "name": "Introduction to R and Quarto at NIH",
+  "kind": "workshop",
+  "from": 2025,
+  "to": 2025
+ },
+ {
+  "id": "t-mgmt",
+  "name": "NIH management course",
+  "kind": "training",
+  "from": 2026,
+  "to": 2026
+ },
+ {
+  "id": "t-team",
+  "name": "Team science workshop",
+  "kind": "training",
+  "from": 2025,
+  "to": 2025
+ },
+ {
+  "id": "t-lpa",
+  "name": "Latent profile analysis workshop",
+  "kind": "training",
+  "from": 2023,
+  "to": 2023
+ },
+ {
+  "id": "t-text",
+  "name": "Text analytics workshop",
+  "kind": "training",
+  "from": 2023,
+  "to": 2023
+ },
+ {
+  "id": "t-health",
+  "name": "Social psychology and health workshop",
+  "kind": "training",
+  "from": 2023,
+  "to": 2023
+ },
+ {
+  "id": "t-pitt",
+  "name": "Longitudinal and ambulatory methods workshops",
+  "kind": "training",
+  "from": 2021,
+  "to": 2021
+ },
+ {
+  "id": "psytech",
+  "name": "Psychology of Technology course",
+  "kind": "teaching",
+  "from": 2022,
+  "to": 2022
+ },
+ {
+  "id": "rmta",
+  "name": "Research Methods teaching fellow",
+  "kind": "teaching",
+  "from": 2021,
+  "to": 2021
+ },
+ {
+  "id": "taother",
+  "name": "Teaching assistant roles",
+  "kind": "teaching",
+  "from": 2017,
+  "to": 2023
+ },
+ {
+  "id": "kaplan",
+  "name": "Kaplan research methods",
+  "kind": "teaching",
+  "from": 2022,
+  "to": 2022
+ },
+ {
+  "id": "guest",
+  "name": "Guest lectures",
+  "kind": "teaching",
+  "from": 2020,
+  "to": 2023
+ },
+ {
+  "id": "talks",
+  "name": "Session chair and invited talks",
+  "kind": "teaching",
+  "from": 2023,
+  "to": 2024
+ },
+ {
+  "id": "c-stats",
+  "name": "Statistics and regression sequence",
+  "kind": "course",
+  "from": 2019,
+  "to": 2020
+ },
+ {
+  "id": "c-py",
+  "name": "Data science for public policy",
+  "kind": "course",
+  "from": 2021,
+  "to": 2021
+ },
+ {
+  "id": "c-econ",
+  "name": "Microeconomics courses",
+  "kind": "course",
+  "from": 2019,
+  "to": 2020
+ },
+ {
+  "id": "c-policy",
+  "name": "Policy process, management and ethics courses",
+  "kind": "course",
+  "from": 2019,
+  "to": 2021
+ },
+ {
+  "id": "c-ai",
+  "name": "AI to the Cloud course",
+  "kind": "course",
+  "from": 2021,
+  "to": 2021
+ },
+ {
+  "id": "c-sem",
+  "name": "Latent variable analysis course",
+  "kind": "course",
+  "from": 2018,
+  "to": 2018
+ },
+ {
+  "id": "c-mem",
+  "name": "Memory seminar",
+  "kind": "course",
+  "from": 2017,
+  "to": 2017
+ },
+ {
+  "id": "c-meth",
+  "name": "Research methodology seminar",
+  "kind": "course",
+  "from": 2018,
+  "to": 2018
+ },
+ {
+  "id": "c-brain",
+  "name": "Mind, Brain and Education course",
+  "kind": "course",
+  "from": 2020,
+  "to": 2020
+ }
+]
