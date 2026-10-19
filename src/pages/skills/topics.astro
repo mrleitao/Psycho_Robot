@@ -1,0 +1,22 @@
+---
+import Base from '../../layouts/Base.astro';
+import SkillsNav from '../../components/SkillsNav.astro';
+import Topics from '../../components/Topics.astro';
+---
+
+<Base title="Topics" description="Topics where I have expertise and topics where I have knowledge.">
+  <div class="wrap">
+    <header class="page-head">
+      <h1>Topics</h1>
+      <p class="lede">The subjects I can speak to, from topics I have published and taught to topics I studied in depth.</p>
+    </header>
+    <SkillsNav current="topics" />
+    <div class="body">
+      <Topics />
+    </div>
+  </div>
+</Base>
+
+<style>
+  .body { margin-top: clamp(24px, 4vw, 40px); }
+</style>

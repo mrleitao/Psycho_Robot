@@ -16,84 +16,84 @@
  },
  {
   "id": "mega",
-  "name": "Smartphone mega-analysis",
+  "name": "Published analysis pooling eight phone experiments",
   "kind": "project",
   "from": 2020,
   "to": 2024
  },
  {
   "id": "genai",
-  "name": "Generative AI work study",
+  "name": "Preprint on employees working with generative AI",
   "kind": "project",
   "from": 2026,
   "to": 2026
  },
  {
   "id": "riskcreep",
-  "name": "Risk Creep, COVID-19 field study",
+  "name": "Paper under review on risk-taking early in COVID-19",
   "kind": "project",
   "from": 2020,
   "to": 2022
  },
  {
   "id": "covid",
-  "name": "COVID-19 social interactions study",
+  "name": "Published study of social contact during COVID-19",
   "kind": "project",
   "from": 2020,
   "to": 2021
  },
  {
   "id": "parasocial",
-  "name": "Parasocial identification study",
+  "name": "Published study of fans and their favorite characters",
   "kind": "project",
   "from": 2022,
   "to": 2022
  },
  {
   "id": "phonereview",
-  "name": "Smartphone wellbeing review",
+  "name": "Published review of smartphones and wellbeing",
   "kind": "project",
   "from": 2020,
   "to": 2020
  },
  {
   "id": "vrq",
-  "name": "VR questionnaire validation",
+  "name": "Published study of a VR symptom questionnaire",
   "kind": "project",
   "from": 2020,
   "to": 2020
  },
  {
   "id": "gaming",
-  "name": "Gaming motivation scale",
+  "name": "Published survey of why people play games",
   "kind": "project",
   "from": 2025,
   "to": 2025
  },
  {
   "id": "vrbuffet",
-  "name": "VR buffet trial analysis at NIH",
+  "name": "Published analysis of a drug trial with a VR buffet",
   "kind": "project",
   "from": 2025,
   "to": 2026
  },
  {
   "id": "prs",
-  "name": "Polygenic risk and virtual patients",
+  "name": "Study of genetic risk in virtual doctor visits",
   "kind": "project",
   "from": 2026,
   "to": 2026
  },
  {
   "id": "nihprot",
-  "name": "NIH genomics-outcomes protocol",
+  "name": "NIH study protocol on genomic results and AI review",
   "kind": "project",
   "from": 2026,
   "to": 2026
  },
  {
   "id": "genetic",
-  "name": "Genetic determinism and body weight paper",
+  "name": "Accepted paper on beliefs about genes and body weight",
   "kind": "project",
   "from": 2026,
   "to": 2026
@@ -107,28 +107,28 @@
  },
  {
   "id": "phonesleep",
-  "name": "Phone and sleep poster",
+  "name": "Poster on screen time in bed and sleep",
   "kind": "project",
   "from": 2021,
   "to": 2021
  },
  {
   "id": "autonomy",
-  "name": "AI autonomy study",
+  "name": "Study of choice and the use of outside judgments",
   "kind": "project",
   "from": 2023,
   "to": 2023
  },
  {
   "id": "iss",
-  "name": "Smartphone self-inclusion scale",
+  "name": "Smartphone closeness scale (in preparation)",
   "kind": "project",
   "from": 2019,
   "to": 2019
  },
  {
   "id": "apppost",
-  "name": "App-usage prediction poster",
+  "name": "Poster on predicting app use",
   "kind": "project",
   "from": 2019,
   "to": 2019
@@ -142,21 +142,21 @@
  },
  {
   "id": "csunir",
-  "name": "CSUN Institutional Research analyst",
+  "name": "Data analyst, CSUN Institutional Research",
   "kind": "role",
   "from": 2018,
   "to": 2019
  },
  {
   "id": "aims2",
-  "name": "AIMS2 summer-skills evaluation",
+  "name": "Summer skills program evaluation at CSUN",
   "kind": "role",
   "from": 2018,
   "to": 2019
  },
  {
   "id": "visn",
-  "name": "VISN Lab at CSUN",
+  "name": "Text and VR research lab at CSUN",
   "kind": "role",
   "from": 2018,
   "to": 2019

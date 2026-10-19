@@ -25,12 +25,15 @@ interface Props {
   skills: Skill[];
   fields: { id: string; name: string }[];
   evidence: Ev[];
+  part?: 'overview' | 'full';
 }
 
 import SkillIcon from './SkillIcon.astro';
 import { href } from '../utils/url';
 
-const { skills, fields, evidence } = Astro.props;
+const { skills, fields, evidence, part = 'full' } = Astro.props;
+const fullPath = href('/skills/full/');
+const nProjects = evidence.filter((e) => e.kind === 'project').length;
 const evOf = (id: string) => evidence.find((e) => e.id === id)!;
 const yearsOf = (s: Skill) => {
   const set = new Set<number>();
@@ -45,8 +48,8 @@ const kindLabel: Record<string, string> = { project: 'Project', role: 'Role', wo
 const YEARS = Array.from({ length: 14 }, (_, i) => 2013 + i);
 
 const levels = [
-  { id: 'have', label: 'Have', note: 'I have done this work, on my own or as part of a published project.' },
-  { id: 'developing', label: 'Developing', note: 'Real practice, and I am still building depth.' },
+  { id: 'have', label: 'Have', note: 'I have done this work on my own or in a published project.' },
+  { id: 'developing', label: 'Developing', note: 'I use it in real work and am still building depth.' },
 ] as const;
 
 const slug = (s: string) => s.toLowerCase().replace(/\W+/g, '-').replace(/^-|-$/g, '');
@@ -72,10 +75,17 @@ const nHard = skills.filter((s) => s.type !== 'soft').length;
 const nSoft = skills.length - nHard;
 ---
 
-<div class="matrix" data-matrix data-total={skills.length}>
+<div class="matrix" data-matrix data-part={part} data-full={fullPath} data-total={skills.length}>
+  {part === 'overview' && (<>
+  <ul class="stats" aria-label="At a glance">
+    <li><strong>{skills.length}</strong><span>skills documented</span></li>
+    <li><strong>{counts.have}</strong><span>skills I have</span></li>
+    <li><strong>{counts.developing}</strong><span>still developing</span></li>
+    <li><strong>{nProjects}</strong><span>projects behind them</span></li>
+  </ul>
   <section class="viz" aria-labelledby="map-h">
     <h2 id="map-h">Every skill, by area</h2>
-    <p class="viz-lead">Each tile is one skill, colored by area. A solid tile is a skill I have. A dashed tile is one I am developing. Select a tile to jump to the evidence, or select an area to show only its skills.</p>
+    <p class="viz-lead">Each tile is one skill, colored by area. A solid tile marks a skill I have. A dashed tile marks one I am developing. Select a tile to read its evidence, or an area to see all of its skills.</p>
     <ul class="areas" aria-label="Areas">
       <li><button type="button" class="area all" data-reset disabled>Show all skills</button></li>
       {groups.map((g) => (
@@ -85,7 +95,7 @@ const nSoft = skills.length - nHard;
     <ul class="grid" aria-label="All skills">
       {skills.map((s) => (
         <li class={`tile a${gi(s.group)} ${s.level}`} data-tile={`s-${slug(s.name)}`}>
-          <a href={`#s-${slug(s.name)}`} aria-label={`${s.name}, ${s.group}, ${labelOf[s.level]}`}>
+          <a href={`${fullPath}#s-${slug(s.name)}`} aria-label={`${s.name}, ${s.group}, ${labelOf[s.level]}`}>
             <span class="chip"><SkillIcon name={s.icon ?? 'spark'} size={20} /></span>
             <span class="tname">{s.name}</span>
           </a>
@@ -96,7 +106,7 @@ const nSoft = skills.length - nHard;
 
   <section class="viz" aria-labelledby="time-h">
     <h2 id="time-h">When the evidence happened</h2>
-    <p class="viz-lead">Darker cells mean more skills with documented work in that year. Select a cell to show those skills, or a year to show every area. A year counts when a project, role, course or workshop in my record documents the skill. Papers with no start date I have are placed at their publication year.</p>
+    <p class="viz-lead">Darker cells mean more skills with documented work in that year. Select a cell to see those skills, or a year to see every area. A year counts when a project, role, course, or workshop documents the skill.</p>
     <div class="tl" role="group" aria-label="Skills by area and year">
       <div class="tl-head" aria-hidden="true">
         <span></span>
@@ -115,12 +125,14 @@ const nSoft = skills.length - nHard;
         {YEARS.map((y) => <button type="button" class="yr yr-pick" data-year-pick={y} aria-label={`Show skills from ${y}`}>{String(y).slice(2)}</button>)}
       </div>
     </div>
-    <p class="tl-key">Years are 2013 to 2026, shown as two digits.</p>
+    <p class="tl-key">Years run from 2013 to 2026.</p>
   </section>
+  </>)}
 
   <slot />
 
-  <h2 class="list-h">The evidence, skill by skill</h2>
+  {part === 'full' && (<>
+  <h2 class="list-h">Every skill and its evidence</h2>
   <div class="controls">
     <div class="filters" role="group" aria-label="Filter skills by level">
       <button type="button" aria-pressed="true" data-filter="all">All <span class="n">{skills.length}</span></button>
@@ -158,7 +170,7 @@ const nSoft = skills.length - nHard;
     }
   </dl>
 
-  <p class="hint">Hover over or tap a skill name to see what else it is called and what it covers.</p>
+  <p class="hint">Hover over or tap a skill name to see its other names and what it covers.</p>
 
   <p class="count" aria-live="polite" data-count>Showing all {skills.length} skills.</p>
   <button type="button" class="area all rst" data-reset disabled>Show all skills</button>
@@ -218,6 +230,7 @@ const nSoft = skills.length - nHard;
       </section>
     ))
   }
+  </>)}
 </div>
 
 <script>
@@ -227,7 +240,9 @@ const nSoft = skills.length - nHard;
     const tiles = root.querySelectorAll<HTMLElement>('[data-tile]');
     const groups = root.querySelectorAll<HTMLElement>('[data-group]');
     const count = root.querySelector<HTMLElement>('[data-count]')!;
-    const select = root.querySelector<HTMLSelectElement>('[data-field]')!;
+    const select = root.querySelector<HTMLSelectElement>('[data-field]');
+    const overview = root.dataset.part === 'overview';
+    const go = (q: Record<string, string>) => { const u = new URLSearchParams(q).toString(); location.href = `${root.dataset.full}${u ? '?' + u : ''}`; };
     const resets = root.querySelectorAll<HTMLButtonElement>('[data-reset]');
     const state = { level: 'all', type: 'all', field: 'all', area: 'all', year: 'all' };
 
@@ -255,7 +270,7 @@ const nSoft = skills.length - nHard;
       root.querySelectorAll<HTMLButtonElement>('button[data-area]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.area === state.area)));
       root.querySelectorAll<HTMLButtonElement>('[data-year-pick]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.yearPick === state.year)));
       root.querySelectorAll<HTMLButtonElement>('.cell').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.cellArea === state.area && b.dataset.cellYear === state.year)));
-      select.value = state.field;
+      if (select) select.value = state.field;
       const filtered = Object.values(state).some((v) => v !== 'all');
       resets.forEach((r) => { r.disabled = !filtered; });
       const bits = [] as string[];
@@ -263,25 +278,30 @@ const nSoft = skills.length - nHard;
       if (state.year !== 'all') bits.push(state.year);
       count.textContent = (shown === total ? `Showing all ${total} skills.` : `Showing ${shown} of ${total} skills`) + (bits.length && shown !== total ? ` (${bits.join(', ')}).` : shown !== total ? '.' : '');
     };
-    const toList = () => root.querySelector('.list-h')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const toList = () => {};
 
     root.querySelectorAll<HTMLButtonElement>('[data-filter]').forEach((b) => b.addEventListener('click', () => { state.level = b.dataset.filter ?? 'all'; apply(); }));
     root.querySelectorAll<HTMLButtonElement>('[data-type]').forEach((b) => b.addEventListener('click', () => { state.type = b.dataset.type ?? 'all'; apply(); }));
-    root.querySelectorAll<HTMLButtonElement>('button[data-area]').forEach((b) => b.addEventListener('click', () => { state.area = state.area === b.dataset.area ? 'all' : (b.dataset.area ?? 'all'); apply(); }));
-    root.querySelectorAll<HTMLButtonElement>('[data-year-pick]').forEach((b) => b.addEventListener('click', () => { state.year = state.year === b.dataset.yearPick ? 'all' : (b.dataset.yearPick ?? 'all'); state.area = 'all'; apply(); toList(); }));
-    root.querySelectorAll<HTMLButtonElement>('.cell').forEach((b) => b.addEventListener('click', () => { state.area = b.dataset.cellArea ?? 'all'; state.year = b.dataset.cellYear ?? 'all'; apply(); toList(); }));
-    select.addEventListener('change', () => { state.field = select.value; apply(); });
+    root.querySelectorAll<HTMLButtonElement>('button[data-area]').forEach((b) => b.addEventListener('click', () => { if (overview) { go({ area: b.dataset.area ?? '' }); return; } state.area = state.area === b.dataset.area ? 'all' : (b.dataset.area ?? 'all'); apply(); }));
+    root.querySelectorAll<HTMLButtonElement>('[data-year-pick]').forEach((b) => b.addEventListener('click', () => { if (overview) { go({ year: b.dataset.yearPick ?? '' }); return; } state.year = state.year === b.dataset.yearPick ? 'all' : (b.dataset.yearPick ?? 'all'); state.area = 'all'; apply(); }));
+    root.querySelectorAll<HTMLButtonElement>('.cell').forEach((b) => b.addEventListener('click', () => { if (overview) { go({ area: b.dataset.cellArea ?? '', year: b.dataset.cellYear ?? '' }); return; } state.area = b.dataset.cellArea ?? 'all'; state.year = b.dataset.cellYear ?? 'all'; apply(); }));
+    select?.addEventListener('change', () => { state.field = select.value; apply(); });
     resets.forEach((r) => r.addEventListener('click', () => { state.level = 'all'; state.type = 'all'; state.field = 'all'; state.area = 'all'; state.year = 'all'; apply(); }));
-    root.querySelectorAll<HTMLAnchorElement>('.tile a').forEach((a) =>
-      a.addEventListener('click', () => {
-        state.level = 'all'; state.type = 'all'; state.field = 'all'; state.area = 'all'; state.year = 'all';
-        apply();
-      })
-    );
+    if (!overview) {
+      const q = new URLSearchParams(location.search);
+      for (const k of ['level', 'type', 'field', 'area', 'year'] as const) { const v = q.get(k); if (v) state[k] = v; }
+      apply();
+      if (location.hash) document.getElementById(location.hash.slice(1))?.scrollIntoView({ block: 'start' });
+    }
   });
 </script>
 
 <style>
+  .stats { list-style: none; margin: 2rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr)); gap: 0.6rem; }
+  .stats li { display: grid; gap: 0.1rem; padding: 0.7rem 0.9rem; background: var(--wash); border-radius: 8px; border-top: 4px solid var(--peach); font-family: var(--display); }
+  .stats li:nth-child(2) { border-color: var(--coral); } .stats li:nth-child(3) { border-color: var(--steel); } .stats li:nth-child(4) { border-color: var(--deep); }
+  .stats strong { font-size: 1.7rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .stats span { font-size: 0.86rem; color: var(--muted); }
   .viz { margin-top: 2.5rem; }
   .viz-lead { margin: 0.3rem 0 1.1rem; color: var(--muted); max-width: 46rem; }
   .areas { list-style: none; margin: 0 0 1rem; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }

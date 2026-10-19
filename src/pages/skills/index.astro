@@ -1,0 +1,46 @@
+---
+import Base from '../../layouts/Base.astro';
+import SkillsNav from '../../components/SkillsNav.astro';
+import EvidenceMatrix from '../../components/EvidenceMatrix.astro';
+import { href } from '../../utils/url';
+import skills from '../../data/skills.json';
+import fields from '../../data/fields.json';
+import evidence from '../../data/evidence.json';
+const starts = [
+  { label: 'Research and study design', blurb: 'Experiments, surveys, and measurement', q: 'area=Study+design' },
+  { label: 'Statistics and analysis', blurb: 'Modeling, Bayes, and robustness', q: 'area=Analysis' },
+  { label: 'AI integration', blurb: 'Building with and evaluating AI', q: 'area=AI+integration' },
+  { label: 'Leading and operating', blurb: 'Teams, process, and policy', q: 'area=Leading+and+operating' },
+  { label: 'Working style', blurb: 'How I work with others', q: 'type=soft' },
+];
+---
+
+<Base title="Skills" description="A map of my technical and working-style skills, with the work that backs each one.">
+  <div class="wrap">
+    <header class="page-head">
+      <h1>Skills, backed by the work</h1>
+      <p class="lede">Each skill below comes with the studies, roles, courses, and workshops that show it. Start with the map, then open the full list to filter by level, type, field, or year.</p>
+    </header>
+    <SkillsNav current="overview" />
+    <section class="start" aria-labelledby="start-h">
+      <h2 id="start-h">Looking for something specific?</h2>
+      <ul>
+        {starts.map((x) => <li><a href={href(`/skills/full/?${x.q}`)}><strong>{x.label}</strong><span>{x.blurb}</span></a></li>)}
+      </ul>
+    </section>
+    <div class="body">
+      <EvidenceMatrix skills={skills} fields={fields} evidence={evidence} part="overview" />
+    </div>
+  </div>
+</Base>
+
+<style>
+  .start { margin-top: 2rem; font-family: var(--display); }
+  .start h2 { font-size: 1.1rem; margin: 0 0 0.6rem; }
+  .start ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: 0.6rem; }
+  .start a { display: grid; gap: 0.15rem; height: 100%; padding: 0.7rem 0.9rem; border: 1.5px solid var(--rule); border-radius: 8px; color: var(--ink); text-decoration: none; }
+  .start a:hover { border-color: var(--coral); }
+  .start strong { font-size: 0.97rem; }
+  .start span { font-size: 0.85rem; color: var(--muted); }
+  .body { margin-top: clamp(24px, 4vw, 40px); }
+</style>

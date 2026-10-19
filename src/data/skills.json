@@ -21,7 +21,7 @@
    "acad",
    "ins"
   ],
-  "proof": "I developed the theory behind Risk Creep, the parasocial identification paper, the smartphone wellbeing review, my thesis and my dissertation.",
+  "proof": "I developed the theory behind a COVID-19 field study, a study of fans and their favorite characters, a review of smartphones and wellbeing, my thesis, and my dissertation.",
   "icon": "idea",
   "evidence": [
    "riskcreep",
@@ -57,7 +57,7 @@
    "tsi",
    "game"
   ],
-  "proof": "I designed and ran six studies for my dissertation, with plans registered in advance, and recruited more than 3,000 people. My master's thesis was an experiment with 305 participants, also registered in advance.",
+  "proof": "I designed and ran six studies for my dissertation, with each plan registered in advance, and recruited more than 3,000 people. My master's thesis was a registered experiment with 305 participants.",
   "icon": "flask",
   "evidence": [
    "diss",
@@ -89,7 +89,7 @@
    "tsi",
    "acad"
   ],
-  "proof": "I ran a 15-day behavior-change study (560 recruited, 455 retained) and managed seven-day student diary studies, with about four surveys a day.",
+  "proof": "I ran a 15-day behavior-change study with 560 people recruited and 455 retained. I also managed seven-day student diary studies, with about four surveys a day.",
   "icon": "clock",
   "evidence": [
    "diss",
@@ -122,7 +122,7 @@
    "dsa",
    "bar"
   ],
-  "proof": "I used matching, regression discontinuity and difference-in-differences on records for more than 100,000 students.",
+  "proof": "I matched comparison groups on records for more than 100,000 students and used difference-in-differences terms in my longitudinal studies. Graduate courses trained me in regression discontinuity and instrumental variables.",
   "icon": "fork",
   "evidence": [
    "csunir",
@@ -146,7 +146,7 @@
    "hlth",
    "acad"
   ],
-  "proof": "I am first author on a 2026 analysis of a randomized, double-blind crossover trial of a ghrelin-receptor blocker in 29 people with alcohol use disorder. The NIH team designed the trial. I ran the analysis.",
+  "proof": "I am first author on a 2026 paper analyzing a randomized, double-blind crossover trial of a ghrelin-receptor blocker in 29 people with alcohol use disorder. The NIH team designed the trial. I ran the analysis and made the figures.",
   "icon": "pill",
   "evidence": [
    "vrbuffet"
@@ -175,7 +175,7 @@
    "pol",
    "bar"
   ],
-  "proof": "I evaluated a university summer-skills program with focus groups, surveys and student outcome data, then presented what worked to department leaders.",
+  "proof": "I evaluated a university summer-skills program with focus groups, surveys, and student outcome data. I presented the results at departmental meetings.",
   "icon": "clipboard",
   "evidence": [
    "aims2"
@@ -201,7 +201,7 @@
    "acad",
    "ai"
   ],
-  "proof": "I wrote literature reviews on smartphone use and on COVID-19 social contact, and pooled the raw data from eight experiments.",
+  "proof": "I co-wrote a published review of how smartphones affect wellbeing. I synthesized the evidence for a COVID-19 social-contact paper and pooled the raw data from eight experiments.",
   "icon": "layers",
   "evidence": [
    "phonereview",
@@ -293,7 +293,7 @@
    "acad",
    "bar"
   ],
-  "proof": "I wrote a graduate-seminar proposal that turned theories of memory into an applied study. I have not run a memory experiment.",
+  "proof": "In a graduate seminar, I turned theories of memory into a proposal for an applied study.",
   "icon": "brain",
   "evidence": [
    "c-mem"
@@ -317,7 +317,7 @@
    "pol",
    "lnd"
   ],
-  "proof": "I analyzed how AI, cloud and data systems depend on people and policy in a graduate course. Applying it to a live project is still ahead.",
+  "proof": "In a graduate course, I traced how AI, cloud, and data systems depend on people and policy, through essays, a group project, and a final project.",
   "icon": "gear",
   "evidence": [
    "c-ai"
@@ -347,7 +347,7 @@
    "game",
    "hlth"
   ],
-  "proof": "I built the surveys for every study I have run, programmed them in Qualtrics, and wrote items for a published gaming-motivation scale.",
+  "proof": "I built the surveys for every study I have run and programmed them in Qualtrics. I wrote items for a published survey of why people play games.",
   "icon": "form",
   "evidence": [
    "gaming",
@@ -379,7 +379,7 @@
    "game",
    "ai"
   ],
-  "proof": "I built the trust measures for my dissertation and a smartphone self-inclusion scale (in preparation, first author). I also contributed to a published gaming scale and a VR symptom questionnaire.",
+  "proof": "I built the trust measures for my dissertation and a scale of how close people feel to their smartphones (in preparation, first author). I contributed to a published survey of gaming motivation and a VR symptom questionnaire.",
   "icon": "ruler",
   "evidence": [
    "diss",
@@ -470,7 +470,7 @@
    "dsa",
    "pol"
   ],
-  "proof": "I screen out inattentive and duplicate respondents. In a COVID-19 survey, 674 people consented and 569 passed.",
+  "proof": "I screen out inattentive and duplicate respondents. In a COVID-19 survey, 674 people consented and 569 completed it.",
   "icon": "shieldcheck",
   "evidence": [
    "covid",
@@ -497,7 +497,7 @@
    "bar",
    "eval"
   ],
-  "proof": "I designed dissertation Study 6, which tracked trust, adherence and behavior for 15 days. It found no reliable effect, and I reported it that way.",
+  "proof": "I designed dissertation Study 6, which tracked trust, adherence, and behavior for 15 days. It showed no reliable difference between the doctor and AI conditions, and I reported it that way.",
   "icon": "target",
   "evidence": [
    "diss"
@@ -557,7 +557,7 @@
    "hlth",
    "acad"
   ],
-  "proof": "I fit linear, logistic, ordinal, negative-binomial and mixed-effects models. I pooled eight experiments (1,778 people) into one multilevel model.",
+  "proof": "I fit linear, logistic, ordinal, negative-binomial, and mixed-effects models. In one analysis I pooled eight experiments (1,778 people) into a single multilevel model.",
   "icon": "trend",
   "evidence": [
    "riskcreep",
@@ -628,7 +628,7 @@
    "ins",
    "acad"
   ],
-  "proof": "I tested who is affected and why: a multilevel mediated-moderation model in my dissertation, and causal mediation in the generative AI experiments.",
+  "proof": "I tested who is affected and why. My dissertation used a multilevel mediated-moderation model, and my generative AI preprint used causal mediation.",
   "icon": "mediate",
   "evidence": [
    "diss",
@@ -721,7 +721,7 @@
    "bar",
    "acad"
   ],
-  "proof": "In the generative AI study I tested the main result 69 ways, so the conclusion does not rest on one analysis choice.",
+  "proof": "In my generative AI preprint, I tested the main result 69 ways, so the conclusion does not rest on one analysis choice.",
   "icon": "shield",
   "evidence": [
    "genai",
@@ -748,7 +748,7 @@
    "xpr",
    "bar"
   ],
-  "proof": "In the generative AI experiments, judges who did not know the condition rated the work, and I compared quality with time spent.",
+  "proof": "I designed blind ratings for my generative AI preprint. Judges who did not know the condition rated the work, and I compared quality with time spent.",
   "icon": "eyeoff",
   "evidence": [
    "genai"
@@ -805,7 +805,7 @@
    "bar",
    "ssp"
   ],
-  "proof": "I prepared the data for the parasocial study, the pooled analysis, and more than 100,000 student records.",
+  "proof": "I prepared the data for a study of fans and their favorite characters, for the pooled analysis, and for more than 100,000 student records.",
   "icon": "funnel",
   "evidence": [
    "parasocial",
@@ -837,7 +837,7 @@
    "rpm",
    "pol"
   ],
-  "proof": "I built Tableau dashboards that department chairs and administrators used each semester, and the figures for the generative AI study.",
+  "proof": "I built Tableau dashboards that department chairs and administrators used each semester, and I made the figures for my generative AI preprint and this website.",
   "icon": "bars",
   "evidence": [
    "csunir",
@@ -865,7 +865,7 @@
    "acad",
    "dsa"
   ],
-  "proof": "I use Bayes factors and Bayesian t-tests to show how strongly the data support a null result, in the generative AI study and on the Studies 1 and 2 pages of this site. I have not built full Bayesian models.",
+  "proof": "I use Bayes factors and Bayesian t-tests to show how strongly the data support a null result. They appear in my generative AI preprint and on the Studies 1 and 2 pages of this site.",
   "icon": "odds",
   "evidence": [
    "diss",
@@ -889,7 +889,7 @@
    "ins",
    "dsa"
   ],
-  "proof": "I completed a 2023 methods workshop. My first applied project is still ahead.",
+  "proof": "I completed a 2023 workshop on latent profile analysis, a method that sorts people into groups by their pattern of answers.",
   "icon": "clusters",
   "evidence": [
    "t-lpa"
@@ -917,7 +917,7 @@
    "game",
    "acad"
   ],
-  "proof": "I built and tested classifiers in an end-to-end Python project for a graduate course, and presented a poster predicting app use. I have not deployed a model.",
+  "proof": "I built and tested classifiers in an end-to-end Python project for a graduate course, and I presented a poster on predicting app use.",
   "icon": "tree",
   "evidence": [
    "c-py",
@@ -942,7 +942,7 @@
    "pol",
    "eval"
   ],
-  "proof": "I used cost-benefit and market-failure analysis in graduate economics courses. I have not applied it to a live decision.",
+  "proof": "I applied cost-benefit and market-failure analysis to policy questions in two graduate economics courses.",
   "icon": "coin",
   "evidence": [
    "c-econ"
@@ -1007,7 +1007,7 @@
    "ai",
    "xpr"
   ],
-  "proof": "I built a participant-facing task on the ChatGPT API, hosted on AWS, with random assignment in Qualtrics. It is a research tool, not production software.",
+  "proof": "I host research tasks in the cloud and connect them to survey software. For one study, AWS linked Qualtrics to the ChatGPT API and stored each prompt and response.",
   "icon": "cloud",
   "evidence": [
    "genai"
@@ -1033,7 +1033,7 @@
    "ins",
    "game"
   ],
-  "proof": "I ran LIWC text analysis at a university lab in 2018 and 2019, and compared human and AI writing with similarity scores in the generative AI study.",
+  "proof": "I ran LIWC text analysis at a university lab in 2018 and 2019. In my generative AI preprint, I compared human and AI writing with similarity scores.",
   "icon": "lines",
   "evidence": [
    "visn",
@@ -1063,7 +1063,7 @@
    "lnd",
    "ins"
   ],
-  "proof": "I use these tools lightly: Excel macros and Praat scripts in earlier lab work, and web pages, slides and posters since.",
+  "proof": "I wrote Excel macros and Praat scripts in earlier lab work. I build web pages, slides, and posters, including mrleitao.com and this site.",
   "icon": "wrench",
   "evidence": [
    "ucr",
@@ -1091,7 +1091,7 @@
    "dsa",
    "ins"
   ],
-  "proof": "I took a 2023 text-analytics workshop and a graduate course on TF-IDF and language processing. My first applied project is still ahead.",
+  "proof": "I took a 2023 text-analytics workshop and a graduate course on word-frequency methods (TF-IDF) and language processing.",
   "icon": "quote",
   "evidence": [
    "t-text",
@@ -1121,7 +1121,7 @@
    "xpr",
    "ai"
   ],
-  "proof": "I used pandas, Jupyter, web scraping and scikit-learn in graduate coursework. R is the language I use daily.",
+  "proof": "I used pandas, Jupyter, web scraping, and scikit-learn in a graduate data-science course. R is the language I use daily.",
   "icon": "terminal",
   "evidence": [
    "c-py"
@@ -1146,7 +1146,7 @@
    "tsi",
    "ssp"
   ],
-  "proof": "I am building SQL skills through self-directed practice and have not used it in a project yet.",
+  "proof": "I am building SQL skills through structured self-directed practice on DataLemur and Mode Analytics, and by translating my R code into SQL.",
   "icon": "database",
   "evidence": []
  },
@@ -1226,7 +1226,7 @@
    "xpr",
    "acad"
   ],
-  "proof": "I am co-first author on two experiments (N = 1,299) on drafting with generative AI versus editing its output. Judges who did not know the condition rated the work.",
+  "proof": "I am co-first author on a preprint with two experiments (1,299 people) on drafting with generative AI versus editing its output. Work quality was similar. How people experienced the work was not.",
   "icon": "pair",
   "evidence": [
    "genai"
@@ -1250,7 +1250,7 @@
    "tsi",
    "bar"
   ],
-  "proof": "My master's thesis (N = 305) tested whether people obey computer instructors as readily as human ones. They did, about equally, and I reported that as a null.",
+  "proof": "My master's thesis (305 participants) tested whether people obey computer instructors as readily as human ones. People obeyed both about equally, and I reported the null result.",
   "icon": "hand",
   "evidence": [
    "thesis"
@@ -1276,7 +1276,7 @@
    "ai",
    "bar"
   ],
-  "proof": "I study how people read genetic-risk information. On a virtual-patient project (N = 200) I collected, cleaned and analyzed the data.",
+  "proof": "I study how people read genetic-risk information. On a virtual-patient project (200 participants), I collected, cleaned, and analyzed the data.",
   "icon": "heart",
   "evidence": [
    "prs",
@@ -1359,7 +1359,7 @@
    "lnd",
    "acad"
   ],
-  "proof": "I have supervised research assistants since 2017, on teams of up to 15. I guided an honors thesis and served as a conference graduate mentor.",
+  "proof": "I have supervised research assistants since 2017, on teams of up to 15. I guided an honors thesis and served as a graduate mentor for a national psychology society.",
   "icon": "people",
   "evidence": [
    "csunlab",
@@ -1413,7 +1413,7 @@
    "hlth",
    "rpm"
   ],
-  "proof": "I support recruitment administration for an NIH clinical trial that tests a drug. I am not a clinician.",
+  "proof": "I support participant recruitment for an NIH clinical trial that tests a drug.",
   "icon": "cross",
   "evidence": [
    "nih",
@@ -1464,7 +1464,7 @@
    "lnd",
    "eval"
   ],
-  "proof": "I redesigned the Georgetown participant pool, and research yield reportedly rose 50% the next year. I also built reusable lab templates.",
+  "proof": "I redesigned parts of the Georgetown participant pool, and research yield rose 50% over the previous year. I also built reusable lab templates.",
   "icon": "cycle",
   "evidence": [
    "sona"
@@ -1513,7 +1513,7 @@
    "acad",
    "rpm"
   ],
-  "proof": "I wrote full proposals in graduate seminars and presented grant literature at a university lab. I have not led a funded federal proposal.",
+  "proof": "I wrote full proposals in graduate seminars, including a three-study program, and I presented grant literature at a university lab.",
   "icon": "pen",
   "evidence": [
    "c-meth",
@@ -1541,7 +1541,7 @@
    "eval",
    "lnd"
   ],
-  "proof": "I served on the task force whose recommendation on storing and showing gender identity and pronouns became policy, and on the committee behind making the GRE optional at Georgetown. I also wrote policy memos and testimony in graduate work.",
+  "proof": "I served on the task force whose recommendation on storing and showing gender identity and pronouns became policy. I also served on the committee behind making the GRE optional at Georgetown. In graduate work I wrote policy memos and testimony.",
   "icon": "document",
   "evidence": [
    "pronoun",
@@ -1567,7 +1567,7 @@
    "eval",
    "ins"
   ],
-  "proof": "I led a team that interviewed an organization and wrote a 20 to 30 page consulting report in a graduate course. I have not consulted professionally.",
+  "proof": "With a self-managed team, I interviewed an organization and wrote a 20 to 30 page consulting report in a graduate course.",
   "icon": "briefcase",
   "evidence": [
    "c-policy"
@@ -1702,7 +1702,7 @@
    "acad",
    "bar"
   ],
-  "proof": "I wrote all of my thesis and dissertation, and I contributed writing to several papers.",
+  "proof": "I wrote all of my thesis and dissertation, and I contributed writing to several published papers.",
   "icon": "pen",
   "evidence": [
    "diss",
@@ -1821,7 +1821,7 @@
    "xpr",
    "acad"
   ],
-  "proof": "I built the task for the generative AI work study on the ChatGPT API. AWS sat between Qualtrics and the API and stored and transformed prompts and responses, and Qualtrics handled random assignment.",
+  "proof": "I built the task for my generative AI preprint on the ChatGPT API. Each participant got a live AI response, and every exchange was logged.",
   "icon": "plug",
   "evidence": [
    "genai"
@@ -1848,7 +1848,7 @@
    "acad",
    "ins"
   ],
-  "proof": "I used generative AI to run a specification curve of 69 alternative analyses in the generative AI study, and I use it to build code and figures, including this website. I check what it produces against the data.",
+  "proof": "I used generative AI to run 69 alternative analyses of the main result in my preprint. I also use it to build code and figures, including this website, and I check its output against the data.",
   "icon": "terminal",
   "evidence": [
    "genai",
@@ -1859,15 +1859,15 @@
  {
   "group": "AI integration",
   "type": "hard",
-  "name": "AI workflow and tool building",
+  "name": "AI workflow automation",
   "level": "have",
   "also": [
-   "AI-enabled workflows",
-   "Internal tooling",
-   "Process automation"
+   "AI-enabled process automation",
+   "Workflow orchestration",
+   "Internal tooling"
   ],
   "includes": [
-   "Standing rules and project files for an AI assistant",
+   "Written rules and project files for an AI assistant",
    "Scoring and triage workflows",
    "Small custom apps"
   ],
@@ -1877,7 +1877,7 @@
    "ins",
    "acad"
   ],
-  "proof": "I built a job-search workflow around an AI assistant, with written rules, a scoring scheme and daily triage, and I build small tools of my own, such as a task-priority app.",
+  "proof": "I built a job-search workflow around an AI assistant, with written rules, a scoring scheme, and daily triage. I also build small tools of my own, such as a task-priority app.",
   "icon": "gear",
   "evidence": [
    "jobsys",
@@ -1906,7 +1906,7 @@
    "ins",
    "acad"
   ],
-  "proof": "I designed the blind ratings in the generative AI study, where judges who did not know the condition scored the work, and I compared quality, time and how closely people's text matched the AI's.",
+  "proof": "I designed blind ratings for my generative AI preprint. Judges who did not know the condition scored the work, and I compared quality, time, and how closely people's text matched the AI's.",
   "icon": "circlecheck",
   "evidence": [
    "genai"
@@ -2200,7 +2200,7 @@
    "eval",
    "tsi"
   ],
-  "proof": "I reported null results as nulls in my thesis and in dissertation Study 6, disclosed changes to my plans, and named the limits of each design.",
+  "proof": "I reported null results as nulls in my thesis and in dissertation Study 6, disclosed changes to my plans, and stated the limits of each design.",
   "icon": "circlecheck",
   "evidence": [
    "thesis",
@@ -2224,7 +2224,7 @@
    "ai",
    "acad"
   ],
-  "proof": "After my thesis null, I studied what it implies for authority in new situations, and my dissertation studies each refined the one before.",
+  "proof": "After my thesis null result, I studied what it implies for authority in new situations. Each dissertation study refined the one before.",
   "icon": "stairs",
   "evidence": [
    "thesis",
@@ -2269,7 +2269,7 @@
    "ai",
    "hlth"
   ],
-  "proof": "My studies involved deception, participant discomfort, clinical samples and genetic-risk data, and I looked at how trust in AI can be wrong, not just high.",
+  "proof": "My studies involved deception, participant discomfort, clinical samples, and genetic-risk data. I examined cases where trust in AI is too high or too low.",
   "icon": "alert",
   "evidence": [
    "thesis",

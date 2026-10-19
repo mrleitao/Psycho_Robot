@@ -1,0 +1,33 @@
+---
+// Links between the pages of the skills section.
+import { href } from '../utils/url';
+interface Props { current: string }
+const { current } = Astro.props;
+const pages = [
+  { key: 'overview', label: 'Overview', blurb: 'All skills by area, and when I used them', path: '/skills/' },
+  { key: 'full', label: 'Every skill and its evidence', blurb: 'Filter by level, type, field, area, or year', path: '/skills/full/' },
+  { key: 'analyses', label: 'Analyses', blurb: 'Every statistical method I use, grouped', path: '/skills/analyses/' },
+  { key: 'topics', label: 'Topics', blurb: 'Where I have expertise and where I have knowledge', path: '/skills/topics/' },
+];
+---
+<nav class="deepnav" aria-label="Pages in Skills">
+  <ul>
+    {pages.map((p) => (
+      <li class={p.key === current ? 'on' : ''}>
+        <a href={href(p.path)} aria-current={p.key === current ? 'page' : undefined}>
+          <strong>{p.label}</strong>
+          <span>{p.blurb}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
+<style>
+  .deepnav { margin: 1.75rem 0 0.5rem; font-family: var(--display); }
+  ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 0.75rem; }
+  li a { display: grid; gap: 0.2rem; height: 100%; padding: 0.85rem 1rem; background: var(--wash); border-radius: 8px; border-top: 4px solid var(--peach); text-decoration: none; color: var(--ink); }
+  li a strong { font-size: 1rem; }
+  li a span { font-size: 0.88rem; color: var(--muted); line-height: 1.35; }
+  li a:hover { border-top-color: var(--coral); }
+  li.on a { border-top-color: var(--deep); background: color-mix(in srgb, var(--steel) 14%, var(--paper)); }
+</style>

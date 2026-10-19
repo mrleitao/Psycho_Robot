@@ -14,10 +14,10 @@ const exp = rows.filter((r) => r.level === 'expertise');
 const know = rows.filter((r) => r.level === 'knowledge');
 ---
 <section class="tp" aria-labelledby="tp-h">
-  <h2 id="tp-h">Topics I know</h2>
-  <p class="tp-lead">{exp.length} topics where I have expertise and {know.length} where I have knowledge. Expertise means the topic shows up beyond coursework, in a paper, a project or a class I taught. Knowledge means I studied it in courses.</p>
+  <h2 id="tp-h" class="vh">Topics</h2>
+  <p class="tp-lead">I can speak to {exp.length} topics from direct research, teaching, or professional work, and to {know.length} more from graduate study. Each topic lists the work behind it.</p>
   <div class="tp-cols">
-    {[['Expertise', exp], ['Knowledge from courses', know]].map(([title, list]) => (
+    {[['Expertise from research, teaching, and work', exp], ['Knowledge from graduate study', know]].map(([title, list]) => (
       <div class="tp-col">
         <h3>{title as string}</h3>
         <ul>
@@ -37,7 +37,8 @@ const know = rows.filter((r) => r.level === 'knowledge');
   </div>
 </section>
 <style>
-  .tp { margin-top: 3rem; }
+  .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .tp { margin-top: 0; }
   .tp-lead { margin: 0.3rem 0 1.2rem; color: var(--muted); max-width: 46rem; }
   .tp-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 1.5rem; }
   .tp-col h3 { font-size: 1rem; margin: 0 0 0.5rem; padding-top: 0.5rem; border-top: 4px solid var(--steel); }

@@ -4,8 +4,8 @@ import analyses from '../data/analyses.json';
 const total = analyses.reduce((n, g) => n + g.items.length, 0);
 ---
 <section class="an" aria-labelledby="an-h">
-  <h2 id="an-h">Analyses I know</h2>
-  <p class="an-lead">{total} kinds of analysis. A filled dot means I have used it. A ring means I am still developing it.</p>
+  <h2 id="an-h" class="vh">Analyses</h2>
+  <p class="an-lead">{total} methods across {analyses.length} groups. A filled dot marks a method I have used in my work. A ring marks one I am still building depth in.</p>
   <div class="an-grid">
     {analyses.map((g) => (
       <div class="an-group">
@@ -20,7 +20,8 @@ const total = analyses.reduce((n, g) => n + g.items.length, 0);
   </div>
 </section>
 <style>
-  .an { margin-top: 3rem; }
+  .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .an { margin-top: 0; }
   .an-lead { margin: 0.3rem 0 1.2rem; color: var(--muted); }
   .an-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1.2rem 1.5rem; }
   .an-group { border-top: 4px solid var(--coral); padding-top: 0.5rem; }
