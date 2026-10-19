@@ -6,6 +6,9 @@ import RankDots from '../../components/RankDots.astro';
 import OutcomePairs from '../../components/OutcomePairs.astro';
 import Study1Live from '../../components/Study1Live.astro';
 import PowerCurve from '../../components/PowerCurve.astro';
+import MainFindings from '../../components/MainFindings.astro';
+import Glossary from '../../components/Glossary.astro';
+import s2 from '../../data/trust-in-medical-ai/study2-full.json';
 import ChapterIntro from '../../components/ChapterIntro.astro';
 import Placeholder from '../../components/Placeholder.astro';
 import data from '../../data/trust-in-medical-ai/trust-by-domain.json';
@@ -15,6 +18,54 @@ import study1 from '../../data/trust-in-medical-ai/study1-tests.json';
 import outcomes from '../../data/trust-in-medical-ai/study1-outcomes.json';
 import meta from '../../data/trust-in-medical-ai/meta.json';
 import { href } from '../../utils/url';
+const o = outcomes.outcomes;
+const stretch = s2.tests.find((t) => t.id === 'prevent_injury_stretching')!;
+const strep = s2.tests.find((t) => t.id === 'diagnose_strep_throat')!;
+const findings = [
+  {
+    head: 'People trust a doctor more than an AI, for every kind of decision',
+    body: [
+      `In Study 2, ${s2.sample.n} adults said how much they would trust a doctor, and how much they would trust a medical AI, for twelve decisions, from diagnosing strep throat to prescribing insulin. Of the ${s2.overallTest.n} people who answered every question, ${s2.overallTest.higher} trusted the doctor more. Only ${s2.overallTest.lower} trusted the AI more.`,
+      `Take strep throat. People rated their trust in a doctor at ${strep.meanA.toFixed(1)} out of 10 and in an AI at ${strep.meanB.toFixed(1)}. Even for something as everyday as advice to stretch, the doctor won, ${stretch.meanA.toFixed(1)} to ${stretch.meanB.toFixed(1)}.`,
+    ],
+    visual: { type: 'people', total: s2.overallTest.n, count: s2.overallTest.higher, label: 'trusted the doctor more than the AI', caption: 'Each dot is one person in Study 2. Blue dots trusted the doctor more.' },
+  },
+  {
+    head: 'Doctors win, but the AI is not a zero',
+    body: [
+      `The AI still earned a middling amount of trust, about ${s2.overallTest.meanB.toFixed(0)} out of 10 across the twelve decisions, against about ${s2.overallTest.meanA.toFixed(0)} for the doctor.`,
+      'So the question is how much, not whether. People weigh an AI\'s advice with more skepticism than a doctor\'s, even when the advice is the same.',
+    ],
+    visual: { type: 'pairs', aName: 'Doctor', bName: 'AI', rows: [{ label: 'Average trust, twelve decisions (0 to 10)', a: s2.overallTest.meanA, b: s2.overallTest.meanB, max: 10 }], caption: 'Study 2, 106 adults.' },
+  },
+  {
+    head: 'People see a doctor as better at both kinds of thinking',
+    body: [
+      'Good doctors combine numbers with judgment. They read the lab result, and they also sense when something does not add up. In Study 1, 188 adults rated doctors higher than an AI on both.',
+      'People who rated a recommender higher on either skill also trusted it more. In Study 2, these ratings explained about half of the doctor\'s edge. The other half is still unexplained.',
+    ],
+    visual: { type: 'pairs', aName: 'Doctor', bName: 'AI', rows: [
+      { label: 'Can use quantitative reasoning', a: o[1].doctor.mean, b: o[1].ai.mean, max: 10 },
+      { label: 'Can use intuition', a: o[2].doctor.mean, b: o[2].ai.mean, max: 10 },
+    ], caption: 'Study 1, ratings from 0 to 10.' },
+  },
+  {
+    head: 'Making an AI seem more human narrowed the gap, but only when people could compare',
+    body: [
+      'I gave the same health advice to everyone. In one version it came from a doctor named Jordan. In another it came from an AI called JO76N. In a third it came from an AI also named Jordan, who spoke like a person.',
+      'People who saw only one version did not trust the humanlike AI more. People who saw all three did, and it closed most of the distance to the doctor. Being able to compare changed how the AI was judged.',
+    ],
+    visual: { type: 'pairs', aName: 'Seen alone (Study 3)', bName: 'Seen side by side (Study 5)', rows: [{ label: 'How much more people trusted the humanlike AI than the standard AI', a: 0.07, b: 0.46, max: 1 }], caption: 'Effect size (d): 0 is no difference, 0.5 is a medium one. Studies 3 to 5 included about 1,800 people.' },
+  },
+  {
+    head: 'Trust did not change what people did',
+    body: [
+      'In the last study, 560 people were recruited for 15 days of sleep logging, and 455 completed it. A doctor or an AI told them to sleep 7.5 to 9 hours and to spend less time on their phone in bed.',
+      'I found no difference in how closely people followed the advice, whoever gave it. Saying you trust a doctor more does not mean you act on the doctor\'s advice more. Still, the advice was low stakes, so this may not hold when the cost of acting is higher.',
+    ],
+    visual: { type: 'stat', value: 'No gap', label: 'in following the advice from a doctor or an AI', caption: 'Study 6, 15 days.' },
+  },
+];
 ---
 
 <Base
@@ -30,6 +81,29 @@ import { href } from '../../utils/url';
         participants recruited, on why people trust a doctor's advice more than an AI's.
       </p>
     </header>
+
+    <section class="section" id="main-findings" aria-labelledby="mf-title">
+      <h2 id="mf-title">Main findings</h2>
+      <p class="lead2">
+        I wear a ring that tracks my sleep and tells me how to improve it. Most days I ignore it. When a doctor at urgent care tells me the same thing,
+        I listen. I wanted to know why, and whether it can change. So I ran six experiments with more than 3,000 people. Here is what they showed.
+      </p>
+      <MainFindings findings={findings} />
+      <p class="lead2 closing">
+        <strong>What this means.</strong> The gap in trust is large and steady, and it tracks how capable people think the advice-giver is. A small nudge can
+        move it: describing an AI in humanlike terms was enough. That cuts both ways. It can help a good AI get a fair hearing, and it can make a weak one look
+        better than it is. And because trust did not change behavior in my one test, I would measure what people do, not only what they say.
+      </p>
+    </section>
+
+    <div class="deep">
+      <h2 id="deep-dive">Deep dive: the evidence, study by study</h2>
+      <p>
+        Everything below shows the data behind these findings. Each chart has hover details, and the full analyses are on separate pages for
+        <a href={href('/projects/trust-in-medical-ai/study-1/')}>Study 1</a> and <a href={href('/projects/trust-in-medical-ai/study-2/')}>Study 2</a>.
+      </p>
+      <Glossary />
+    </div>
 
     <div class="prose">
       <section class="section">
@@ -88,31 +162,6 @@ import { href } from '../../utils/url';
     </section>
 
     <div class="prose">
-      <section class="section">
-        <h2>What I found</h2>
-        <ul class="findings">
-          <li>
-            <strong>People trusted the doctor more than a standard AI in every one of the first five studies.</strong>
-            That held across medical domains, decision types and self-relevant scenarios.
-          </li>
-          <li>
-            <strong>People saw the doctor as more capable.</strong> They rated doctors higher on both intuition
-            (d = 0.58) and quantitative reasoning (d = 0.56), and trusted them more to make medical decisions
-            (d = 0.79). These are Study 1 results.
-          </li>
-          <li>
-            <strong>A humanlike AI helped in one design but not another.</strong> When people judged both AIs, they
-            trusted the humanlike one more (Study 5, d = 0.46). When each person saw only one AI, the difference was not
-            significant (Study 3, d = 0.07).
-          </li>
-          <li>
-            <strong>Trust did not change behavior.</strong> In a 15-day health intervention (560 recruited, 455
-            retained), whether a doctor or an AI made the recommendation did not change adherence. I report it as a
-            null result.
-          </li>
-        </ul>
-      </section>
-
       <section class="section">
         <h2>How I measured it</h2>
         <p>
@@ -275,4 +324,9 @@ import { href } from '../../utils/url';
       grid-template-columns: 1fr 1fr;
     }
   }
+  .lead2 { max-width: 62ch; font-size: 1.1rem; }
+  .closing { margin-top: 2rem; }
+  .deep { margin-top: 4rem; padding-top: 2rem; border-top: 3px solid var(--ink); }
+  .deep h2 { margin-bottom: 0.5rem; }
+  .deep p { max-width: 62ch; color: var(--muted); }
 </style>

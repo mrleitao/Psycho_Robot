@@ -1,0 +1,102 @@
+---
+// Plain-language main findings: each finding is a short headline, two or three sentences, and one picture
+// (paired bars, a grid of people, ranked bars, or one big number).
+interface PairRow { label: string; a: number; b: number; max: number; fmt?: number }
+interface RankRow { label: string; value: number; kind?: 'human' | 'ai' | 'hybrid' | 'plain' }
+type Visual =
+  | { type: 'pairs'; rows: PairRow[]; aName: string; bName: string; caption?: string }
+  | { type: 'people'; total: number; count: number; label: string; caption?: string }
+  | { type: 'ranks'; rows: RankRow[]; max: number; caption?: string }
+  | { type: 'stat'; value: string; label: string; caption?: string };
+interface Finding { head: string; body: string[]; visual?: Visual }
+interface Props { findings: Finding[] }
+const { findings } = Astro.props;
+const n1 = (v: number) => v.toFixed(1);
+---
+<div class="mf">
+  {
+    findings.map((f) => (
+      <article class="item">
+        <div class="text">
+          <h3>{f.head}</h3>
+          {f.body.map((p) => <p set:html={p} />)}
+        </div>
+        {f.visual && (
+          <div class="viz">
+            {f.visual.type === 'pairs' && (
+              <div role="img" aria-label={`${f.visual.rows.map((r) => `${r.label}: ${f.visual.aName} ${n1(r.a)}, ${f.visual.bName} ${n1(r.b)}`).join('. ')}`}>
+                <p class="legend">
+                  <span class="sw a"></span>{f.visual.aName}
+                  <span class="sw b"></span>{f.visual.bName}
+                </p>
+                {f.visual.rows.map((r) => (
+                  <div class="pair">
+                    <p class="lab">{r.label}</p>
+                    <div class="bar"><span class="fill a" style={`width:${(r.a / r.max) * 100}%`}></span><span class="val">{n1(r.a)}</span></div>
+                    <div class="bar"><span class="fill b" style={`width:${(r.b / r.max) * 100}%`}></span><span class="val">{n1(r.b)}</span></div>
+                  </div>
+                ))}
+              </div>
+            )}
+            {f.visual.type === 'people' && (
+              <div role="img" aria-label={`${f.visual.count} of ${f.visual.total} people: ${f.visual.label}`}>
+                <div class="dots">
+                  {Array.from({ length: f.visual.total }, (_, i) => <span class={`dot ${i < f.visual.count ? 'on' : ''}`}></span>)}
+                </div>
+                <p class="big"><strong>{f.visual.count} of {f.visual.total}</strong> {f.visual.label}</p>
+              </div>
+            )}
+            {f.visual.type === 'ranks' && (
+              <div role="img" aria-label={f.visual.rows.map((r) => `${r.label} ${n1(r.value)}`).join(', ')}>
+                {f.visual.rows.map((r) => (
+                  <div class="rank">
+                    <p class="lab">{r.label}</p>
+                    <div class="bar"><span class={`fill k-${r.kind ?? 'plain'}`} style={`width:${(r.value / f.visual.max) * 100}%`}></span><span class="val">{n1(r.value)}</span></div>
+                  </div>
+                ))}
+              </div>
+            )}
+            {f.visual.type === 'stat' && (
+              <div class="stat"><p class="num">{f.visual.value}</p><p class="cap">{f.visual.label}</p></div>
+            )}
+            {f.visual.caption && <p class="small muted caption">{f.visual.caption}</p>}
+          </div>
+        )}
+      </article>
+    ))
+  }
+</div>
+<style>
+  .mf { display: grid; gap: 2.4rem; margin-top: 1.6rem; }
+  .item { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 24rem); gap: 1.5rem 2.4rem; align-items: start; padding-top: 1.6rem; border-top: 1px solid var(--rule); }
+  .item:first-child { border-top: 0; padding-top: 0; }
+  .text h3 { font-size: 1.3rem; line-height: 1.25; margin: 0 0 0.6rem; }
+  .text p { margin: 0 0 0.7rem; max-width: 52ch; }
+  .viz { font-family: var(--display); font-size: 0.9rem; background: var(--wash); border-radius: 8px; padding: 1rem 1.1rem; }
+  .legend { margin: 0 0 0.7rem; display: flex; align-items: center; gap: 0.4rem; color: var(--muted); }
+  .sw { display: inline-block; width: 0.8rem; height: 0.8rem; border-radius: 2px; }
+  .sw.b { margin-left: 0.8rem; }
+  .a { background: var(--doctor); }
+  .b { background: var(--ai); }
+  .pair { margin-bottom: 0.9rem; }
+  .pair:last-child { margin-bottom: 0.2rem; }
+  .lab { margin: 0 0 0.2rem; color: var(--ink); font-weight: 600; }
+  .bar { position: relative; height: 1.15rem; margin-bottom: 0.2rem; }
+  .fill { display: block; height: 100%; border-radius: 0 3px 3px 0; min-width: 2px; }
+  .val { position: absolute; left: 0.45rem; top: 0; line-height: 1.15rem; font-size: 0.8rem; font-weight: 700; color: #fff; font-variant-numeric: tabular-nums; text-shadow: 0 0 2px rgba(0, 0, 0, 0.45); }
+  .rank { display: grid; grid-template-columns: 8.2rem 1fr; align-items: center; gap: 0.5rem; margin-bottom: 0.3rem; }
+  .rank .lab { margin: 0; font-weight: 500; font-size: 0.85rem; }
+  .rank .bar { margin: 0; height: 1.2rem; }
+  .k-human { background: var(--doctor); }
+  .k-ai { background: var(--ai); }
+  .k-hybrid { background: var(--muted); }
+  .k-plain { background: var(--ink); opacity: 0.8; }
+  .dots { display: grid; grid-template-columns: repeat(12, 1fr); gap: 5px; margin-bottom: 0.8rem; }
+  .dot { aspect-ratio: 1; border-radius: 50%; background: var(--rule); }
+  .dot.on { background: var(--doctor); }
+  .big { margin: 0; color: var(--ink); font-size: 1rem; }
+  .stat .num { margin: 0; font-size: 3.2rem; line-height: 1; font-weight: 750; color: var(--doctor); }
+  .stat .cap { margin: 0.4rem 0 0; font-size: 1rem; color: var(--ink); }
+  .caption { margin: 0.8rem 0 0; }
+  @media (max-width: 760px) { .item { grid-template-columns: 1fr; } }
+</style>

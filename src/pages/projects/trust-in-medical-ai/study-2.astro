@@ -3,6 +3,8 @@ import Base from '../../../layouts/Base.astro';
 import StatTable from '../../../components/StatTable.astro';
 import Raincloud from '../../../components/Raincloud.astro';
 import DotPanels from '../../../components/DotPanels.astro';
+import MainFindings from '../../../components/MainFindings.astro';
+import Glossary from '../../../components/Glossary.astro';
 import ChapterIntro from '../../../components/ChapterIntro.astro';
 import GapScatter from '../../../components/GapScatter.astro';
 import MediationDiagram from '../../../components/MediationDiagram.astro';
@@ -18,6 +20,60 @@ const minus = (s: string) => s.replace(/^-/, '−').replace(/\[-/g, '[−').repl
 const pv = (p: number) => (p < 0.001 ? '< .001' : noZero(p.toFixed(3)));
 const r3 = (n: number) => minus(noZero(n.toFixed(3)));
 
+const tt = Object.fromEntries(full.tests.map((t: any) => [t.id, t]));
+const qt = Object.fromEntries(full.qualityTests.map((t: any) => [t.id, t]));
+const ctest = Object.fromEntries(full.compositeTests.map((t: any) => [t.id, t]));
+const findings = [
+  {
+    head: 'Almost everyone trusted the doctor more',
+    body: [
+      `${full.sample.n} adults rated how much they would trust a doctor, and how much they would trust a medical AI, for twelve decisions. Of the ${full.overallTest.n} people who answered every question, ${full.overallTest.higher} trusted the doctor more on average. ${full.overallTest.same} trusted both the same, and ${full.overallTest.lower} trusted the AI more.`,
+      'The result held for diagnosing, prescribing and preventing, and for injuries, mental health, short illnesses and long ones.',
+    ],
+    visual: { type: 'people', total: full.overallTest.n, count: full.overallTest.higher, label: 'trusted the doctor more than the AI', caption: 'Each dot is one person. Blue dots trusted the doctor more.' },
+  },
+  {
+    head: 'The gap is smallest for advice about prevention',
+    body: [
+      `Asked about a strep throat diagnosis, people trusted the doctor at ${tt.diagnose_strep_throat.meanA.toFixed(1)} and the AI at ${tt.diagnose_strep_throat.meanB.toFixed(1)}. Asked about advice to stretch, the scores were ${tt.prevent_injury_stretching.meanA.toFixed(1)} and ${tt.prevent_injury_stretching.meanB.toFixed(1)}.`,
+      'People gave AI its best showing on everyday advice like stretching, vitamins and meditation. They gave it its worst when the decision was about finding out what is wrong, or about prescribing.',
+    ],
+    visual: { type: 'pairs', aName: 'Doctor', bName: 'AI', rows: [
+      { label: 'Diagnose strep throat', a: tt.diagnose_strep_throat.meanA, b: tt.diagnose_strep_throat.meanB, max: 10 },
+      { label: 'Prescribe antibiotics', a: tt.prescribe_antibiotics.meanA, b: tt.prescribe_antibiotics.meanB, max: 10 },
+      { label: 'Recommend vitamin C and zinc', a: tt.prevent_acute_vitamins.meanA, b: tt.prevent_acute_vitamins.meanB, max: 10 },
+      { label: 'Recommend stretching', a: tt.prevent_injury_stretching.meanA, b: tt.prevent_injury_stretching.meanB, max: 10 },
+    ], caption: 'Average trust, 0 to 10.' },
+  },
+  {
+    head: 'People rated the doctor higher on everything, not only skill',
+    body: [
+      'The doctor beat the AI on quantitative reasoning and intuition, and also on being warm and being competent. The biggest gaps were in warmth and in understanding how a person feels.',
+      'The AI scored lowest on warmth, about 1 out of 4, against about 3 for the doctor. People did not just see a less skilled tool. They saw a colder one.',
+    ],
+    visual: { type: 'pairs', aName: 'Doctor', bName: 'AI', rows: [
+      { label: 'Warmth (0 to 4)', a: qt.warmth.meanA, b: qt.warmth.meanB, max: 4 },
+      { label: 'Competence (0 to 4)', a: qt.competence.meanA, b: qt.competence.meanB, max: 4 },
+      { label: 'Intuition (0 to 10)', a: qt.intuition.meanA, b: qt.intuition.meanB, max: 10 },
+      { label: 'Quantitative reasoning (0 to 10)', a: qt.quantitative_reasoning.meanA, b: qt.quantitative_reasoning.meanB, max: 10 },
+    ], caption: 'Average ratings. Each bar is scaled to its own maximum.' },
+  },
+  {
+    head: 'How people see the two explains about half the gap',
+    body: [
+      `Doctors were trusted ${full.mediation[1].total.toFixed(1)} points more on average. When I accounted for how capable people thought each one was at using numbers and judgment, ${(full.mediation[1].total - full.mediation[1].direct).toFixed(1)} of those points were accounted for. Competence mattered most of the four qualities I measured.`,
+      'The rest remains unexplained. Some quality of doctors that I did not measure is also at work.',
+    ],
+    visual: { type: 'stat', value: `${full.mediation[1].total.toFixed(1)} to ${full.mediation[1].direct.toFixed(1)}`, label: 'points of trust gap, before and after accounting for how capable people thought each one was', caption: 'Intuition and quantitative reasoning together.' },
+  },
+  {
+    head: 'It did not matter how number-driven the decision was',
+    body: [
+      'I expected people to be more open to an AI for decisions they see as needing data and statistics. They were not. The doctor kept the edge whether a decision seemed to call for numbers or for judgment.',
+      'So the explanation lies in how people see the advice-giver, not in what kind of decision it is.',
+    ],
+  },
+];
 // ---- sample
 const sampleRows = full.sample.variables.flatMap((v) =>
   v.rows.map((r) => ({ label: `${v.variable}: ${r.group}`, n: r.n, pct: `${r.pct.toFixed(1)}%` })),
@@ -209,6 +265,19 @@ const toc = [
     </header>
 
     <ChapterIntro current="2" />
+
+    <section class="section" id="main-findings" aria-labelledby="mf-title">
+      <h2 id="mf-title">Main findings</h2>
+      <MainFindings findings={findings} />
+    </section>
+
+    <div class="deep">
+      <h2 id="deep-dive">Deep dive: every table and figure</h2>
+      <p>
+        The rest of this page rebuilds each analysis from the public data. Hover over any mark for the details, and open the guide below if a term is unfamiliar.
+      </p>
+      <Glossary />
+    </div>
 
     <nav class="toc" aria-label="On this page">
       <ul>
@@ -516,6 +585,9 @@ const toc = [
 
 <style>
   .cloud { margin-top: 1.5rem; }
+  .deep { margin-top: 4rem; padding-top: 2rem; border-top: 3px solid var(--ink); }
+  .deep h2 { margin-bottom: 0.5rem; }
+  .deep p { max-width: 62ch; color: var(--muted); }
   .mini { margin: 0 0 -0.4rem; font-size: 0.98rem; }
   .toc { margin-top: 2rem; }
   .toc ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; font-family: var(--display); font-size: 0.95rem; }

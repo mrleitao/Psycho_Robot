@@ -7,6 +7,10 @@ import LoadingsTable from '../../../components/LoadingsTable.astro';
 import MakerMap from '../../../components/MakerMap.astro';
 import SlopesPlot from '../../../components/SlopesPlot.astro';
 import DirectionBars from '../../../components/DirectionBars.astro';
+import MainFindings from '../../../components/MainFindings.astro';
+import Glossary from '../../../components/Glossary.astro';
+import ranked from '../../../data/trust-in-medical-ai/trust-by-recommender.json';
+import outcomes1 from '../../../data/trust-in-medical-ai/study1-outcomes.json';
 import ChapterIntro from '../../../components/ChapterIntro.astro';
 import DotPanels from '../../../components/DotPanels.astro';
 import LinkScatter from '../../../components/LinkScatter.astro';
@@ -25,6 +29,47 @@ const pv = (p: number) => (p < 0.001 ? '< .001' : noZero(p.toFixed(3)));
 const r3 = (n: number) => noZero(n.toFixed(3)).replace('-.', '−.');
 const minus = (s: string) => s.replace(/^-/, '−');
 
+const kindOf = (l: string) => (/^AI/.test(l) ? 'ai' : l === 'Doctor using AI' ? 'hybrid' : 'human') as 'ai' | 'hybrid' | 'human';
+const oc = outcomes1.outcomes;
+const compById = Object.fromEntries(full.compositeDescriptives.map((c: any) => [c.id, c]));
+const findings = [
+  {
+    head: 'A doctor is the most trusted of eleven recommenders, and AI sits near the bottom',
+    body: [
+      `${full.sample.n} adults rated how much they would trust eleven recommenders for medical decisions, from a doctor to an AI fitness coach. The doctor came first, then the nurse. Every AI landed below the human experts, close to where people put a layperson.`,
+      'A doctor who uses AI landed in the middle, which suggests that AI in a doctor\'s hands is trusted more than AI on its own.',
+    ],
+    visual: { type: 'ranks', max: 10, rows: ranked.rows.map((r: any) => ({ label: r.label, value: r.mean, kind: kindOf(r.label) })), caption: 'Average trust, 0 to 10. Blue: human. Gold: AI. Grey: doctor using AI.' },
+  },
+  {
+    head: 'The doctor beat the AI on trust, and on both kinds of thinking',
+    body: [
+      `The doctor scored ${oc[0].doctor.mean.toFixed(1)} on trust against ${oc[0].ai.mean.toFixed(1)} for a general medical AI. People also rated the doctor as better at using quantitative reasoning and at using intuition.`,
+      'The trust gap was the largest of the three. That fits the idea that people credit doctors with both numbers and judgment, and trust them for it.',
+    ],
+    visual: { type: 'pairs', aName: 'Doctor', bName: 'AI', rows: [
+      { label: 'Trust', a: oc[0].doctor.mean, b: oc[0].ai.mean, max: 10 },
+      { label: 'Quantitative reasoning', a: oc[1].doctor.mean, b: oc[1].ai.mean, max: 10 },
+      { label: 'Intuition', a: oc[2].doctor.mean, b: oc[2].ai.mean, max: 10 },
+    ], caption: 'Average ratings, 0 to 10.' },
+  },
+  {
+    head: 'Most people trusted humans over AI, but not everyone',
+    body: [
+      `I averaged each person's trust in the six human recommenders and in the four AI ones. ${hva.tests[0].human_vs_ai.higher} of ${hva.tests[0].human_vs_ai.n} people trusted the humans more. ${hva.tests[0].human_vs_ai.lower} trusted the AI more, and ${hva.tests[0].human_vs_ai.same} rated them the same.`,
+      'So the gap is a strong tendency, not a rule. About one in four people leaned the other way.',
+    ],
+    visual: { type: 'people', total: hva.tests[0].human_vs_ai.n, count: hva.tests[0].human_vs_ai.higher, label: 'trusted humans more than AI', caption: 'Each dot is one person. Blue dots trusted humans more.' },
+  },
+  {
+    head: 'People do not treat all medical decisions alike',
+    body: [
+      'I asked how much a professional would need numbers versus intuition for each decision. Diagnosing and prescribing leaned on numbers. Prevention, such as advice to stretch or take vitamins, leaned on intuition, as did decisions about mental health.',
+      'That suggested the kind of decision might change how people judge an AI, which Study 2 tested.',
+    ],
+    visual: { type: 'ranks', max: 100, rows: ['q_prescription', 'q_diagnosis', 'q_chronic', 'q_injury', 'q_acute', 'q_mental', 'q_preventative'].map((id) => ({ label: compById[id].label, value: compById[id].mean, kind: 'plain' as const })), caption: '0 means only intuition is needed, 100 means only quantitative reasoning.' },
+  },
+];
 // ---- sample
 const sampleRows = full.sample.variables.flatMap((v) =>
   v.rows.map((r) => ({ label: `${v.variable}: ${r.group}`, n: r.n, pct: `${r.pct.toFixed(1)}%` })),
@@ -312,6 +357,19 @@ const toc = [
     </header>
 
     <ChapterIntro current="1" />
+
+    <section class="section" id="main-findings" aria-labelledby="mf-title">
+      <h2 id="mf-title">Main findings</h2>
+      <MainFindings findings={findings} />
+    </section>
+
+    <div class="deep">
+      <h2 id="deep-dive">Deep dive: every table and figure</h2>
+      <p>
+        The rest of this page rebuilds each analysis from the public data. Hover over any mark for the details, and open the guide below if a term is unfamiliar.
+      </p>
+      <Glossary />
+    </div>
 
     <div class="tabs" role="tablist" aria-label="Views of Study 1">
       <button role="tab" id="tab-full" aria-controls="panel-full" aria-selected="true" data-tab="full">All of Study 1</button>
@@ -953,6 +1011,9 @@ const toc = [
   .tabs button:focus-visible { outline: 3px solid var(--doctor); outline-offset: -3px; border-radius: 4px; }
   .panel[hidden] { display: none; }
   .cloud { margin-top: 1.5rem; }
+  .deep { margin-top: 4rem; padding-top: 2rem; border-top: 3px solid var(--ink); }
+  .deep h2 { margin-bottom: 0.5rem; }
+  .deep p { max-width: 62ch; color: var(--muted); }
   .mini { margin: 0 0 -0.4rem; font-size: 0.98rem; }
   .toc { margin-top: 2rem; }
   .toc ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; font-family: var(--display); font-size: 0.95rem; }
