@@ -1,0 +1,102 @@
+---
+import PaperPage from '../../components/PaperPage.astro';
+import MainFindings from '../../components/MainFindings.astro';
+import StatTable from '../../components/StatTable.astro';
+import DotRows from '../../components/DotRows.astro';
+import SigGrid from '../../components/SigGrid.astro';
+import { ci, pctPer } from '../../utils/papers';
+
+const cite = 'Logg, J. M., Tinsley, C. H., &amp; <strong>Leitao, M. R.</strong> (2026). Risk creep: A COVID-19 longitudinal field study. Working paper, July 3, 2026.';
+const L = (level: 'strong' | 'some' | 'none', text: string) => ({ level, text });
+const cols = ['Exercise', 'Small social', 'Large events', 'Food', 'Errands', 'School'];
+const grid = [
+  { label: 'Your own perceived risk', cells: [L('strong', '.005'), L('some', '.002'), L('strong', '.020'), L('strong', '.003'), L('none', '.002'), L('none', '−.001')] },
+  { label: 'Others observed doing it', cells: [L('strong', '.001'), L('strong', '.001'), L('strong', '.006'), L('strong', '.003'), L('none', '.000'), L('strong', '.005')] },
+  { label: 'Week of the study', cells: [L('some', '−.025'), L('strong', '−.045'), L('none', '−.035'), L('none', '−.018'), L('strong', '−.050'), L('strong', '−.206')] },
+];
+const ests = [
+  { n: 'Exercise', b: 0.005, se: 0.001 }, { n: 'Small social', b: 0.002, se: 0.001 }, { n: 'Large events', b: 0.02, se: 0.003 },
+  { n: 'Food', b: 0.003, se: 0.001 }, { n: 'Errands', b: 0.002, se: 0.001 }, { n: 'School', b: -0.001, se: 0.003 },
+];
+const pct = ests.map((e) => { const p = pctPer(e.b, e.se, 10); return { label: e.n, v: p.v, lo: p.lo, hi: p.hi }; });
+const weeks = [
+  { n: 'Exercise', b: -0.025, se: 0.011 }, { n: 'Small social', b: -0.045, se: 0.010 }, { n: 'Large events', b: -0.035, se: 0.036 },
+  { n: 'Food', b: -0.018, se: 0.012 }, { n: 'Errands', b: -0.050, se: 0.011 }, { n: 'School', b: -0.206, se: 0.035 },
+].map((e) => { const [lo, hi] = ci(e.b, e.se); return { label: e.n, v: e.b, lo, hi }; });
+
+const findings = [
+  {
+    head: 'The more risk people felt, the more outings they reported',
+    body: ['304 returning students reported their outings and how risky they felt the virus was, once at the start and then weekly for seven weeks. Each person was a repeated measure, about 1,634 observations in each model.', 'For discretionary outings, higher perceived risk went with more outings, not fewer. The link was clearest for large events (b = .020) and exercise (b = .005).'],
+    visual: { type: 'stat', value: 'b = .020', label: 'perceived risk and large events', caption: 'About 22% more large events per 10 points of perceived risk, my transformation of the coefficient.' },
+  },
+  {
+    head: 'Seeing others go out went with going out',
+    body: ['The number of others people saw doing an activity went with doing that activity more. This held for exercise, small social events, large events, food outings and school.', 'Errands, a necessity, did not show it.'],
+    visual: { type: 'stat', value: 'b = .006', label: 'others observed and large events', caption: 'Reliable at p < .01.' },
+  },
+  {
+    head: 'Habituation does not explain it',
+    body: ['Outings fell week by week for every activity (the week coefficient is negative in all six models). That rules out a simple story where people just got used to the risk and went out more.', 'School outings fell fastest (b = −.206).'],
+    visual: { type: 'stat', value: '6 of 6', label: 'activities with a falling trend over the weeks', caption: 'Four of six reliably so.' },
+  },
+];
+---
+<PaperPage
+  title="Risk creep"
+  description="A working paper on how perceived risk and watching others related to outings during a pandemic semester."
+  heading="Risk creep: outings during a pandemic semester"
+  cite={cite}
+  role="Contributing author (third of three)"
+  status="Under review. Working paper, July 2026"
+  lede="If people feel the risk is high, do they go out less? We followed students for eight weeks to see how risk perception, seeing others, and time related to what they did."
+>
+  <dl class="facts">
+    <div><dt>Who</dt><dd>304 returning students in three waves of 38, 144 and 122. 14 of 303 tested positive.</dd></div>
+    <div><dt>Design</dt><dd>A baseline survey plus seven weekly pulses, eight weeks in all. Counts of outings in each category.</dd></div>
+    <div><dt>Data</dt><dd>Not public. Figures are rebuilt from the printed tables, and a derived percentage is labeled.</dd></div>
+  </dl>
+
+  <section class="section" id="main-findings" aria-labelledby="mf-title">
+    <h2 id="mf-title">Main findings</h2>
+    <MainFindings findings={findings} />
+  </section>
+
+  <section class="section" id="evidence" aria-labelledby="ev-title">
+    <h2 id="ev-title">The evidence</h2>
+    <p class="figcap">What went with outings</p>
+    <p class="figlook"><strong>What to look for.</strong> Filled circles are reliable results. The top two rows are mostly filled for discretionary outings. The bottom row shows time moving in one direction.</p>
+    <SigGrid cols={cols} rows={grid} ariaLabel="Model coefficients for six outing types, marked by strength." />
+    <p class="small muted">Coefficients from count models, as printed in the paper’s Tables 1 and 2 (Model 2). Lagged outings were controlled.</p>
+
+    <p class="figcap">Size of the perceived-risk link, in percent</p>
+    <p class="figlook"><strong>What to look for.</strong> Large events stand apart. Errands and school sit near zero.</p>
+    <DotRows rows={pct} domain={[-10, 50]} tickStep={10} zero digits={1} unit="%" axisLabel="Change in outings per 10-point rise in perceived risk"
+      ariaLabel="Percent change in outings per 10 points of perceived risk for six outing types, with 95% intervals." />
+    <p class="small muted">This is my transformation of the printed coefficients: the percent change is 100 × (exp(10 × b) − 1), with the interval from each printed standard error. The paper reports the coefficients.</p>
+
+    <p class="figcap">Trend over the weeks</p>
+    <DotRows rows={weeks} domain={[-0.32, 0.05]} tickStep={0.05} zero digits={3} axisLabel="Week coefficient (log scale), with 95% interval from the printed standard error"
+      ariaLabel="Week coefficients for six outing types, all negative." />
+
+    <StatTable title="Table 1. Perceived risk, others observed and week" look="The first row is the main result. The last column shows the largest decline over time."
+      columns={[{ key: 'r', label: 'Predictor' }, ...cols.map((c, i) => ({ key: 'c' + i, label: c, num: true }))]}
+      rows={[
+        { r: 'Perceived risk', c0: '.005***', c1: '.002*', c2: '.020***', c3: '.003**', c4: '.002', c5: '−.001' },
+        { r: 'Others observed', c0: '.001**', c1: '.001***', c2: '.006***', c3: '.003**', c4: '.000', c5: '.005**' },
+        { r: 'Week', c0: '−.025*', c1: '−.045***', c2: '−.035', c3: '−.018', c4: '−.050***', c5: '−.206***' },
+      ]} note="* p < .05, ** p < .01, *** p < .001. From Tables 1 and 2." />
+  </section>
+
+  <section class="section" id="implications" aria-labelledby="imp-title">
+    <h2 id="imp-title">What this means</h2>
+    <div class="prose">
+      <p><strong>Higher perceived risk did not go with fewer outings.</strong> For discretionary outings, risk perception went with more outings. Seeing others do the same thing went with more of it too.</p>
+      <p><strong>Limits.</strong> This is a working paper. The results are associations in one student group, so I cannot say what caused what.</p>
+    </div>
+  </section>
+  <section class="section" id="files" aria-labelledby="files-title">
+    <h2 id="files-title">How this page was made</h2>
+    <div class="prose"><p>Estimates are from the printed tables. The percent figure and the intervals on the coefficients are derived from the printed standard errors. I have not re-run the models.</p></div>
+  </section>
+</PaperPage>

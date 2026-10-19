@@ -1,0 +1,117 @@
+---
+// One row per outcome or group, one dot per series on a shared axis. Rows can carry an interval for each dot.
+// Used for condition means (drug and placebo, phone and no phone, doctor and AI) and for paired comparisons.
+interface Cell { v: number; lo?: number; hi?: number; tip?: string }
+interface Row { head?: string; label?: string; cells?: (Cell | null)[] }
+interface Series { name: string }
+interface Props {
+  rows: Row[];
+  series: Series[];
+  domain: [number, number];
+  tickStep: number;
+  axisLabel: string;
+  ariaLabel: string;
+  digits?: number;
+  zero?: boolean;
+  unit?: string;
+  link?: boolean; // draw a line between the dots of a row
+  tableNote?: string;
+}
+const { rows, series, domain, tickStep, axisLabel, ariaLabel, digits = 2, zero = false, unit = '', link = true, tableNote } = Astro.props;
+const W = 780, labelW = 270, padR = 28, rowH = series.length > 2 ? 40 : 32, headH = 30, top = 30;
+const pw = W - labelW - padR;
+const x = (v: number) => labelW + ((Math.max(domain[0], Math.min(domain[1], v)) - domain[0]) / (domain[1] - domain[0])) * pw;
+let y = top;
+const placed = rows.map((r) => { const h = r.head ? headH : rowH; const o = { r, y0: y, h }; y += h; return o; });
+const bottom = y + 2, H = bottom + 46;
+const ticks: number[] = [];
+for (let t = domain[0]; t <= domain[1] + 1e-9; t += tickStep) ticks.push(Math.round(t * 1000) / 1000);
+const fmt = (n: number) => (digits === 0 ? String(Math.round(n)) : n.toFixed(digits)).replace('-', '−');
+const off = (i: number) => (series.length === 1 ? 0 : (i - (series.length - 1) / 2) * 7);
+const tipFor = (r: Row) =>
+  (r.cells ?? []).map((c, i) => (c ? (c.tip ?? `${series[i].name}: ${fmt(c.v)}${unit}${c.lo != null ? ` (95% CI ${fmt(c.lo)} to ${fmt(c.hi!)})` : ''}`) : '')).filter(Boolean).join('|');
+---
+<figure class="gd" data-fig>
+  {series.length > 1 && (
+    <ul class="key">
+      {series.map((s, i) => <li><span class={`sw s${i}`}></span>{s.name}</li>)}
+    </ul>
+  )}
+  <div class="scroll" tabindex="0" role="region" aria-label="Chart. Scrolls sideways on narrow screens.">
+    <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={ariaLabel}>
+      <g class="grid">{ticks.map((t) => <line x1={x(t)} x2={x(t)} y1={top - 8} y2={bottom} />)}</g>
+      <g class="axis">{ticks.map((t) => <text class="tick" x={x(t)} y={bottom + 18} text-anchor="middle">{fmt(t)}</text>)}</g>
+      {zero && domain[0] < 0 && domain[1] > 0 && <line class="zero" x1={x(0)} x2={x(0)} y1={top - 8} y2={bottom} />}
+      {placed.map(({ r, y0, h }) => {
+        if (r.head) return <text class="head" x="8" y={y0 + 19}>{r.head}</text>;
+        const cy = y0 + h / 2;
+        const cells = r.cells ?? [];
+        const vs = cells.filter(Boolean).map((c) => c!.v);
+        return (
+          <g class="row" data-tip tabindex="0" role="group" aria-label={`${r.label}: ${tipFor(r).replace(/\|/g, '. ')}`} data-label={r.label} data-lines={tipFor(r)}>
+            <rect class="hit" x="0" y={y0} width={W} height={h} />
+            <text class="name" x="8" y={cy + 4.5}>{r.label}</text>
+            {link && vs.length > 1 && <line class="link" x1={x(Math.min(...vs))} x2={x(Math.max(...vs))} y1={cy} y2={cy} />}
+            {cells.map((c, i) => c && (
+              <g>
+                {c.lo != null && <line class={`ci s${i}`} x1={x(c.lo)} x2={x(c.hi!)} y1={cy + off(i)} y2={cy + off(i)} />}
+                <circle class={`dot s${i}`} cx={x(c.v)} cy={cy + off(i)} r="5.5" />
+              </g>
+            ))}
+          </g>
+        );
+      })}
+      <text class="axlab" x={labelW + pw / 2} y={bottom + 38} text-anchor="middle">{axisLabel}</text>
+    </svg>
+  </div>
+  <div class="tip" hidden></div>
+  <details class="table-view">
+    <summary>View as a table</summary>
+    <table>
+      <thead>
+        <tr><th scope="col">Row</th>{series.map((s) => <th scope="col">{s.name}</th>)}</tr>
+      </thead>
+      <tbody>
+        {rows.filter((r) => !r.head).map((r) => (
+          <tr>
+            <th scope="row">{r.label}</th>
+            {(r.cells ?? []).map((c) => <td>{c ? `${fmt(c.v)}${unit}${c.lo != null ? ` [${fmt(c.lo)}, ${fmt(c.hi!)}]` : ''}` : ''}</td>)}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    {tableNote && <p class="small muted">{tableNote}</p>}
+  </details>
+</figure>
+<script>
+  import { attachTips } from '../utils/figtip';
+  document.querySelectorAll<HTMLElement>('[data-fig]').forEach(attachTips);
+</script>
+<style>
+  .gd { margin: 1rem 0 1.8rem; position: relative; max-width: 800px; }
+  .scroll { overflow-x: auto; }
+  svg { display: block; width: 100%; min-width: 640px; height: auto; overflow: visible; }
+  .key { list-style: none; margin: 0 0 0.5rem; padding: 0; display: flex; flex-wrap: wrap; gap: 0.3rem 1.2rem; font-family: var(--display); font-size: 0.9rem; }
+  .sw { display: inline-block; width: 0.8rem; height: 0.8rem; border-radius: 50%; margin-right: 0.4rem; vertical-align: -1px; }
+  .s0 { fill: var(--ai); background: var(--ai); stroke: var(--ai); }
+  .s1 { fill: var(--doctor); background: var(--doctor); stroke: var(--doctor); }
+  .s2 { fill: var(--deep); background: var(--deep); stroke: var(--deep); }
+  .s3 { fill: var(--coral); background: var(--coral); stroke: var(--coral); }
+  .grid { stroke: var(--rule); stroke-dasharray: 2 4; }
+  .zero { stroke: var(--ink); stroke-width: 1.5; }
+  .tick, .axlab { font-family: var(--display); font-size: 11.5px; fill: var(--muted); stroke: none; }
+  .axlab { font-size: 12px; }
+  .head { font-family: var(--display); font-size: 12.5px; font-weight: 700; fill: var(--ink); }
+  .name { font-family: var(--display); font-size: 13px; fill: var(--ink); }
+  .hit { fill: transparent; } .row:hover .hit, .row:focus .hit { fill: var(--wash); }
+  .row:focus { outline: none; } .row:focus-visible .hit { stroke: var(--doctor); stroke-width: 2; }
+  .link { stroke: var(--rule); stroke-width: 3; stroke-linecap: round; }
+  .ci { stroke-width: 2; opacity: 0.8; }
+  .dot { stroke: var(--paper); stroke-width: 2; }
+  .tip { position: absolute; transform: translate(-50%, -100%); display: grid; gap: 0.1rem; padding: 0.55rem 0.8rem; background: var(--ink); color: var(--paper); border-radius: 6px; font-family: var(--display); font-size: 0.85rem; white-space: nowrap; pointer-events: none; z-index: 2; }
+  .tip[hidden] { display: none; }
+  .table-view { margin-top: 0.6rem; font-family: var(--display); font-size: 0.9rem; }
+  .table-view summary { cursor: pointer; color: var(--muted); }
+  .table-view table { margin-top: 0.5rem; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  .table-view th, .table-view td { padding: 0.25rem 0.8rem 0.25rem 0; text-align: left; border-bottom: 1px solid var(--rule); }
+</style>

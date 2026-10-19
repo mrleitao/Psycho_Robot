@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import pubs from '../data/cv/publications.json';
+import { href } from '../utils/url';
 
 // Papers live in src/data/cv/publications.json, shared with the CV page.
 const groups = pubs.groups.filter((g) => !g.cvOnly);
@@ -27,13 +28,29 @@ const groups = pubs.groups.filter((g) => !g.cvOnly);
             {g.items.map((item) => (
               <li>
                 <p class="cite" set:html={item.html} />
-                <p class="role small muted">{item.role}</p>
+                <p class="role small muted">
+                  {item.role}
+                  {item.page && <> · <a href={href(item.page)}>Results and figures</a></>}
+                </p>
               </li>
             ))}
           </ul>
         </section>
       ))
     }
+
+    <section class="section group">
+      <h2>Master’s thesis</h2>
+      <ul class="rows">
+        <li>
+          <p class="cite">
+            <strong>Leitao, M. R.</strong> (2019). <em>All hail our robot overlords: Obedience to digital authority</em>. Master’s thesis,
+            California State University, Northridge.
+          </p>
+          <p class="role small muted">Sole author · <a href={href('/research/obedience-to-computers/')}>Results and figures</a></p>
+        </li>
+      </ul>
+    </section>
   </div>
 </Base>
 

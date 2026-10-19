@@ -1,0 +1,78 @@
+---
+import PaperPage from '../../components/PaperPage.astro';
+import MainFindings from '../../components/MainFindings.astro';
+import Framework from '../../components/Framework.astro';
+
+const cite = 'Kushlev, K., &amp; Leitao, M. R. (2020). The effects of smartphones on well-being: Theoretical integration and research agenda. <em>Current Opinion in Psychology</em>. <a href="https://doi.org/10.1016/j.copsyc.2020.05.001">doi:10.1016/j.copsyc.2020.05.001</a>';
+
+const cards = [
+  {
+    name: 'Displacement', claim: 'Phones change well-being by replacing other activities.',
+    rows: [
+      { label: 'What to measure', items: ['Time on phone-mediated activities (screen time)'] },
+      { label: 'How it works', items: ['Time spent on other activities, such as sleep and face-to-face interaction'] },
+      { label: 'When it matters', items: ['Quality of the phone activity', 'Quality of attention (immersion)', 'What the person would otherwise have done'] },
+    ],
+  },
+  {
+    name: 'Interference', claim: 'Phones change well-being by interfering with what people are doing.',
+    rows: [
+      { label: 'What to measure', items: ['Frequency of checking and notifications', 'Mere presence of the phone'] },
+      { label: 'How it works', items: ['Quality of attention', 'Cognitive capacity'] },
+      { label: 'When it matters', items: ['How good the concurrent experience is', 'How demanding the concurrent activity is'] },
+    ],
+  },
+  {
+    name: 'Complementarity', claim: 'Phones change well-being by offering information and activities not otherwise available.',
+    rows: [
+      { label: 'What to measure', items: ['Type of use: information, communication, entertainment'] },
+      { label: 'How it works', items: ['Efficiency (time saved)', 'Buffering negative emotions', 'A source of positive emotions'] },
+      { label: 'When it matters', items: ['Whether unmediated options exist', 'Relevance to current goals and needs', 'Quality of the current experience'] },
+    ],
+  },
+];
+const findings = [
+  {
+    head: 'Phones can help or hurt, depending on how they are used',
+    body: ['We proposed that three ideas can explain the mixed findings on smartphones and well-being. Phones can replace other activities, interfere with what we are doing, or give us things we could not get otherwise.', 'The first two usually lower well-being. The third can raise it.'],
+    visual: { type: 'stat', value: '3 ideas', label: 'displacement, interference and complementarity', caption: 'The D.I.C. framework, in the table below.' },
+  },
+  {
+    head: 'Overall, the net effect looks small and negative',
+    body: ['Across screen time, frequency of use and the mere presence of a phone, we found small but consistently negative net effects.', 'The effects become substantial with heavy, problematic use, which is the use most likely to displace or interfere with other activities.'],
+    visual: { type: 'stat', value: 'Small', label: 'typical net effect of phones on well-being', caption: 'From the studies we reviewed, published mostly since 2018.' },
+  },
+];
+---
+<PaperPage
+  title="Smartphones and well-being: a framework"
+  description="A theory paper that organizes research on smartphones and well-being under displacement, interference and complementarity."
+  heading="A framework for how smartphones affect well-being"
+  cite={cite}
+  role="Second author"
+  status="Published, Current Opinion in Psychology, 2020 (review)"
+  lede="Researchers disagreed about whether phones help or hurt well-being. Kostadin Kushlev and I argued that the disagreement comes from method, and that one framework can explain the findings."
+  links={[{ label: 'Read the paper (DOI)', href: 'https://doi.org/10.1016/j.copsyc.2020.05.001' }]}
+>
+  <section class="section" id="main-findings" aria-labelledby="mf-title">
+    <h2 id="mf-title">Main findings</h2>
+    <MainFindings findings={findings} />
+  </section>
+  <section class="section" id="evidence" aria-labelledby="ev-title">
+    <h2 id="ev-title">The framework</h2>
+    <p class="figlook"><strong>What to look for.</strong> Each card gives one idea, what to measure for it, how it works, and when it changes the result. The table is Table 1 of the paper, redrawn.</p>
+    <Framework cards={cards} ariaLabel="The displacement, interference and complementarity framework." />
+  </section>
+  <section class="section" id="implications" aria-labelledby="imp-title">
+    <h2 id="imp-title">What this means</h2>
+    <div class="prose">
+      <p><strong>Measure the use, not only the time.</strong> Screen time, frequency of checking, notifications and mere presence are different things and can have different effects.</p>
+      <p><strong>Test it with experiments and sensors.</strong> Much of the evidence is correlational and relies on self-report. We called for experiments and objective measures from mobile sensing across several days.</p>
+      <p><strong>Limits.</strong> This is a review with no new data. The conclusions are preliminary, as we said in the paper.</p>
+    </div>
+  </section>
+  <section class="section" id="files" aria-labelledby="files-title">
+    <h2 id="files-title">How this page was made</h2>
+    <div class="prose"><p>This page redraws the paper's Table 1 and restates its three conclusions. It contains no data.</p></div>
+  </section>
+</PaperPage>

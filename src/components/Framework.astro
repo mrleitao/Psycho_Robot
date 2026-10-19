@@ -1,0 +1,30 @@
+---
+// A framework laid out as columns: one card per idea, with the same labeled rows in each card.
+interface Card { name: string; claim: string; rows: { label: string; items: string[] }[] }
+interface Props { cards: Card[]; ariaLabel: string }
+const { cards, ariaLabel } = Astro.props;
+---
+<div class="fw" role="group" aria-label={ariaLabel}>
+  {cards.map((c, i) => (
+    <section class={`card k${i}`}>
+      <h3>{c.name}</h3>
+      <p class="claim">{c.claim}</p>
+      {c.rows.map((r) => (
+        <div class="r">
+          <h4>{r.label}</h4>
+          <ul>{r.items.map((it) => <li>{it}</li>)}</ul>
+        </div>
+      ))}
+    </section>
+  ))}
+</div>
+<style>
+  .fw { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1rem; margin: 1.2rem 0 1.8rem; font-family: var(--display); }
+  .card { background: var(--wash); border-radius: 8px; padding: 1rem 1.1rem 1.1rem; border-top: 4px solid var(--peach); }
+  .k1 { border-top-color: var(--steel); } .k2 { border-top-color: var(--deep); }
+  h3 { margin: 0 0 0.35rem; font-size: 1.15rem; }
+  .claim { margin: 0 0 0.8rem; color: var(--muted); font-size: 0.95rem; line-height: 1.45; }
+  h4 { margin: 0.7rem 0 0.2rem; font-size: 0.82rem; color: var(--muted); font-weight: 600; }
+  ul { margin: 0; padding-left: 1.1rem; font-size: 0.94rem; line-height: 1.45; }
+  li { margin-bottom: 0.15rem; }
+</style>

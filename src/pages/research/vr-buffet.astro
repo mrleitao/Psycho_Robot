@@ -1,0 +1,179 @@
+---
+import PaperPage from '../../components/PaperPage.astro';
+import MainFindings from '../../components/MainFindings.astro';
+import StatTable from '../../components/StatTable.astro';
+import DotRows from '../../components/DotRows.astro';
+import GroupDots from '../../components/GroupDots.astro';
+import { sg } from '../../utils/papers';
+
+const cite = '<strong>Leitao, M. R.</strong>, Farokhnia, M., Leggio, L., &amp; Persky, S. (2026). Experiences and behavior during a virtual reality buffet simulation: A secondary analysis of a ghrelin-related pharmacology randomized controlled trial in people with alcohol use disorder. <em>Journal of Medical Extended Reality</em>. <a href="https://doi.org/10.1177/29941520261484294">doi:10.1177/29941520261484294</a>';
+
+const series = [{ name: 'Ghrelin receptor blocker' }, { name: 'Placebo' }];
+const c = (a: number, b: number) => [{ v: a }, { v: b }];
+
+const effects = [
+  { head: 'Drug (blocker against placebo)' },
+  { label: 'Liking the meal', v: 0.144 },
+  { label: 'How typical the meal felt', v: 0.244 },
+  { label: 'Satisfaction with the meal', v: 0.153 },
+  { label: 'Presence (feeling of being there)', v: 0.016 },
+  { label: 'Realism', v: 0.018 },
+  { label: 'Time to first food order', v: 0.138 },
+  { head: 'Drug and order together' },
+  { label: 'Presence', v: 0.291 },
+  { label: 'Time to first food order', v: 0.224 },
+];
+
+const t1 = [
+  { effect: 'Liking', drug: '.144* (4.375)', inter: 'Not significant' },
+  { effect: 'Typicality', drug: '.244** (8.381)', inter: 'Not significant' },
+  { effect: 'Satisfaction', drug: '.153* (4.680)', inter: 'Not significant' },
+  { effect: 'Presence', drug: '.016 (not significant)', inter: '.291** (10.697)' },
+  { effect: 'Realism', drug: '.018 (not significant)', inter: 'Not significant' },
+];
+
+const findings = [
+  {
+    head: 'On the blocker, the virtual meal felt more typical, more liked and more satisfying',
+    body: [
+      'Twenty-nine adults with alcohol use disorder ate a buffet in virtual reality twice, once on a ghrelin receptor blocker and once on a placebo. Neither they nor the staff knew which was which.',
+      'The blocker went with higher ratings of liking (ηp² = .144), typicality (.244) and satisfaction (.153). By common benchmarks, .06 is a medium effect and .14 a large one.',
+    ],
+    visual: { type: 'stat', value: 'ηp² = .244', label: 'drug effect on how typical the meal felt', caption: 'The largest of the five experience ratings.' },
+  },
+  {
+    head: 'Feeling of being there depended on which visit came first',
+    body: [
+      'The blocker alone did not change presence (ηp² = .016) or realism (.018). Presence did change with the drug and the order together (ηp² = .291).',
+      'People who got the blocker first rated presence 3.83 on the blocker and 3.47 on placebo. People who got placebo first rated it 3.83 on the blocker and 4.09 on placebo. The direction of the drug gap depended on the visit order.',
+    ],
+    visual: { type: 'stat', value: 'ηp² = .291', label: 'drug by order effect on presence', caption: 'Order of the two visits mattered more than the drug.' },
+  },
+  {
+    head: 'Eating choices were mixed and depended on order',
+    body: [
+      'Time to the first food order showed a drug effect (ηp² = .138) and a drug by order effect (.224). Food variety and the other eating measure were not reliably different.',
+      'Whether people went back for a second plate also depended on order. The sample was small, so I treat these as leads to follow up, not settled results.',
+    ],
+    visual: { type: 'stat', value: '29 people', label: 'completed both visits', caption: 'Of 42 enrolled. The study fell short of its planned sample.' },
+  },
+];
+
+const fig2 = [
+  { head: 'Blocker visit first (drug first)' },
+  { label: 'Presence', cells: c(3.83, 3.47) },
+  { label: 'Realism', cells: c(5.13, 5.07) },
+  { label: 'Liking', cells: c(5.91, 5.57) },
+  { label: 'Typicality', cells: c(5.27, 4.71) },
+  { label: 'Satisfaction', cells: c(5.73, 5.21) },
+  { head: 'Placebo visit first (placebo first)' },
+  { label: 'Presence', cells: c(3.83, 4.09) },
+  { label: 'Realism', cells: c(5.5, 5.29) },
+  { label: 'Liking', cells: c(6.04, 6.0) },
+  { label: 'Typicality', cells: c(5.64, 5.07) },
+  { label: 'Satisfaction', cells: c(5.71, 5.57) },
+];
+const fig3 = [
+  { head: 'Perceived weight lower (n = 15)' },
+  { label: 'Presence', cells: c(3.88, 4.13) },
+  { label: 'Realism', cells: c(5.33, 5.86) },
+  { label: 'Liking', cells: c(6.1, 6.2) },
+  { label: 'Typicality', cells: c(5.67, 5.29) },
+  { label: 'Satisfaction', cells: c(5.87, 5.79) },
+  { head: 'Perceived weight higher (n = 14)' },
+  { label: 'Presence', cells: c(3.77, 3.43) },
+  { label: 'Realism', cells: c(5.29, 4.5) },
+  { label: 'Liking', cells: c(5.83, 5.37) },
+  { label: 'Typicality', cells: c(5.21, 4.5) },
+  { label: 'Satisfaction', cells: c(5.57, 5.0) },
+];
+const fig4 = [
+  { head: 'Blocker visit first' },
+  { label: 'Time to first food order', cells: c(20.46, 14.91) },
+  { label: 'Food variety', cells: c(7.47, 7.87) },
+  { head: 'Placebo visit first' },
+  { label: 'Time to first food order', cells: c(19.04, 31.73) },
+  { label: 'Food variety', cells: c(7.86, 7.79) },
+];
+const fig4b = [
+  { label: 'Blocker visit first', cells: c(26.6, 13.3) },
+  { label: 'Placebo visit first', cells: c(28.5, 41.8) },
+];
+---
+<PaperPage
+  title="Virtual reality buffet and a ghrelin receptor blocker"
+  description="A double-blind crossover trial of a ghrelin receptor blocker in alcohol use disorder, rebuilt from the printed statistics."
+  heading="A virtual reality buffet on a ghrelin receptor blocker"
+  cite={cite}
+  role="First author"
+  status="Published, Journal of Medical Extended Reality, 2026"
+  lede="Does a drug that blocks the hunger hormone ghrelin change how people with alcohol use disorder feel about, and choose from, a virtual buffet? I ran the buffet in a randomized, double-blind crossover trial."
+  links={[{ label: 'Read the paper (DOI)', href: 'https://doi.org/10.1177/29941520261484294' }]}
+>
+  <dl class="facts">
+    <div><dt>Who</dt><dd>29 adults who finished both visits, of 42 enrolled. 8 women, mean age 51.3.</dd></div>
+    <div><dt>Design</dt><dd>Randomized, double-blind crossover. Each person ate the buffet once on the blocker and once on placebo.</dd></div>
+    <div><dt>Data</dt><dd>Available on request only. These figures are redrawn from the printed paper.</dd></div>
+  </dl>
+
+  <section class="section" id="main-findings" aria-labelledby="mf-title">
+    <h2 id="mf-title">Main findings</h2>
+    <MainFindings findings={findings} />
+  </section>
+
+  <section class="section" id="evidence" aria-labelledby="ev-title">
+    <h2 id="ev-title">The evidence</h2>
+    <p class="figcap">Size of each effect</p>
+    <p class="figlook"><strong>What to look for.</strong> Dots to the right of the dashed lines are larger effects. Experience ratings sit mostly past the medium line. Presence needs the drug and order together.</p>
+    <DotRows rows={effects} domain={[0, 0.35]} tickStep={0.05} digits={3} axisLabel="Partial eta squared (ηp²), from the paper's Tables 1 and 2"
+      refs={[{ v: 0.01, label: 'small' }, { v: 0.06, label: 'medium' }, { v: 0.14, label: 'large' }]}
+      ariaLabel="Effect sizes for the drug and for drug by order on five experience ratings and time to first food order." />
+
+    <StatTable title="Table 1. Experience ratings (ηp², with F in brackets)" look="Three ratings change with the drug. Presence changes only with drug and order together."
+      columns={[{ key: 'effect', label: 'Rating' }, { key: 'drug', label: 'Drug effect', num: true }, { key: 'inter', label: 'Drug by order', num: true }]}
+      rows={t1} note="* p < .05, ** p < .01. From the paper's Table 1. Weight-status models also showed drug by weight effects for presence (ηp² = .219) and realism (.206)." />
+
+    <p class="figcap">Ratings at each visit, by order</p>
+    <p class="figlook"><strong>What to look for.</strong> In the top block the blocker dot sits to the right for liking, typicality and satisfaction. In the bottom block the two dots are close.</p>
+    <GroupDots rows={fig2} series={series} domain={[3, 6.5]} tickStep={0.5} digits={2} axisLabel="Average rating (as printed in the paper's Figure 2)"
+      ariaLabel="Average ratings on the blocker and on placebo, split by which visit came first." />
+
+    <p class="figcap">Ratings by perceived weight</p>
+    <p class="figlook"><strong>What to look for.</strong> Gaps between the dots are wider in the higher perceived weight group, especially for realism and typicality.</p>
+    <GroupDots rows={fig3} series={series} domain={[3, 6.5]} tickStep={0.5} digits={2} axisLabel="Average rating (as printed in the paper's Figure 3)"
+      ariaLabel="Average ratings on the blocker and on placebo for people with lower and higher perceived weight." />
+
+    <p class="figcap">Eating measures</p>
+    <p class="figlook"><strong>What to look for.</strong> Time to the first food order flips direction between the two order groups. Food variety barely moves.</p>
+    <GroupDots rows={fig4} series={series} domain={[0, 35]} tickStep={5} digits={1} axisLabel="Average value (as printed in the paper's Figure 4)"
+      ariaLabel="Time to first food order and food variety on the blocker and on placebo, split by visit order." />
+
+    <p class="figcap">Went back for a second plate</p>
+    <GroupDots rows={fig4b} series={series} domain={[0, 50]} tickStep={10} digits={1} unit="%" axisLabel="People who took a second plate (%)"
+      ariaLabel="Share of people who took a second plate on the blocker and on placebo, by visit order." />
+
+    <StatTable title="Table 2. Eating behavior (ηp²)" look="Only time to the first food order shows a clear effect."
+      columns={[{ key: 'm', label: 'Measure' }, { key: 'd', label: 'Result', wrap: true, minw: '16rem' }]}
+      rows={[
+        { m: 'Time to first food order', d: 'Drug ηp² = .138*, drug by order ηp² = .224**' },
+        { m: 'Second plate (logit model)', d: 'Drug b = 9.241 (SE 4.537), order b = 8.441, drug by order b = −12.039' },
+        { m: 'SSC and food variety', d: 'Not significant' },
+      ]} note="* p < .05, ** p < .01. From the paper's Table 2." />
+  </section>
+
+  <section class="section" id="implications" aria-labelledby="imp-title">
+    <h2 id="imp-title">What this means</h2>
+    <div class="prose">
+      <p><strong>The blocker changed how the meal felt.</strong> Liking, typicality and satisfaction were higher on the blocker, with large effects by common benchmarks.</p>
+      <p><strong>Order complicates the eating results.</strong> Time to the first order and the second plate depended on which visit came first. With 29 people I cannot separate a drug effect from carryover.</p>
+      <p><strong>Limits.</strong> The study fell short of its planned sample because of COVID, and these analyses were exploratory. The abstract and the Results text describe the second plate differently: the abstract says it was less likely on the blocker for the placebo-first group, and the Results say the blocker made it more likely in the drug-first group. Both can be true, since they describe different groups, and the chart above shows each.</p>
+    </div>
+  </section>
+
+  <section class="section" id="files" aria-labelledby="files-title">
+    <h2 id="files-title">How this page was made</h2>
+    <div class="prose">
+      <p>The data are available on request, so I have not released any. Every number here is taken from the printed paper and redrawn. I did not recompute anything from raw data.</p>
+    </div>
+  </section>
+</PaperPage>

@@ -1,0 +1,69 @@
+---
+import PaperPage from '../../components/PaperPage.astro';
+import MainFindings from '../../components/MainFindings.astro';
+import StatTable from '../../components/StatTable.astro';
+import DotRows from '../../components/DotRows.astro';
+import { dInterval } from '../../utils/papers';
+
+const cite = 'Leitao, M. R. (2019). <em>All hail our robot overlords: Obedience to digital authority</em>. Master’s thesis, California State University, Northridge. Preregistered at aspredicted.org #16048.';
+const tests = [
+  { c: 'Human against both computers', t: 1.549, p: 0.123, d: 0.19, n: 303 },
+  { c: 'Human against basic computer', t: 1.093, p: 0.275, d: 0.15, n: 202 },
+  { c: 'Human against sophisticated computer', t: 1.585, p: 0.114, d: 0.22, n: 202 },
+  { c: 'Sophisticated against basic computer', t: -0.49, p: 0.625, d: -0.07, n: 202 },
+];
+const rows = tests.map((x) => { const [lo, hi] = dInterval(x.d, x.n); return { label: x.c, v: x.d, lo, hi }; });
+const findings = [
+  {
+    head: 'People obeyed a computer about as much as a person',
+    body: ['305 adults (217 women, 88 men) took part in a motion-capture task. A human, a standard computer or a sophisticated computer gave the instructions. The key measure was how many actions people completed.', 'The three groups did not differ reliably (F(2, 302) = 1.31, p = .269). Each group completed about half of the instructions.'],
+    visual: { type: 'stat', value: 'p = .269', label: 'overall test across three instructors', caption: 'No reliable difference.' },
+  },
+  {
+    head: 'A human instructor drew slightly more compliance, but within chance',
+    body: ['Compliance was a little higher for the human than for the computers, at about 16 actions against about 14, read from the thesis figure. The planned tests were not reliable (human against both computers, p = .123).', 'A more sophisticated computer did not draw more obedience than a basic one (p = .625).'],
+    visual: { type: 'stat', value: 'd ≈ .19', label: 'human against both computers, derived from t', caption: 'Small, and not reliable.' },
+  },
+  {
+    head: 'Age, gender, income and attitudes toward technology did not change the result',
+    body: ['An exploratory model that added age, gender, socioeconomic status and attitudes toward technology showed no reliable effects of those factors.'],
+  },
+];
+---
+<PaperPage
+  title="Obedience to digital authority"
+  description="A preregistered master's thesis on whether people follow instructions from a computer as they follow a person."
+  heading="Would you follow orders from a computer?"
+  cite={cite}
+  role="Author"
+  status="Master’s thesis, 2019. Preregistered."
+  lede="Classic obedience studies used a human in charge. I asked whether a computer in charge would get the same compliance."
+>
+  <section class="section" id="main-findings" aria-labelledby="mf-title">
+    <h2 id="mf-title">Main findings</h2>
+    <MainFindings findings={findings} />
+  </section>
+  <section class="section" id="evidence" aria-labelledby="ev-title">
+    <h2 id="ev-title">The evidence</h2>
+    <StatTable title="Table 1. Planned comparisons of actions completed" look="No comparison reaches p < .05."
+      columns={[{ key: 'c', label: 'Comparison' }, { key: 't', label: 't (302)', num: true }, { key: 'p', label: 'p', num: true }, { key: 'd', label: 'd (derived)', num: true }]}
+      rows={tests.map((x) => ({ c: x.c, t: x.t.toFixed(3).replace('-', '−'), p: x.p.toFixed(3).replace('0.', '.'), d: x.d.toFixed(2).replace('-', '−').replace('0.', '.') }))}
+      note="t and p are as printed in the thesis. The d values are mine, derived from t with about 101 people per condition." />
+    <p class="figcap">Size of each difference</p>
+    <p class="figlook"><strong>What to look for.</strong> Every interval crosses zero.</p>
+    <DotRows rows={rows} domain={[-0.5, 0.6]} tickStep={0.1} zero digits={2} axisLabel="Approximate Cohen’s d"
+      ariaLabel="Approximate effect sizes for four planned comparisons, with 95% intervals that all include zero." />
+    <p class="small muted">The intervals are approximate, from the standard error equal to the square root of 4 over N plus d squared over 2N.</p>
+  </section>
+  <section class="section" id="implications" aria-labelledby="imp-title">
+    <h2 id="imp-title">What this means</h2>
+    <div class="prose">
+      <p><strong>A computer got compliance similar to a person.</strong> I did not find evidence that people obey a human more than a computer in this task.</p>
+      <p><strong>Limits.</strong> The thesis does not print the group means, so the means I quote are read from its figure and are approximate. A null result with about 100 people per group cannot rule out a small difference.</p>
+    </div>
+  </section>
+  <section class="section" id="files" aria-labelledby="files-title">
+    <h2 id="files-title">How this page was made</h2>
+    <div class="prose"><p>Test statistics are from the thesis. The effect sizes and intervals are my derivations from those statistics, not values the thesis reports.</p></div>
+  </section>
+</PaperPage>

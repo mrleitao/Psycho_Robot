@@ -1,0 +1,134 @@
+---
+import PaperPage from '../../components/PaperPage.astro';
+import MainFindings from '../../components/MainFindings.astro';
+import StatTable from '../../components/StatTable.astro';
+import DotRows from '../../components/DotRows.astro';
+import GroupDots from '../../components/GroupDots.astro';
+import { dInterval, sg } from '../../utils/papers';
+
+const cite = '<strong>Leitao, M. R.</strong>, Proulx, J. D. E., &amp; Kushlev, K. (2024). Smartphones undermine social connectedness more in men than women: A mini mega-analysis. <em>Technology, Mind, and Behavior, 5</em>(1). <a href="https://doi.org/10.1037/tmb0000125">doi:10.1037/tmb0000125</a>';
+
+const paradigms = [
+  { name: 'Getting directions', n: 287, conn: -0.43, aff: 0.18 },
+  { name: 'Parents with children', n: 408, conn: -0.43, aff: -0.07 },
+  { name: 'Meal with strong ties', n: 305, conn: -0.18, aff: -0.15 },
+  { name: 'Meal with weak ties', n: 271, conn: -0.2, aff: -0.03 },
+  { name: 'Waiting alone', n: 130, conn: -0.13, aff: -0.14 },
+  { name: 'Waiting together', n: 377, conn: -0.13, aff: -0.18 },
+];
+const row = (label: string, d: number, n: number) => { const [lo, hi] = dInterval(d, n); return { label, v: d, lo, hi }; };
+const connRows = [...paradigms.map((p) => row(`${p.name} (n = ${p.n})`, p.conn, p.n)), row('All eight experiments (n = 1,778)', -0.181, 1778)];
+const affRows = [...paradigms.map((p) => row(`${p.name} (n = ${p.n})`, p.aff, p.n)), row('Without getting directions (n = 1,491)', -0.106, 1491)];
+
+const models = [
+  { head: 'Phone effect on connectedness (b)' },
+  { label: 'Model 1: phone only', v: -0.26, lo: -0.38, hi: -0.14 },
+  { label: 'Model 2: adds gender and age', v: -0.24, lo: -0.37, hi: -0.11 },
+  { label: 'Model 3: adds phone by gender', v: -0.15, lo: -0.29, hi: -0.01 },
+  { head: 'Phone by gender (Model 3)' },
+  { label: 'Phone by gender interaction', v: -0.31, lo: -0.52, hi: -0.11 },
+];
+const series = [{ name: 'With phone' }, { name: 'Without phone' }];
+const cells = [
+  { label: 'Men', cells: [{ v: -0.33 }, { v: 0.13 }] },
+  { label: 'Women', cells: [{ v: -0.036 }, { v: 0.11 }] },
+];
+
+const findings = [
+  {
+    head: 'A phone nearby made people feel less connected',
+    body: [
+      'I pooled eight experiments, 1,778 people in all, that put a phone in view during a short social moment. Those moments included a meal, a wait, and a walk to get directions.',
+      'People with a phone present felt less connected than people without one (b = −.241, d = −.181). That is a small effect, and it pointed the same way in all six kinds of situation.',
+    ],
+    visual: { type: 'stat', value: 'd = −.18', label: 'effect of a phone on connectedness', caption: '1,778 people, eight experiments.' },
+  },
+  {
+    head: 'The effect was bigger for men than for women',
+    body: [
+      'Men with a phone felt clearly less connected than men without one (d = −.473). Women showed a smaller drop (d = −.152).',
+      'The difference between the two was reliable (interaction d = −.148). I report it as a pattern in these data, not as an explanation of why.',
+    ],
+    visual: { type: 'pairs', aName: 'Men', bName: 'Women', rows: [{ label: 'Effect size, d (flipped to positive)', a: 0.473, b: 0.152, max: 0.6, fmt: 2 }], caption: 'Size of the drop in connectedness with a phone present.' },
+  },
+  {
+    head: 'Mood told a weaker story',
+    body: [
+      'Once I set aside the getting-directions experiments, a phone went with slightly lower positive mood (b = −.105, p = .045, d = −.106). There was no gender difference (p = .169).',
+      'In the getting-directions experiments alone, mood did not change (b = .18, p = .174), which is why I report the two results separately.',
+    ],
+    visual: { type: 'stat', value: 'd = −.11', label: 'effect of a phone on affect, without getting directions', caption: 'Small, and close to the p = .05 line.' },
+  },
+];
+---
+<PaperPage
+  title="Smartphones and social connection"
+  description="A mega-analysis of eight experiments on how a phone in view affects feeling connected."
+  heading="Smartphones and social connection: men and women"
+  cite={cite}
+  role="First author"
+  status="Published, Technology, Mind, and Behavior, 2024"
+  lede="I pooled eight experiments run over several years into one analysis. The question was whether a phone in view changes how connected people feel in the moment."
+  links={[{ label: 'Read the paper (DOI)', href: 'https://doi.org/10.1037/tmb0000125' }, { label: 'Data, code and materials on OSF', href: 'https://doi.org/10.17605/OSF.IO/X73M9' }]}
+>
+  <dl class="facts">
+    <div><dt>Who</dt><dd>1,778 people. 70.4% women, mean age 25.8.</dd></div>
+    <div><dt>Design</dt><dd>Eight experiments in six kinds of situation, each with a phone-present and a phone-absent group.</dd></div>
+    <div><dt>Data</dt><dd>Public on OSF. These figures are rebuilt from the printed paper, with intervals derived as noted below.</dd></div>
+  </dl>
+
+  <section class="section" id="main-findings" aria-labelledby="mf-title">
+    <h2 id="mf-title">Main findings</h2>
+    <MainFindings findings={findings} />
+  </section>
+
+  <section class="section" id="evidence" aria-labelledby="ev-title">
+    <h2 id="ev-title">The evidence</h2>
+
+    <StatTable title="Table 1. The six situations" look="The effect on connectedness is negative in every row. It is largest where people got directions or were parents with children."
+      columns={[{ key: 'p', label: 'Situation' }, { key: 'n', label: 'n', num: true }, { key: 'c', label: 'Connectedness d', num: true }, { key: 'a', label: 'Affect d', num: true }]}
+      rows={paradigms.map((p) => ({ p: p.name, n: p.n, c: sg(p.conn), a: sg(p.aff) }))}
+      note="Effect sizes (d) are from the paper's figures. Negative means lower with a phone present." />
+
+    <p class="figcap">Connectedness, by situation</p>
+    <p class="figlook"><strong>What to look for.</strong> Every dot sits left of zero. The interval for each situation is wide, and the pooled interval is the narrowest.</p>
+    <DotRows rows={connRows} domain={[-0.8, 0.2]} tickStep={0.2} zero digits={2} axisLabel="Effect of a phone on connectedness (d)"
+      ariaLabel="Effect of a phone on connectedness for six situations and for all experiments pooled, with 95% intervals." />
+
+    <p class="figcap">Affect, by situation</p>
+    <p class="figlook"><strong>What to look for.</strong> The dots scatter around zero. Getting directions is the only one to the right.</p>
+    <DotRows rows={affRows} domain={[-0.8, 0.6]} tickStep={0.2} zero digits={2} axisLabel="Effect of a phone on affect (d)"
+      ariaLabel="Effect of a phone on affect for six situations and pooled without getting directions, with 95% intervals." />
+
+    <StatTable title="Table 2. Regression models of connectedness (Table 3 in the paper)" look="The phone effect stays negative in all three models. The phone by gender row is the one that changes the story."
+      columns={[{ key: 'm', label: 'Model' }, { key: 'b', label: 'Phone, b [95% CI]', num: true }, { key: 'x', label: 'Other terms', wrap: true, minw: '12rem' }]}
+      rows={[
+        { m: 'Model 1: phone only', b: '−.26 [−.38, −.14]', x: 'None' },
+        { m: 'Model 2: with gender and age', b: '−.24 [−.37, −.11]', x: 'Gender and age not significant' },
+        { m: 'Model 3: with phone by gender', b: '−.15 [−.29, −.01]', x: 'Gender .02, age .00, phone by gender −.31 [−.52, −.11]' },
+      ]} note="Intervals are as printed." />
+    <DotRows rows={models} domain={[-0.6, 0.1]} tickStep={0.1} zero digits={2} axisLabel="Coefficient on connectedness"
+      ariaLabel="Phone coefficients in three models and the phone by gender interaction, with 95% intervals." />
+
+    <p class="figcap">Connectedness by gender</p>
+    <p class="figlook"><strong>What to look for.</strong> For men the two dots are far apart. For women they are close.</p>
+    <GroupDots rows={cells} series={series} domain={[-0.5, 0.3]} tickStep={0.1} digits={2} zero axisLabel="Average connectedness (as printed in the paper)"
+      ariaLabel="Average connectedness with and without a phone, for men and for women." />
+  </section>
+
+  <section class="section" id="implications" aria-labelledby="imp-title">
+    <h2 id="imp-title">What this means</h2>
+    <div class="prose">
+      <p><strong>A phone in view costs a little connection.</strong> The effect is small and consistent across situations. It does not say that phones harm relationships over time, because these were short moments.</p>
+      <p><strong>Gender differences need replication.</strong> The interaction was reliable in these data. A new set of experiments should test it directly.</p>
+      <p><strong>Limits.</strong> Samples were mostly young adults, and the effect on mood was small and sensitive to which experiments I included.</p>
+    </div>
+  </section>
+
+  <section class="section" id="files" aria-labelledby="files-title">
+    <h2 id="files-title">How this page was made</h2>
+    <div class="prose">
+      <p>Effect sizes and model results come from the printed paper. The paper's own data and code are public on OSF. For the situation-level figures I derived the 95% intervals from each group size. The standard error was the square root of 4 over N plus d squared over 2N. This approach reproduces the intervals in the paper's forest plot. I have not re-run the models on the raw data.</p>
+    </div>
+  </section>
+</PaperPage>

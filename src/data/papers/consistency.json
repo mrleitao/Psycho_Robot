@@ -1,0 +1,545 @@
+{
+ "generated_by": "analysis/papers_consistency.py",
+ "rows": [
+  {
+   "paper": "Generative AI preprint",
+   "where": "Table 11",
+   "what": "Cohen d from t and df: Exp 1 productivity, drafter vs editor",
+   "printed": 0.17,
+   "implied": 0.171,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Generative AI preprint",
+   "where": "Table 13",
+   "what": "Cohen d from t and df: Exp 1 time, drafter vs editor",
+   "printed": -0.22,
+   "implied": -0.22,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Generative AI preprint",
+   "where": "Table 14",
+   "what": "Cohen d from t and df: Exp 1 control, drafter vs editor",
+   "printed": -0.38,
+   "implied": -0.384,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Generative AI preprint",
+   "where": "Table 15",
+   "what": "Cohen d from t and df: Exp 1 responsibility, drafter vs editor",
+   "printed": -0.42,
+   "implied": -0.419,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Generative AI preprint",
+   "where": "Table 16",
+   "what": "Cohen d from t and df: Exp 1 creativity, drafter vs editor",
+   "printed": -0.81,
+   "implied": -0.812,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Generative AI preprint",
+   "where": "Table 20",
+   "what": "Cohen d from t and df: Exp 2 productivity, drafter vs editor",
+   "printed": -0.23,
+   "implied": -0.067,
+   "ok": false,
+   "note": ""
+  },
+  {
+   "paper": "Generative AI preprint",
+   "where": "Table 20",
+   "what": "Cohen d from t and df: Exp 2 productivity, control vs editor",
+   "printed": -0.32,
+   "implied": -0.319,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Generative AI preprint",
+   "where": "Table 20",
+   "what": "Cohen d from t and df: Exp 2 productivity, control vs drafter",
+   "printed": -0.26,
+   "implied": -0.256,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Generative AI preprint",
+   "where": "Table 22",
+   "what": "Cohen d from t and df: Exp 2 judge score, drafter vs editor",
+   "printed": -0.23,
+   "implied": -0.23,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Generative AI preprint",
+   "where": "Table 22",
+   "what": "Cohen d from t and df: Exp 2 judge score, control vs editor",
+   "printed": -0.7,
+   "implied": -0.705,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Generative AI preprint",
+   "where": "Table 22",
+   "what": "Cohen d from t and df: Exp 2 judge score, control vs drafter",
+   "printed": -0.39,
+   "implied": -0.385,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Generative AI preprint",
+   "where": "Table 24",
+   "what": "Cohen d from t and df: Exp 2 time, drafter vs editor",
+   "printed": -0.02,
+   "implied": -0.022,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Generative AI preprint",
+   "where": "Table 24",
+   "what": "Cohen d from t and df: Exp 2 time, control vs editor",
+   "printed": -0.7,
+   "implied": 0.159,
+   "ok": false,
+   "note": ""
+  },
+  {
+   "paper": "Generative AI preprint",
+   "where": "Table 24",
+   "what": "Cohen d from t and df: Exp 2 time, control vs drafter",
+   "printed": 0.18,
+   "implied": 0.183,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Generative AI preprint",
+   "where": "Table 25",
+   "what": "Cohen d from t and df: Exp 2 control, drafter vs editor",
+   "printed": -0.07,
+   "implied": -0.068,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Generative AI preprint",
+   "where": "Table 25",
+   "what": "Cohen d from t and df: Exp 2 control, control vs editor",
+   "printed": 0.71,
+   "implied": 0.708,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Generative AI preprint",
+   "where": "Table 25",
+   "what": "Cohen d from t and df: Exp 2 control, control vs drafter",
+   "printed": 0.67,
+   "implied": 0.671,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Generative AI preprint",
+   "where": "Table 26",
+   "what": "Cohen d from t and df: Exp 2 responsibility, drafter vs editor",
+   "printed": -0.37,
+   "implied": -0.371,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Generative AI preprint",
+   "where": "Table 26",
+   "what": "Cohen d from t and df: Exp 2 responsibility, control vs editor",
+   "printed": 0.65,
+   "implied": 0.651,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Generative AI preprint",
+   "where": "Table 26",
+   "what": "Cohen d from t and df: Exp 2 responsibility, control vs drafter",
+   "printed": 0.94,
+   "implied": 0.944,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Generative AI preprint",
+   "where": "Table 27",
+   "what": "Cohen d from t and df: Exp 2 creativity, drafter vs editor",
+   "printed": -0.75,
+   "implied": -0.755,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Generative AI preprint",
+   "where": "Table 27",
+   "what": "Cohen d from t and df: Exp 2 creativity, control vs editor",
+   "printed": 0.18,
+   "implied": 0.175,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Generative AI preprint",
+   "where": "Table 27",
+   "what": "Cohen d from t and df: Exp 2 creativity, control vs drafter",
+   "printed": 0.96,
+   "implied": 0.962,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Generative AI preprint",
+   "where": "Table 29",
+   "what": "Cohen d from t and df: Exp 2 write time, control vs editor",
+   "printed": 0.48,
+   "implied": 0.478,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Generative AI preprint",
+   "where": "Table 30",
+   "what": "Cohen d from t and df: Exp 2 frustration, drafter vs editor",
+   "printed": 0.05,
+   "implied": 0.047,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Generative AI preprint",
+   "where": "Table 27",
+   "what": "Exp 2 creativity, control minus drafter (difference column)",
+   "printed": 119.63,
+   "implied": 19.62,
+   "ok": false,
+   "note": "The printed means (78.01 and 58.39) and the interval [16.03; 23.22] both imply about 19.6."
+  },
+  {
+   "paper": "Generative AI preprint",
+   "where": "Table 25",
+   "what": "Exp 2 control, control minus editor",
+   "printed": 10.11,
+   "implied": 10.11,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Generative AI preprint",
+   "where": "Table 26",
+   "what": "Exp 2 responsibility, control minus drafter",
+   "printed": 17.29,
+   "implied": 17.29,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Generative AI preprint",
+   "where": "Results text and Table 3",
+   "what": "Exp 1 expertise effect on control: t",
+   "printed": -3.64,
+   "implied": 2.68,
+   "ok": false,
+   "note": "The text prints t(595) = -3.64 and beta = -0.14 for expertise; those are the drafter values. Table 3 gives b = 5.44, SE = 2.03."
+  },
+  {
+   "paper": "Generative AI preprint",
+   "where": "Table 21",
+   "what": "Exp 2 editor, judge score change: paired d from t and n=178",
+   "printed": 0.53,
+   "implied": 0.524,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Parasocial paper",
+   "where": "Table 2",
+   "what": "Relative weights sum to total R2: Need for humor",
+   "printed": 0.133,
+   "implied": 0.133,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Parasocial paper",
+   "where": "Table 2",
+   "what": "F from R2 with N = 829, so df = 6 and 822: Need for humor",
+   "printed": 21.022,
+   "implied": 21.016,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Parasocial paper",
+   "where": "Table 2",
+   "what": "Relative weights sum to total R2: Generosity",
+   "printed": 0.124,
+   "implied": 0.122,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Parasocial paper",
+   "where": "Table 2",
+   "what": "F from R2 with N = 829, so df = 6 and 822: Generosity",
+   "printed": 19.457,
+   "implied": 19.393,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Parasocial paper",
+   "where": "Table 2",
+   "what": "Relative weights sum to total R2: Loyalty",
+   "printed": 0.063,
+   "implied": 0.064,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Parasocial paper",
+   "where": "Table 2",
+   "what": "F from R2 with N = 829, so df = 6 and 822: Loyalty",
+   "printed": 9.164,
+   "implied": 9.211,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Parasocial paper",
+   "where": "Table 2",
+   "what": "Relative weights sum to total R2: Honesty",
+   "printed": 0.022,
+   "implied": 0.022,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Parasocial paper",
+   "where": "Table 2",
+   "what": "F from R2 with N = 829, so df = 6 and 822: Honesty",
+   "printed": 3.037,
+   "implied": 3.082,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Parasocial paper",
+   "where": "Table 2",
+   "what": "Relative weights sum to total R2: Kindness",
+   "printed": 0.148,
+   "implied": 0.148,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Parasocial paper",
+   "where": "Table 2",
+   "what": "F from R2 with N = 829, so df = 6 and 822: Kindness",
+   "printed": 23.889,
+   "implied": 23.798,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Parasocial paper",
+   "where": "Table 2",
+   "what": "Relative weights sum to total R2: Friendship",
+   "printed": 0.069,
+   "implied": 0.069,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Parasocial paper",
+   "where": "Table 2",
+   "what": "F from R2 with N = 829, so df = 6 and 822: Friendship",
+   "printed": 10.109,
+   "implied": 10.154,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Mega-analysis",
+   "where": "Results text",
+   "what": "t from b and SE: Model 3, phone",
+   "printed": -3.713,
+   "implied": -3.708,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Mega-analysis",
+   "where": "Results text",
+   "what": "t from b and SE: Model 3 interaction",
+   "printed": -3.03,
+   "implied": -3.039,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Mega-analysis",
+   "where": "Results text",
+   "what": "t from b and SE: men, simple effect",
+   "printed": -4.706,
+   "implied": -4.704,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Mega-analysis",
+   "where": "Results text",
+   "what": "t from b and SE: women, simple effect",
+   "printed": -2.046,
+   "implied": -2.056,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Mega-analysis",
+   "where": "Results text",
+   "what": "d from t(1685) = -3.713 (2t / sqrt df)",
+   "printed": -0.181,
+   "implied": -0.181,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Mega-analysis",
+   "where": "Results text",
+   "what": "d from t(1684) = -3.03 (2t / sqrt df)",
+   "printed": -0.148,
+   "implied": -0.148,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Mega-analysis",
+   "where": "Table 1",
+   "what": "Study sizes add to the stated total of 1,778",
+   "printed": 1778,
+   "implied": 1778,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "VR buffet paper",
+   "where": "Tables 1 and 2",
+   "what": "partial eta squared from F: Liking, drug",
+   "printed": 0.144,
+   "implied": 0.144,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "VR buffet paper",
+   "where": "Tables 1 and 2",
+   "what": "partial eta squared from F: Typicality, drug",
+   "printed": 0.244,
+   "implied": 0.244,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "VR buffet paper",
+   "where": "Tables 1 and 2",
+   "what": "partial eta squared from F: Satisfaction, drug",
+   "printed": 0.153,
+   "implied": 0.153,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "VR buffet paper",
+   "where": "Tables 1 and 2",
+   "what": "partial eta squared from F: Presence, drug x order",
+   "printed": 0.291,
+   "implied": 0.291,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "VR buffet paper",
+   "where": "Tables 1 and 2",
+   "what": "partial eta squared from F: Time to first selection, drug x order",
+   "printed": 0.224,
+   "implied": 0.224,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "VR buffet paper",
+   "where": "Tables 1 and 2",
+   "what": "partial eta squared from F: Time to first selection, order",
+   "printed": 0.138,
+   "implied": 0.138,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Master's thesis",
+   "where": "Results",
+   "what": "p for F(2, 302) = 1.31",
+   "printed": 0.269,
+   "implied": 0.271,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Master's thesis",
+   "where": "Results",
+   "what": "p for t(302) = 1.549: human vs both computers",
+   "printed": 0.123,
+   "implied": 0.122,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Master's thesis",
+   "where": "Results",
+   "what": "p for t(302) = 1.093: human vs basic computer",
+   "printed": 0.275,
+   "implied": 0.275,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Master's thesis",
+   "where": "Results",
+   "what": "p for t(302) = 1.585: human vs sophisticated computer",
+   "printed": 0.114,
+   "implied": 0.114,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "paper": "Master's thesis",
+   "where": "Results",
+   "what": "p for t(302) = -0.49: sophisticated vs basic",
+   "printed": 0.625,
+   "implied": 0.624,
+   "ok": true,
+   "note": ""
+  }
+ ]
+}

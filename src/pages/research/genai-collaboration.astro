@@ -1,0 +1,118 @@
+---
+import PaperPage from '../../components/PaperPage.astro';
+import MainFindings from '../../components/MainFindings.astro';
+import StatTable from '../../components/StatTable.astro';
+import DotRows from '../../components/DotRows.astro';
+import GroupDots from '../../components/GroupDots.astro';
+import { dInterval } from '../../utils/papers';
+
+const cite = 'Logg, J. M.*, <strong>Leitao, M. R.</strong>*, &amp; Ulu, C. (2026). The cost of generative AI collaboration strategies to the psychological experience of work. SSRN working paper, June 12, 2026 (*co-first authors). <a href="https://papers.ssrn.com/abstract=6926039">SSRN 6926039</a>';
+
+const s1 = [{ name: 'GenAI drafter' }, { name: 'GenAI editor' }];
+// Experiment 1 means: GenAI drafter, GenAI editor.
+const e1 = [
+  { label: 'Sense of control', cells: [{ v: 59.53 }, { v: 69.41 }] },
+  { label: 'Sense of responsibility', cells: [{ v: 51.59 }, { v: 62.63 }] },
+  { label: 'Creativity', cells: [{ v: 49.16 }, { v: 69.64 }] },
+];
+const s2 = [{ name: 'No GenAI' }, { name: 'GenAI editor' }, { name: 'GenAI drafter' }];
+const e2 = [
+  { label: 'Sense of control', cells: [{ v: 86.0 }, { v: 75.89 }, { v: 74.67 }] },
+  { label: 'Sense of responsibility', cells: [{ v: 88.2 }, { v: 78.47 }, { v: 70.91 }] },
+  { label: 'Creativity', cells: [{ v: 78.01 }, { v: 75.04 }, { v: 58.39 }] },
+  { label: 'Frustration', cells: [{ v: 24.6 }, { v: 19.36 }, { v: 20.37 }] },
+];
+const judge1 = [{ label: 'Judge score', cells: [{ v: 5.57 }, { v: 5.65 }] }];
+const judge2 = [{ label: 'Judge score', cells: [{ v: 5.42 }, { v: 6.09 }, { v: 5.86 }] }];
+const d1 = [['Sense of control', -0.38], ['Sense of responsibility', -0.42], ['Creativity', -0.81]].map(([l, d]) => {
+  const [lo, hi] = dInterval(d as number, 601);
+  return { label: l as string, v: d as number, lo, hi };
+});
+
+const findings = [
+  {
+    head: 'When the AI wrote the first draft, people felt less in control and less creative',
+    body: ['In two preregistered experiments, 1,299 people worked with generative AI in one of two ways. The AI wrote the first draft and the person edited it, or the person wrote the draft and the AI edited it.', 'In Experiment 1, drafters rated creativity 49.16 against 69.64 for editors (d = −.81). Control (59.53 against 69.41) and responsibility (51.59 against 62.63) were also lower.'],
+    visual: { type: 'stat', value: 'd = −.81', label: 'creativity, AI drafter against AI editor', caption: 'Experiment 1, a podcast pitch, 601 people on Prolific.' },
+  },
+  {
+    head: 'Teachers who used AI wrote more, and the extra words explained the quality gain',
+    body: ['In Experiment 2, 698 teachers wrote lesson plans. Those who used GenAI wrote more and judges scored their plans higher (b = .62). Productivity rose too (b = .22, p = .013).', 'The number of words fully explained the gain in quality (ACME = .57, proportion mediated = 1.06).'],
+    visual: { type: 'stat', value: 'b = .62', label: 'judge-score gain with GenAI over no GenAI', caption: 'Experiment 2.' },
+  },
+  {
+    head: 'Most people chose to let the AI draft',
+    body: ['When teachers could pick a strategy, 61.7% chose to have the AI draft and 38.3% to edit (χ² = 49.95, n = 467).', 'Editing paid off more. Judge scores rose by .78 for editors and fell by .32 for drafters.'],
+    visual: { type: 'people', total: 100, count: 62, label: 'chose to let the AI draft', caption: '467 teachers who used GenAI.' },
+  },
+];
+---
+<PaperPage
+  title="Working with generative AI as a drafter or an editor"
+  description="Two preregistered experiments on who writes the first draft when people work with generative AI."
+  heading="Who writes the first draft when you work with AI?"
+  cite={cite}
+  role="Co-first author"
+  status="Preprint on SSRN, under review. Not yet peer reviewed."
+  lede="Generative AI can write a draft or edit one. I helped test whether the choice changes how in control and creative people feel, and how good the work is."
+  links={[{ label: 'Read the preprint (SSRN)', href: 'https://papers.ssrn.com/abstract=6926039' }]}
+>
+  <dl class="facts">
+    <div><dt>Experiment 1</dt><dd>601 people on Prolific wrote a podcast pitch. 2 (topic expertise) by 2 (AI drafter or AI editor).</dd></div>
+    <div><dt>Experiment 2</dt><dd>698 teachers wrote lesson plans: 231 without GenAI, 467 with it by their own choice of strategy.</dd></div>
+    <div><dt>Data</dt><dd>Figures are rebuilt from the printed preprint. Both experiments were preregistered.</dd></div>
+  </dl>
+
+  <section class="section" id="main-findings" aria-labelledby="mf-title">
+    <h2 id="mf-title">Main findings</h2>
+    <MainFindings findings={findings} />
+  </section>
+
+  <section class="section" id="evidence" aria-labelledby="ev-title">
+    <h2 id="ev-title">The evidence</h2>
+    <p class="figcap">Experiment 1: how people felt, by role</p>
+    <p class="figlook"><strong>What to look for.</strong> The drafter dot sits left of the editor dot on all three, and creativity has the widest gap.</p>
+    <GroupDots rows={e1} series={s1} domain={[40, 75]} tickStep={5} digits={1} axisLabel="Average rating"
+      ariaLabel="Experiment 1 average ratings of control, responsibility and creativity for GenAI drafter and GenAI editor." />
+
+    <p class="figcap">Experiment 1: size of the differences</p>
+    <DotRows rows={d1} domain={[-1.4, 0.2]} tickStep={0.2} zero digits={2} axisLabel="Cohen’s d (drafter minus editor)"
+      ariaLabel="Effect sizes for control, responsibility and creativity, drafter against editor." />
+    <p class="small muted">The d values are as printed. I derived each interval from the sample size of 601, with the standard error equal to the square root of 4 over N plus d squared over 2N.</p>
+
+    <p class="figcap">Experiment 2: how people felt, by condition</p>
+    <p class="figlook"><strong>What to look for.</strong> Drafters stand out on creativity. For control and responsibility, both AI groups sit below the group that did not use AI.</p>
+    <GroupDots rows={e2} series={s2} domain={[10, 95]} tickStep={10} digits={1} axisLabel="Average rating"
+      ariaLabel="Experiment 2 averages of control, responsibility, creativity and frustration for three conditions." />
+
+    <p class="figcap">Quality of the work, as scored by judges</p>
+    <p class="figlook"><strong>What to look for.</strong> In Experiment 1 the two roles scored alike. In Experiment 2 both AI groups scored above the no-AI group.</p>
+    <GroupDots rows={judge1} series={s1} domain={[5, 6.5]} tickStep={0.25} digits={2} axisLabel="Experiment 1: average judge score"
+      ariaLabel="Experiment 1 judge scores for GenAI drafter and GenAI editor." />
+    <GroupDots rows={judge2} series={s2} domain={[5, 6.5]} tickStep={0.25} digits={2} axisLabel="Experiment 2: average judge score"
+      ariaLabel="Experiment 2 judge scores for no GenAI, GenAI editor and GenAI drafter." />
+
+    <StatTable title="Table 1. Experiment 2, GenAI users against no GenAI" look="Productivity and judged quality went up. Control and responsibility went down."
+      columns={[{ key: 'm', label: 'Outcome' }, { key: 'b', label: 'b', num: true }, { key: 'n', label: 'Note', wrap: true, minw: '14rem' }]}
+      rows={[
+        { m: 'Productivity', b: '.22', n: 'p = .013' },
+        { m: 'Judge score', b: '.62', n: 'Number of words fully mediated the gain (ACME .57)' },
+        { m: 'Sense of control', b: '−10.73', n: '' },
+        { m: 'Sense of responsibility', b: '−10.13', n: '' },
+        { m: 'Creativity', b: '−3.21', n: 'p = .118, not reliable. The drop is driven by drafting.' },
+      ]} note="From the preprint’s Experiment 2 models." />
+  </section>
+
+  <section class="section" id="implications" aria-labelledby="imp-title">
+    <h2 id="imp-title">What this means</h2>
+    <div class="prose">
+      <p><strong>The role matters.</strong> Letting the AI draft cost people a sense of control and creativity. Editing an AI’s work did not lower creativity as much.</p>
+      <p><strong>Output can rise even as ownership falls.</strong> In Experiment 2 the gain came mostly from writing more.</p>
+      <p><strong>Limits.</strong> This is a preprint that has not been peer reviewed. Teachers chose their own strategy, so the drafter and editor groups differ by choice as well as by role.</p>
+    </div>
+  </section>
+  <section class="section" id="files" aria-labelledby="files-title">
+    <h2 id="files-title">How this page was made</h2>
+    <div class="prose"><p>Values are from the printed preprint. I did not recompute from raw data, and the preprint’s materials are not linked here.</p></div>
+  </section>
+</PaperPage>

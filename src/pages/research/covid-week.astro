@@ -1,0 +1,121 @@
+---
+import PaperPage from '../../components/PaperPage.astro';
+import MainFindings from '../../components/MainFindings.astro';
+import StatTable from '../../components/StatTable.astro';
+import DotRows from '../../components/DotRows.astro';
+import CorrGrid from '../../components/CorrGrid.astro';
+import { sg } from '../../utils/papers';
+
+const cite = 'Tibbetts, M., Epstein-Shuman, A., <strong>Leitao, M. R.</strong>, &amp; Kushlev, K. (2021). A week during COVID-19: Online social interactions are associated with greater connection and more stress. <em>Computers in Human Behavior Reports, 4</em>, 100133. <a href="https://doi.org/10.1016/j.chbr.2021.100133">doi:10.1016/j.chbr.2021.100133</a>';
+
+const findings = [
+  {
+    head: 'Time with close friends and family in person went with feeling better',
+    body: [
+      'On April 8, 2020, at the peak of social distancing, 569 adults told the research team how much time they spent with strong ties (close people) and weak ties (acquaintances), in person and online, and how they felt.',
+      'More hours with strong ties in person went with more positive affect (r = .19) and more connectedness (r = .10).',
+    ],
+    visual: { type: 'stat', value: 'r = .19', label: 'hours with close people in person and positive affect', caption: 'A small positive link.' },
+  },
+  {
+    head: 'Time online with acquaintances went with feeling worse',
+    body: [
+      'More hours online with weak ties went with more negative affect (r = .18) and more stress (r = .20). It also went with lower connectedness (r = −.16).',
+      'These are links at one point in time. The data cannot show whether online time caused the feelings or the feelings drove the time.',
+    ],
+    visual: { type: 'stat', value: 'r = .20', label: 'hours online with acquaintances and stress', caption: 'The strongest link between time use and a feeling.' },
+  },
+  {
+    head: 'Stress, mood and connectedness moved together',
+    body: [
+      'Stress and negative affect were closely tied (r = .79). Connectedness fell as stress rose (r = −.70).',
+      'Time use explained between 30% and 44% of the variation in the four feelings once the four kinds of contact were combined (R² from .30 to .44).',
+    ],
+    visual: { type: 'stat', value: 'R² = .44', label: 'variance in connectedness explained by time use', caption: 'The highest of the four models.' },
+  },
+];
+
+const vars = ['Positive affect', 'Negative affect', 'Stress', 'Connectedness'];
+const timeRows = [
+  { head: 'Strong ties in person (hours)' },
+  { label: 'Positive affect', v: 0.19 }, { label: 'Connectedness', v: 0.10 },
+  { head: 'Strong ties online (hours)' },
+  { label: 'Positive affect', v: 0.15 }, { label: 'Negative affect', v: 0.16 }, { label: 'Stress', v: 0.16 },
+  { head: 'Weak ties in person (hours)' },
+  { label: 'Positive affect', v: 0.15 }, { label: 'Stress', v: 0.13 },
+  { head: 'Weak ties online (hours)' },
+  { label: 'Positive affect', v: 0.09 }, { label: 'Negative affect', v: 0.18 }, { label: 'Stress', v: 0.20 }, { label: 'Connectedness', v: -0.16 },
+];
+const partial = [
+  { head: 'Strong ties in person' },
+  { label: 'Positive affect', v: 0.14 }, { label: 'Connectedness', v: 0.16 },
+  { head: 'Strong ties online' },
+  { label: 'Connectedness', v: 0.15 },
+  { head: 'Weak ties online' },
+  { label: 'Negative affect', v: 0.20 }, { label: 'Stress', v: 0.16 }, { label: 'Connectedness', v: -0.12 },
+];
+---
+<PaperPage
+  title="A week during COVID-19"
+  description="How time with close and distant people, in person and online, related to well-being at the peak of social distancing."
+  heading="A week during COVID-19: social time and well-being"
+  cite={cite}
+  role="Contributing author (third of four)"
+  status="Published, Computers in Human Behavior Reports, 2021"
+  lede="When most people stayed home, who did they spend time with, and how did that relate to how they felt? The team surveyed adults on a single day in April 2020."
+  links={[{ label: 'Read the paper (DOI)', href: 'https://doi.org/10.1016/j.chbr.2021.100133' }]}
+>
+  <dl class="facts">
+    <div><dt>Who</dt><dd>569 adults who finished the survey, of 674 who consented. 56.2% women, mean age 46.05. MTurk and CloudResearch.</dd></div>
+    <div><dt>When</dt><dd>April 8, 2020. 39% were staying home, and the contact index was down 75.6% against 2019.</dd></div>
+    <div><dt>Data</dt><dd>On OSF with view-only access, so I do not link it here. Figures are rebuilt from the printed paper.</dd></div>
+  </dl>
+
+  <section class="section" id="main-findings" aria-labelledby="mf-title">
+    <h2 id="mf-title">Main findings</h2>
+    <MainFindings findings={findings} />
+  </section>
+
+  <section class="section" id="evidence" aria-labelledby="ev-title">
+    <h2 id="ev-title">The evidence</h2>
+    <StatTable title="Table 1. Averages of the four feelings" look="Positive affect and connectedness sat above the middle of the scale. Stress sat low."
+      columns={[{ key: 'm', label: 'Measure' }, { key: 'mean', label: 'Mean', num: true }, { key: 'sd', label: 'SD', num: true }]}
+      rows={[{ m: 'Positive affect', mean: '3.33', sd: '.92' }, { m: 'Negative affect', mean: '2.75', sd: '.95' }, { m: 'Stress', mean: '1.80', sd: '.82' }, { m: 'Connectedness', mean: '3.25', sd: '.86' }]}
+      note="From the paper's descriptive statistics." />
+
+    <p class="figcap">Hours of social time and feelings (correlations)</p>
+    <p class="figlook"><strong>What to look for.</strong> Strong ties in person link to better feelings. Weak ties online link to worse ones.</p>
+    <DotRows rows={timeRows} domain={[-0.3, 0.3]} tickStep={0.1} zero digits={2} axisLabel="Correlation (r)"
+      ariaLabel="Correlations between hours with four kinds of contact and four feelings." />
+
+    <p class="figcap">How the four feelings relate</p>
+    <p class="figlook"><strong>What to look for.</strong> Stress and negative affect are close to one. Connectedness opposes them.</p>
+    <CorrGrid vars={vars} r={[[1, -0.54, -0.57, 0.51], [-0.54, 1, 0.79, -0.64], [-0.57, 0.79, 1, -0.70], [0.51, -0.64, -0.70, 1]]}
+      ariaLabel="Correlations among positive affect, negative affect, stress and connectedness." />
+
+    <StatTable title="Table 2. What time use explains" look="Each model combines all four kinds of contact. Connectedness and stress are the best explained."
+      columns={[{ key: 'm', label: 'Outcome' }, { key: 'r2', label: 'R²', num: true }, { key: 'k', label: 'Key predictors (partial r)', wrap: true, minw: '16rem' }]}
+      rows={[
+        { m: 'Positive affect', r2: '.30', k: 'Strong ties in person (.14)' },
+        { m: 'Negative affect', r2: '.35', k: 'Weak ties online (.20)' },
+        { m: 'Stress', r2: '.41', k: 'Weak ties online (.16)' },
+        { m: 'Connectedness', r2: '.44', k: 'Strong ties in person (.16), strong ties online (.15), weak ties online (−.12)' },
+      ]} note="Final stepwise models, from the paper's Table 2." />
+    <p class="figcap">Partial correlations of the key predictors</p>
+    <DotRows rows={partial} domain={[-0.3, 0.3]} tickStep={0.1} zero digits={2} axisLabel="Partial correlation"
+      ariaLabel="Partial correlations of the key contact predictors with each feeling." />
+  </section>
+
+  <section class="section" id="implications" aria-labelledby="imp-title">
+    <h2 id="imp-title">What this means</h2>
+    <div class="prose">
+      <p><strong>The kind of contact mattered.</strong> Time with close people in person went with better feelings, and online time with acquaintances went the other way.</p>
+      <p><strong>Limits.</strong> This is one day of survey data from online panels, so the data cannot show what caused what. The links are small to moderate.</p>
+    </div>
+  </section>
+
+  <section class="section" id="files" aria-labelledby="files-title">
+    <h2 id="files-title">How this page was made</h2>
+    <div class="prose"><p>Every value is from the printed paper. I did not recompute from raw data.</p></div>
+  </section>
+</PaperPage>

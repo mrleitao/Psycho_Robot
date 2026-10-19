@@ -1,0 +1,47 @@
+---
+// A grid of results marked by strength: a filled circle for a reliable result, a half circle for a weaker one,
+// and an open circle for no reliable result. The printed estimate sits beside each mark.
+interface Cell { level: 'strong' | 'some' | 'none'; text: string }
+interface Row { label: string; cells: Cell[] }
+interface Props { cols: string[]; rows: Row[]; ariaLabel: string; key?: string[] }
+const { cols, rows, ariaLabel, key = ['Reliable (p below .01)', 'Weaker (p below .05)', 'No reliable association'] } = Astro.props;
+---
+<figure class="sg">
+  <ul class="key">
+    <li><span class="m strong"></span>{key[0]}</li>
+    <li><span class="m some"></span>{key[1]}</li>
+    <li><span class="m none"></span>{key[2]}</li>
+  </ul>
+  <div class="scroll" tabindex="0" role="region" aria-label={`${ariaLabel}. Scrolls sideways on narrow screens.`}>
+    <table>
+      <thead>
+        <tr><th scope="col">Activity</th>{cols.map((c) => <th scope="col">{c}</th>)}</tr>
+      </thead>
+      <tbody>
+        {rows.map((r) => (
+          <tr>
+            <th scope="row">{r.label}</th>
+            {r.cells.map((c) => (
+              <td><span class={`m ${c.level}`} role="img" aria-label={c.level === 'strong' ? 'reliable' : c.level === 'some' ? 'weaker' : 'not reliable'}></span><span class="txt">{c.text}</span></td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</figure>
+<style>
+  .sg { margin: 1rem 0 1.8rem; max-width: 800px; font-family: var(--display); }
+  .scroll { overflow-x: auto; border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.95rem; font-variant-numeric: tabular-nums; }
+  th, td { padding: 0.55rem 0.8rem; text-align: left; white-space: nowrap; }
+  thead th { background: var(--thead); border-bottom: 1px solid var(--ink); font-weight: 600; }
+  tbody th { font-weight: 500; }
+  tbody tr + tr > * { border-top: 1px solid var(--rule); }
+  .key { list-style: none; margin: 0 0 0.6rem; padding: 0; display: flex; flex-wrap: wrap; gap: 0.3rem 1.2rem; font-size: 0.88rem; }
+  .m { display: inline-block; width: 0.95rem; height: 0.95rem; border-radius: 50%; border: 2px solid var(--deep); margin-right: 0.55rem; vertical-align: -2px; box-sizing: border-box; }
+  .m.strong { background: var(--deep); }
+  .m.some { background: linear-gradient(90deg, var(--deep) 50%, transparent 50%); }
+  .m.none { background: transparent; border-color: var(--muted); }
+  .txt { color: var(--muted); }
+</style>

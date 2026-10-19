@@ -1,0 +1,51 @@
+---
+import PaperPage from '../../components/PaperPage.astro';
+import MainFindings from '../../components/MainFindings.astro';
+import Framework from '../../components/Framework.astro';
+
+const cite = 'Berzenski, S. R., Shulze, J., Leitao, M. R., &amp; Ruvalcaba, O. (2025). Motivations for Gaming Scale: A comparison of competitive and noncompetitive gamers. <em>Journal of Electronic Gaming and Esports</em>, 3, 1–13. <a href="https://doi.org/10.1123/jege.2024-0026">doi:10.1123/jege.2024-0026</a>';
+const cards = [
+  { name: 'Both groups', claim: 'Two motivations appeared for all gamers.', rows: [{ label: 'Factors', items: ['Challenge', 'Competition'] }, { label: 'Also in both', items: ['Enjoyment and Purpose, which divide differently by group'] }] },
+  { name: 'Competitive gamers', claim: 'Enjoyment separated into two motivations.', rows: [{ label: 'Sample', items: ['N = 335'] }, { label: 'Enjoyment splits into', items: ['Diversion', 'Mastery'] }] },
+  { name: 'Noncompetitive gamers', claim: 'Purpose separated into two motivations.', rows: [{ label: 'Sample', items: ['N = 237'] }, { label: 'Purpose splits into', items: ['Occupation', 'Identity'] }] },
+];
+const findings = [
+  {
+    head: 'We built and tested a new scale of why people game',
+    body: ['572 adults who play video games answered an online survey. 67.8% were women and 64.3% were Hispanic. They came from mTurk and an undergraduate pool.', 'We split the sample into one group to find the factors and another to confirm them.'],
+    visual: { type: 'stat', value: 'N = 572', label: 'gamers across the exploratory and confirmatory samples', caption: 'mTurk plus undergraduates.' },
+  },
+  {
+    head: 'Competitive and noncompetitive gamers are motivated differently',
+    body: ['Among competitive gamers, enjoyment split into Diversion and Mastery. Among noncompetitive gamers, purpose split into Occupation and Identity.', 'Challenge and Competition appeared in both groups.'],
+    visual: { type: 'stat', value: '4 motivations', label: 'Challenge, Competition, Enjoyment and Purpose', caption: 'Enjoyment and Purpose each split in one group.' },
+  },
+];
+---
+<PaperPage
+  title="Motivations for Gaming Scale"
+  description="A new scale for why people play video games, and how motivation differs for competitive and noncompetitive gamers."
+  heading="Why people game: a new motivation scale"
+  cite={cite}
+  role="Contributing author (third of four)"
+  status="Published, Journal of Electronic Gaming and Esports, 2025"
+  lede="We built a scale that measures what motivates people to play, and compared the structure for competitive and noncompetitive gamers."
+  links={[{ label: 'Read the paper (DOI)', href: 'https://doi.org/10.1123/jege.2024-0026' }]}
+>
+  <section class="section" id="main-findings" aria-labelledby="mf-title">
+    <h2 id="mf-title">Main findings</h2>
+    <MainFindings findings={findings} />
+  </section>
+  <section class="section" id="evidence" aria-labelledby="ev-title">
+    <h2 id="ev-title">The structure of motivation</h2>
+    <p class="figlook"><strong>What to look for.</strong> The groups share Challenge and Competition. They differ in how the other two motivations divide.</p>
+    <Framework cards={cards} ariaLabel="Motivation factors for all gamers, competitive gamers and noncompetitive gamers." />
+  </section>
+  <section class="section" id="implications" aria-labelledby="imp-title">
+    <h2 id="imp-title">What this means</h2>
+    <div class="prose">
+      <p><strong>One scale, two profiles.</strong> Researchers, clinicians and industry teams can use the scale to describe and serve different gaming groups.</p>
+      <p><strong>Limits.</strong> This page rests on the abstract alone. Loadings, reliabilities and fit indices are in the paper, and I have not redrawn them here.</p>
+    </div>
+  </section>
+</PaperPage>

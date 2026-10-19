@@ -1,0 +1,57 @@
+---
+// The shared frame for one paper: breadcrumb, title, citation, role and status, links out, and a content slot.
+import Base from '../layouts/Base.astro';
+import { href } from '../utils/url';
+interface Link { label: string; href: string }
+interface Props {
+  title: string;
+  description: string;
+  heading: string;
+  cite: string; // HTML
+  role: string;
+  status: string;
+  lede: string;
+  links?: Link[];
+}
+const { title, description, heading, cite, role, status, lede, links = [] } = Astro.props;
+---
+<Base title={title} description={description}>
+  <div class="wrap paper">
+    <header class="page-head">
+      <p class="back small"><a href={href('/research/')}>Research</a></p>
+      <h1>{heading}</h1>
+      <p class="lede">{lede}</p>
+      <dl class="meta">
+        <div><dt>My role</dt><dd>{role}</dd></div>
+        <div><dt>Status</dt><dd>{status}</dd></div>
+      </dl>
+      <p class="cite small" set:html={cite} />
+      {links.length > 0 && (
+        <ul class="links">
+          {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+        </ul>
+      )}
+    </header>
+    <slot />
+  </div>
+</Base>
+<style>
+  .back { margin: 0 0 0.6rem; font-family: var(--display); }
+  .meta { display: flex; flex-wrap: wrap; gap: 0.5rem 2.5rem; margin: 1.25rem 0 0.9rem; font-family: var(--display); font-size: 0.95rem; }
+  dt { color: var(--muted); font-size: 0.85rem; }
+  dd { margin: 0; }
+  .cite { max-width: 72ch; color: var(--muted); padding-left: 1.5rem; text-indent: -1.5rem; margin: 0.4rem 0 0.6rem; }
+  .links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.3rem 1.4rem; font-family: var(--display); }
+  :global(.paper section > h2) { margin-bottom: 0.75rem; }
+  :global(.paper .prose p) { margin: 0 0 1rem; }
+  :global(.paper .facts) { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 0.75rem; margin: 1.2rem 0 0; font-family: var(--display); }
+  :global(.paper .facts div) { background: var(--wash); border-radius: 8px; padding: 0.8rem 1rem; border-top: 4px solid var(--peach); }
+  :global(.paper .facts dt) { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.15rem; }
+  :global(.paper .facts dd) { margin: 0; font-size: 0.97rem; line-height: 1.4; }
+  :global(.paper .filelist) { padding-left: 1.2rem; font-family: var(--display); }
+  :global(.paper .filelist li) { margin-bottom: 0.3rem; }
+  :global(.paper figure + h3), :global(.paper .prose + h3) { margin-top: 2.4rem; }
+  :global(.paper .figcap) { font-family: var(--display); font-weight: 650; font-size: 1.02rem; margin: 2rem 0 0.2rem; }
+  :global(.paper .figlook) { margin: 0 0 0.5rem; font-family: var(--display); font-size: 0.95rem; color: var(--muted); max-width: 66ch; line-height: 1.45; }
+  :global(.paper .figlook strong) { color: var(--ink); font-weight: 650; }
+</style>

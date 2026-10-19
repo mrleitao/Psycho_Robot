@@ -1,0 +1,114 @@
+---
+import PaperPage from '../../components/PaperPage.astro';
+import MainFindings from '../../components/MainFindings.astro';
+import StatTable from '../../components/StatTable.astro';
+import StackBars from '../../components/StackBars.astro';
+import DotRows from '../../components/DotRows.astro';
+
+const cite = 'Rarity, E., <strong>Leitao, M. R.</strong>, &amp; Rutchick, A. M. (2022). Identification with characters in parasocial relationships predicts sharing their personality traits. <em>Psychology of Popular Media, 11</em>(2), 111–116. <a href="https://doi.org/10.1037/ppm0000389">doi:10.1037/ppm0000389</a>';
+
+const chars = ['Pinkie Pie', 'Rarity', 'Rainbow Dash', 'Applejack', 'Fluttershy', 'Twilight Sparkle'];
+const traits = ['Humor', 'Generosity', 'Loyalty', 'Honesty', 'Kindness', 'Friendship'];
+// Relative weights, rows are characters, columns are traits (the paper's Table 2). "<.001" is entered as .0005.
+const W = [
+  [0.097, 0.026, 0.008, 0.001, 0.020, 0.037],
+  [0.014, 0.051, 0.003, 0.001, 0.028, 0.004],
+  [0.005, 0.005, 0.024, 0.0005, 0.007, 0.010],
+  [0.011, 0.012, 0.020, 0.007, 0.003, 0.003],
+  [0.005, 0.026, 0.008, 0.011, 0.086, 0.015],
+  [0.001, 0.002, 0.001, 0.002, 0.004, 0.0005],
+];
+const cols = traits.map((t, j) => ({ label: t, segs: chars.map((c, i) => ({ name: c, v: W[i][j] })) }));
+const r2 = [0.133, 0.124, 0.063, 0.022, 0.148, 0.069];
+const f = [21.022, 19.457, 9.164, 3.037, 23.889, 10.109];
+const matched = [
+  { t: 'Humor', c: 'Pinkie Pie', w: 0.097 }, { t: 'Generosity', c: 'Rarity', w: 0.051 }, { t: 'Loyalty', c: 'Rainbow Dash', w: 0.024 },
+  { t: 'Honesty', c: 'Applejack', w: 0.007 }, { t: 'Kindness', c: 'Fluttershy', w: 0.086 }, { t: 'Friendship', c: 'Twilight Sparkle', w: 0.0005 },
+];
+const shares = matched.map((m, j) => ({ label: `${m.t}, matched to ${m.c}`, v: Math.round((m.w / r2[j]) * 100) }));
+const betas = [
+  { label: 'Pinkie Pie and humor', v: 0.329 }, { label: 'Rarity and generosity', v: 0.202 },
+  { label: 'Rainbow Dash and loyalty', v: 0.139 }, { label: 'Fluttershy and kindness', v: 0.284 },
+  { label: 'Applejack and honesty', v: -0.082 }, { label: 'Fluttershy and honesty', v: -0.098 },
+  { label: 'Fluttershy and friendship', v: -0.148 }, { label: 'Pinkie Pie and friendship', v: 0.2 },
+];
+
+const findings = [
+  {
+    head: 'Fans saw themselves in the traits of the characters they identified with',
+    body: [
+      'The team asked 829 fans of My Little Pony: Friendship Is Magic how close they felt to each of six characters. They also asked how much each of six traits described them.',
+      'Closeness to Pinkie Pie predicted humor (β = .329). Closeness to Fluttershy predicted kindness (β = .284). Rarity predicted generosity (β = .202) and Rainbow Dash predicted loyalty (β = .139).',
+    ],
+    visual: { type: 'stat', value: 'β = .329', label: 'closeness to Pinkie Pie and humor', caption: 'The strongest matched pair.' },
+  },
+  {
+    head: 'Two matches did not hold',
+    body: [
+      'Applejack stands for honesty, but closeness to Applejack did not predict honesty (β = −.082). Twilight Sparkle stands for friendship, and her share of the variance was near zero.',
+      'Fluttershy was linked to lower honesty (β = −.098) and lower friendship (β = −.148). These results ran against the show’s themes.',
+    ],
+    visual: { type: 'stat', value: 'β = −.082', label: 'closeness to Applejack and honesty', caption: 'Opposite to the match the show suggests.' },
+  },
+  {
+    head: 'The matched character carried most of the explained variance for humor and kindness',
+    body: [
+      'Pinkie Pie accounted for 73% of the explained variance in humor. Fluttershy accounted for 58% for kindness.',
+      'Each model explained a modest share overall (R² from .02 to .15).',
+    ],
+    visual: { type: 'ranks', rows: shares.map((s) => ({ label: s.label.split(',')[0], value: s.v, kind: 'plain' as const })), max: 100, caption: 'Matched character’s share of explained variance (%).' },
+  },
+];
+---
+<PaperPage
+  title="Identification with fictional characters"
+  description="Fans of My Little Pony and the traits they saw in themselves, rebuilt from the printed statistics."
+  heading="Seeing yourself in a favorite character"
+  cite={cite}
+  role="Contributing author (second of three)"
+  status="Published, Psychology of Popular Media, 2022 (brief report)"
+  lede="Do people see a character's traits in themselves when they feel close to that character? We tested it with adult fans of one show and its six main characters."
+  links={[{ label: 'Read the paper (DOI)', href: 'https://doi.org/10.1037/ppm0000389' }]}
+>
+  <dl class="facts">
+    <div><dt>Who</dt><dd>829 of 1,518 recruited fans. Mean age 23.8. 78.7% male, 15.9% female.</dd></div>
+    <div><dt>Measures</dt><dd>Closeness to each character (the Inclusion of Other in the Self scale) and ratings of six traits.</dd></div>
+    <div><dt>Data</dt><dd>Figures are rebuilt from the printed tables.</dd></div>
+  </dl>
+
+  <section class="section" id="main-findings" aria-labelledby="mf-title">
+    <h2 id="mf-title">Main findings</h2>
+    <MainFindings findings={findings} />
+  </section>
+
+  <section class="section" id="evidence" aria-labelledby="ev-title">
+    <h2 id="ev-title">The evidence</h2>
+    <p class="figcap">Matched character and trait</p>
+    <p class="figlook"><strong>What to look for.</strong> Dots right of zero are matches that held. Dots left of zero are ones that did not.</p>
+    <DotRows rows={betas} domain={[-0.3, 0.4]} tickStep={0.1} zero digits={3} axisLabel="Standardized coefficient (β)"
+      ariaLabel="Standardized coefficients for selected character and trait pairs." />
+
+    <p class="figcap">Who explains each trait</p>
+    <p class="figlook"><strong>What to look for.</strong> Each column is one trait. The total height is the variance explained, and each color is one character’s share.</p>
+    <StackBars cols={cols} parts={chars} max={0.16} tickStep={0.04} digits={1} axisLabel="Share of variance in the trait explained (relative weight)"
+      ariaLabel="Relative weights of six characters for six traits, stacked by trait." />
+
+    <StatTable title="Table 1. Fit of the six models" look="Humor and kindness are best explained. Honesty is barely explained."
+      columns={[{ key: 't', label: 'Trait' }, { key: 'r', label: 'R²', num: true }, { key: 'f', label: 'F', num: true }]}
+      rows={traits.map((t, j) => ({ t, r: r2[j].toFixed(3).replace('0.', '.'), f: f[j].toFixed(3) }))}
+      note="From the paper's Table 2. The text gives the degrees of freedom as 6 and 828; with 829 people it would be 6 and 822, so I have left them out of the table." />
+  </section>
+
+  <section class="section" id="implications" aria-labelledby="imp-title">
+    <h2 id="imp-title">What this means</h2>
+    <div class="prose">
+      <p><strong>Closeness to a character tracked self-perceived traits.</strong> The match was strongest for humor and kindness.</p>
+      <p><strong>Limits.</strong> The sample was mostly young men who chose to take part, and it was cross-sectional. The data cannot show whether fans took on traits or chose characters who already matched them.</p>
+    </div>
+  </section>
+
+  <section class="section" id="files" aria-labelledby="files-title">
+    <h2 id="files-title">How this page was made</h2>
+    <div class="prose"><p>Every value is from the printed paper. Percent shares are each matched character’s relative weight divided by the model’s total R².</p></div>
+  </section>
+</PaperPage>
