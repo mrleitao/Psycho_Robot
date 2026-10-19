@@ -1,0 +1,270 @@
+---
+import DeepNav from '../../../../components/DeepNav.astro';
+import Base from '../../../../layouts/Base.astro';
+import StatTable from '../../../../components/StatTable.astro';
+import Raincloud from '../../../../components/Raincloud.astro';
+import DotPanels from '../../../../components/DotPanels.astro';
+import DotRows from '../../../../components/DotRows.astro';
+import Contents from '../../../../components/Contents.astro';
+import Glossary from '../../../../components/Glossary.astro';
+import full from '../../../../data/trust-in-medical-ai/study4-full.json';
+import pts from '../../../../data/trust-in-medical-ai/study4-points.json';
+import { href } from '../../../../utils/url';
+import {
+  f2, noZero, pv, descCols, descRow, betweenCols, betweenRow, pairedCols, pairedRow, olsCols, olsRows, olsFit,
+  lmmCols, lmmRows, lmmFit, coefFig, coefDomain, dRefs, sampleRows, sampleFig, missingNote, minus,
+} from '../../../../utils/fmt';
+
+const MEAS = [
+  { id: 'trust', label: 'Trust', scale: '−3 to 3' },
+  { id: 'belief', label: 'Belief', scale: '−3 to 3' },
+  { id: 'warmth', label: 'Warmth', scale: '0 to 4' },
+  { id: 'competence', label: 'Competence', scale: '0 to 4' },
+];
+const CONDS = [['humanlike', 'Humanlike AI'], ['standard', 'Standard AI'], ['doctor', 'Doctor']] as const;
+const n = full.sample.n;
+const get = (arr: any[], id: string) => arr.find((d: any) => d.id === id)!;
+const SHORT: Record<string, string> = { 'ai-doc': 'Doctor versus both AIs', 'hum-std': 'Humanlike versus standard AI', 'doc-std': 'Doctor versus standard AI', 'doc-hum': 'Doctor versus humanlike AI' };
+const cell = (c: any) => ({ mean: c.mean, lo: c.lo, hi: c.hi, n: c.n });
+const grid4 = pts.gridScale4;
+
+const descRowsFor = (list: any[]) => MEAS.flatMap((m) => CONDS.map(([k, name]) => descRow(get(list, m.id).cells[k], `${m.label} (${m.scale}): ${name}`)));
+const meanItems = (list: any[]) => CONDS.slice().reverse().map(([k, name]) => ({
+  label: name, kind: k === 'doctor' ? 'human' : k === 'humanlike' ? 'hybrid' : 'ai', cells: MEAS.map((m) => cell(get(list, m.id).cells[k])),
+}));
+const meanPanels = [
+  { title: 'Trust', domain: [0, 1.75], tickStep: 0.25, axisLabel: 'Mean (−3 to 3)' },
+  { title: 'Belief', domain: [0, 1.75], tickStep: 0.25, axisLabel: 'Mean (−3 to 3)' },
+  { title: 'Warmth', domain: [1.25, 3], tickStep: 0.25, axisLabel: 'Mean (0 to 4)' },
+  { title: 'Competence', domain: [1.75, 3], tickStep: 0.25, axisLabel: 'Mean (0 to 4)' },
+];
+
+// ---- between people
+const btTests = (m: string) => ['ai-doc', 'hum-std', 'doc-std', 'doc-hum'].map((id) => (full.betweenTests as any)[m].find((t: any) => t.id === id));
+const btRows = MEAS.flatMap((m) => btTests(m.id).map((t: any) => ({ ...betweenRow(t, `${m.label}: ${t.label}`), role: t.role === 'planned' ? 'Planned' : 'Additional', pt: t.pTukey == null ? '' : pv(t.pTukey) })));
+const btCols = [...betweenCols('First', 'Second'), { key: 'role', label: 'Kind' }, { key: 'pt', label: 'Tukey p', num: true, hint: 'p adjusted for the three pairwise comparisons among the conditions' }];
+const btFig = MEAS.flatMap((m) => [{ head: m.label }, ...btTests(m.id).map((t: any) => ({ label: SHORT[t.id], v: t.d, lo: t.dLo, hi: t.dHi, tip: `d = ${t.d.toFixed(2)} (95% CI ${t.dLo.toFixed(2)} to ${t.dHi.toFixed(2)})` }))]);
+const anovaRows = MEAS.map((m) => {
+  const a = (full.betweenAnova as any)[m.id];
+  return { measure: m.label, n: a.n, F: `F(${a.df1}, ${a.df2}) = ${f2(a.F)}`, p: pv(a.p), eta: noZero(a.eta2.toFixed(3)),
+    ds: pv(a.tukey['Doctor|Standard AI']), dh: pv(a.tukey['Doctor|Humanlike AI']), hs: pv(a.tukey['Humanlike AI|Standard AI']) };
+});
+const sensRows = full.sensitivity.map((s: any) => ({ text: s.label, nA: s.nA, nB: s.nB, d: f2(s.minD) }));
+const check = full.manipulationCheck;
+
+// ---- side by side
+const wtTests = (m: string) => (full.withinTests as any)[m];
+const wtRows = MEAS.flatMap((m) => wtTests(m.id).map((t: any) => pairedRow(t, `${m.label}: ${t.label}`)));
+const wtFig = MEAS.flatMap((m) => [{ head: m.label }, ...wtTests(m.id).map((t: any) => ({ label: SHORT[t.id], v: t.d, lo: t.dLo, hi: t.dHi, tip: `dz = ${t.d.toFixed(2)} (95% CI ${t.dLo.toFixed(2)} to ${t.dHi.toFixed(2)})` }))]);
+const wa = full.withinAnova as any;
+const waRows = ['trust', 'belief'].map((k) => {
+  const a = wa[k];
+  return { measure: k === 'trust' ? 'Trust' : 'Belief', n: a.n, F: `F(${a.df1}, ${a.df2}) = ${f2(a.F)}`, p: pv(a.p), pes: noZero(a.pes.toFixed(3)), eps: noZero(a.eps.toFixed(2)), pgg: pv(a.pGG),
+    rep: `F(${a.reported.df1}, ${a.reported.df2}) = ${f2(a.reported.F)}, p = ${noZero(a.reported.p.toFixed(3))}` };
+});
+
+// ---- alone versus side by side
+const effRows = full.effectCompare.flatMap((e: any) => [{ head: e.measure === 'trust' ? 'Trust' : 'Belief' },
+  ...['hum-std', 'doc-std', 'doc-hum'].flatMap((id) => [
+    { label: `${SHORT[id]}, seen alone`, v: e.between[id].d, lo: e.between[id].dLo, hi: e.between[id].dHi },
+    { label: `${SHORT[id]}, side by side`, v: e.within[id].d, lo: e.within[id].dLo, hi: e.within[id].dHi },
+  ])]);
+const effTable = full.effectCompare.flatMap((e: any) => ['hum-std', 'doc-std', 'doc-hum'].map((id) => ({
+  text: `${e.measure === 'trust' ? 'Trust' : 'Belief'}: ${SHORT[id]}`,
+  alone: minus(`${f2(e.between[id].d)} [${f2(e.between[id].dLo)}, ${f2(e.between[id].dHi)}]`),
+  side: minus(`${f2(e.within[id].d)} [${f2(e.within[id].dLo)}, ${f2(e.within[id].dHi)}]`),
+})));
+
+const orderRows = full.design.orders.map((o: any) => ({ order: o.order, first: { H: 'Humanlike AI', N: 'Standard AI', D: 'Doctor' }[o.order[0] as 'H'], n: o.n }));
+
+const F = (label: string, h: string) => ({ label, href: h, kind: 'figure' as const });
+const Tb = (label: string, h: string) => ({ label, href: h, kind: 'table' as const });
+const contents = [
+  { title: 'Who took part', href: '#sample', items: [Tb('1. The people in the released file', '#table-sample')] },
+  { title: 'The design and the check', href: '#design', items: [Tb('2. Who saw what first', '#table-orders'), Tb('3. How humanlike the AI seemed', '#table-check'), F('1. The check as an effect size', '#fig-check')] },
+  { title: 'Part 1: each person saw one source first', href: '#between', items: [
+    Tb('4. Ratings by first source', '#table-bdesc'), F('2 to 5. Every person', '#fig-btrust'), F('6. Means and intervals', '#fig-bmeans'),
+    Tb('5. One-way ANOVAs', '#table-banova'), Tb('6. Comparisons', '#table-btests'), F('7. Effect sizes', '#fig-bd'), Tb('7. What Part 1 could detect', '#table-sens')] },
+  { title: 'Part 2: everyone rated all three', href: '#within', items: [
+    Tb('8. Ratings, side by side', '#table-wdesc'), F('8 to 11. Every rating', '#fig-wtrust'), F('12. Means and intervals', '#fig-wmeans'),
+    Tb('9. Repeated-measures ANOVAs', '#table-wanova'), Tb('10. Paired comparisons', '#table-wtests'), F('13. Effect sizes', '#fig-wd')] },
+  { title: 'Alone versus side by side', href: '#compare', items: [Tb('11. The same effects in the two parts', '#table-compare'), F('14. The same effects in the two parts', '#fig-compare')] },
+  { title: 'Models', href: '#models', items: [Tb('12. Part 1 regressions', '#table-bm-trust'), Tb('13. Part 2 mixed models', '#table-mm-trust')] },
+  { title: 'More', href: '#dig', items: [{ label: 'Dig deeper: figure map and Bayes factors', href: href('/projects/trust-in-medical-ai/study-4/dig-deeper/'), kind: 'page' as const }] },
+];
+---
+
+<Base
+  title="Trust in medical AI: Study 4, every table and figure"
+  description="Every table and figure from the Study 4 analysis, rebuilt from the public data with hover details."
+>
+  <div class="wrap">
+    <header class="page-head">
+      <p class="back small"><a href={href('/projects/trust-in-medical-ai/study-4/')}>Study 4</a> · <a href={href('/projects/trust-in-medical-ai/')}>Trust in medical AI</a></p>
+      <h1>Study 4: every table and figure</h1>
+      <p class="lede">Each analysis from the dissertation, rebuilt from the released data, with a figure beside every table. Hover over any mark for the details.</p>
+    </header>
+    <DeepNav study="4" current="full" />
+    <div class="deep">
+      <h2 id="deep-dive">Deep dive: every table and figure</h2>
+      <p>The rest of this page rebuilds each analysis from the public data. Hover over any mark for the details, and open the guide below if a term is unfamiliar.</p>
+      <Glossary />
+    </div>
+    <Contents groups={contents} />
+    <div class="prose">
+      <p class="how small muted">
+        How to read this page. Study 4 has two parts. In Part 1 each person read and rated one recommender first, so comparisons are between groups. In Part 2 the same people then rated all
+        three in a random order, so comparisons are within people. Trust and belief run from −3 to 3, warmth and competence from 0 to 4. Every recommender was voiced. Age is in four bands in the public file, so age coefficients
+        differ in scale from the dissertation's.
+      </p>
+    </div>
+
+    <section class="section" id="sample" aria-labelledby="sample-title">
+      <h2 id="sample-title">Who took part</h2>
+      <p class="intro">{n} adults are in the released file. Not everyone finished Part 2, so the number of people varies by rating.</p>
+      <StatTable id="table-sample" title="Table 1. The people in the released file"
+        look="The share in each group. Younger adults and women make up the largest groups."
+        columns={[{ key: 'label', label: 'Group' }, { key: 'n', label: 'People', num: true }, { key: 'pct', label: 'Share', num: true }]}
+        rows={sampleRows(full.sample)}
+        note={`Shares are of all ${n} people. Left blank in the file: ${missingNote(full.sample)}. Race is shown as White or another or multiple because no other group reached 30 people. Age is in bands.`} />
+      <h3 class="fig-title mini">Table 1 as a figure</h3>
+      <p class="leadin">Each bar is the share of the {n} people in that group. Hover a bar for the head count.</p>
+      <DotRows rows={sampleFig(full.sample)} domain={[0, 100]} tickStep={20} axisLabel="Share of people (%)" bars unit="%" digits={0} ariaLabel="Share of participants in each demographic group" />
+    </section>
+
+    <section class="section" id="design" aria-labelledby="design-title">
+      <h2 id="design-title">The design and the check</h2>
+      <p class="intro">
+        Each person was randomly assigned a recommender to read first: {full.design.groups.map((g: any) => `${g.n} the ${g.condition.toLowerCase()}`).join(', ')}.
+        They then rated all three, in one of six random orders. Letters give the order: H is the humanlike AI, N the standard AI and D the doctor.
+      </p>
+      <StatTable id="table-orders" title="Table 2. Who saw what first, and the six orders"
+        look="The groups are not equal in size, so Part 1 compares unequal groups."
+        columns={[{ key: 'order', label: 'Order' }, { key: 'first', label: 'Seen first' }, { key: 'n', label: 'People', num: true }]} rows={orderRows} />
+      <StatTable id="table-check" title="Table 3. How humanlike the AI seemed (0 to 4), first rating"
+        look="Unlike Study 3, the humanlike AI was rated more humanlike. The interval for the difference stays above zero."
+        columns={betweenCols('Humanlike AI', 'Standard AI')} rows={[betweenRow(check)]} note="Welch t test, two-sided. Only people who first saw an AI answered this question." />
+      <h3 class="fig-title mini" id="fig-check">Table 3 as a figure</h3>
+      <p class="leadin">The effect of the framing on how humanlike the AI seemed, in standard deviations, with a 95% interval.</p>
+      <DotRows rows={[{ label: 'Humanlike versus standard AI', v: check.d, lo: check.dLo, hi: check.dHi }]} domain={[0, 0.6]} tickStep={0.1} zero refs={dRefs} axisLabel="Cohen's d" ariaLabel="Effect of the framing on how humanlike the AI seemed" />
+    </section>
+
+    <section class="section" id="between" aria-labelledby="between-title">
+      <h2 id="between-title">Part 1: each person saw one source first</h2>
+      <p class="intro">This part repeats Study 3's design with a voice added. It asks whether the humanlike AI is trusted more than the standard AI when each person judges only one.</p>
+      <StatTable id="table-bdesc" title="Table 4. Ratings by first source"
+        look="Compare means within a measure. The doctor is highest; the humanlike AI sits a little above the standard one."
+        columns={descCols.map((c) => (c.key === 'label' ? { ...c, label: 'Measure and source' } : c))} rows={descRowsFor(full.betweenDescriptives)} />
+      {MEAS.map((m, i) => (
+        <>
+          <h3 class="fig-title" id={i === 0 ? 'fig-btrust' : `fig-b-${m.id}`}>Figure {2 + i}. {m.label}, every person</h3>
+          <p class="leadin">Each dot is one person's first rating. The curve shows where ratings pile up, and the bar marks the mean with its bootstrapped 95% interval.</p>
+          <Raincloud rows={(pts as any)[`between_${m.id}`]} grid={i < 2 ? pts.gridTrust : grid4} domain={i < 2 ? [-3, 3] : [0, 4]} tickStep={1} xJitter={0.15} xLabel={`${m.label} (${m.scale})`} ariaLabel={`Distribution of ${m.label.toLowerCase()} ratings by first source`} />
+        </>
+      ))}
+      <h3 class="fig-title" id="fig-bmeans">Figure 6. Means and intervals</h3>
+      <p class="leadin">Table 4 as a figure. Each dot is a mean with its 95% interval, one panel per measure.</p>
+      <DotPanels items={meanItems(full.betweenDescriptives)} panels={meanPanels} ariaLabel="Mean ratings for each first source, with 95% intervals" tableLabel="Source" valueLabel="Mean" />
+      <StatTable id="table-banova" title="Table 5. One-way ANOVAs across the three first sources"
+        look="The F and p columns say whether the sources differ at all; the Tukey columns say which pairs do."
+        columns={[
+          { key: 'measure', label: 'Measure' }, { key: 'n', label: 'n', num: true }, { key: 'F', label: 'F (df)', num: true }, { key: 'p', label: 'p', num: true },
+          { key: 'eta', label: 'η²', num: true }, { key: 'ds', label: 'Tukey p: doctor, standard AI', num: true, wrap: true, minw: '7rem' },
+          { key: 'dh', label: 'Tukey p: doctor, humanlike AI', num: true, wrap: true, minw: '7rem' }, { key: 'hs', label: 'Tukey p: humanlike, standard AI', num: true, wrap: true, minw: '7rem' },
+        ]} rows={anovaRows} />
+      <StatTable id="table-btests" title="Table 6. Planned and additional comparisons, Part 1"
+        look="The d column shows the size of each difference. The humanlike-versus-standard rows are the test of the framing."
+        columns={btCols} rows={btRows} note="Welch t tests, two-sided. d uses the pooled standard deviation and is positive when the first group is higher." />
+      <h3 class="fig-title" id="fig-bd">Figure 7. Effect sizes, Part 1</h3>
+      <p class="leadin">Table 6 as a figure. Each dot is Cohen's d with a 95% interval. The dashed lines mark a small, medium and large effect.</p>
+      <DotRows rows={btFig} domain={[-0.3, 0.8]} tickStep={0.1} zero refs={dRefs} axisLabel="Cohen's d, first group minus second" ariaLabel="Part 1 effect sizes" />
+      <StatTable id="table-sens" title="Table 7. What Part 1 could detect"
+        look="The d column is the smallest true difference this part would find 80% of the time."
+        columns={[{ key: 'text', label: 'Comparison', wrap: true, minw: '14rem' }, { key: 'nA', label: 'n, first', num: true }, { key: 'nB', label: 'n, second', num: true }, { key: 'd', label: 'Smallest detectable d', num: true }]}
+        rows={sensRows} note="Two-sided Welch test, α = .05, power = .80." />
+    </section>
+
+    <section class="section" id="within" aria-labelledby="within-title">
+      <h2 id="within-title">Part 2: everyone rated all three</h2>
+      <p class="intro">After the first rating, each person rated the humanlike AI, the standard AI and the doctor. Seeing all three lets people compare them directly.</p>
+      <StatTable id="table-wdesc" title="Table 8. Ratings of each recommender, side by side"
+        look="The standard AI is lowest. The humanlike AI and the doctor sit close together."
+        columns={descCols.map((c) => (c.key === 'label' ? { ...c, label: 'Measure and recommender' } : c))} rows={descRowsFor(full.withinDescriptives)} />
+      {MEAS.map((m, i) => (
+        <>
+          <h3 class="fig-title" id={i === 0 ? 'fig-wtrust' : `fig-w-${m.id}`}>Figure {8 + i}. {m.label}, every rating</h3>
+          <p class="leadin">Each dot is one person's rating of that recommender in Part 2.</p>
+          <Raincloud rows={(pts as any)[`within_${m.id}`]} grid={i < 2 ? pts.gridTrust : grid4} domain={i < 2 ? [-3, 3] : [0, 4]} tickStep={1} xJitter={0.15} xLabel={`${m.label} (${m.scale})`} ariaLabel={`Distribution of ${m.label.toLowerCase()} ratings of each recommender, side by side`} />
+        </>
+      ))}
+      <h3 class="fig-title" id="fig-wmeans">Figure 12. Means and intervals, side by side</h3>
+      <p class="leadin">Table 8 as a figure. Each dot is a mean with its 95% interval, one panel per measure.</p>
+      <DotPanels items={meanItems(full.withinDescriptives)} panels={meanPanels} ariaLabel="Mean ratings of each recommender, side by side, with 95% intervals" tableLabel="Recommender" valueLabel="Mean" />
+      <StatTable id="table-wanova" title="Table 9. Repeated-measures ANOVAs across the three recommenders"
+        look="The corrected p column says whether the three recommenders differ. The last column is what the dissertation reported for the same test."
+        columns={[
+          { key: 'measure', label: 'Measure' }, { key: 'n', label: 'People', num: true }, { key: 'F', label: 'F (df)', num: true }, { key: 'p', label: 'p', num: true },
+          { key: 'pes', label: 'Partial η²', num: true }, { key: 'eps', label: 'ε', num: true, hint: 'Greenhouse-Geisser correction for unequal variances of the differences' },
+          { key: 'pgg', label: 'p, corrected', num: true }, { key: 'rep', label: 'As printed in the dissertation', wrap: true, minw: '10rem' },
+        ]} rows={waRows}
+        note="Computed on the people who rated all three recommenders. The values printed in the dissertation could not be reproduced from the data: their degrees of freedom are larger than the number of people allows, which points to a test that counted ratings rather than people. The pairwise tests in Table 10 agree with the repeated-measures result." />
+      <StatTable id="table-wtests" title="Table 10. Paired comparisons, Part 2"
+        look="The dz column shows how large each difference is within a person. Humanlike versus standard is clearly positive; doctor versus humanlike is close to zero."
+        columns={pairedCols} rows={wtRows} note="Paired t tests, two-sided, with a Bonferroni correction across the three comparisons of each measure. dz is positive when the first recommender is higher." />
+      <h3 class="fig-title" id="fig-wd">Figure 13. Effect sizes, Part 2</h3>
+      <p class="leadin">Table 10 as a figure. Each dot is dz with a 95% interval. The dashed lines mark a small, medium and large effect.</p>
+      <DotRows rows={wtFig} domain={[-0.1, 0.8]} tickStep={0.1} zero refs={dRefs} axisLabel="dz, first recommender minus second" ariaLabel="Part 2 effect sizes" />
+    </section>
+
+    <section class="section" id="compare" aria-labelledby="compare-title">
+      <h2 id="compare-title">Alone versus side by side</h2>
+      <p class="intro">The same contrasts, estimated in the two parts. The humanlike effect grows when people can compare. Part 1 uses the pooled-SD d and Part 2 uses dz, so the two are close but not identical measures.</p>
+      <StatTable id="table-compare" title="Table 11. The same effects in the two parts"
+        look="Compare the two columns for each row. The humanlike-versus-standard effect is larger side by side."
+        columns={[{ key: 'text', label: 'Comparison', wrap: true, minw: '14rem' }, { key: 'alone', label: 'Seen alone (Part 1): d [95% CI]', num: true }, { key: 'side', label: 'Side by side (Part 2): dz [95% CI]', num: true }]} rows={effTable} />
+      <h3 class="fig-title" id="fig-compare">Figure 14. The same effects in the two parts</h3>
+      <p class="leadin">Table 11 as a figure. Each pair of dots is one contrast, first seen alone and then side by side.</p>
+      <DotRows rows={effRows} domain={[-0.2, 0.7]} tickStep={0.1} zero refs={dRefs} axisLabel="Effect size" ariaLabel="Effect sizes seen alone and side by side" />
+    </section>
+
+    <section class="section" id="models" aria-labelledby="models-title">
+      <h2 id="models-title">Models</h2>
+      <p class="intro">Part 1 is modelled with regressions and Part 2 with mixed models that give each person their own baseline. The reference is the humanlike AI. When warmth and competence enter, the standard-AI and doctor coefficients drop to about zero.</p>
+      {(['trust', 'belief'] as const).map((key) => (
+        <>
+          {(full.betweenModels as any)[key].map((m: any, i: number) => (
+            <>
+              <StatTable id={i === 0 ? `table-bm-${key}` : `table-bm-${key}-${i + 1}`} title={`Table 12${key === 'trust' ? 'a' : 'b'}${i + 1}. Part 1, ${key}: ${m.label.toLowerCase()}`}
+                look="The Standard AI and Doctor rows are differences from the humanlike AI." columns={olsCols} rows={olsRows(m)} note={olsFit(m)} />
+              <p class="leadin">As a figure. Each dot is a coefficient (b) with its 95% interval.</p>
+              <DotRows rows={coefFig(m)} domain={coefDomain(coefFig(m))} tickStep={0.2} zero axisLabel={`Effect on ${key} (points)`} ariaLabel={`Part 1 coefficients: ${key}, ${m.label.toLowerCase()}`} />
+            </>
+          ))}
+        </>
+      ))}
+      {(['trust', 'belief'] as const).map((key) => (
+        <>
+          {(full.mixedModels as any)[key].map((m: any, i: number) => (
+            <>
+              <StatTable id={i === 0 ? `table-mm-${key}` : `table-mm-${key}-${i + 1}`} title={`Table 13${key === 'trust' ? 'a' : 'b'}${i + 1}. Part 2, ${key}: ${m.label.toLowerCase()}`}
+                look="Read the standardized β column to see which ratings carry the most weight." columns={lmmCols} rows={lmmRows(m)} note={lmmFit(m)} />
+              <p class="leadin">As a figure. Each dot is a coefficient (b) with its 95% interval.</p>
+              <DotRows rows={coefFig(m)} domain={coefDomain(coefFig(m))} tickStep={0.2} zero axisLabel={`Effect on ${key} (points)`} ariaLabel={`Part 2 coefficients: ${key}, ${m.label.toLowerCase()}`} />
+            </>
+          ))}
+        </>
+      ))}
+    </section>
+  </div>
+</Base>
+
+<style>
+  .deep { margin-top: 4rem; padding-top: 2rem; border-top: 5px solid; border-image: var(--five) 1; }
+  .deep h2 { margin-bottom: 0.5rem; }
+  .deep p { max-width: 62ch; color: var(--muted); }
+  .mini { margin: 0 0 -0.4rem; font-size: 0.98rem; }
+  .how { margin-top: 1.5rem; font-family: var(--display); }
+  .intro { max-width: 64ch; color: var(--muted); }
+  .fig-title { margin-top: 3rem; font-size: 1.15rem; }
+  section :global(h2) { margin-bottom: 0.75rem; }
+</style>

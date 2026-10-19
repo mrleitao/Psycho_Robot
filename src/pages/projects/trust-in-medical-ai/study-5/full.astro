@@ -1,0 +1,311 @@
+---
+import DeepNav from '../../../../components/DeepNav.astro';
+import Base from '../../../../layouts/Base.astro';
+import StatTable from '../../../../components/StatTable.astro';
+import Raincloud from '../../../../components/Raincloud.astro';
+import DotPanels from '../../../../components/DotPanels.astro';
+import DotRows from '../../../../components/DotRows.astro';
+import CorrGrid from '../../../../components/CorrGrid.astro';
+import MediationDiagram from '../../../../components/MediationDiagram.astro';
+import Contents from '../../../../components/Contents.astro';
+import Glossary from '../../../../components/Glossary.astro';
+import full from '../../../../data/trust-in-medical-ai/study5-full.json';
+import pts from '../../../../data/trust-in-medical-ai/study5-points.json';
+import { href } from '../../../../utils/url';
+import {
+  f2, noZero, pv, r3, minus, descCols, descRow, betweenCols, betweenRow, pairedCols, pairedRow, lmmCols, lmmRows, lmmFit,
+  coefFig, coefDomain, dRefs, sampleRows, sampleFig, missingNote,
+} from '../../../../utils/fmt';
+
+const n = full.sample.n;
+const REC = [['doctor', 'Doctor', 'human'], ['humanlike', 'Humanlike AI', 'hybrid'], ['standard', 'Standard AI', 'ai']] as const;
+const DESC = full.descriptives as any[];
+const dget = (id: string) => DESC.find((d) => d.id === id)!;
+const SHORT: Record<string, string> = { 'doc-std': 'Doctor versus standard AI', 'hum-std': 'Humanlike versus standard AI', 'hum-doc': 'Humanlike AI versus doctor' };
+const MEAS = DESC.map((d) => ({ id: d.id, label: d.label, scale: d.scale }));
+const cell = (c: any) => ({ mean: c.mean, lo: c.lo, hi: c.hi, n: c.n });
+
+const descRows = MEAS.flatMap((m) => REC.map(([k, name]) => descRow(dget(m.id).cells[k], `${m.label} (${m.scale}): ${name}`)));
+const items = REC.map(([k, name, kind]) => ({ label: name, kind, cells: [] as any[], k }));
+const panelSet = (ids: string[], panels: any[]) => ({
+  items: REC.map(([k, name, kind]) => ({ label: name, kind, cells: ids.map((id) => cell(dget(id).cells[k])) })), panels,
+});
+const setA = panelSet(['tb', 'trust', 'belief'], [
+  { title: 'Trust and belief', domain: [0, 1.75], tickStep: 0.25, axisLabel: 'Mean (−3 to 3)' },
+  { title: 'Trust', domain: [0, 1.75], tickStep: 0.25, axisLabel: 'Mean (−3 to 3)' },
+  { title: 'Belief', domain: [0, 1.75], tickStep: 0.25, axisLabel: 'Mean (−3 to 3)' }]);
+const setB = panelSet(['warmth', 'competence', 'mind'], [
+  { title: 'Warmth', domain: [1.25, 2.75], tickStep: 0.25, axisLabel: 'Mean (0 to 4)' },
+  { title: 'Competence', domain: [1.5, 2.75], tickStep: 0.25, axisLabel: 'Mean (0 to 4)' },
+  { title: 'Mind perception', domain: [5, 7], tickStep: 0.5, axisLabel: 'Mean (0 to 10)' }]);
+const setC = panelSet(['appropriate', 'praise', 'blame'], [
+  { title: 'Appropriate', domain: [-0.25, 1.5], tickStep: 0.25, axisLabel: 'Mean (−3 to 3)' },
+  { title: 'Praise if it works', domain: [55, 70], tickStep: 5, axisLabel: 'Mean (0 to 100)' },
+  { title: 'Blame if it fails', domain: [55, 70], tickStep: 5, axisLabel: 'Mean (0 to 100)' }]);
+
+// mixed ANOVA
+const ma = full.mixedAnova as any;
+const maRows = ma.rows.map((r: any) => ({ effect: r.effect, stratum: r.stratum, F: `F(${r.df1}, ${r.df2}) = ${f2(r.F)}`, p: pv(r.p), pes: noZero(r.pes.toFixed(3)) }));
+const rep = ma.reported;
+const repRows = [
+  { effect: 'Recommender', mine: maRows[1].F, rep: `F(${rep.recommender.df1}, ${rep.recommender.df2}) = ${f2(rep.recommender.F)}, partial η² = ${noZero(rep.recommender.pes.toFixed(3))}` },
+  { effect: 'Recommender × voice', mine: maRows[2].F, rep: `F(${rep.interaction.df1}, ${rep.interaction.df2}) = ${f2(rep.interaction.F)}, partial η² = ${noZero(rep.interaction.pes.toFixed(3))}` },
+  { effect: 'Voice', mine: maRows[0].F, rep: `F(${rep.voice.df1}, ${rep.voice.df2}) = ${f2(rep.voice.F)}, p = ${noZero(rep.voice.p.toFixed(3))}` },
+];
+
+// by voice
+const byVoice = full.descriptivesByVoice as any[];
+const bvRows = byVoice.flatMap((m) => REC.flatMap(([k, name]) => (['written', 'voiced'] as const).map((v) => descRow(m.cells[k][v], `${m.label}: ${name}, ${v === 'written' ? 'written only' : 'written and voiced'}`))));
+const vt = full.voiceTests as any;
+const voiceRows = [
+  ...(['tb', 'trust', 'belief'] as const).flatMap((m) => vt[m].map((t: any) => ({ ...betweenRow(t, `${m === 'tb' ? 'Trust and belief' : m === 'trust' ? 'Trust' : 'Belief'}: ${t.label}`) }))),
+  ...(full.voiceMind as any[]).map((t) => betweenRow(t)),
+  betweenRow(full.voiceAll as any),
+];
+const voiceFig = [
+  ...(['tb', 'trust', 'belief'] as const).flatMap((m) => [{ head: m === 'tb' ? 'Trust and belief' : m === 'trust' ? 'Trust' : 'Belief' }, ...vt[m].map((t: any) => ({ label: t.recommender, v: t.d, lo: t.dLo, hi: t.dHi, tip: `d = ${t.d.toFixed(2)} (95% CI ${t.dLo.toFixed(2)} to ${t.dHi.toFixed(2)})` }))]),
+  { head: 'Mind perception' }, ...(full.voiceMind as any[]).map((t) => ({ label: t.recommender, v: t.d, lo: t.dLo, hi: t.dHi, tip: `d = ${t.d.toFixed(2)}` })),
+  { head: 'All three averaged' }, { label: 'Trust and belief', v: (full.voiceAll as any).d, lo: (full.voiceAll as any).dLo, hi: (full.voiceAll as any).dHi },
+];
+
+// paired
+const pt = full.pairedTests as any;
+const PM = [['tb', 'Trust and belief'], ['trust', 'Trust'], ['belief', 'Belief'], ['warmth', 'Warmth'], ['competence', 'Competence'], ['mind', 'Mind perception']] as const;
+const ptRows = PM.flatMap(([m, label]) => pt[m].map((t: any) => pairedRow(t, `${label}: ${SHORT[t.id]}`)));
+const ptFig = PM.flatMap(([m, label]) => [{ head: label }, ...pt[m].map((t: any) => ({ label: SHORT[t.id], v: t.d, lo: t.dLo, hi: t.dHi, tip: `dz = ${t.d.toFixed(2)} (95% CI ${t.dLo.toFixed(2)} to ${t.dHi.toFixed(2)})` }))]);
+const pbv = (full.pairedByVoice as any[]).flatMap((g) => g.rows.map((t: any) => pairedRow(t, `${g.voice}: ${SHORT[t.id]}`)));
+const pbvFig = (full.pairedByVoice as any[]).flatMap((g) => [{ head: g.voice }, ...g.rows.map((t: any) => ({ label: SHORT[t.id], v: t.d, lo: t.dLo, hi: t.dHi }))]);
+
+// ranking
+const rk = full.ranking as any;
+const pct = (a: number, b: number) => (a * 100) / b;
+const rkRows = rk.rows.map((r: any) => ({ rec: r.rec, first: r.first, second: r.second, third: r.third, share: `${pct(r.first, rk.n).toFixed(1)}%`, mean: f2(r.mean) }));
+const rkFig = rk.rows.map((r: any) => ({ label: r.rec, v: pct(r.first, rk.n), tip: `${r.first} of ${rk.n} people (${pct(r.first, rk.n).toFixed(1)}%) ranked the ${r.rec.toLowerCase()} first` }));
+
+const rkP = rk.p < 0.001 ? 'p < .001' : `p = ${pv(rk.p)}`;
+// mind perception
+const mr = full.mindReliability as any;
+const mindItemRows = mr.items.map((it: any) => ({ item: it.label, doc: f2(it.cells.doctor.mean), hum: f2(it.cells.humanlike.mean), std: f2(it.cells.standard.mean) }));
+const mindFig = mr.items.flatMap((it: any) => [{ head: it.label }, ...REC.map(([k, name]) => ({ label: name, v: it.cells[k].mean, lo: it.cells[k].lo, hi: it.cells[k].hi }))]);
+const corr = full.correlations as any;
+const corrRows: any[] = [];
+for (let i = 0; i < corr.labels.length; i++) for (let j = i + 1; j < corr.labels.length; j++) corrRows.push({ pair: `${corr.labels[i]} and ${corr.labels[j]}`, r: r3(corr.r[i][j]) });
+
+// mediation
+const med = full.mediation as any[];
+const medRows = med.map((m) => ({
+  model: m.label, n: m.n, a: minus(f2(m.a)), b: minus(f2(m.b)), ind: minus(`${f2(m.indirect)} [${f2(m.lo)}, ${f2(m.hi)}]`),
+  dir: minus(`${f2(m.direct)} [${f2(m.directLo)}, ${f2(m.directHi)}]`), tot: minus(f2(m.total)), share: `${m.share.toFixed(0)}%`, rep: minus(f2(m.reported)),
+}));
+const medFig = med.map((m) => ({ label: m.label, v: m.indirect, lo: m.lo, hi: m.hi }));
+
+const models = full.mixedModels as any[];
+const bN = full.design;
+const F = (label: string, h: string) => ({ label, href: h, kind: 'figure' as const });
+const Tb = (label: string, h: string) => ({ label, href: h, kind: 'table' as const });
+const contents = [
+  { title: 'Who took part', href: '#sample', items: [Tb('1. The people in the released file', '#table-sample'), Tb('2. Who saw what', '#table-design')] },
+  { title: 'Ratings of the three recommenders', href: '#ratings', items: [Tb('3. Every rating, by recommender', '#table-desc'), F('1 to 3. Means and intervals', '#fig-means-a'), F('4. Trust and belief, every person', '#fig-tb'), F('5. Mind perception, every person', '#fig-mind')] },
+  { title: 'The three recommenders compared', href: '#paired', items: [Tb('4. Paired comparisons', '#table-paired'), F('6. Effect sizes', '#fig-paired'), Tb('5. Repeated-measures ANOVA with voice', '#table-anova'), Tb('6. Who ranked first', '#table-rank'), F('7. First-place rankings', '#fig-rank')] },
+  { title: 'Does a voice matter?', href: '#voice', items: [Tb('7. Ratings with and without a voice', '#table-bvoice'), F('8 to 10. Every person, by voice', '#fig-voice-0'), Tb('8. Voiced versus written only', '#table-voice'), F('11. Effect sizes of voice', '#fig-voice-d'), Tb('9. Comparisons within each voice group', '#table-pbv'), F('12. The same, by voice group', '#fig-pbv')] },
+  { title: 'Mind perception', href: '#mind', items: [Tb('10. The seven items', '#table-mind'), F('13. Each item, by recommender', '#fig-mind-items'), Tb('11. Correlations', '#table-corr'), F('14. Correlation grid', '#fig-corr')] },
+  { title: 'Models', href: '#models', items: [Tb('12 to 14. Mixed models of trust and belief', '#table-mm-0')] },
+  { title: 'Does mind perception explain the gaps?', href: '#mediation', items: [Tb('15. Indirect effects', '#table-med'), F('15. Indirect effects as a figure', '#fig-med'), F('16 to 18. Mediation diagrams', '#fig-med-0')] },
+  { title: 'More', href: '#dig', items: [{ label: 'Dig deeper: figure map and Bayes factors', href: href('/projects/trust-in-medical-ai/study-5/dig-deeper/'), kind: 'page' as const }] },
+];
+---
+
+<Base
+  title="Trust in medical AI: Study 5, every table and figure"
+  description="Every table and figure from the Study 5 analysis, rebuilt from the public data with hover details."
+>
+  <div class="wrap">
+    <header class="page-head">
+      <p class="back small"><a href={href('/projects/trust-in-medical-ai/study-5/')}>Study 5</a> · <a href={href('/projects/trust-in-medical-ai/')}>Trust in medical AI</a></p>
+      <h1>Study 5: every table and figure</h1>
+      <p class="lede">Each analysis from the dissertation, rebuilt from the released data, with a figure beside every table. Hover over any mark for the details.</p>
+    </header>
+    <DeepNav study="5" current="full" />
+    <div class="deep">
+      <h2 id="deep-dive">Deep dive: every table and figure</h2>
+      <p>The rest of this page rebuilds each analysis from the public data. Hover over any mark for the details, and open the guide below if a term is unfamiliar.</p>
+      <Glossary />
+    </div>
+    <Contents groups={contents} />
+    <div class="prose">
+      <p class="how small muted">
+        How to read this page. Everyone rated the doctor, the humanlike AI and the standard AI, so the main comparisons are within people. Voice is the one thing that varies between people: some
+        read the recommendation only, and others also heard it spoken. “Trust and belief” is the average of the two ratings, on a scale from −3 to 3. Warmth and competence run from 0 to 4,
+        mind perception from 0 to 10, and praise and blame from 0 to 100. Age is in four bands in the public file, so the age coefficient differs in scale from the dissertation's.
+      </p>
+    </div>
+
+    <section class="section" id="sample" aria-labelledby="sample-title">
+      <h2 id="sample-title">Who took part</h2>
+      <p class="intro">{n} adults are in the released file. {bN.allThree} of them rated all three recommenders, and the paired tests use those who gave both ratings in each comparison.</p>
+      <StatTable id="table-sample" title="Table 1. The people in the released file"
+        look="The share in each group. Younger adults and women make up the largest groups."
+        columns={[{ key: 'label', label: 'Group' }, { key: 'n', label: 'People', num: true }, { key: 'pct', label: 'Share', num: true }]}
+        rows={sampleRows(full.sample)}
+        note={`Shares are of all ${n} people. Left blank in the file: ${missingNote(full.sample)}. Race is shown as White or another or multiple because no other group reached 30 people. Age is in bands.`} />
+      <h3 class="fig-title mini">Table 1 as a figure</h3>
+      <p class="leadin">Each bar is the share of the {n} people in that group. Hover a bar for the head count.</p>
+      <DotRows rows={sampleFig(full.sample)} domain={[0, 100]} tickStep={20} axisLabel="Share of people (%)" bars unit="%" digits={0} ariaLabel="Share of participants in each demographic group" />
+      <StatTable id="table-design" title="Table 2. Who saw what"
+        look="Voice is the between-person factor; about six in ten heard the voice."
+        columns={[{ key: 'g', label: 'Group' }, { key: 'all', label: 'All people', num: true }, { key: 'three', label: 'Rated all three', num: true }]}
+        rows={[
+          { g: 'Written only', all: bN.written, three: bN.allThreeWritten },
+          { g: 'Written and voiced', all: bN.voiced, three: bN.allThreeVoiced },
+          { g: 'Total', all: bN.written + bN.voiced, three: bN.allThree },
+        ]} note="People were randomly assigned to read the recommendation only or to read it and hear a voice recording." />
+    </section>
+
+    <section class="section" id="ratings" aria-labelledby="ratings-title">
+      <h2 id="ratings-title">Ratings of the three recommenders</h2>
+      <p class="intro">Every person rated each recommender on trust, belief, warmth, competence, mind perception, how appropriate it was for these decisions, and how much praise or blame it would deserve.</p>
+      <StatTable id="table-desc" title="Table 3. Every rating, by recommender"
+        look="Compare means within a measure. The doctor is highest on nearly everything, the humanlike AI is close behind, and the standard AI is lowest."
+        columns={descCols.map((c) => (c.key === 'label' ? { ...c, label: 'Measure and recommender' } : c))} rows={descRows}
+        note="Trust and belief are on a scale from −3 to 3. Praise and blame are 0 to 100. The humanlike AI was not rated on being humanlike by the same people." />
+      <h3 class="fig-title" id="fig-means-a">Figures 1 to 3. Means and intervals</h3>
+      <p class="leadin">Table 3 as figures. Each dot is a mean with its 95% interval. The first figure shows trust and belief.</p>
+      <DotPanels items={setA.items} panels={setA.panels} ariaLabel="Mean trust and belief for each recommender, with 95% intervals" tableLabel="Recommender" valueLabel="Mean" />
+      <p class="leadin">Warmth, competence and mind perception.</p>
+      <DotPanels items={setB.items} panels={setB.panels} ariaLabel="Mean warmth, competence and mind perception for each recommender, with 95% intervals" tableLabel="Recommender" valueLabel="Mean" />
+      <p class="leadin">How appropriate the recommender was judged to be, and the praise and blame it would get.</p>
+      <DotPanels items={setC.items} panels={setC.panels} ariaLabel="Mean appropriateness, praise and blame for each recommender, with 95% intervals" tableLabel="Recommender" valueLabel="Mean" />
+      <h3 class="fig-title" id="fig-tb">Figure 4. Trust and belief, every person</h3>
+      <p class="leadin">Each dot is one person's average of trust and belief for that recommender, from −3 to 3. The curve shows where ratings pile up, and the bar marks the mean with its bootstrapped 95% interval.</p>
+      <Raincloud rows={pts.tb} grid={pts.gridTrust} domain={[-3, 3]} tickStep={1} xJitter={0.1} xLabel="Trust and belief (−3 to 3)" ariaLabel="Distribution of trust and belief for each recommender" />
+      <h3 class="fig-title" id="fig-mind">Figure 5. Mind perception, every person</h3>
+      <p class="leadin">Each dot is one person's average on the seven mind-perception items, from 0 to 10.</p>
+      <Raincloud rows={pts.mind} grid={pts.gridMind} domain={[0, 10]} tickStep={1} xJitter={0.1} xLabel="Mind perception (0 to 10)" ariaLabel="Distribution of mind perception for each recommender" />
+    </section>
+
+    <section class="section" id="paired" aria-labelledby="paired-title">
+      <h2 id="paired-title">The three recommenders compared</h2>
+      <p class="intro">Each comparison uses the people who rated both recommenders. A positive difference means the first one named was rated higher. The dissertation's central question is how the humanlike AI sits between the standard AI and the doctor.</p>
+      <StatTable id="table-paired" title="Table 4. Paired comparisons of the three recommenders"
+        look="The dz column shows how large each difference is. The humanlike AI is clearly above the standard AI and a little below the doctor."
+        columns={pairedCols} rows={ptRows}
+        note="Paired t tests, two-sided, with a Bonferroni correction across the three comparisons of each measure. dz is positive when the first recommender is rated higher. The humanlike-versus-doctor rows are negative: the doctor was rated higher." />
+      <h3 class="fig-title" id="fig-paired">Figure 6. Effect sizes of the paired comparisons</h3>
+      <p class="leadin">Table 4 as a figure. Each dot is dz with a 95% interval. Negative values mean the first recommender was rated lower. The dashed lines mark a small, medium and large effect.</p>
+      <DotRows rows={ptFig} domain={[-0.3, 0.8]} tickStep={0.1} zero refs={dRefs} axisLabel="dz, first recommender minus second" ariaLabel="Effect sizes of paired comparisons" />
+
+      <StatTable id="table-anova" title="Table 5. Mixed ANOVA of trust and belief: recommender, voice and their interaction"
+        look="Recommender is the large effect. Voice alone is nothing, and its interaction with the recommender is small but real."
+        columns={[{ key: 'effect', label: 'Effect' }, { key: 'stratum', label: 'Compared' }, { key: 'F', label: 'F (df)', num: true }, { key: 'p', label: 'p', num: true }, { key: 'pes', label: 'Partial η²', num: true }]} rows={maRows}
+        note={`Computed on the ${ma.n} people who rated all three recommenders, with recommender within people and voice between people.`} />
+      <StatTable id="table-anova-rep" title="Table 5b. The same effects as printed in the dissertation"
+        look="The recommender effect and the interaction agree closely. The voice effect differs because it was tested on everyone, not only on people who rated all three."
+        columns={[{ key: 'effect', label: 'Effect' }, { key: 'mine', label: 'Here', wrap: true, minw: '9rem' }, { key: 'rep', label: 'In the dissertation', wrap: true, minw: '14rem' }]} rows={repRows}
+        note="The dissertation's degrees of freedom imply more people than the 727 who rated all three." />
+
+      <StatTable id="table-rank" title="Table 6. Who ranked first"
+        look="The doctor was ranked first most often. The humanlike AI was most often ranked second."
+        columns={[{ key: 'rec', label: 'Recommender' }, { key: 'first', label: 'Ranked first', num: true }, { key: 'second', label: 'Second', num: true }, { key: 'third', label: 'Third', num: true }, { key: 'share', label: 'Share first', num: true }, { key: 'mean', label: 'Mean rank', num: true }]} rows={rkRows}
+        note={`${rk.n} people ranked the three on trust. Friedman test: χ²(2) = ${f2(rk.friedman)}, ${rkP}. A lower mean rank is better.`} />
+      <h3 class="fig-title" id="fig-rank">Figure 7. First-place rankings</h3>
+      <p class="leadin">Table 6 as a figure. Each bar is the share of people who ranked that recommender first in trust. Chance would be one third.</p>
+      <DotRows rows={rkFig} domain={[0, 100]} tickStep={20} bars unit="%" digits={0} axisLabel="Share ranking this recommender first (%)" refs={[{ v: 33.3, label: 'chance' }]} ariaLabel="Share of people who ranked each recommender first" />
+    </section>
+
+    <section class="section" id="voice" aria-labelledby="voice-title">
+      <h2 id="voice-title">Does a voice matter?</h2>
+      <p class="intro">Half of the people heard the recommendation spoken as well as reading it. If a voice makes an AI seem more human, the humanlike AI should gain, and the standard AI may lose.</p>
+      <StatTable id="table-bvoice" title="Table 7. Ratings with and without a voice"
+        look="Compare the written and voiced rows within each recommender. Differences are small."
+        columns={descCols.map((c) => (c.key === 'label' ? { ...c, label: 'Measure, recommender and version' } : c))} rows={bvRows} />
+      {(pts.tbByVoice as any[]).map((r, i) => (
+        <>
+          <h3 class="fig-title" id={`fig-voice-${i}`}>Figure {8 + i}. Trust and belief, {r.rec.toLowerCase()}, by voice</h3>
+          <p class="leadin">Each dot is one person's average trust and belief for the {r.rec.toLowerCase()}, split by whether they heard a voice.</p>
+          <Raincloud rows={r.rows.map((x: any) => ({ ...x, kind: r.kind }))} grid={pts.gridTrust} domain={[-3, 3]} tickStep={1} xJitter={0.1} xLabel="Trust and belief (−3 to 3)" ariaLabel={`Distribution of trust and belief for the ${r.rec.toLowerCase()}, written only and voiced`} />
+        </>
+      ))}
+      <StatTable id="table-voice" title="Table 8. Voiced versus written only"
+        look="The d column. The voiced humanlike AI gains and the voiced standard AI loses, but the intervals are close to zero."
+        columns={betweenCols('Voiced', 'Written only')} rows={voiceRows}
+        note="Welch t tests, two-sided, uncorrected. d is positive when the voiced group is higher. A voice effect was not preregistered for each recommender separately." />
+      <h3 class="fig-title" id="fig-voice-d">Figure 11. Effect sizes of voice</h3>
+      <p class="leadin">Table 8 as a figure. Each dot is Cohen's d for voiced against written only, with a 95% interval.</p>
+      <DotRows rows={voiceFig} domain={[-0.4, 0.4]} tickStep={0.1} zero refs={[{ v: -0.2, label: 'small' }, { v: 0.2, label: 'small' }]} axisLabel="Cohen's d, voiced minus written only" ariaLabel="Effect sizes of voice for each rating" />
+      <StatTable id="table-pbv" title="Table 9. Comparisons among the three recommenders, within each voice group"
+        look="The same pattern appears with and without a voice: standard AI lowest, doctor highest."
+        columns={pairedCols} rows={pbv} note="Paired t tests on trust and belief, uncorrected." />
+      <h3 class="fig-title" id="fig-pbv">Figure 12. The same, by voice group</h3>
+      <p class="leadin">Table 9 as a figure. Each dot is dz with a 95% interval.</p>
+      <DotRows rows={pbvFig} domain={[-0.3, 0.8]} tickStep={0.1} zero refs={dRefs} axisLabel="dz, first recommender minus second" ariaLabel="Paired effect sizes within each voice group" />
+    </section>
+
+    <section class="section" id="mind" aria-labelledby="mind-title">
+      <h2 id="mind-title">Mind perception</h2>
+      <p class="intro">Mind perception is how much people credit a recommender with a mind: whether it can understand, feel, anticipate and explain itself. It is the mean of seven items, with Cronbach's alpha of {noZero(mr.alpha.toFixed(3))} ({mr.n.toLocaleString('en-US')} ratings).</p>
+      <StatTable id="table-mind" title="Table 10. The seven mind-perception items, by recommender (0 to 10)"
+        look="The standard AI is lowest on every item. The doctor and humanlike AI are close."
+        columns={[{ key: 'item', label: 'Item', wrap: true, minw: '16rem' }, { key: 'doc', label: 'Doctor', num: true }, { key: 'hum', label: 'Humanlike AI', num: true }, { key: 'std', label: 'Standard AI', num: true }]} rows={mindItemRows} note="Mean rating of each item." />
+      <h3 class="fig-title" id="fig-mind-items">Figure 13. Each item, by recommender</h3>
+      <p class="leadin">Table 10 as a figure. Each dot is a mean with its 95% interval.</p>
+      <DotRows rows={mindFig} domain={[3, 8]} tickStep={0.5} axisLabel="Mean rating (0 to 10)" ariaLabel="Mean rating of each mind-perception item for each recommender" />
+      <StatTable id="table-corr" title="Table 11. Correlations among the four ratings"
+        look="Every correlation is positive. Mind perception goes with trust, warmth and competence."
+        columns={[{ key: 'pair', label: 'Pair', wrap: true, minw: '16rem' }, { key: 'r', label: 'r', num: true }]} rows={corrRows} note={`Pearson correlations across all ${corr.n.toLocaleString('en-US')} ratings, pooled over recommenders.`} />
+      <h3 class="fig-title" id="fig-corr">Figure 14. Correlation grid</h3>
+      <p class="leadin">Table 11 as a figure. Darker means the two ratings move together more strongly.</p>
+      <CorrGrid vars={corr.labels} r={corr.r} title="All ratings pooled" ariaLabel="Correlations among trust and belief, mind perception, warmth and competence" />
+    </section>
+
+    <section class="section" id="models" aria-labelledby="models-title">
+      <h2 id="models-title">Models</h2>
+      <p class="intro">Mixed models predict each person's trust and belief rating, with a random intercept for each person. The reference is the humanlike AI read without a voice. Adding mind perception, warmth and competence shrinks the recommender coefficients.</p>
+      {models.map((m, i) => (
+        <>
+          <StatTable id={`table-mm-${i}`} title={`Table ${12 + i}. ${m.label}`} look="Read the standardized β column for which ratings carry the most weight." columns={lmmCols} rows={lmmRows(m)} note={lmmFit(m)} />
+          <p class="leadin">Table {12 + i} as a figure. Each dot is a coefficient (b) with its 95% interval.</p>
+          <DotRows rows={coefFig(m)} domain={coefDomain(coefFig(m))} tickStep={0.2} zero axisLabel="Effect on trust and belief (points)" ariaLabel={`Coefficients: ${m.label}`} />
+        </>
+      ))}
+    </section>
+
+    <section class="section" id="mediation" aria-labelledby="mediation-title">
+      <h2 id="mediation-title">Does mind perception explain the gaps?</h2>
+      <p class="intro">
+        For each pair of recommenders I asked how much of the difference in trust and belief runs through mind perception. The method compares each person's two ratings and uses 3,000
+        bootstrap resamples of people for the intervals.
+      </p>
+      <StatTable id="table-med" title="Table 15. Indirect effects through mind perception"
+        look="The a × b column and the share. For the doctor and the humanlike AI against the standard AI, more than half of the gap runs through mind perception."
+        columns={[
+          { key: 'model', label: 'Comparison', wrap: true, minw: '12rem' }, { key: 'n', label: 'People', num: true },
+          { key: 'a', label: 'a', num: true, hint: 'How much more mind the first recommender was credited with' },
+          { key: 'b', label: 'b', num: true, hint: 'How much each extra point of mind perception goes with more trust and belief' },
+          { key: 'ind', label: 'a × b [95% CI]', num: true }, { key: 'dir', label: 'Direct [95% CI]', num: true }, { key: 'tot', label: 'Total', num: true },
+          { key: 'share', label: 'Share through mind', num: true }, { key: 'rep', label: 'Dissertation a × b', num: true, hint: 'The indirect effect as printed in the dissertation' },
+        ]} rows={medRows}
+        note="Difference-score mediation for repeated measures (Montoya and Hayes). The dissertation prints the humanlike-versus-doctor effect with the opposite sign to the direction of the comparison used here." />
+      <h3 class="fig-title" id="fig-med">Figure 15. Indirect effects as a figure</h3>
+      <p class="leadin">Table 15 as a figure. Each dot is the part of the gap that runs through mind perception, in points of trust and belief, with a 95% interval.</p>
+      <DotRows rows={medFig} domain={[-0.2, 0.7]} tickStep={0.1} zero axisLabel="Indirect effect through mind perception (points)" ariaLabel="Indirect effects through mind perception for each comparison" />
+      {med.map((m, i) => (
+        <>
+          <h3 class="fig-title" id={`fig-med-${i}`}>Figure {16 + i}. {m.label}</h3>
+          <p class="leadin">Arrows show how the comparison changes trust and belief directly and through mind perception. The numbers on the arrows are estimates.</p>
+          <MediationDiagram title={m.label} from={['Doctor vs standard AI', 'Humanlike vs standard', 'Humanlike vs doctor'][i]} to="Trust and belief" mediators={[{ name: 'Mind perception', a: m.a, b: m.b, indirect: m.indirect, lo: m.lo, hi: m.hi }]} direct={m.direct} total={m.total} />
+        </>
+      ))}
+    </section>
+  </div>
+</Base>
+
+<style>
+  .deep { margin-top: 4rem; padding-top: 2rem; border-top: 5px solid; border-image: var(--five) 1; }
+  .deep h2 { margin-bottom: 0.5rem; }
+  .deep p { max-width: 62ch; color: var(--muted); }
+  .mini { margin: 0 0 -0.4rem; font-size: 0.98rem; }
+  .how { margin-top: 1.5rem; font-family: var(--display); }
+  .intro { max-width: 64ch; color: var(--muted); }
+  .fig-title { margin-top: 3rem; font-size: 1.15rem; }
+  section :global(h2) { margin-bottom: 0.75rem; }
+</style>

@@ -1,0 +1,68 @@
+---
+import DeepNav from '../../../../components/DeepNav.astro';
+import Base from '../../../../layouts/Base.astro';
+import BayesPlot from '../../../../components/BayesPlot.astro';
+import BayesGuide from '../../../../components/BayesGuide.astro';
+import FigureMap from '../../../../components/FigureMap.astro';
+import bayes from '../../../../data/trust-in-medical-ai/bayes.json';
+import { times } from '../../../../utils/bayes';
+import { href } from '../../../../utils/url';
+
+const bf = (id: string) => bayes.rows.find((r) => r.id === id)!;
+const pf = (id: string) => `p = ${(bf(id).stat as any).p.toFixed(2).replace(/^0/, '')}`;
+const bayesRows = bayes.rows.filter((r) => r.study === 'Study 3');
+const figureMap = [
+  { diss: 'Figure 13', what: 'The vignette images for the three sources', here: 'In the dissertation and on OSF', note: 'Materials, not data; not redrawn here' },
+  { diss: 'Figure 14', what: 'Conceptual model of the study', here: 'In the dissertation', note: 'Not data; not redrawn here' },
+  { diss: 'Figure 15', what: 'Mean trust by source, with 95% intervals', here: 'Figures 2 and 6', href: '../full/#fig-trust' },
+  { diss: 'Figure 16', what: 'Mean belief by source, with 95% intervals', here: 'Figures 3 and 6', href: '../full/#fig-belief' },
+  { diss: 'Planned and follow-up t tests in the text', what: 'Doctor against the AIs, and humanlike against standard AI', here: 'Table 5', href: '../full/#table-tests', note: 'Cohen\'s d here uses the pooled standard deviation; the text uses 2t over the root of the degrees of freedom' },
+  { diss: 'Regression tables for Study 3', what: 'Trust and belief predicted by source, then by gender and age, then by warmth and competence', here: 'Tables 7 and 8', href: '../full/#models', note: 'Age is in four bands in the public file, so the age coefficients differ in scale' },
+];
+---
+
+<Base
+  title="Trust in medical AI: Study 3, dig deeper"
+  description="Where each Study 3 figure and table lives, and Bayes factors for every comparison."
+>
+  <div class="wrap">
+    <header class="page-head">
+      <p class="back small"><a href={href('/projects/trust-in-medical-ai/study-3/')}>Study 3</a> · <a href={href('/projects/trust-in-medical-ai/')}>Trust in medical AI</a></p>
+      <h1>Study 3: dig deeper</h1>
+    </header>
+    <DeepNav study="3" current="dig" />
+    <section class="section" id="dig-deeper" aria-labelledby="dig-title">
+      <div class="deep">
+        <h2 id="dig-title">Dig deeper</h2>
+        <p>Two more things for readers who want them: where each figure and table of the dissertation sits on these pages, and a Bayesian check on every comparison, computed from the raw ratings.</p>
+      </div>
+      <h3 class="fig-title">Where each dissertation figure and table lives</h3>
+      <FigureMap rows={figureMap.map((r) => (r.href ? { ...r, href: href(`/projects/trust-in-medical-ai/study-3/full/${r.href.replace('../full/', '')}`) } : r))} />
+
+      <h3 class="fig-title" id="bayes">When the test found no difference</h3>
+      <BayesGuide />
+      <BayesPlot rows={bayesRows} />
+      <div class="prose">
+        <p>
+          <strong>Humanizing the AI did not change trust or belief.</strong> For trust, the data are {times(bf('S3-trust-hum-std').bf01)} under no difference between the humanlike and standard AI than under a medium difference.
+          For belief the figure is {times(bf('S3-belief-hum-std').bf01)}. Both are moderate evidence for no effect, a firmer reading than the p values ({pf('S3-trust-hum-std')} and {pf('S3-belief-hum-std')}) give on their own.
+        </p>
+        <p>
+          <strong>The doctor's edge over the AIs is modest evidence at best.</strong> Against the standard AI the data are {times(bf('S3-trust-doc-std').bf10)} under a difference for trust, moderate evidence, and {times(bf('S3-belief-doc-std').bf10)} for belief, which is anecdotal.
+          Against the humanlike AI they are {times(bf('S3-trust-hum-doc').bf10)} for trust and {times(bf('S3-belief-hum-doc').bf10)} for belief, also anecdotal, even where p is below .05. Studies 4 and 5 give a sharper test.
+        </p>
+        <p class="small muted">
+          Bayes factors in this section come from the raw ratings. Two-group tests use the Rouder default Bayes factor for the t test with a Cauchy prior on d, with widths set to a small (0.20), medium (0.41) and large (0.63) effect on the Funder and Ozer scale.
+        </p>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .deep { margin-top: 4rem; padding-top: 2rem; border-top: 5px solid; border-image: var(--five) 1; }
+  .deep h2 { margin-bottom: 0.5rem; }
+  .deep p { max-width: 62ch; color: var(--muted); }
+  .fig-title { margin-top: 3rem; font-size: 1.15rem; }
+  section :global(h2) { margin-bottom: 0.75rem; }
+</style>

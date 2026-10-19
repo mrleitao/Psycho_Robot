@@ -1,0 +1,58 @@
+variable,description,scale,group,recommender
+participant,"Anonymous participant number, assigned after a seeded shuffle",P001 to P854,,
+age_group,"Age group, in years",18-44 / 45-59 / 60-69 / 70+,demographic,
+gender,"Gender, as reported. Only woman and man were reported by 10 or more people, so smaller groups are left blank",Woman / Man,demographic,
+race,"Race, as reported. White only if that is the only group selected; everyone else, including anyone selecting more than one, is combined",White / Another or multiple,demographic,
+education,"Highest education completed, in two groups",No college degree / College degree or more,demographic,
+religiosity,"How religious the person considers themselves, from a 7-point scale: not at all to slightly (0 to 2), moderately (3), more than moderately (4 to 6)",Not at all to slightly / Moderately / More than moderately,demographic,
+voice,Whether the person also heard a voice recording with the written recommendation (random assignment),Written only / Written and voiced,condition,
+trust_humanlike,Humanlike AI: Trust in the recommendation,-3 to 3,rating,Humanlike AI
+belief_humanlike,Humanlike AI: Belief the recommendation would improve health,-3 to 3,rating,Humanlike AI
+warmth_humanlike,Humanlike AI: Warm and friendly,0 to 4,rating,Humanlike AI
+competence_humanlike,Humanlike AI: Competent and capable,0 to 4,rating,Humanlike AI
+appropriate_humanlike,Humanlike AI: How appropriate this recommender is for these health decisions,-3 to 3,rating,Humanlike AI
+compare_humanlike,Humanlike AI: Comparison item from the survey (wording not stored in the data file),-3 to 3,rating,Humanlike AI
+mind_capable_humanlike,Humanlike AI: Mind perception 1: capable of accurate health recommendations in general,0 to 10,mind perception item,Humanlike AI
+mind_anticipate_humanlike,Humanlike AI: Mind perception 2: can anticipate my future health needs,0 to 10,mind perception item,Humanlike AI
+mind_feelings_humanlike,Humanlike AI: Mind perception 3: understands my feelings about my health,0 to 10,mind perception item,Humanlike AI
+mind_account_humanlike,Humanlike AI: Mind perception 4: can account for my health needs,0 to 10,mind perception item,Humanlike AI
+mind_familiar_humanlike,Humanlike AI: Mind perception 5: its process reminds me of other health recommendations,0 to 10,mind perception item,Humanlike AI
+mind_transparent_humanlike,Humanlike AI: Mind perception 6: its decision process is transparent,0 to 10,mind perception item,Humanlike AI
+mind_process_humanlike,Humanlike AI: Mind perception 7: I understand how it comes up with a recommendation,0 to 10,mind perception item,Humanlike AI
+praise_humanlike,Humanlike AI: How much praise the recommender deserves if the recommendation works,0 to 100,rating,Humanlike AI
+blame_humanlike,Humanlike AI: How much blame the recommender deserves if the recommendation fails,0 to 100,rating,Humanlike AI
+humanlike_humanlike,Humanlike AI: How humanlike the AI was (AI conditions only),0 to 4,rating,Humanlike AI
+trust_standard,Standard AI: Trust in the recommendation,-3 to 3,rating,Standard AI
+belief_standard,Standard AI: Belief the recommendation would improve health,-3 to 3,rating,Standard AI
+warmth_standard,Standard AI: Warm and friendly,0 to 4,rating,Standard AI
+competence_standard,Standard AI: Competent and capable,0 to 4,rating,Standard AI
+appropriate_standard,Standard AI: How appropriate this recommender is for these health decisions,-3 to 3,rating,Standard AI
+compare_standard,Standard AI: Comparison item from the survey (wording not stored in the data file),-3 to 3,rating,Standard AI
+mind_capable_standard,Standard AI: Mind perception 1: capable of accurate health recommendations in general,0 to 10,mind perception item,Standard AI
+mind_anticipate_standard,Standard AI: Mind perception 2: can anticipate my future health needs,0 to 10,mind perception item,Standard AI
+mind_feelings_standard,Standard AI: Mind perception 3: understands my feelings about my health,0 to 10,mind perception item,Standard AI
+mind_account_standard,Standard AI: Mind perception 4: can account for my health needs,0 to 10,mind perception item,Standard AI
+mind_familiar_standard,Standard AI: Mind perception 5: its process reminds me of other health recommendations,0 to 10,mind perception item,Standard AI
+mind_transparent_standard,Standard AI: Mind perception 6: its decision process is transparent,0 to 10,mind perception item,Standard AI
+mind_process_standard,Standard AI: Mind perception 7: I understand how it comes up with a recommendation,0 to 10,mind perception item,Standard AI
+praise_standard,Standard AI: How much praise the recommender deserves if the recommendation works,0 to 100,rating,Standard AI
+blame_standard,Standard AI: How much blame the recommender deserves if the recommendation fails,0 to 100,rating,Standard AI
+humanlike_standard,Standard AI: How humanlike the AI was (AI conditions only),0 to 4,rating,Standard AI
+trust_doctor,Doctor: Trust in the recommendation,-3 to 3,rating,Doctor
+belief_doctor,Doctor: Belief the recommendation would improve health,-3 to 3,rating,Doctor
+warmth_doctor,Doctor: Warm and friendly,0 to 4,rating,Doctor
+competence_doctor,Doctor: Competent and capable,0 to 4,rating,Doctor
+appropriate_doctor,Doctor: How appropriate this recommender is for these health decisions,-3 to 3,rating,Doctor
+compare_doctor,Doctor: Comparison item from the survey (wording not stored in the data file),-3 to 3,rating,Doctor
+mind_capable_doctor,Doctor: Mind perception 1: capable of accurate health recommendations in general,0 to 10,mind perception item,Doctor
+mind_anticipate_doctor,Doctor: Mind perception 2: can anticipate my future health needs,0 to 10,mind perception item,Doctor
+mind_feelings_doctor,Doctor: Mind perception 3: understands my feelings about my health,0 to 10,mind perception item,Doctor
+mind_account_doctor,Doctor: Mind perception 4: can account for my health needs,0 to 10,mind perception item,Doctor
+mind_familiar_doctor,Doctor: Mind perception 5: its process reminds me of other health recommendations,0 to 10,mind perception item,Doctor
+mind_transparent_doctor,Doctor: Mind perception 6: its decision process is transparent,0 to 10,mind perception item,Doctor
+mind_process_doctor,Doctor: Mind perception 7: I understand how it comes up with a recommendation,0 to 10,mind perception item,Doctor
+praise_doctor,Doctor: How much praise the recommender deserves if the recommendation works,0 to 100,rating,Doctor
+blame_doctor,Doctor: How much blame the recommender deserves if the recommendation fails,0 to 100,rating,Doctor
+rank_trust_humanlike,Rank of the Humanlike AI on trustworthiness among the three (1 = most trustworthy),1 to 3,ranking,Humanlike AI
+rank_trust_standard,Rank of the Standard AI on trustworthiness among the three (1 = most trustworthy),1 to 3,ranking,Standard AI
+rank_trust_doctor,Rank of the Doctor on trustworthiness among the three (1 = most trustworthy),1 to 3,ranking,Doctor

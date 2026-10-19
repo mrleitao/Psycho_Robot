@@ -1,0 +1,34 @@
+variable,description,scale,group,recommender
+participant,"Anonymous participant number, assigned after a seeded shuffle",P001 to P559,,
+age_group,"Age group, in years",18-44 / 45-59 / 60-69 / 70+,demographic,
+gender,"Gender, as reported. Only woman and man were reported by 10 or more people, so smaller groups are left blank",Woman / Man,demographic,
+race,"Race, as reported. White only if that is the only group selected; everyone else, including anyone selecting more than one, is combined",White / Another or multiple,demographic,
+education,"Highest education completed, in two groups",No college degree / College degree or more,demographic,
+religiosity,"How religious the person considers themselves, from a 7-point scale: not at all to slightly (0 to 2), moderately (3), more than moderately (4 to 6)",Not at all to slightly / Moderately / More than moderately,demographic,
+first_recommender,Which recommender the person was randomly shown first (the between-subjects part),Humanlike AI / Standard AI / Doctor,condition,
+order,"Order in which the person then saw the three recommenders: D doctor, H humanlike AI, N standard AI",HDN / HND / DHN / NHD / DNH / NDH,condition,
+trust_first,Trust in the first recommender's recommendation,-3 (completely distrust) to 3 (complete trust),between-subjects outcome,first
+belief_first,Belief that the first recommender's recommendation would improve health,-3 (completely disbelieve) to 3 (completely believe),between-subjects outcome,first
+warmth_first,"Warm and friendly, first recommender",0 to 4,between-subjects perception,first
+competence_first,"Competent and capable, first recommender",0 to 4,between-subjects perception,first
+humanlike_first,"How humanlike the first recommender was, asked when it was an AI",0 to 4,between-subjects perception,first
+appropriate_ai,How appropriate is it to use AI to make these health decisions,-3 (extremely inappropriate) to 3 (extremely appropriate),attitude,
+trust_humanlike,Humanlike AI: Trust in the recommendation,-3 to 3,within-subjects,Humanlike AI
+belief_humanlike,Humanlike AI: Belief the recommendation would improve health,-3 to 3,within-subjects,Humanlike AI
+warmth_humanlike,Humanlike AI: Warm and friendly,0 to 4,within-subjects,Humanlike AI
+competence_humanlike,Humanlike AI: Competent and capable,0 to 4,within-subjects,Humanlike AI
+humanlike_humanlike,Humanlike AI: How humanlike the AI was (AI conditions only),0 to 4,within-subjects,Humanlike AI
+appropriate_humanlike,Humanlike AI: How appropriate this AI is for these decisions (AI conditions only),-3 to 3,within-subjects,Humanlike AI
+compare_humanlike,Humanlike AI: Comparison item from the survey (wording not stored in the data file),-3 to 3,within-subjects,Humanlike AI
+trust_standard,Standard AI: Trust in the recommendation,-3 to 3,within-subjects,Standard AI
+belief_standard,Standard AI: Belief the recommendation would improve health,-3 to 3,within-subjects,Standard AI
+warmth_standard,Standard AI: Warm and friendly,0 to 4,within-subjects,Standard AI
+competence_standard,Standard AI: Competent and capable,0 to 4,within-subjects,Standard AI
+humanlike_standard,Standard AI: How humanlike the AI was (AI conditions only),0 to 4,within-subjects,Standard AI
+appropriate_standard,Standard AI: How appropriate this AI is for these decisions (AI conditions only),-3 to 3,within-subjects,Standard AI
+compare_standard,Standard AI: Comparison item from the survey (wording not stored in the data file),-3 to 3,within-subjects,Standard AI
+trust_doctor,Doctor: Trust in the recommendation,-3 to 3,within-subjects,Doctor
+belief_doctor,Doctor: Belief the recommendation would improve health,-3 to 3,within-subjects,Doctor
+warmth_doctor,Doctor: Warm and friendly,0 to 4,within-subjects,Doctor
+competence_doctor,Doctor: Competent and capable,0 to 4,within-subjects,Doctor
+compare_doctor,Doctor: Comparison item from the survey (wording not stored in the data file),-3 to 3,within-subjects,Doctor

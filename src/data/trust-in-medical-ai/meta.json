@@ -3,7 +3,7 @@
   "source": "Leitao, M. R. (2024). Artificial Intelligence, Humanization, and Health Beliefs. Doctoral dissertation, Georgetown University.",
   "files": {
     "trust-by-domain.json": "Study 2 (N = 106), Table 7: Doctor minus AI trust difference by medical-decision domain. Transcribed from the dissertation.",
-    "effects-by-study.json": "Cohen's d by study, as reported in the dissertation text.",
+    "effects-by-study.json": "Effect sizes for the chart of the humanlike AI and the doctor against the standard AI: computed from the released data for Studies 3, 4 and 5.",
     "trust-by-recommender.json": "Study 1 (N = 188): mean trust (0 to 10) in each of eleven recommenders with 95% confidence intervals. Computed by analysis/study1-summaries.py from public/data/study1-ratings.csv.",
     "study1-tests.json": "Study 1 paired tests: the seven preregistered hypotheses plus one exploratory test, computed by analysis/study1-summaries.py.",
     "public/data/study1-ratings.csv": "Study 1 participant-level ratings with six coarse demographic groups, de-identified (see analysis/study1-deidentify.py). Released by the author as open data.",
@@ -18,11 +18,22 @@
     "public/data/study2-ratings.csv": "Study 2 participant-level ratings with six coarse demographic groups (age in four bands), de-identified (see analysis/study2-deidentify.py). Released by the author as open data.",
     "public/docs/study2-preregistration.pdf": "Study 2 preregistration, converted from the author's Word file.",
     "public/code/study2-original-analysis.Rmd": "The author's original Study 2 analysis notebook, run on the raw export. Only the two local file paths were replaced.",
-    "public/code/study2-analysis.R": "Study 2 tests and main mixed models in R, from the public file. Not yet run."
+    "public/code/study2-analysis.R": "Study 2 tests and main mixed models in R, from the public file. Not yet run.",
+    "study3-full.json": "Study 3 (N = 609): every table and model on the Study 3 in full page. Computed by analysis/study3-full-results.py from public/data/study3-ratings.csv.",
+    "study3-points.json": "Study 3: each person's value for the dot plots, with bootstrapped intervals and smoothed shapes.",
+    "study4-full.json": "Study 4 (N = 559): every table and model on the Study 4 in full page. Computed by analysis/study4-full-results.py from public/data/study4-ratings.csv.",
+    "study4-points.json": "Study 4: each person's value for the dot plots, with bootstrapped intervals and smoothed shapes.",
+    "study5-full.json": "Study 5 (N = 854): every table and model on the Study 5 in full page. Computed by analysis/study5-full-results.py from public/data/study5-ratings.csv.",
+    "study5-points.json": "Study 5: each person's value for the dot plots, with bootstrapped intervals and smoothed shapes.",
+    "public/data/study{3,4,5}-ratings.csv": "Participant-level ratings with coarse demographic groups (age in four bands), de-identified (see analysis/study{3,4,5}-deidentify.py, seed 2024). Released by the author as open data.",
+    "bayes.json": "Bayes factors for Studies 2 to 5 computed from the raw data, and for Study 6 from reported statistics (analysis/bayes-followups.py)."
   },
-  "sharing": "Published summary statistics, plus the de-identified Study 1 and Study 2 files released by the author (public/data/, CC BY 4.0). No raw files, IDs, IP addresses, locations or timestamps, and no sensitive demographics. A demographic group is its own filter option only if at least 30 people are in it.",
+  "sharing": "Published summary statistics, plus the de-identified Study 1 to 5 files released by the author (public/data/, CC BY 4.0). No raw files, IDs, IP addresses, locations or timestamps, and no sensitive demographics. A demographic group is its own filter option only if at least 30 people are in it.",
   "publicLinks": {
     "study2Preregistration": "https://osf.io/k25g8",
-    "study2DataAndAnalysis": "https://osf.io/7png8"
+    "study2DataAndAnalysis": "https://osf.io/7png8",
+    "study3": "https://doi.org/10.17605/OSF.IO/6BAWV",
+    "study4": "https://doi.org/10.17605/OSF.IO/C6RMT",
+    "study5": "https://doi.org/10.17605/OSF.IO/WYD8Z"
   }
 }

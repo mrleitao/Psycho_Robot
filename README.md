@@ -15,6 +15,7 @@ This README doubles as a build log. It records how the site was made and why, so
 7. [Study 1 data release](#study-1-data-release)
 8. [Study 1 in full](#study-1-in-full)
    - [Study 2 data release and full results](#study-2-data-release-and-full-results)
+   - [Studies 3, 4 and 5 data release and full results](#studies-3-4-and-5-data-release-and-full-results)
 9. [Content rules](#content-rules)
 10. [Everyday tasks](#everyday-tasks)
 11. [Deploying](#deploying)
@@ -164,6 +165,19 @@ Study 2 (106 adults rate trust in a doctor and in an AI for twelve medical decis
 **Checked against the dissertation.** Paired tests and effect sizes, the correlations in Tables 11 and 12 (within .03), the full mixed model (doctor 1.68, intuition .14, quantitative reasoning .27, warmth .14, competence .58, N = 2,454 ratings from 105 people) and the double-mediation indirect effects reproduce. Differences: random-effect variances are not identical to lme4's (fixed effects and residual variance are); mediation z values are close to, not identical to, Mplus's; between-person correlations differ by up to .03; the dissertation's narrative numbers sometimes disagree with its own Table 5 (the data agree with the table).
 
 **Deviations, on purpose.** Ratings use the scales participants saw (the notebook kept some Qualtrics codes, so means and intercepts differ; differences, slopes and correlations do not). Composites are missing if any item is missing. Age enters as the band number, so the age rows differ a little from the dissertation; rerunning the dissertation's Table 8 privately with exact age gives the same results (doctor 1.683, intuition .140, quantitative reasoning .272, warmth .134, competence .578, age .002, man .037; 2,454 ratings, 105 people). The age-band-by-doctor interaction (b = .16, p = .01) is exploratory and was not in the dissertation.
+
+## Studies 3, 4 and 5 data release and full results
+
+Studies 3, 4 and 5 (Chapter 3) are released the way Studies 1 and 2 were. Study 3 has 609 adults who each saw one recommender. Study 4 has 559 adults who rated one recommender first and then all three. Study 5 has 854 adults who rated all three, some with a voice.
+
+- [`analysis/study3-deidentify.py`](analysis/study3-deidentify.py), [`study4-deidentify.py`](analysis/study4-deidentify.py) and [`study5-deidentify.py`](analysis/study5-deidentify.py) turn the raw SPSS files (not in the repository) into `public/data/study{3,4,5}-ratings.csv` and `-codebook.csv`. They remove IP addresses, locations, timestamps, response and panel IDs, free text and every sensitive item (income, disability, mental health, trans status, employment, first language, birthplace, parents' education), shuffle participant numbers (seed 2024), and keep only coarse demographics from [`analysis/deid_common.py`](analysis/deid_common.py): age in four bands (18-44, 45-59, 60-69, 70+; under 18 left blank), gender as woman or man (other answers left blank), race as White or another or multiple, education as college degree or not, and religiosity in three levels. People who skipped the demographic block have blank cells. Study 4 is reshaped from three rows per person to one.
+- [`analysis/study{3,4,5}-full-results.py`](analysis) write `study{N}-full.json` and `study{N}-points.json`, which the pages under `src/pages/projects/trust-in-medical-ai/study-{N}/` read. Each study has an overview, a page with every table and figure, and a dig-deeper page. [`analysis/trust_stats.py`](analysis/trust_stats.py) holds the shared helpers and [`src/utils/fmt.ts`](src/utils/fmt.ts) the table formatters.
+- [`analysis/bayes-followups.py`](analysis/bayes-followups.py) now computes the Study 3 to 5 Bayes factors from the raw ratings (Study 6 still uses reported statistics).
+- Files: `public/code/study{3,4,5}-analysis.R` (not run, no R in the build environment), `public/code/study{3,4,5}-original-analysis.Rmd` (the author's combined notebook split by study, local paths removed, scratch sections left out). The preregistrations are on OSF (DOIs 10.17605/OSF.IO/6BAWV, C6RMT and WYD8Z).
+
+**Checked against the dissertation.** The group means, planned t tests, ANOVAs, regression models, the Study 4 side-by-side tests, the Study 5 paired tests, the mixed model of Table 22, the mind-perception reliability (alpha .963) and the mediation effects (.46, .40 and about 0) reproduce. Differences, all flagged on the pages: the dissertation's Study 4 omnibus repeated-measures test (F(2, 1573) = 1.65) does not reproduce (the data give F(2, 984) = 55.5 on 493 people); its Study 5 humanlike-versus-doctor comparison has the sign reversed; its sample sizes differ from the files (Study 4, 556 against 559; Study 5, 596 against 854); and its Cohen's d for two-group tests is 2t over the square root of df, where the pages use the pooled standard deviation.
+
+**Deviations, on purpose.** Age enters as the band number, so age coefficients differ in scale from the dissertation. Mixed models use a random intercept for each person; the Study 5 mediation uses the Montoya and Hayes difference-score method with 3,000 bootstrap resamples, not Mplus.
 
 ## Content rules
 

@@ -1145,35 +1145,37 @@
    "group": "Humanizing the AI (between people)",
    "id": "S3-trust-hum-std",
    "text": "Trust: humanlike AI versus standard AI",
-   "source": "reported statistics",
+   "source": "raw data",
    "kind": "t",
    "stat": {
-    "t": -0.76,
+    "t": 0.76,
     "df": 477.11,
-    "d": -0.07,
-    "nEff": 117.9
+    "d": 0.07,
+    "nEff": 120.0,
+    "diff": 0.1,
+    "p": 0.4460524669613946
    },
    "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
-   "bf10": 0.223,
-   "bf01": 4.48,
+   "bf10": 0.222,
+   "bf01": 4.51,
    "sensitivity": [
     {
      "scale": 0.2,
      "size": "small",
-     "bf10": 0.395,
-     "bf01": 2.53
+     "bf10": 0.393,
+     "bf01": 2.55
     },
     {
      "scale": 0.41,
      "size": "medium",
-     "bf10": 0.223,
-     "bf01": 4.48
+     "bf10": 0.222,
+     "bf01": 4.51
     },
     {
      "scale": 0.63,
      "size": "large",
-     "bf10": 0.151,
-     "bf01": 6.63
+     "bf10": 0.15,
+     "bf01": 6.68
     }
    ],
    "verdict": "Moderate evidence for no difference",
@@ -1182,42 +1184,44 @@
   },
   {
    "study": "Study 3",
-   "group": "Humanizing the AI (between people)",
-   "id": "S3-belief-hum-std",
-   "text": "Belief: humanlike AI versus standard AI",
-   "source": "reported statistics",
+   "group": "Doctor versus AI (between people)",
+   "id": "S3-trust-doc-std",
+   "text": "Trust: doctor versus standard AI",
+   "source": "raw data",
    "kind": "t",
    "stat": {
-    "t": -0.3,
-    "df": 477.91,
-    "d": -0.03,
-    "nEff": 100.0
+    "t": 2.62,
+    "df": 253.27,
+    "d": 0.29,
+    "nEff": 83.9,
+    "diff": 0.45,
+    "p": 0.009429336771056514
    },
    "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
-   "bf10": 0.192,
-   "bf01": 5.2,
+   "bf10": 4.31,
+   "bf01": 0.232,
    "sensitivity": [
     {
      "scale": 0.2,
      "size": "small",
-     "bf10": 0.348,
-     "bf01": 2.88
+     "bf10": 4.92,
+     "bf01": 0.203
     },
     {
      "scale": 0.41,
      "size": "medium",
-     "bf10": 0.192,
-     "bf01": 5.2
+     "bf10": 4.31,
+     "bf01": 0.232
     },
     {
      "scale": 0.63,
      "size": "large",
-     "bf10": 0.129,
-     "bf01": 7.75
+     "bf10": 3.4,
+     "bf01": 0.294
     }
    ],
-   "verdict": "Moderate evidence for no difference",
-   "supportsNull": true,
+   "verdict": "Moderate evidence for a difference",
+   "supportsNull": false,
    "page": "Chapter 3, Study 3"
   },
   {
@@ -1225,35 +1229,121 @@
    "group": "Humanlike AI versus doctor (between people)",
    "id": "S3-trust-hum-doc",
    "text": "Trust: humanlike AI versus doctor",
-   "source": "reported statistics",
+   "source": "raw data",
    "kind": "t",
    "stat": {
-    "t": -2.04,
+    "t": 2.04,
     "df": 244.06,
-    "d": -0.26,
-    "nEff": 61.6
+    "d": 0.23,
+    "nEff": 83.9,
+    "diff": 0.34,
+    "p": 0.04283905980106347
    },
    "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
-   "bf10": 1.4,
-   "bf01": 0.714,
+   "bf10": 1.29,
+   "bf01": 0.777,
    "sensitivity": [
     {
      "scale": 0.2,
      "size": "small",
-     "bf10": 1.74,
-     "bf01": 0.574
+     "bf10": 1.7,
+     "bf01": 0.587
     },
     {
      "scale": 0.41,
      "size": "medium",
-     "bf10": 1.4,
-     "bf01": 0.714
+     "bf10": 1.29,
+     "bf01": 0.777
     },
     {
      "scale": 0.63,
      "size": "large",
-     "bf10": 1.08,
-     "bf01": 0.928
+     "bf10": 0.961,
+     "bf01": 1.04
+    }
+   ],
+   "verdict": "Anecdotal evidence for a difference",
+   "supportsNull": false,
+   "page": "Chapter 3, Study 3"
+  },
+  {
+   "study": "Study 3",
+   "group": "Humanizing the AI (between people)",
+   "id": "S3-belief-hum-std",
+   "text": "Belief: humanlike AI versus standard AI",
+   "source": "raw data",
+   "kind": "t",
+   "stat": {
+    "t": 0.3,
+    "df": 477.91,
+    "d": 0.03,
+    "nEff": 120.0,
+    "diff": 0.04,
+    "p": 0.7605810372890217
+   },
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 0.177,
+   "bf01": 5.65,
+   "sensitivity": [
+    {
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 0.325,
+     "bf01": 3.08
+    },
+    {
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 0.177,
+     "bf01": 5.65
+    },
+    {
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.118,
+     "bf01": 8.45
+    }
+   ],
+   "verdict": "Moderate evidence for no difference",
+   "supportsNull": true,
+   "page": "Chapter 3, Study 3"
+  },
+  {
+   "study": "Study 3",
+   "group": "Doctor versus AI (between people)",
+   "id": "S3-belief-doc-std",
+   "text": "Belief: doctor versus standard AI",
+   "source": "raw data",
+   "kind": "t",
+   "stat": {
+    "t": 2.35,
+    "df": 276.78,
+    "d": 0.25,
+    "nEff": 83.9,
+    "diff": 0.37,
+    "p": 0.019260399440976003
+   },
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 2.37,
+   "bf01": 0.422,
+   "sensitivity": [
+    {
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 2.9,
+     "bf01": 0.345
+    },
+    {
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 2.37,
+     "bf01": 0.422
+    },
+    {
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 1.82,
+     "bf01": 0.549
     }
    ],
    "verdict": "Anecdotal evidence for a difference",
@@ -1265,35 +1355,37 @@
    "group": "Humanlike AI versus doctor (between people)",
    "id": "S3-belief-hum-doc",
    "text": "Belief: humanlike AI versus doctor",
-   "source": "reported statistics",
+   "source": "raw data",
    "kind": "t",
    "stat": {
-    "t": -2.1,
+    "t": 2.1,
     "df": 273.56,
-    "d": -0.25,
-    "nEff": 70.6
+    "d": 0.23,
+    "nEff": 83.9,
+    "diff": 0.33,
+    "p": 0.036527796820016355
    },
    "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
-   "bf10": 1.51,
-   "bf01": 0.662,
+   "bf10": 1.44,
+   "bf01": 0.694,
    "sensitivity": [
     {
      "scale": 0.2,
      "size": "small",
-     "bf10": 1.9,
-     "bf01": 0.526
+     "bf10": 1.88,
+     "bf01": 0.533
     },
     {
      "scale": 0.41,
      "size": "medium",
-     "bf10": 1.51,
-     "bf01": 0.662
+     "bf10": 1.44,
+     "bf01": 0.694
     },
     {
      "scale": 0.63,
      "size": "large",
-     "bf10": 1.15,
-     "bf01": 0.868
+     "bf10": 1.08,
+     "bf01": 0.925
     }
    ],
    "verdict": "Anecdotal evidence for a difference",
@@ -1305,35 +1397,121 @@
    "group": "Humanizing the AI (between people)",
    "id": "S4-trust-hum-std",
    "text": "Trust: humanlike AI versus standard AI",
-   "source": "reported statistics",
+   "source": "raw data",
    "kind": "t",
    "stat": {
-    "t": -1.32,
+    "t": 1.32,
     "df": 425.02,
-    "d": -0.13,
-    "nEff": 103.1
+    "d": 0.13,
+    "nEff": 108.3,
+    "diff": 0.19,
+    "p": 0.18821941277362797
    },
    "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
-   "bf10": 0.403,
-   "bf01": 2.48,
+   "bf10": 0.395,
+   "bf01": 2.53,
    "sensitivity": [
     {
      "scale": 0.2,
      "size": "small",
-     "bf10": 0.646,
-     "bf01": 1.55
+     "bf10": 0.638,
+     "bf01": 1.57
     },
     {
      "scale": 0.41,
      "size": "medium",
-     "bf10": 0.403,
-     "bf01": 2.48
+     "bf10": 0.395,
+     "bf01": 2.53
     },
     {
      "scale": 0.63,
      "size": "large",
-     "bf10": 0.281,
-     "bf01": 3.56
+     "bf10": 0.275,
+     "bf01": 3.64
+    }
+   ],
+   "verdict": "Anecdotal evidence for no difference",
+   "supportsNull": true,
+   "page": "Chapter 3, Study 4"
+  },
+  {
+   "study": "Study 4",
+   "group": "Doctor versus AI (between people)",
+   "id": "S4-trust-doc-std",
+   "text": "Trust: doctor versus standard AI",
+   "source": "raw data",
+   "kind": "t",
+   "stat": {
+    "t": 2.73,
+    "df": 264.44,
+    "d": 0.31,
+    "nEff": 77.9,
+    "diff": 0.47,
+    "p": 0.006672949484715638
+   },
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 5.69,
+   "bf01": 0.176,
+   "sensitivity": [
+    {
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 6.2,
+     "bf01": 0.161
+    },
+    {
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 5.69,
+     "bf01": 0.176
+    },
+    {
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 4.59,
+     "bf01": 0.218
+    }
+   ],
+   "verdict": "Moderate evidence for a difference",
+   "supportsNull": false,
+   "page": "Chapter 3, Study 4"
+  },
+  {
+   "study": "Study 4",
+   "group": "Humanlike AI versus doctor (between people)",
+   "id": "S4-trust-hum-doc",
+   "text": "Trust: humanlike AI versus doctor",
+   "source": "raw data",
+   "kind": "t",
+   "stat": {
+    "t": 1.67,
+    "df": 250.94,
+    "d": 0.19,
+    "nEff": 80.6,
+    "diff": 0.28,
+    "p": 0.09532823840130988
+   },
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 0.706,
+   "bf01": 1.42,
+   "sensitivity": [
+    {
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 1.01,
+     "bf01": 0.986
+    },
+    {
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 0.706,
+     "bf01": 1.42
+    },
+    {
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.512,
+     "bf01": 1.95
     }
    ],
    "verdict": "Anecdotal evidence for no difference",
@@ -1345,35 +1523,37 @@
    "group": "Humanizing the AI (between people)",
    "id": "S4-belief-hum-std",
    "text": "Belief: humanlike AI versus standard AI",
-   "source": "reported statistics",
+   "source": "raw data",
    "kind": "t",
    "stat": {
-    "t": -1.6,
+    "t": 1.6,
     "df": 427.99,
-    "d": -0.15,
-    "nEff": 113.8
+    "d": 0.15,
+    "nEff": 108.0,
+    "diff": 0.22,
+    "p": 0.11094479527160475
    },
    "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
-   "bf10": 0.564,
-   "bf01": 1.77,
+   "bf10": 0.575,
+   "bf01": 1.74,
    "sensitivity": [
     {
      "scale": 0.2,
      "size": "small",
-     "bf10": 0.869,
-     "bf01": 1.15
+     "bf10": 0.879,
+     "bf01": 1.14
     },
     {
      "scale": 0.41,
      "size": "medium",
-     "bf10": 0.564,
-     "bf01": 1.77
+     "bf10": 0.575,
+     "bf01": 1.74
     },
     {
      "scale": 0.63,
      "size": "large",
-     "bf10": 0.397,
-     "bf01": 2.52
+     "bf10": 0.406,
+     "bf01": 2.46
     }
    ],
    "verdict": "Anecdotal evidence for no difference",
@@ -1382,42 +1562,44 @@
   },
   {
    "study": "Study 4",
-   "group": "Humanlike AI versus doctor (between people)",
-   "id": "S4-trust-hum-doc",
-   "text": "Trust: humanlike AI versus doctor",
-   "source": "reported statistics",
+   "group": "Doctor versus AI (between people)",
+   "id": "S4-belief-doc-std",
+   "text": "Belief: doctor versus standard AI",
+   "source": "raw data",
    "kind": "t",
    "stat": {
-    "t": -1.67,
-    "df": 250.94,
-    "d": -0.21,
-    "nEff": 63.2
+    "t": 2.53,
+    "df": 262.81,
+    "d": 0.29,
+    "nEff": 77.9,
+    "diff": 0.41,
+    "p": 0.012115839972473187
    },
    "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
-   "bf10": 0.763,
-   "bf01": 1.31,
+   "bf10": 3.57,
+   "bf01": 0.28,
    "sensitivity": [
     {
      "scale": 0.2,
      "size": "small",
-     "bf10": 1.05,
-     "bf01": 0.95
+     "bf10": 4.09,
+     "bf01": 0.245
     },
     {
      "scale": 0.41,
      "size": "medium",
-     "bf10": 0.763,
-     "bf01": 1.31
+     "bf10": 3.57,
+     "bf01": 0.28
     },
     {
      "scale": 0.63,
      "size": "large",
-     "bf10": 0.564,
-     "bf01": 1.77
+     "bf10": 2.81,
+     "bf01": 0.355
     }
    ],
-   "verdict": "Anecdotal evidence for no difference",
-   "supportsNull": true,
+   "verdict": "Moderate evidence for a difference",
+   "supportsNull": false,
    "page": "Chapter 3, Study 4"
   },
   {
@@ -1425,35 +1607,37 @@
    "group": "Humanlike AI versus doctor (between people)",
    "id": "S4-belief-hum-doc",
    "text": "Belief: humanlike AI versus doctor",
-   "source": "reported statistics",
+   "source": "raw data",
    "kind": "t",
    "stat": {
-    "t": -1.18,
+    "t": 1.18,
     "df": 258.19,
-    "d": -0.15,
-    "nEff": 61.9
+    "d": 0.13,
+    "nEff": 80.5,
+    "diff": 0.19,
+    "p": 0.23949390619841046
    },
    "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
-   "bf10": 0.418,
-   "bf01": 2.39,
+   "bf10": 0.379,
+   "bf01": 2.64,
    "sensitivity": [
     {
      "scale": 0.2,
      "size": "small",
-     "bf10": 0.643,
-     "bf01": 1.55
+     "bf10": 0.604,
+     "bf01": 1.66
     },
     {
      "scale": 0.41,
      "size": "medium",
-     "bf10": 0.418,
-     "bf01": 2.39
+     "bf10": 0.379,
+     "bf01": 2.64
     },
     {
      "scale": 0.63,
      "size": "large",
-     "bf10": 0.297,
-     "bf01": 3.37
+     "bf10": 0.265,
+     "bf01": 3.77
     }
    ],
    "verdict": "Anecdotal evidence for no difference",
@@ -1462,16 +1646,102 @@
   },
   {
    "study": "Study 4",
+   "group": "Humanizing the AI (side by side)",
+   "id": "S4w-trust-hum-std",
+   "text": "Trust: humanlike AI versus standard AI",
+   "source": "raw data",
+   "kind": "t",
+   "stat": {
+    "t": 7.98,
+    "df": 503,
+    "d": 0.36,
+    "nEff": 504,
+    "diff": 0.5,
+    "p": 9.645656316078918e-15
+   },
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 553000000000.0,
+   "bf01": 1.81e-12,
+   "sensitivity": [
+    {
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 487000000000.0,
+     "bf01": 2.05e-12
+    },
+    {
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 553000000000.0,
+     "bf01": 1.81e-12
+    },
+    {
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 476000000000.0,
+     "bf01": 2.1e-12
+    }
+   ],
+   "verdict": "Extreme evidence for a difference",
+   "supportsNull": false,
+   "page": "Chapter 3, Study 4"
+  },
+  {
+   "study": "Study 4",
+   "group": "Doctor versus AI (side by side)",
+   "id": "S4w-trust-doc-std",
+   "text": "Trust: doctor versus standard AI",
+   "source": "raw data",
+   "kind": "t",
+   "stat": {
+    "t": 9.28,
+    "df": 503,
+    "d": 0.41,
+    "nEff": 504,
+    "diff": 0.61,
+    "p": 5.213208514957009e-19
+   },
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 8550000000000000.0,
+   "bf01": 1.17e-16,
+   "sensitivity": [
+    {
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 6810000000000000.0,
+     "bf01": 1.47e-16
+    },
+    {
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 8550000000000000.0,
+     "bf01": 1.17e-16
+    },
+    {
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 7800000000000000.0,
+     "bf01": 1.28e-16
+    }
+   ],
+   "verdict": "Extreme evidence for a difference",
+   "supportsNull": false,
+   "page": "Chapter 3, Study 4"
+  },
+  {
+   "study": "Study 4",
    "group": "Humanlike AI versus doctor (side by side)",
    "id": "S4w-trust-hum-doc",
    "text": "Trust: humanlike AI versus doctor",
-   "source": "reported statistics",
+   "source": "raw data",
    "kind": "t",
    "stat": {
-    "t": -2.11,
+    "t": 2.11,
     "df": 506,
-    "d": -0.09,
-    "nEff": 507
+    "d": 0.09,
+    "nEff": 507,
+    "diff": 0.11,
+    "p": 0.035715125459990796
    },
    "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
    "bf10": 0.75,
@@ -1502,16 +1772,102 @@
   },
   {
    "study": "Study 4",
+   "group": "Humanizing the AI (side by side)",
+   "id": "S4w-belief-hum-std",
+   "text": "Belief: humanlike AI versus standard AI",
+   "source": "raw data",
+   "kind": "t",
+   "stat": {
+    "t": 7.2,
+    "df": 503,
+    "d": 0.32,
+    "nEff": 504,
+    "diff": 0.5,
+    "p": 2.1531419748722e-12
+   },
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 2930000000.0,
+   "bf01": 3.41e-10,
+   "sensitivity": [
+    {
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 2780000000.0,
+     "bf01": 3.6e-10
+    },
+    {
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 2930000000.0,
+     "bf01": 3.41e-10
+    },
+    {
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 2430000000.0,
+     "bf01": 4.11e-10
+    }
+   ],
+   "verdict": "Extreme evidence for a difference",
+   "supportsNull": false,
+   "page": "Chapter 3, Study 4"
+  },
+  {
+   "study": "Study 4",
+   "group": "Doctor versus AI (side by side)",
+   "id": "S4w-belief-doc-std",
+   "text": "Belief: doctor versus standard AI",
+   "source": "raw data",
+   "kind": "t",
+   "stat": {
+    "t": 8.65,
+    "df": 503,
+    "d": 0.39,
+    "nEff": 504,
+    "diff": 0.57,
+    "p": 7.143756135229136e-17
+   },
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 69600000000000.0,
+   "bf01": 1.44e-14,
+   "sensitivity": [
+    {
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 58100000000000.0,
+     "bf01": 1.72e-14
+    },
+    {
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 69600000000000.0,
+     "bf01": 1.44e-14
+    },
+    {
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 61700000000000.0,
+     "bf01": 1.62e-14
+    }
+   ],
+   "verdict": "Extreme evidence for a difference",
+   "supportsNull": false,
+   "page": "Chapter 3, Study 4"
+  },
+  {
+   "study": "Study 4",
    "group": "Humanlike AI versus doctor (side by side)",
    "id": "S4w-belief-hum-doc",
    "text": "Belief: humanlike AI versus doctor",
-   "source": "reported statistics",
+   "source": "raw data",
    "kind": "t",
    "stat": {
-    "t": -1.48,
+    "t": 1.48,
     "df": 505,
-    "d": -0.07,
-    "nEff": 506
+    "d": 0.07,
+    "nEff": 506,
+    "diff": 0.08,
+    "p": 0.13890643968777067
    },
    "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
    "bf10": 0.25,
@@ -1545,35 +1901,37 @@
    "group": "Does a voice help? (between people)",
    "id": "S5-doc-voice",
    "text": "Doctor: voiced versus written",
-   "source": "reported statistics",
+   "source": "raw data",
    "kind": "t",
    "stat": {
-    "t": -1.08,
+    "t": 1.08,
     "df": 747.81,
-    "d": -0.08,
-    "nEff": 182.2
+    "d": 0.08,
+    "nEff": 206.4,
+    "diff": 0.1,
+    "p": 0.28020129529172394
    },
    "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
-   "bf10": 0.243,
-   "bf01": 4.12,
+   "bf10": 0.23,
+   "bf01": 4.36,
    "sensitivity": [
     {
      "scale": 0.2,
      "size": "small",
-     "bf10": 0.431,
-     "bf01": 2.32
+     "bf10": 0.412,
+     "bf01": 2.42
     },
     {
      "scale": 0.41,
      "size": "medium",
-     "bf10": 0.243,
-     "bf01": 4.12
+     "bf10": 0.23,
+     "bf01": 4.36
     },
     {
      "scale": 0.63,
      "size": "large",
-     "bf10": 0.163,
-     "bf01": 6.12
+     "bf10": 0.154,
+     "bf01": 6.49
     }
    ],
    "verdict": "Moderate evidence for no difference",
@@ -1585,35 +1943,37 @@
    "group": "Does a voice help? (between people)",
    "id": "S5-hum-voice",
    "text": "Humanlike AI: voiced versus written",
-   "source": "reported statistics",
+   "source": "raw data",
    "kind": "t",
    "stat": {
-    "t": -2.38,
+    "t": 2.38,
     "df": 646.74,
-    "d": -0.19,
-    "nEff": 156.9
+    "d": 0.18,
+    "nEff": 189.2,
+    "diff": 0.25,
+    "p": 0.017461483170894607
    },
    "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
-   "bf10": 2.13,
-   "bf01": 0.469,
+   "bf10": 2.0,
+   "bf01": 0.5,
    "sensitivity": [
     {
      "scale": 0.2,
      "size": "small",
-     "bf10": 2.96,
-     "bf01": 0.338
+     "bf10": 2.89,
+     "bf01": 0.346
     },
     {
      "scale": 0.41,
      "size": "medium",
-     "bf10": 2.13,
-     "bf01": 0.469
+     "bf10": 2.0,
+     "bf01": 0.5
     },
     {
      "scale": 0.63,
      "size": "large",
-     "bf10": 1.55,
-     "bf01": 0.647
+     "bf10": 1.43,
+     "bf01": 0.7
     }
    ],
    "verdict": "Anecdotal evidence for a difference",
@@ -1625,35 +1985,37 @@
    "group": "Does a voice help? (between people)",
    "id": "S5-std-voice",
    "text": "Standard AI: voiced versus written",
-   "source": "reported statistics",
+   "source": "raw data",
    "kind": "t",
    "stat": {
-    "t": 2.1,
+    "t": -2.1,
     "df": 655.74,
-    "d": 0.16,
-    "nEff": 172.3
+    "d": -0.16,
+    "nEff": 175.7,
+    "diff": -0.26,
+    "p": 0.03623088961868464
    },
    "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
-   "bf10": 1.15,
-   "bf01": 0.873,
+   "bf10": 1.14,
+   "bf01": 0.879,
    "sensitivity": [
     {
      "scale": 0.2,
      "size": "small",
-     "bf10": 1.72,
-     "bf01": 0.583
+     "bf10": 1.71,
+     "bf01": 0.585
     },
     {
      "scale": 0.41,
      "size": "medium",
-     "bf10": 1.15,
-     "bf01": 0.873
+     "bf10": 1.14,
+     "bf01": 0.879
     },
     {
      "scale": 0.63,
      "size": "large",
-     "bf10": 0.81,
-     "bf01": 1.23
+     "bf10": 0.804,
+     "bf01": 1.24
     }
    ],
    "verdict": "Anecdotal evidence for a difference",
@@ -1662,16 +2024,102 @@
   },
   {
    "study": "Study 5",
-   "group": "Side by side",
+   "group": "Humanizing the AI (side by side)",
+   "id": "S5-hum-std",
+   "text": "Humanlike AI versus standard AI",
+   "source": "raw data",
+   "kind": "t",
+   "stat": {
+    "t": 12.52,
+    "df": 726,
+    "d": 0.46,
+    "nEff": 727,
+    "diff": 0.67,
+    "p": 1.030314307277556e-32
+   },
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 2.31e+29,
+   "bf01": 4.33e-30,
+   "sensitivity": [
+    {
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 1.71e+29,
+     "bf01": 5.86e-30
+    },
+    {
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 2.31e+29,
+     "bf01": 4.33e-30
+    },
+    {
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 2.21e+29,
+     "bf01": 4.51e-30
+    }
+   ],
+   "verdict": "Extreme evidence for a difference",
+   "supportsNull": false,
+   "page": "Chapter 3, Study 5"
+  },
+  {
+   "study": "Study 5",
+   "group": "Doctor versus AI (side by side)",
+   "id": "S5-doc-std",
+   "text": "Doctor versus standard AI",
+   "source": "raw data",
+   "kind": "t",
+   "stat": {
+    "t": 13.44,
+    "df": 726,
+    "d": 0.5,
+    "nEff": 727,
+    "diff": 0.8,
+    "p": 6.250214114803025e-37
+   },
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 3.49e+33,
+   "bf01": 2.87e-34,
+   "sensitivity": [
+    {
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 2.48e+33,
+     "bf01": 4.04e-34
+    },
+    {
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 3.49e+33,
+     "bf01": 2.87e-34
+    },
+    {
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 3.44e+33,
+     "bf01": 2.9e-34
+    }
+   ],
+   "verdict": "Extreme evidence for a difference",
+   "supportsNull": false,
+   "page": "Chapter 3, Study 5"
+  },
+  {
+   "study": "Study 5",
+   "group": "Humanlike AI versus doctor (side by side)",
    "id": "S5-hum-doc",
    "text": "Humanlike AI versus doctor",
-   "source": "reported statistics",
+   "source": "raw data",
    "kind": "t",
    "stat": {
     "t": -3.78,
     "df": 788,
     "d": -0.13,
-    "nEff": 789
+    "nEff": 789,
+    "diff": -0.13,
+    "p": 0.00017008768634261485
    },
    "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
    "bf10": 74.7,
@@ -1705,34 +2153,34 @@
    "group": "Does a voice help? (between people)",
    "id": "S5-voice-main",
    "text": "Voice, across all recommenders",
-   "source": "reported statistics",
+   "source": "raw data",
    "kind": "coef",
    "stat": {
-    "b": 0.07,
-    "se": 0.079,
-    "note": "Table 22"
+    "b": 0.073,
+    "se": 0.081,
+    "note": "Table 22 model"
    },
    "priorNote": "Cauchy prior on the standardized effect, width set to a small, medium and large effect (d: 0.20, 0.41, 0.63)",
-   "bf10": 0.211,
-   "bf01": 4.74,
+   "bf10": 0.218,
+   "bf01": 4.59,
    "sensitivity": [
     {
      "scale": 0.2,
      "size": "small",
-     "bf10": 0.38,
-     "bf01": 2.63
+     "bf10": 0.39,
+     "bf01": 2.56
     },
     {
      "scale": 0.41,
      "size": "medium",
-     "bf10": 0.211,
-     "bf01": 4.74
+     "bf10": 0.218,
+     "bf01": 4.59
     },
     {
      "scale": 0.63,
      "size": "large",
-     "bf10": 0.142,
-     "bf01": 7.06
+     "bf10": 0.147,
+     "bf01": 6.82
     }
    ],
    "verdict": "Moderate evidence for no difference",
@@ -1744,34 +2192,34 @@
    "group": "Does a voice help? (between people)",
    "id": "S5-voice-std-int",
    "text": "Voice effect for the standard AI versus the humanlike AI",
-   "source": "reported statistics",
+   "source": "raw data",
    "kind": "coef",
    "stat": {
-    "b": -0.08,
+    "b": -0.068,
     "se": 0.092,
-    "note": "Table 22"
+    "note": "Table 22 model"
    },
    "priorNote": "Cauchy prior on the standardized effect, width set to a small, medium and large effect (d: 0.20, 0.41, 0.63)",
-   "bf10": 0.238,
-   "bf01": 4.2,
+   "bf10": 0.216,
+   "bf01": 4.63,
    "sensitivity": [
     {
      "scale": 0.2,
      "size": "small",
-     "bf10": 0.417,
-     "bf01": 2.4
+     "bf10": 0.384,
+     "bf01": 2.6
     },
     {
      "scale": 0.41,
      "size": "medium",
-     "bf10": 0.238,
-     "bf01": 4.2
+     "bf10": 0.216,
+     "bf01": 4.63
     },
     {
      "scale": 0.63,
      "size": "large",
-     "bf10": 0.161,
-     "bf01": 6.2
+     "bf10": 0.145,
+     "bf01": 6.87
     }
    ],
    "verdict": "Moderate evidence for no difference",
@@ -1783,34 +2231,34 @@
    "group": "Does a voice help? (between people)",
    "id": "S5-voice-doc-int",
    "text": "Voice effect for the doctor versus the humanlike AI",
-   "source": "reported statistics",
+   "source": "raw data",
    "kind": "coef",
    "stat": {
-    "b": -0.08,
-    "se": 0.089,
-    "note": "Table 22"
+    "b": -0.075,
+    "se": 0.09,
+    "note": "Table 22 model"
    },
    "priorNote": "Cauchy prior on the standardized effect, width set to a small, medium and large effect (d: 0.20, 0.41, 0.63)",
-   "bf10": 0.237,
-   "bf01": 4.22,
+   "bf10": 0.227,
+   "bf01": 4.41,
    "sensitivity": [
     {
      "scale": 0.2,
      "size": "small",
-     "bf10": 0.417,
-     "bf01": 2.4
+     "bf10": 0.401,
+     "bf01": 2.49
     },
     {
      "scale": 0.41,
      "size": "medium",
-     "bf10": 0.237,
-     "bf01": 4.22
+     "bf10": 0.227,
+     "bf01": 4.41
     },
     {
      "scale": 0.63,
      "size": "large",
-     "bf10": 0.16,
-     "bf01": 6.24
+     "bf10": 0.153,
+     "bf01": 6.53
     }
    ],
    "verdict": "Moderate evidence for no difference",
@@ -1819,40 +2267,157 @@
   },
   {
    "study": "Study 5",
-   "group": "Side by side",
+   "group": "Humanlike AI versus doctor (side by side)",
    "id": "S5-doc-adj",
    "text": "Doctor versus humanlike AI after adjusting for mind, warmth, competence",
-   "source": "reported statistics",
+   "source": "raw data",
    "kind": "coef",
    "stat": {
-    "b": 0.09,
-    "se": 0.069,
-    "note": "Table 22"
+    "b": 0.085,
+    "se": 0.07,
+    "note": "Table 22 model"
    },
    "priorNote": "Cauchy prior on the standardized effect, width set to a small, medium and large effect (d: 0.20, 0.41, 0.63)",
-   "bf10": 0.289,
-   "bf01": 3.46,
+   "bf10": 0.262,
+   "bf01": 3.82,
    "sensitivity": [
     {
      "scale": 0.2,
      "size": "small",
-     "bf10": 0.509,
-     "bf01": 1.97
+     "bf10": 0.465,
+     "bf01": 2.15
     },
     {
      "scale": 0.41,
      "size": "medium",
-     "bf10": 0.289,
-     "bf01": 3.46
+     "bf10": 0.262,
+     "bf01": 3.82
     },
     {
      "scale": 0.63,
      "size": "large",
-     "bf10": 0.195,
-     "bf01": 5.13
+     "bf10": 0.176,
+     "bf01": 5.67
     }
    ],
    "verdict": "Moderate evidence for no difference",
+   "supportsNull": true,
+   "page": "Chapter 3, Study 5"
+  },
+  {
+   "study": "Study 5",
+   "group": "Does mind perception explain the gaps?",
+   "id": "S5-med-doc-std",
+   "text": "Mind perception as a mediator: doctor versus standard AI",
+   "source": "raw data",
+   "kind": "coef",
+   "stat": {
+    "b": 0.464,
+    "se": 0.0425,
+    "note": "indirect effect, trust/belief points"
+   },
+   "priorNote": "Cauchy prior on the indirect effect in standard-deviation units of the outcome, width set to a small, medium and large effect (d: 0.20, 0.41, 0.63)",
+   "bf10": 2.57e+24,
+   "bf01": 3.89e-25,
+   "sensitivity": [
+    {
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 1.93e+24,
+     "bf01": 5.19e-25
+    },
+    {
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 2.57e+24,
+     "bf01": 3.89e-25
+    },
+    {
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 2.44e+24,
+     "bf01": 4.1e-25
+    }
+   ],
+   "verdict": "Extreme evidence for a difference",
+   "supportsNull": false,
+   "page": "Chapter 3, Study 5"
+  },
+  {
+   "study": "Study 5",
+   "group": "Does mind perception explain the gaps?",
+   "id": "S5-med-hum-std",
+   "text": "Mind perception as a mediator: humanlike AI versus standard AI",
+   "source": "raw data",
+   "kind": "coef",
+   "stat": {
+    "b": 0.398,
+    "se": 0.0377,
+    "note": "indirect effect, trust/belief points"
+   },
+   "priorNote": "Cauchy prior on the indirect effect in standard-deviation units of the outcome, width set to a small, medium and large effect (d: 0.20, 0.41, 0.63)",
+   "bf10": 6.21e+22,
+   "bf01": 1.61e-23,
+   "sensitivity": [
+    {
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 5.11e+22,
+     "bf01": 1.96e-23
+    },
+    {
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 6.21e+22,
+     "bf01": 1.61e-23
+    },
+    {
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 5.54e+22,
+     "bf01": 1.8e-23
+    }
+   ],
+   "verdict": "Extreme evidence for a difference",
+   "supportsNull": false,
+   "page": "Chapter 3, Study 5"
+  },
+  {
+   "study": "Study 5",
+   "group": "Does mind perception explain the gaps?",
+   "id": "S5-med-hum-doc",
+   "text": "Mind perception as a mediator: humanlike AI versus doctor",
+   "source": "raw data",
+   "kind": "coef",
+   "stat": {
+    "b": -0.013,
+    "se": 0.0066,
+    "note": "indirect effect, trust/belief points"
+   },
+   "priorNote": "Cauchy prior on the indirect effect in standard-deviation units of the outcome, width set to a small, medium and large effect (d: 0.20, 0.41, 0.63)",
+   "bf10": 0.0861,
+   "bf01": 11.6,
+   "sensitivity": [
+    {
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 0.176,
+     "bf01": 5.69
+    },
+    {
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 0.0861,
+     "bf01": 11.6
+    },
+    {
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.0561,
+     "bf01": 17.8
+    }
+   ],
+   "verdict": "Strong evidence for no difference",
    "supportsNull": true,
    "page": "Chapter 3, Study 5"
   },

@@ -2,7 +2,7 @@
 // Links between the pages of one study: the overview, the full tables and figures, and the extras.
 import { href } from '../utils/url';
 interface Page { key: string; label: string; blurb: string; path: string }
-interface Props { study: '1' | '2'; current: string }
+interface Props { study: '1' | '2' | '3' | '4' | '5'; current: string }
 const { study, current } = Astro.props;
 const base = `/projects/trust-in-medical-ai/study-${study}/`;
 const pages: Page[] = [

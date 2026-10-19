@@ -179,29 +179,12 @@ for m in s2["mediation"]:
                  w["indirect"], se, 1.0, True, "indirect effect, trust points", source="raw data")
         ROWS[-1]["priorNote"] = "Cauchy prior on the indirect effect in standard-deviation units of trust, width set to a small, medium and large effect (d: 0.20, 0.41, 0.63)"
 
-# ---------------------------------------------------------------- Studies 3 to 6 (reported statistics)
+# ---------------------------------------------------------------- Study 6 (reported statistics)
 # Every number below is copied from the dissertation text (Leitao, 2024). n_eff for two-sample tests comes from (t / d)^2.
 def rep_t(study, group, tid, text, t, d_, df, paired=False, page=None):
     n_eff = (df + 1) if paired else (t / d_) ** 2
     t_rows(study, group, tid, text, "reported statistics", t, n_eff, df, d_)
     ROWS[-1]["page"] = page
-
-g = "Humanizing the AI (between people)"
-rep_t("Study 3", g, "S3-trust-hum-std", "Trust: humanlike AI versus standard AI", -0.76, -0.07, 477.11, page="Chapter 3, Study 3")
-rep_t("Study 3", g, "S3-belief-hum-std", "Belief: humanlike AI versus standard AI", -0.30, -0.03, 477.91, page="Chapter 3, Study 3")
-rep_t("Study 3", "Humanlike AI versus doctor (between people)", "S3-trust-hum-doc", "Trust: humanlike AI versus doctor", -2.04, -0.26, 244.06, page="Chapter 3, Study 3")
-rep_t("Study 3", "Humanlike AI versus doctor (between people)", "S3-belief-hum-doc", "Belief: humanlike AI versus doctor", -2.10, -0.25, 273.56, page="Chapter 3, Study 3")
-g = "Adding a voice (between people)"
-rep_t("Study 4", "Humanizing the AI (between people)", "S4-trust-hum-std", "Trust: humanlike AI versus standard AI", -1.32, -0.13, 425.02, page="Chapter 3, Study 4")
-rep_t("Study 4", "Humanizing the AI (between people)", "S4-belief-hum-std", "Belief: humanlike AI versus standard AI", -1.60, -0.15, 427.99, page="Chapter 3, Study 4")
-rep_t("Study 4", "Humanlike AI versus doctor (between people)", "S4-trust-hum-doc", "Trust: humanlike AI versus doctor", -1.67, -0.21, 250.94, page="Chapter 3, Study 4")
-rep_t("Study 4", "Humanlike AI versus doctor (between people)", "S4-belief-hum-doc", "Belief: humanlike AI versus doctor", -1.18, -0.15, 258.19, page="Chapter 3, Study 4")
-rep_t("Study 4", "Humanlike AI versus doctor (side by side)", "S4w-trust-hum-doc", "Trust: humanlike AI versus doctor", -2.11, -0.09, 506, paired=True, page="Chapter 3, Study 4")
-rep_t("Study 4", "Humanlike AI versus doctor (side by side)", "S4w-belief-hum-doc", "Belief: humanlike AI versus doctor", -1.48, -0.07, 505, paired=True, page="Chapter 3, Study 4")
-rep_t("Study 5", "Does a voice help? (between people)", "S5-doc-voice", "Doctor: voiced versus written", -1.08, -0.08, 747.81, page="Chapter 3, Study 5")
-rep_t("Study 5", "Does a voice help? (between people)", "S5-hum-voice", "Humanlike AI: voiced versus written", -2.38, -0.19, 646.74, page="Chapter 3, Study 5")
-rep_t("Study 5", "Does a voice help? (between people)", "S5-std-voice", "Standard AI: voiced versus written", 2.10, 0.16, 655.74, page="Chapter 3, Study 5")
-rep_t("Study 5", "Side by side", "S5-hum-doc", "Humanlike AI versus doctor", -3.78, -0.13, 788, paired=True, page="Chapter 3, Study 5")
 
 def rep_coef(study, group, tid, text, b, lo, hi, scale_unit, note, page, binary=True):
     se = (hi - lo) / (2 * 1.96)
@@ -211,12 +194,59 @@ def rep_coef(study, group, tid, text, b, lo, hi, scale_unit, note, page, binary=
         lambda s: coef_bf10(b * k, se * k, s), list(scales), "Cauchy prior on the standardized effect, width set to a small, medium and large effect (d: 0.20, 0.41, 0.63)")
     ROWS[-1]["page"] = page
 
-# Study 5 voice and interaction terms (Table 22). Outcome SD about 1.02 from the model variances (0.66 + 0.38).
-sd5 = math.sqrt(0.66 + 0.38)
-rep_coef("Study 5", "Does a voice help? (between people)", "S5-voice-main", "Voice, across all recommenders", 0.07, -0.08, 0.23, sd5, "Table 22", "Chapter 3, Study 5")
-rep_coef("Study 5", "Does a voice help? (between people)", "S5-voice-std-int", "Voice effect for the standard AI versus the humanlike AI", -0.08, -0.26, 0.10, sd5, "Table 22", "Chapter 3, Study 5")
-rep_coef("Study 5", "Does a voice help? (between people)", "S5-voice-doc-int", "Voice effect for the doctor versus the humanlike AI", -0.08, -0.25, 0.10, sd5, "Table 22", "Chapter 3, Study 5")
-rep_coef("Study 5", "Side by side", "S5-doc-adj", "Doctor versus humanlike AI after adjusting for mind, warmth, competence", 0.09, -0.04, 0.23, sd5, "Table 22", "Chapter 3, Study 5")
+# ---------------------------------------------------------------- Studies 3 to 5 (raw data)
+# Differences are first minus second (doctor or humanlike AI first). Bayes factors do not depend on the sign.
+def raw_t(study, group, tid, text, r, page):
+    n_eff = r["n"] if "n" in r else r["nA"] * r["nB"] / (r["nA"] + r["nB"])
+    t_rows(study, group, tid, text, "raw data", r["t"], n_eff, r["df"], r["d"])
+    ROWS[-1]["stat"].update({"diff": r["diff"], "p": r["p"]})
+    ROWS[-1]["page"] = page
+
+s3 = json.load(open(OUT + "study3-full.json"))
+s4 = json.load(open(OUT + "study4-full.json"))
+s5 = json.load(open(OUT + "study5-full.json"))
+pick = lambda rows, i: [r for r in rows if r["id"] == i][0]
+MEAS = {"trust": "Trust", "belief": "Belief"}
+for m, w in MEAS.items():
+    raw_t("Study 3", "Humanizing the AI (between people)", f"S3-{m}-hum-std", f"{w}: humanlike AI versus standard AI", pick(s3["tests"][m], "hum-std"), "Chapter 3, Study 3")
+    raw_t("Study 3", "Doctor versus AI (between people)", f"S3-{m}-doc-std", f"{w}: doctor versus standard AI", pick(s3["tests"][m], "doc-std"), "Chapter 3, Study 3")
+    raw_t("Study 3", "Humanlike AI versus doctor (between people)", f"S3-{m}-hum-doc", f"{w}: humanlike AI versus doctor", pick(s3["tests"][m], "doc-hum"), "Chapter 3, Study 3")
+for m, w in MEAS.items():
+    raw_t("Study 4", "Humanizing the AI (between people)", f"S4-{m}-hum-std", f"{w}: humanlike AI versus standard AI", pick(s4["betweenTests"][m], "hum-std"), "Chapter 3, Study 4")
+    raw_t("Study 4", "Doctor versus AI (between people)", f"S4-{m}-doc-std", f"{w}: doctor versus standard AI", pick(s4["betweenTests"][m], "doc-std"), "Chapter 3, Study 4")
+    raw_t("Study 4", "Humanlike AI versus doctor (between people)", f"S4-{m}-hum-doc", f"{w}: humanlike AI versus doctor", pick(s4["betweenTests"][m], "doc-hum"), "Chapter 3, Study 4")
+for m, w in MEAS.items():
+    raw_t("Study 4", "Humanizing the AI (side by side)", f"S4w-{m}-hum-std", f"{w}: humanlike AI versus standard AI", pick(s4["withinTests"][m], "hum-std"), "Chapter 3, Study 4")
+    raw_t("Study 4", "Doctor versus AI (side by side)", f"S4w-{m}-doc-std", f"{w}: doctor versus standard AI", pick(s4["withinTests"][m], "doc-std"), "Chapter 3, Study 4")
+    raw_t("Study 4", "Humanlike AI versus doctor (side by side)", f"S4w-{m}-hum-doc", f"{w}: humanlike AI versus doctor", pick(s4["withinTests"][m], "doc-hum"), "Chapter 3, Study 4")
+for r, nm, short in (("doctor", "Doctor", "doc"), ("humanlike", "Humanlike AI", "hum"), ("standard", "Standard AI", "std")):
+    raw_t("Study 5", "Does a voice help? (between people)", f"S5-{short}-voice", f"{nm}: voiced versus written", pick(s5["voiceTests"]["tb"], f"voice-{r}"), "Chapter 3, Study 5")
+raw_t("Study 5", "Humanizing the AI (side by side)", "S5-hum-std", "Humanlike AI versus standard AI", pick(s5["pairedTests"]["tb"], "hum-std"), "Chapter 3, Study 5")
+raw_t("Study 5", "Doctor versus AI (side by side)", "S5-doc-std", "Doctor versus standard AI", pick(s5["pairedTests"]["tb"], "doc-std"), "Chapter 3, Study 5")
+raw_t("Study 5", "Humanlike AI versus doctor (side by side)", "S5-hum-doc", "Humanlike AI versus doctor", pick(s5["pairedTests"]["tb"], "hum-doc"), "Chapter 3, Study 5")
+# Study 5 model terms (Table 22). The outcome SD comes from the person and residual variances of the model.
+m5 = s5["mixedModels"][2]
+sd5 = math.sqrt(m5["varPerson"] + m5["varResidual"])
+def m5term(name): return [t for t in m5["terms"] if t["term"] == name][0]
+for tid, txt, nm, grp in [("S5-voice-main", "Voice, across all recommenders", "Voiced (versus written only)", "Does a voice help? (between people)"),
+                          ("S5-voice-std-int", "Voice effect for the standard AI versus the humanlike AI", "Standard AI × voiced", "Does a voice help? (between people)"),
+                          ("S5-voice-doc-int", "Voice effect for the doctor versus the humanlike AI", "Doctor × voiced", "Does a voice help? (between people)"),
+                          ("S5-doc-adj", "Doctor versus humanlike AI after adjusting for mind, warmth, competence", "Doctor (versus humanlike AI)", "Humanlike AI versus doctor (side by side)")]:
+    t_ = m5term(nm)
+    add("Study 5", grp, tid, txt, "raw data", "coef", {"b": t_["b"], "se": t_["se"], "note": "Table 22 model"},
+        lambda s, t_=t_: coef_bf10(t_["b"] / sd5, t_["se"] / sd5, s), list(FO_D),
+        "Cauchy prior on the standardized effect, width set to a small, medium and large effect (d: 0.20, 0.41, 0.63)")
+    ROWS[-1]["page"] = "Chapter 3, Study 5"
+# Study 5 mediation through mind perception: indirect effect over the SD of the outcome
+for i, (tid, txt) in enumerate([("S5-med-doc-std", "Mind perception as a mediator: doctor versus standard AI"), ("S5-med-hum-std", "Mind perception as a mediator: humanlike AI versus standard AI"),
+                                ("S5-med-hum-doc", "Mind perception as a mediator: humanlike AI versus doctor")]):
+    m_ = s5["mediation"][i]
+    se = abs(m_["indirect"] / m_["z"])
+    add("Study 5", "Does mind perception explain the gaps?", tid, txt, "raw data", "coef", {"b": m_["indirect"], "se": round(se, 4), "note": "indirect effect, trust/belief points"},
+        lambda s, m_=m_, se=se: coef_bf10(m_["indirect"] / sd5, se / sd5, s), list(FO_D),
+        "Cauchy prior on the indirect effect in standard-deviation units of the outcome, width set to a small, medium and large effect (d: 0.20, 0.41, 0.63)")
+    ROWS[-1]["page"] = "Chapter 3, Study 5"
+
 # Study 6 (Tables 23 and 24, model 2). Outcome SD about 1.06 (sleep) and 1.03 (phone in bed) from sigma-squared.
 rep_coef("Study 6", "Did the recommender change what people did?", "S6-sleep-int", "Sleep: change after the advice, AI versus doctor", -0.03, -0.144, 0.079, math.sqrt(1.13 + 0.01), "Table 23", "Chapter 4, Study 6")
 rep_coef("Study 6", "Did the recommender change what people did?", "S6-sleep-cond", "Sleep: AI versus doctor, overall", 0.03, -0.053, 0.108, math.sqrt(1.13 + 0.01), "Table 23", "Chapter 4, Study 6")

@@ -1,0 +1,71 @@
+---
+import DeepNav from '../../../../components/DeepNav.astro';
+import Base from '../../../../layouts/Base.astro';
+import BayesPlot from '../../../../components/BayesPlot.astro';
+import BayesGuide from '../../../../components/BayesGuide.astro';
+import FigureMap from '../../../../components/FigureMap.astro';
+import bayes from '../../../../data/trust-in-medical-ai/bayes.json';
+import { times } from '../../../../utils/bayes';
+import { href } from '../../../../utils/url';
+
+const bf = (id: string) => bayes.rows.find((r) => r.id === id)!;
+const bayesRows = bayes.rows.filter((r) => r.study === 'Study 4');
+const FULL = '/projects/trust-in-medical-ai/study-4/full/';
+const figureMap = [
+  { diss: 'Figure 17', what: 'The vignette images', here: 'In the dissertation and on OSF', note: 'Materials, not data; not redrawn here' },
+  { diss: 'Figures 18 and 19', what: 'Trust and belief by first source, with 95% intervals', here: 'Figures 2, 3 and 6', href: `${FULL}#fig-btrust` },
+  { diss: 'Figures 20 and 21', what: 'Trust and belief for the three recommenders, side by side', here: 'Figures 8, 9 and 12', href: `${FULL}#fig-wtrust` },
+  { diss: 'The omnibus repeated-measures tests', what: 'Whether the three recommenders differ', here: 'Table 9', href: `${FULL}#table-wanova`, note: 'The dissertation prints F(2, 1573) = 1.65 for trust; the data give F(2, 984) = 55.5 on the people who rated all three' },
+  { diss: 'Planned and follow-up t tests in the text', what: 'Humanlike against standard AI, and the doctor against each', here: 'Tables 6 and 10', href: `${FULL}#table-btests`, note: 'Part 1 d uses the pooled standard deviation; the text uses 2t over the root of the degrees of freedom' },
+  { diss: 'Regression and mixed-model tables for Study 4', what: 'Trust and belief predicted by recommender, then by gender and age, then by warmth and competence', here: 'Tables 12 and 13', href: `${FULL}#models`, note: 'Age is in four bands in the public file, so the age coefficients differ in scale' },
+];
+---
+
+<Base
+  title="Trust in medical AI: Study 4, dig deeper"
+  description="Where each Study 4 figure and table lives, and Bayes factors for every comparison."
+>
+  <div class="wrap">
+    <header class="page-head">
+      <p class="back small"><a href={href('/projects/trust-in-medical-ai/study-4/')}>Study 4</a> · <a href={href('/projects/trust-in-medical-ai/')}>Trust in medical AI</a></p>
+      <h1>Study 4: dig deeper</h1>
+    </header>
+    <DeepNav study="4" current="dig" />
+    <section class="section" id="dig-deeper" aria-labelledby="dig-title">
+      <div class="deep">
+        <h2 id="dig-title">Dig deeper</h2>
+        <p>Two more things for readers who want them: where each figure and table of the dissertation sits on these pages, and a Bayesian check on every comparison, computed from the raw ratings.</p>
+      </div>
+      <h3 class="fig-title">Where each dissertation figure and table lives</h3>
+      <FigureMap rows={figureMap.map((r) => (r.href ? { ...r, href: href(r.href) } : r))} />
+
+      <h3 class="fig-title" id="bayes">What the Bayes factors say</h3>
+      <BayesGuide />
+      <BayesPlot rows={bayesRows} />
+      <div class="prose">
+        <p>
+          <strong>Seen alone, the evidence leans toward no effect of the framing, but weakly.</strong> The data are {times(bf('S4-trust-hum-std').bf01)} under no difference for trust and {times(bf('S4-belief-hum-std').bf01)} for belief,
+          both anecdotal. With a voice added, Study 4 cannot rule out a small effect between people. The doctor's edge over the standard AI is moderate evidence: {times(bf('S4-trust-doc-std').bf10)} under a difference for trust and {times(bf('S4-belief-doc-std').bf10)} for belief.
+        </p>
+        <p>
+          <strong>Side by side, the framing effect is very clear.</strong> The humanlike AI against the standard AI, and the doctor against the standard AI, are both supported by extremely strong evidence, for trust and for belief.
+        </p>
+        <p>
+          <strong>The doctor and the humanlike AI are close, side by side.</strong> For trust the data are {times(bf('S4w-trust-hum-doc').bf01)} under no difference, anecdotal. For belief they are {times(bf('S4w-belief-hum-doc').bf01)}, moderate evidence for no difference.
+          The p value for trust is .036, so I read this as a gap that is at most small.
+        </p>
+        <p class="small muted">
+          Bayes factors in this section come from the raw ratings. Two-group tests use the Rouder default Bayes factor for the t test with a Cauchy prior on d, with widths set to a small (0.20), medium (0.41) and large (0.63) effect on the Funder and Ozer scale.
+        </p>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .deep { margin-top: 4rem; padding-top: 2rem; border-top: 5px solid; border-image: var(--five) 1; }
+  .deep h2 { margin-bottom: 0.5rem; }
+  .deep p { max-width: 62ch; color: var(--muted); }
+  .fig-title { margin-top: 3rem; font-size: 1.15rem; }
+  section :global(h2) { margin-bottom: 0.75rem; }
+</style>

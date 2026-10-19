@@ -1,0 +1,153 @@
+---
+import DeepNav from '../../../components/DeepNav.astro';
+import Base from '../../../layouts/Base.astro';
+import MainFindings from '../../../components/MainFindings.astro';
+import Chapter3Intro from '../../../components/Chapter3Intro.astro';
+import full from '../../../data/trust-in-medical-ai/study4-full.json';
+import bayes from '../../../data/trust-in-medical-ai/bayes.json';
+import { times } from '../../../utils/bayes';
+import { href } from '../../../utils/url';
+import { f1, f2, noZero, pEq, REPO } from '../../../utils/fmt';
+
+const bt = (m: string, id: string) => (full.betweenTests as any)[m].find((t: any) => t.id === id);
+const wt = (m: string, id: string) => (full.withinTests as any)[m].find((t: any) => t.id === id);
+const bf = (id: string) => bayes.rows.find((r) => r.id === id)!;
+const eff = (m: string) => full.effectCompare.find((e: any) => e.measure === m)!;
+const n = full.sample.n;
+const bHS = bt('trust', 'hum-std'), bAD = bt('trust', 'ai-doc');
+const wHS = wt('trust', 'hum-std'), wDS = wt('trust', 'doc-std'), wDH = wt('trust', 'doc-hum');
+const wWarm = wt('warmth', 'hum-std'), wComp = wt('competence', 'hum-std');
+const check = full.manipulationCheck;
+const models = (full.mixedModels as any).trust;
+const wa = (full.withinAnova as any).trust;
+
+const findings = [
+  {
+    head: 'Seen alone, the voiced humanlike AI still did not win more trust',
+    body: [
+      `${n} adults first read and rated one recommender: a doctor, a standard AI or a humanlike AI, each with a voice reading the advice. The humanlike AI scored ${f2(bt('trust', 'hum-std').meanA)} on trust and the standard AI ${f2(bt('trust', 'hum-std').meanB)}.`,
+      `The difference is small (d = ${f2(bHS.d)}, ${pEq(bHS.p)}). The data are ${times(bf('S4-trust-hum-std').bf01)} under no difference, which is anecdotal, not firm evidence.`,
+    ],
+    visual: { type: 'stat', value: `d = ${f2(bHS.d)}`, label: 'humanlike AI against standard AI, each rated alone', caption: 'Study 4, Part 1.' },
+  },
+  {
+    head: 'Side by side, the humanlike AI pulled clearly ahead of the standard AI',
+    body: [
+      `Everyone then rated all three recommenders. In this comparison the humanlike AI was trusted ${f1(wHS.diff)} points more than the standard AI, ${f2(wHS.meanA)} against ${f2(wHS.meanB)} (d = ${f2(wHS.d)}, p < .001).`,
+      `${wHS.higher} of ${wHS.n} people trusted the humanlike AI more, ${wHS.same} trusted both the same, and ${wHS.lower} trusted it less.`,
+    ],
+    visual: { type: 'stat', value: `+${f1(wHS.diff)} points`, label: 'more trust in the humanlike AI than in the standard AI, among the same people', caption: `Trust runs from −3 to 3. ${wHS.n} people in Part 2.` },
+  },
+  {
+    head: 'It nearly closed the gap to the doctor',
+    body: [
+      `The doctor was trusted ${f1(wDS.diff)} points more than the standard AI, but only ${f2(wDH.diff)} more than the humanlike AI (${f2(wDH.meanA)} against ${f2(wDH.meanB)}). The gap in effect size shrank from d = ${f2(wDS.d)} to ${f2(wDH.d)}.`,
+      `The data are only ${times(bf('S4w-trust-hum-doc').bf01)} under no difference between the doctor and the humanlike AI, so the gap is small, not proven absent.`,
+    ],
+    visual: { type: 'pairs', aName: 'Compared with the standard AI', bName: 'Compared with the humanlike AI', rows: [{ label: 'Doctor advantage in trust (d)', a: wDS.d, b: wDH.d, max: 0.5 }], caption: 'Doctor minus AI, side by side. Study 4, Part 2.' },
+  },
+  {
+    head: 'Comparing changed how people judged the AI',
+    body: [
+      `The same humanlike-versus-standard contrast was d = ${f2(eff('trust').between['hum-std'].d)} when each person saw one, and d = ${f2(eff('trust').within['hum-std'].d)} when they saw all three. For belief it went from ${f2(eff('belief').between['hum-std'].d)} to ${f2(eff('belief').within['hum-std'].d)}.`,
+      'Part 1 and Part 2 use different formulas for d, so I read the pattern, not the exact ratio. The shift is large enough to matter either way.',
+    ],
+    visual: { type: 'pairs', aName: 'Seen alone', bName: 'Side by side', rows: [
+      { label: 'Trust', a: eff('trust').between['hum-std'].d, b: eff('trust').within['hum-std'].d, max: 0.5 },
+      { label: 'Belief', a: eff('belief').between['hum-std'].d, b: eff('belief').within['hum-std'].d, max: 0.5 },
+    ], caption: 'Humanlike AI against standard AI, effect size (d).' },
+  },
+  {
+    head: 'Warmth and competence carried the effect',
+    body: [
+      `Side by side, the humanlike AI was rated warmer (d = ${f2(wWarm.d)}) and more competent (d = ${f2(wComp.d)}) than the standard AI. When I put warmth and competence into the model, the humanlike advantage over the standard AI went from ${f2(-models[0].terms[1].b)} to ${f2(-models[2].terms[1].b)} points.`,
+      'That pattern fits the idea that people trusted the humanlike AI more because it seemed warmer and more capable.',
+    ],
+    visual: { type: 'stat', value: `${f2(-models[0].terms[1].b)} to ${f2(-models[2].terms[1].b)}`, label: 'humanlike advantage over the standard AI in trust points, before and after accounting for warmth and competence', caption: 'Study 4, Part 2 mixed model.' },
+  },
+];
+---
+
+<Base
+  title="Trust in medical AI: Study 4"
+  description="Study 4 of my dissertation: does a humanlike AI with a voice win more trust, alone and when compared with a doctor and a standard AI?"
+>
+  <div class="wrap">
+    <header class="page-head">
+      <p class="back small"><a href={href('/projects/trust-in-medical-ai/')}>Trust in medical AI</a></p>
+      <h1>Study 4</h1>
+      <p class="lede">
+        {n} adults read a health recommendation, with a voice reading it aloud, from a doctor, a standard AI or a humanlike AI. Then everyone rated all three recommenders in a random order.
+        That gives two tests of the same idea: one when people judged a single recommender, and one when they compared. This page gives the main findings and what they mean.
+        Every table and figure is on the next page, rebuilt from the released data.
+      </p>
+    </header>
+    <Chapter3Intro current="4" />
+    <DeepNav study="4" current="overview" />
+
+    <section class="section" id="main-findings" aria-labelledby="mf-title">
+      <h2 id="mf-title">Main findings</h2>
+      <MainFindings findings={findings} />
+    </section>
+
+    <section class="section" id="implications" aria-labelledby="implications-title">
+      <h2 id="implications-title">What this means</h2>
+      <div class="prose">
+        <p>
+          <strong>Humanlike framing helps through comparison.</strong> With one recommender at a time, the effect was small and uncertain, as in Study 3. When people could weigh the three against each other,
+          the humanlike AI came out clearly ahead of the standard one. A person judging an AI on its own has little to anchor on. Next to alternatives, the cues in the humanlike version become visible.
+        </p>
+        <p>
+          <strong>The effect is about impressions of warmth and competence.</strong> The humanlike AI looked warmer and more competent, and those ratings accounted for the whole advantage in the model. This is a statistical
+          account, not proof of mechanism, but it points to what to measure in a real product: how capable and warm an AI seems to its users.
+        </p>
+        <p>
+          <strong>The check worked this time.</strong> People rated the humanlike AI as more humanlike than the standard one (d = {f2(check.d)}, {pEq(check.p)}), which Study 3 had not shown. That supports reading the Part 1
+          result as a weak effect, not a failed manipulation.
+        </p>
+        <p>
+          <strong>A correction to the dissertation.</strong> The dissertation reports the omnibus repeated-measures test of trust as F(2, 1573) = 1.65, p = .192. I could not reproduce that. A repeated-measures ANOVA on the {wa.n} people who rated all three gives
+          F({wa.df1}, {wa.df2}) = {f2(wa.F)}, p &lt; .001, which agrees with the pairwise tests. The pairwise results and every effect size elsewhere are unaffected.
+        </p>
+        <p>
+          <strong>Cautions.</strong> Part 2 reuses the people from Part 1, and everyone who rated all three had already formed a first impression. The order was randomized, but I did not test order effects here.
+          The advice was a single scenario, and trust is stated trust, not behavior.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" id="files" aria-labelledby="files-title">
+      <h2 id="files-title">Files and methods</h2>
+      <div class="prose">
+        <ul class="filelist">
+          <li><a href={href('/data/study4-ratings.csv')}>study4-ratings.csv</a>, the de-identified ratings, one row per person</li>
+          <li><a href={href('/data/study4-codebook.csv')}>study4-codebook.csv</a>, what every column means</li>
+          <li><a href={href('/code/study4-analysis.R')}>study4-analysis.R</a>, the main tests in R, from the public file</li>
+          <li><a href={href('/code/study4-original-analysis.Rmd')}>study4-original-analysis.Rmd</a>, my original notebook for this study, with local file paths removed</li>
+          <li><a href="https://doi.org/10.17605/OSF.IO/C6RMT">Preregistration and materials on OSF</a>, written before data collection</li>
+          <li><a href={`${REPO}/blob/main/analysis/study4-full-results.py`}>study4-full-results.py</a>, the code behind every table and figure</li>
+          <li><a href={`${REPO}/blob/main/analysis/study4-deidentify.py`}>study4-deidentify.py</a>, how the raw export became the public file</li>
+        </ul>
+        <p>
+          Everything on these pages was computed in Python from the released file. Part 1 uses Welch t tests and one-way ANOVAs with Tukey adjustment, with d from the pooled standard deviation. Part 2 uses
+          paired t tests with a Bonferroni correction, dz as the effect size, a repeated-measures ANOVA with the Greenhouse-Geisser correction, and mixed models with a random intercept for each person.
+          The released file has {n} people and shuffled row order, with no IDs, locations, timestamps or free text, and age in four bands.
+        </p>
+        <p>
+          The dissertation reports Cohen's d as 2t divided by the square root of the degrees of freedom. These pages use the pooled standard deviation for Part 1, which gives somewhat different values from the dissertation's
+          for some tests. The dissertation also lists a sample of 556 people where the released file has {n}; I use the file.
+        </p>
+        <p class="small muted">
+          The data, codebook and code are shared under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> (data) and the MIT license (code). Please do not use the file to try to identify anyone.
+          Please cite the dissertation: Leitao, M. R. (2024). <em>Artificial Intelligence, Humanization, and Health Beliefs</em>. Georgetown University.
+        </p>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .filelist { padding-left: 1.2rem; font-family: var(--display); }
+  .filelist li { margin-bottom: 0.3rem; }
+  section :global(h2) { margin-bottom: 0.75rem; }
+</style>

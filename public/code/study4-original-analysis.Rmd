@@ -1,0 +1,785 @@
+---
+title: "Study 4 - original analysis"
+author: "Matthew Leitao"
+date: "2/15/2022"
+output:
+  html_document: 
+      #code_folding: hide
+    df_print: paged
+    toc: yes
+    toc_float: true
+    toc_depth: 5
+    toc_collapse: False
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r loading packages}
+if(!require(haven))  {install.packages("haven")}
+if(!require(tidyverse))  {install.packages("tidyverse")}
+if(!require(psych))  {install.packages("psych")}
+if(!require(ggplot2))  {install.packages("ggplot2")}
+if(!require(ggdist))  {install.packages("ggdist")}
+if(!require(gghalves))  {install.packages("gghalves")}
+if(!require(PupillometryR))  {install.packages("PupillometryR")}
+if(!require(jmv))  {install.packages("jmv")}
+if(!require(plyr))  {install.packages("plyr")}
+if(!require(lme4))  {install.packages("lme4")}
+if(!require(lmerTest))  {install.packages("lmerTest")}
+if(!require(modelsummary))  {install.packages("modelsummary")}
+if(!require(MuMIn))  {install.packages("MuMIn")}
+if(!require(papaja))  {install.packages("papaja")}
+if(!require(reghelper))  {install.packages("reghelper")}
+if(!require(emmeans))  {install.packages("emmeans")}
+if(!require(lavaan))  {install.packages("lavaan")}
+if(!require(semPlot))  {install.packages("semPlot")}
+if(!require(bmlm))  {install.packages("bmlm")}
+if(!require(sjPlot))  {install.packages("sjPlot")}
+if(!require(sjmisc))  {install.packages("sjmisc")}
+if(!require(EMAtools))  {install.packages("EMAtools")}
+if(!require(report))  {install.packages("report")}
+if(!require(MplusAutomation))  {install.packages("MplusAutomation")}
+if(!require(rstatix))  {install.packages("rstatix")}
+
+```
+
+#Health Algorithm - Belief 1
+
+<!-- Study 4 (Chapter 3), from the author's combined notebook. The raw survey exports are not released: the read_sav() lines are kept so you can see which files the analysis used, and the de-identified ratings are in study4-ratings.csv. Local file paths were removed. -->
+
+
+## Loading Packages
+```{r}
+```{r}
+Digital_Belief_Voiced_Cleaned <-  read_sav("Study 1.2 - Voiced/Digital Beliefs - Study 1.2 - Voice_February 28 2022.sav")
+
+Digital_Belief_Voiced_Longer <- read_sav("Study 1.2 - Voiced/Digital Beliefs - Study 1.2 - Voiced_Longer - May 11 2022.sav")
+```
+
+## Between Subjects ANOVA
+```{r}
+anovaOneW(
+  formula = Trust + Believe ~ Condition,
+  data = Digital_Belief_Voiced_Cleaned,
+  welchs = FALSE,
+  fishers = TRUE,
+  desc = TRUE,
+  descPlot = TRUE,
+  norm = TRUE,
+  eqv = TRUE
+)
+
+HealBelief.1.Trust <- aov(Trust + Believe ~ Condition, data = Digital_Belief_Voiced_Cleaned)
+summary(HealBelief.1.Trust)
+```
+
+```{r}
+HealBelief.2.Trust <- aov(Trust ~ Condition, data = Digital_Belief_Voiced_Cleaned)
+summary(HealBelief.2.Trust)
+TukeyHSD(HealBelief.2.Trust, conf.level = .95)
+```
+
+```{r}
+HealBelief.2.Believe <- aov(Believe ~ Condition, data = Digital_Belief_Voiced_Cleaned)
+summary(HealBelief.2.Believe)
+TukeyHSD(HealBelief.2.Believe, conf.level = .95)
+```
+
+##T-Tests
+###Simplified All
+#### Trust
+```{r}
+pairwise.t.test(Digital_Belief_Voiced_Cleaned$Trust, Digital_Belief_Voiced_Cleaned$Condition, p.adjust.method = "none")
+```
+
+#### Believe
+```{r}
+pairwise.t.test(Digital_Belief_Voiced_Cleaned$Believe, Digital_Belief_Voiced_Cleaned$Condition, p.adjust.method = "none")
+```
+
+###Planned Comparsons
+
+####Non-Human-Like Vs Doctor
+```{r}
+ttestIS(
+    formula = Trust + Believe ~ Coding_NONvHum,
+    data = Digital_Belief_Voiced_Cleaned,
+    vars = vars(Trust, Believe),
+    meanDiff = TRUE,
+    effectSize = TRUE,
+    desc = TRUE,
+    plots = TRUE)
+```
+
+```{r}
+t.test(Believe ~ Coding_NONvHum, data = Digital_Belief_Voiced_Cleaned)
+report(t.test(Believe ~ Coding_NONvHum, data = Digital_Belief_Voiced_Cleaned))
+```
+
+```{r}
+t.test(Trust ~ Coding_NONvHum, data = Digital_Belief_Voiced_Cleaned)
+report(t.test(Trust ~ Coding_NONvHum, data = Digital_Belief_Voiced_Cleaned))
+```
+
+#### Human-Like vs Doctor
+```{r}
+ttestIS(
+    formula = Trust + Believe ~ Coding_HumvHum,
+    data = Digital_Belief_Voiced_Cleaned,
+    vars = vars(Trust, Believe),
+    meanDiff = TRUE,
+    effectSize = TRUE,
+    desc = TRUE,
+    plots = TRUE)
+```
+
+```{r}
+t.test(Trust ~ Coding_HumvHum, data = Digital_Belief_Voiced_Cleaned)
+report(t.test(Trust ~ Coding_HumvHum, data = Digital_Belief_Voiced_Cleaned))
+```
+
+```{r}
+t.test(Believe ~ Coding_HumvHum, data = Digital_Belief_Voiced_Cleaned)
+report(t.test(Believe ~ Coding_HumvHum, data = Digital_Belief_Voiced_Cleaned))
+```
+#### Both AI vs Doctor
+
+```{r}
+ttestIS(
+    formula = Trust + Believe ~ Coding_AIvHum,
+    data = Digital_Belief_Voiced_Cleaned,
+    vars = vars(Trust, Believe),
+    meanDiff = TRUE,
+    effectSize = TRUE,
+    desc = TRUE,
+    plots = TRUE)
+```
+
+
+```{r}
+t.test(Trust ~ Coding_AIvHum, data = Digital_Belief_Voiced_Cleaned)
+report(t.test(Trust ~ Coding_AIvHum, data = Digital_Belief_Voiced_Cleaned))
+```
+```{r}
+t.test(Believe ~ Coding_AIvHum, data = Digital_Belief_Voiced_Cleaned)
+report(t.test(Believe ~ Coding_AIvHum, data = Digital_Belief_Voiced_Cleaned))
+```
+
+
+#### Non-Human vs Human-Like
+```{r}
+ttestIS(
+    formula = Trust + Believe ~ Coding_AIvAI,
+    data = Digital_Belief_Voiced_Cleaned,
+    vars = vars(Trust, Believe),
+    meanDiff = TRUE,
+    effectSize = TRUE,
+    desc = TRUE,
+    plots = TRUE)
+```
+
+
+```{r}
+t.test(Trust ~ Coding_AIvAI, data = Digital_Belief_Voiced_Cleaned)
+report(t.test(Trust ~ Coding_AIvAI, data = Digital_Belief_Voiced_Cleaned))
+```
+
+
+```{r}
+t.test(Believe ~ Coding_AIvAI, data = Digital_Belief_Voiced_Cleaned)
+report(t.test(Believe ~ Coding_AIvAI, data = Digital_Belief_Voiced_Cleaned))
+```
+
+```{r}
+jmv::ttestPS(
+    data = Digital_Belief_Voiced_Tight,
+    pairs = list(
+        list(
+            i1="Cond_1.Trust_WS",
+            i2="Cond_3.Trust_WS"),
+        list(
+            i1="Cond_1.Trust_WS",
+            i2="Cond_2.Trust_WS"),
+        list(
+            i1="Cond_3.Trust_WS",
+            i2="Cond_2.Trust_WS")),
+    effectSize = TRUE,
+    plots = TRUE)
+```
+
+### Follow Up Correlations & Ancova
+```{r}
+Digital_Belief_Voiced_Cleaned %>%
+  select(Religious, Humanlike) %>%
+  corr.test(use = "pairwise.complete.obs")
+```
+
+
+
+```{r}
+Digital_Belief_Voiced_Cleaned %>%
+  select(Trust, Believe, Appropriate_AI, Warmth, Competent, Humanlike) %>%
+  corr.test(use = "pairwise.complete.obs")
+```
+
+```{r}
+FollowUp_ANCOVA <- aov(Trust ~ Condition + Warmth + Competent + Appropriate_AI, data = Digital_Belief_Voiced_Cleaned)
+summary(FollowUp_ANCOVA)
+```
+
+
+```{r}
+summary.lm(FollowUp_ANCOVA)
+```
+
+
+```{r}
+lm.beta::lm.beta(FollowUp_ANCOVA)
+```
+
+
+```{r}
+PostHoc_FollowUp <- glht(FollowUp_ANCOVA, linf)
+```
+
+## Better Plots - Between Subjects
+
+### Trust
+
+```{r}
+Digital_Belief_Voiced_Cleaned <- Digital_Belief_Voiced_Cleaned %>%
+  mutate(
+    Condition_Fix = case_when(
+      Condition == "Non-Humanlike" ~ "Standard AI",
+      Condition == "Humanlike" ~ "Humanlike AI",
+      TRUE ~ Condition
+    )
+  )
+
+
+
+Digital_Belief_Voiced_Cleaned$Condition <- dplyr::recode(Digital_Belief_Voiced_Cleaned$Condition, `1` = "Humanlike AI", `2` = "Standard AI", `3` = "Doctor")
+
+
+Digital_Belief_Voiced_Cleaned$Condition_Fix
+
+```
+
+
+```{r}
+Digital_Belief_Voiced_Cleaned %>%
+  filter(!is.na(Condition_Fix))  %>%
+    mutate(Condition_Fix = fct_reorder(Condition_Fix, Trust, .fun = "mean")) %>%
+  ggplot(., aes(x = Condition_Fix, y = Trust, fill = Condition_Fix, col = Condition_Fix, na.rm = TRUE)) +
+    geom_flat_violin(position = position_nudge(x = .2, y = 0), alpha = .75, adjust = 4)+
+    geom_point(position=position_jitter(width = .15),size = 2, alpha = 1/2, color = "black") +
+      scale_fill_manual(values = c("#F8737F", "#FCBB6D", "#475C7A"))+
+    scale_colour_manual(values = c("#F8737F", "#FCBB6D", "#475C7A"))+
+    guides(fill = FALSE, col = FALSE, scale = "none") +
+  geom_boxplot(aes(x = as.numeric(Condition_Fix)+ 0.25, y = Trust),outlier.shape = NA, alpha = 0.4, width = .1, colour = "BLACK") + 
+ stat_summary(fun.data = "mean_cl_normal", geom = "errorbar", width = 1/4, size = 1.5, color = "white") + 
+ stat_summary(fun = "mean", geom = "point",shape = 23, stroke = 1, size = 4,  color = "white") +  ggtitle("Trust In Recommendation by Recommender - Between Subjects") +
+  ylab('Trust In Recommendation')+ 
+  xlab('Recommender') +
+  theme_apa() + theme(plot.title = element_text(face = "bold", size = 16), axis.title = element_text(face = "bold", size = 14), panel.background = element_rect("transparent"), plot.background = element_rect("transparent", color = NA), legend.background = element_blank(), legend.box.background = element_rect("transparent", colour = 'white'), axis.text = element_text(colour = "white", size = 14, face = "bold"), axis.ticks = element_line(colour = "white"), axis.line = element_line(colour = "white")) +
+  scale_y_continuous(breaks=seq(-3,3,.5))
+
+
+ggsave("Study 4 - Trust Means - Between Subjects - Presentation.png", width = 12, height = 8)
+```
+
+
+### Believe
+
+```{r}
+Digital_Belief_Voiced_Cleaned %>%
+  filter(!is.na(Condition_Fix))  %>%
+    mutate(Condition_Fix = fct_reorder(Condition_Fix, Believe, .fun = "mean")) %>%
+  ggplot(., aes(x = Condition_Fix, y = Believe, fill = Condition_Fix, col = Condition_Fix, na.rm = TRUE)) +
+    geom_flat_violin(position = position_nudge(x = .2, y = 0), alpha = .75, adjust = 4)+
+    geom_point(position=position_jitter(width = .15),size = 2, alpha = 1/2, color = "black") +
+      scale_fill_manual(values = c("#F8737F", "#FCBB6D", "#475C7A"))+
+    scale_colour_manual(values = c("#F8737F", "#FCBB6D", "#475C7A"))+
+    guides(fill = FALSE, col = FALSE, scale = "none") +
+  geom_boxplot(aes(x = as.numeric(Condition_Fix)+ 0.25, y = Believe),outlier.shape = NA, alpha = 0.4, width = .1, colour = "BLACK") + 
+ stat_summary(fun.data = "mean_cl_normal", geom = "errorbar", width = 1/4, size = 1.5, color = "white") + 
+ stat_summary(fun = "mean", geom = "point",shape = 23, stroke = 1, size = 4,  color = "white") +  ggtitle("Belief In Recommendation by Recommender - Between Subjects") +
+  ylab('Belief In Recommendation')+ 
+  xlab('Recommender') +
+  theme_apa() + theme(plot.title = element_text(face = "bold", size = 16), axis.title = element_text(face = "bold", size = 14), panel.background = element_rect("transparent"), plot.background = element_rect("transparent", color = NA), legend.background = element_blank(), legend.box.background = element_rect("transparent", colour = 'white'), axis.text = element_text(colour = "white", size = 14, face = "bold"), axis.ticks = element_line(colour = "white"), axis.line = element_line(colour = "white")) +
+  scale_y_continuous(breaks=seq(-3,3,.5))
+
+ggsave("Study 4 - Belief Means - Between Subjects - Presentation.png", width = 12, height = 8)
+```
+  
+
+### LM
+#### Trust
+##### Models 
+```{r}
+DigitalBeliefs_LM_1 <- lm(Trust ~ as.factor(Condition), data = Digital_Belief_Voiced_Cleaned)
+
+summary(DigitalBeliefs_LM_1)
+```
+
+
+```{r}
+DigitalBeliefs_LM_2 <- lm(Trust ~ as.factor(Condition) + IsMale + Age, data = Digital_Belief_Voiced_Cleaned)
+
+summary(DigitalBeliefs_LM_2)
+```
+
+```{r}
+DigitalBeliefs_LM_3 <- lm(Trust ~ as.factor(Condition) + IsMale + Age + Warmth + Competent , data = Digital_Belief_Voiced_Cleaned)
+
+summary(DigitalBeliefs_LM_3)
+```
+
+##### Exporting Models
+```{r}
+Study4_TrustModels <- list(
+  "Model 1" = DigitalBeliefs_LM_1, "Model 2" = DigitalBeliefs_LM_2, "Model 3" = DigitalBeliefs_LM_3
+)
+```
+
+
+```{r}
+modelsummary(Study4_TrustModels, , fmt = 2, estimate = "{estimate}{stars}", statistic = c("std.error"), stars = c("*" = .05, "**" = .01, "***" = .001), gof_map = c("nobs", "r.squared", "adj.r.squared"), align = "lccc", notes = "Note. * = .05, ** = .01, *** = .001", title = "OLS Regression On Trust", output = "Study4_TrustModels.docx")
+
+```
+
+#### Belief
+##### Models 
+```{r}
+DigitalBeliefs_LM_1 <- lm(Believe ~ as.factor(Condition), data = Digital_Belief_Voiced_Cleaned)
+
+summary(DigitalBeliefs_LM_1)
+```
+
+
+```{r}
+DigitalBeliefs_LM_2 <- lm(Believe ~ as.factor(Condition) + IsMale + Age, data = Digital_Belief_Voiced_Cleaned)
+
+summary(DigitalBeliefs_LM_2)
+```
+
+```{r}
+DigitalBeliefs_LM_3 <- lm(Believe ~ as.factor(Condition) + IsMale + Age + Warmth + Competent , data = Digital_Belief_Voiced_Cleaned)
+
+summary(DigitalBeliefs_LM_3)
+```
+
+##### Exporting Models
+```{r}
+Study4_Belief_Models <- list(
+  "Model 1" = DigitalBeliefs_LM_1, "Model 2" = DigitalBeliefs_LM_2, "Model 3" = DigitalBeliefs_LM_3
+)
+```
+
+
+```{r}
+modelsummary(Study4_Belief_Models, , fmt = 2, estimate = "{estimate}{stars}", statistic = c("std.error"), stars = c("*" = .05, "**" = .01, "***" = .001), gof_map = c("nobs", "r.squared", "adj.r.squared"), align = "lccc", notes = "Note. * = .05, ** = .01, *** = .001", title = "OLS Regression On Belief", output = "Study4_Belief_Models.docx")
+
+```
+  
+## Repeated Measure ANOVA
+```{r}
+zap_labels(Digital_Belief_Voiced_Longer$Believe_WS)
+
+Digital_Belief_Voiced_Longer$Believe_WS
+
+Digital_Belief_Voiced_Longer %>% 
+  anova_test(zap_labels(Believe_WS) ~ Cond + Error(Participant_Num/Cond))
+
+Digital_Belief_Voiced_Longer %>% 
+  anova_test(zap_labels(Believe_WS) ~ Cond + Error(Participant_Num/Cond)) %>%
+  get_anova_table() %>%
+  adjust_pvalue(method = "none")
+
+Digital_Belief_Voiced_Longer %>% 
+  pairwise_t_test(Trust_WS ~ Cond, paired = TRUE, p.adjust.method = "bonferroni")
+
+
+tidy(aov(Trust_WS ~ Cond + Error(Participant_Num/Cond), data = Digital_Belief_Voiced_Longer))
+
+
+
+report(aov(Trust_WS ~ Cond + Error(Participant_Num/Cond), data = Digital_Belief_Voiced_Longer))
+
+
+```
+
+```{r}
+
+tidy(aov(Believe_WS ~ Cond + Error(Participant_Num/Cond), data = Digital_Belief_Voiced_Longer))
+
+report(aov(Believe_WS ~ Cond + Error(Participant_Num/Cond), data = Digital_Belief_Voiced_Longer))
+
+Digital_Belief_Voiced_Longer %>% 
+  pairwise_t_test(Believe_WS ~ Cond, paired = TRUE, p.adjust.method = "bonferroni")
+
+```
+
+
+### Paired Samples t-test
+
+#### Humanlike AI vs Doctor
+
+Trust
+```{r}
+Digital_Belief_Voiced_Tight %>% t.test(.$Cond_1.Trust_WS, .$Cond_3.Trust_WS, data = ., subset = is.na(.$Cond_1.Trust_WS), paired = TRUE)
+
+Digital_Belief_Voiced_Tight %>% t.test(.$Cond_1.Trust_WS, .$Cond_3.Trust_WS, data = ., subset = is.na(.$Cond_1.Trust_WS), paired = TRUE) %>%
+  report()
+
+
+```
+
+Belief
+```{r}
+Digital_Belief_Voiced_Tight %>% t.test(.$Cond_1.Believe_WS, .$Cond_3.Believe_WS, data = ., subset = is.na(.$Cond_1.Believe_WS), paired = TRUE)
+
+Digital_Belief_Voiced_Tight %>% t.test(.$Cond_1.Believe_WS, .$Cond_3.Believe_WS, data = ., subset = is.na(.$Cond_1.Believe_WS), paired = TRUE) %>%
+  report()
+
+
+```
+
+#### Non-Humanlike AI vs Doctor
+
+Trust
+```{r}
+Digital_Belief_Voiced_Tight %>% t.test(.$Cond_2.Trust_WS, .$Cond_3.Trust_WS, data = ., subset = is.na(.$Cond_2.Trust_WS), paired = TRUE)
+
+Digital_Belief_Voiced_Tight %>% t.test(.$Cond_2.Trust_WS, .$Cond_3.Trust_WS, data = ., subset = is.na(.$Cond_2.Trust_WS), paired = TRUE) %>%
+  report()
+
+
+```
+
+Belief
+```{r}
+Digital_Belief_Voiced_Tight %>% t.test(.$Cond_2.Believe_WS, .$Cond_3.Believe_WS, data = ., subset = is.na(.$Cond_2.Believe_WS), paired = TRUE)
+
+Digital_Belief_Voiced_Tight %>% t.test(.$Cond_2.Believe_WS, .$Cond_3.Believe_WS, data = ., subset = is.na(.$Cond_2.Believe_WS), paired = TRUE) %>%
+  report()
+
+
+```
+
+#### Non-Humanlike AI vs Humanlike AI
+
+Trust
+```{r}
+Digital_Belief_Voiced_Tight %>% t.test(.$Cond_2.Trust_WS, .$Cond_1.Trust_WS, data = ., subset = is.na(.$Cond_1.Trust_WS), paired = TRUE)
+
+Digital_Belief_Voiced_Tight %>% t.test(.$Cond_2.Trust_WS, .$Cond_1.Trust_WS, data = ., subset = is.na(.$Cond_1.Trust_WS), paired = TRUE) %>%
+  report()
+
+
+```
+
+Belief
+```{r}
+Digital_Belief_Voiced_Tight %>% t.test(.$Cond_2.Believe_WS, .$Cond_1.Believe_WS, data = ., subset = is.na(.$Cond_1.Believe_WS), paired = TRUE)
+
+Digital_Belief_Voiced_Tight %>% t.test(.$Cond_2.Believe_WS, .$Cond_1.Believe_WS, data = ., subset = is.na(.$Cond_1.Believe_WS), paired = TRUE) %>%
+  report()
+
+
+```
+
+
+```{r}
+jmv::ttestPS(
+    data = Digital_Belief_Voiced_Tight,
+    pairs = list(
+        list(
+            i1="Cond_1.Trust_WS",
+            i2="Cond_3.Trust_WS"),
+        list(
+            i1="Cond_1.Trust_WS",
+            i2="Cond_2.Trust_WS"),
+        list(
+            i1="Cond_3.Trust_WS",
+            i2="Cond_2.Trust_WS")),
+    effectSize = TRUE,
+    plots = TRUE)
+```
+
+```{r}
+jmv::ttestPS(
+    data = Digital_Belief_Voiced_Tight,
+    pairs = list(
+        list(
+            i1="Cond_1.Believe_WS",
+            i2="Cond_3.Believe_WS"),
+        list(
+            i1="Cond_1.Believe_WS",
+            i2="Cond_2.Believe_WS"),
+        list(
+            i1="Cond_3.Believe_WS",
+            i2="Cond_2.Believe_WS")),
+    effectSize = TRUE,
+    plots = TRUE)
+```
+
+
+```{r}
+Digital_Belief_Voiced_Longer %>% 
+  filter(!is.na(Trust_WS)) %>%
+  group_by(Cond) %>%
+    dplyr::summarise(mean(Trust_WS), sd(Trust_WS))
+  
+```
+
+```{r}
+Digital_Belief_Voiced_Cleaned %>% 
+  filter(!is.na(Trust)) %>%
+  group_by(Condition) %>%
+    dplyr::summarise(mean(Trust), sd(Trust))
+```
+
+
+
+## Repeated Measures Effects Linear Model
+For this data I used the long format.
+### Dissertation Models
+#### Trust
+##### Basic
+```{r}
+Repeated_Measures_Trust_1 <- lmer(Trust_WS ~ as.factor(Cond) + (1|Participant_Num), data = Digital_Belief_Voiced_Longer)
+
+summary(Repeated_Measures_Trust_1)
+
+tab_model(Repeated_Measures_Trust_1, digits = 3, digits.re = 5, show.std = TRUE , file = "Repeated_Measures_Trust_1.doc")
+```
+
+```{r}
+msummary(Repeated_Measures, output = "Shift_Rate_Binary.docx",
+stars = TRUE, metrics=c("RMSE","R2","AIC", "BIC","Log.Lik.","F"))
+```
+
+
+##### Second Model
+```{r}
+Repeated_Measures_Trust_2 <- lmer(Trust_WS ~ as.factor(Cond) + IsMale + Age + (1|Participant_Num), data = Digital_Belief_Voiced_Longer)
+
+summary(Repeated_Measures_Trust_2)
+
+tab_model(Repeated_Measures_Trust_2, digits = 3, digits.re = 5, show.std = TRUE , file = "Repeated_Measures_Trust_2.doc")
+```
+
+##### Third Model
+```{r}
+Repeated_Measures_Trust_3 <- lmer(Trust_WS ~ as.factor(Cond) + IsMale + Age + Warm_WS + Competent_WS + (1|Participant_Num), data = Digital_Belief_Voiced_Longer)
+
+summary(Repeated_Measures_Trust_3)
+
+tab_model(Repeated_Measures_Trust_3, digits = 3, digits.re = 5, show.std = TRUE, file = "Repeated_Measures_Trust_3.doc")
+```
+
+
+#### Belief
+##### Basic
+```{r}
+Repeated_Measures_Believe_1 <- lmer(Believe_WS ~ as.factor(Cond) + (1|Participant_Num), data = Digital_Belief_Voiced_Longer)
+
+summary(Repeated_Measures_Believe_1)
+
+tab_model(Repeated_Measures_Believe_1, digits = 3, digits.re = 5, show.std = TRUE , file = "Repeated_Measures_Believe_1.doc")
+```
+
+```{r}
+msummary(Repeated_Measures, output = "Shift_Rate_Binary.docx",
+stars = TRUE, metrics=c("RMSE","R2","AIC", "BIC","Log.Lik.","F"))
+```
+
+
+##### Second Model
+```{r}
+Repeated_Measures_Believe_2 <- lmer(Believe_WS ~ as.factor(Cond) + IsMale + Age + (1|Participant_Num), data = Digital_Belief_Voiced_Longer)
+
+summary(Repeated_Measures_Believe_2)
+
+tab_model(Repeated_Measures_Believe_2, digits = 3, digits.re = 5, show.std = TRUE , file = "Repeated_Measures_Believe_2.doc")
+```
+
+##### Third Model
+```{r}
+Repeated_Measures_Believe_3 <- lmer(Believe_WS ~ as.factor(Cond) + IsMale + Age + Warm_WS + Competent_WS + (1|Participant_Num), data = Digital_Belief_Voiced_Longer)
+
+summary(Repeated_Measures_Believe_3)
+
+tab_model(Repeated_Measures_Believe_3, digits = 3, digits.re = 5, show.std = TRUE, file = "Repeated_Measures_Believe_3.doc")
+```
+
+### With Humanlike (Only Algorithm Conditions)
+```{r}
+Repeated_Measures_Humlike_1 <- lmer(Trust_WS ~ as.factor(Cond) + Humanlike_WS + (1|Participant_Num), data = Digital_Belief_Voiced_Longer, subset = Cond != 3)
+
+summary(Repeated_Measures_Humlike_1)
+
+```
+
+
+```{r}
+r.squaredGLMM(Repeated_Measures_Humlike_1)
+```
+
+
+
+```{r}
+Repeated_Measures_Humlike_2 <- lmer(Trust_WS ~ as.factor(Cond) + Warm_WS + Competent_WS + Appropriate_WS + (1|Participant_Num), data = Digital_Belief_Voiced_Longer, subset = Cond != 3)
+
+Repeated_Measures_Humlike_3 <- lmer(Trust_WS ~ as.factor(Cond) + Humanlike_WS + Warm_WS + Competent_WS + Appropriate_WS + (1|Participant_Num), data = Digital_Belief_Voiced_Longer, subset = Cond != 3)
+
+summary(Repeated_Measures_Humlike_3)
+```
+
+```{r}
+r.squaredGLMM(Repeated_Measures_Humlike_3)
+```
+
+```{r}
+anova(Repeated_Measures_Humlike_2, Repeated_Measures_Humlike_3)
+```
+
+### With Warmth and Competence
+```{r}
+Repeated_Measures_Humlike <- lmer(Trust_WS ~ as.factor(Cond) + Warm_WS + Competent_WS + (1|Participant_Num), data = Digital_Belief_Voiced_Longer)
+
+
+summary(Repeated_Measures_Humlike)
+```
+
+```{r}
+lme.dscore(Repeated_Measures_Humlike, Digital_Belief_Voiced_Longer, type = "lme4")
+
+```
+
+
+```{r}
+r.squaredGLMM(Repeated_Measures_Humlike)
+```
+
+```{r}
+Repeated_Measures_Humlike_4 <- lmer(Trust_WS ~ as.factor(Cond) + Warm_WS + Competent_WS + Appropriate_WS + IsMale + Age +  (1|Participant_Num), data = Digital_Belief_Voiced_Longer)
+
+
+summary(Repeated_Measures_Humlike_4)
+```
+
+```{r}
+r.squaredGLMM(Repeated_Measures_Humlike_4)
+```
+
+
+
+```{r}
+anova(Repeated_Measures_Humlike, Repeated_Measures_Humlike_4)
+```
+
+```{r}
+
+modelsummary_binary_switches <- list(
+"Full Model" = Repeated_Measures,
+"Final Model"= Repeated_Measures_Humlike)
+
+msummary(modelsummary_binary_switches, output = "Shift_Rate_Binary.docx",
+stars = TRUE, align = "lcc",metrics=c("RMSE","R2","AIC", "BIC","Log.Lik.","F"))
+
+msummary(Repeated_Measures_Humlike, output = "Shift_Rate_Binary.docx",
+stars = TRUE, metrics=c("RMSE","R2","AIC", "BIC","Log.Lik.","F"))
+```
+
+
+```{r}
+anova(Repeated_Measures_Humlike_2, Repeated_Measures_Humlike_3)
+```
+
+
+
+```{r}
+Repeated_Measures <- lmer(Believe_WS ~ as.factor(Cond) + (1|Participant_Num), data = Digital_Belief_Voiced_Longer)
+
+summary(Repeated_Measures)
+```
+
+
+
+## Better Plots - Within-Subjects
+
+### Trust
+
+```{r}
+Digital_Belief_Voiced_Longer <- Digital_Belief_Voiced_Longer %>%
+  mutate(
+    Cond_Fix = case_when(
+      Cond == "Non-Humanlike AI" ~ "Standard AI",
+      TRUE ~ Cond
+    )
+  )
+
+Digital_Belief_Voiced_Longer$Cond_Fix
+
+```
+
+
+
+
+```{r}
+Digital_Belief_Voiced_Longer %>%
+  filter(!is.na(Cond_Fix))  %>%
+  mutate(Cond_Fix = fct_reorder(Cond_Fix, Trust_WS, .fun = "mean")) %>%
+  ggplot(., aes(x = Cond_Fix, y = Trust_WS, fill = Cond_Fix, col = Cond_Fix, na.rm = TRUE)) +
+    geom_flat_violin(position = position_nudge(x = .2, y = 0), alpha = .75, adjust = 4)+
+    geom_point(position=position_jitter(width = .15),size = 2, alpha = 1/2, color = "black")+
+      scale_fill_manual(values = c("#F8737F", "#FCBB6D", "#475C7A"))+
+    scale_colour_manual(values = c("#F8737F", "#FCBB6D", "#475C7A"))+
+    guides(fill = FALSE, col = FALSE, scale = "none") +
+  geom_boxplot(aes(x = as.numeric(Cond_Fix)+ 0.25, y = Trust_WS),outlier.shape = NA, alpha = 0.4, width = .1, colour = "BLACK") + 
+   stat_summary(fun.data = "mean_cl_normal", geom = "errorbar", width = 1/4, size = 1.25, color = "white") + 
+ stat_summary(fun = "mean", geom = "point",shape = 23, stroke = 1.25, size = 4, color = "white") + 
+  ggtitle("Trust In Recommendation by Recommender - Within Subjects") +
+  ylab('Trust In Recommendation')+ 
+  xlab('Recommender') +
+  theme_apa() + theme(plot.title = element_text(face = "bold", size = 16), axis.title = element_text(face = "bold", size = 14), panel.background = element_rect("transparent"), plot.background = element_rect("transparent", color = NA), legend.background = element_blank(), legend.box.background = element_rect("transparent", colour = 'white'), axis.text = element_text(colour = "white", size = 14, face = "bold"), axis.ticks = element_line(colour = "white"), axis.line = element_line(colour = "white")) +
+  scale_y_continuous(breaks=seq(-3,3,.5))
+
+ggsave("Study 4 - Trust Means - Within Subjects - Presentation.png", width = 12, height = 8)
+```
+
+
+
+### Believe
+
+```{r}
+Digital_Belief_Voiced_Longer %>%
+  filter(!is.na(Cond_Fix))  %>%
+  mutate(Cond_Fix = fct_reorder(Cond_Fix, Believe_WS, .fun = "mean")) %>%
+  ggplot(., aes(x = Cond_Fix, y = Believe_WS, fill = Cond_Fix, col = Cond_Fix, na.rm = TRUE)) +
+    geom_flat_violin(position = position_nudge(x = .2, y = 0), alpha = .75, adjust = 4)+
+    geom_point(position=position_jitter(width = .15),size = 2, alpha = 1/2, color = "black")+
+      scale_fill_manual(values = c("#F8737F", "#FCBB6D", "#475C7A"))+
+    scale_colour_manual(values = c("#F8737F", "#FCBB6D", "#475C7A"))+
+    guides(fill = FALSE, col = FALSE, scale = "none") +
+  geom_boxplot(aes(x = as.numeric(Cond_Fix)+ 0.25, y = Believe_WS),outlier.shape = NA, alpha = 0.4, width = .1, colour = "BLACK") + 
+   stat_summary(fun.data = "mean_cl_normal", geom = "errorbar", width = 1/4, size = 1.25, color = "white") + 
+ stat_summary(fun = "mean", geom = "point",shape = 23, stroke = 1.25, size = 4, color = "white") + 
+  ggtitle("Belief In Recommendation by Recommender - Within Subjects") +
+  ylab('Belief In Recommendation')+ 
+  xlab('Recommender') +
+  theme_apa() + theme(plot.title = element_text(face = "bold", size = 16), axis.title = element_text(face = "bold", size = 14), panel.background = element_rect("transparent"), plot.background = element_rect("transparent", color = NA), legend.background = element_blank(), legend.box.background = element_rect("transparent", colour = 'white'), axis.text = element_text(colour = "white", size = 14, face = "bold"), axis.ticks = element_line(colour = "white"), axis.line = element_line(colour = "white")) +
+  scale_y_continuous(breaks=seq(-3,3,.5))
+
+ggsave("Study 4 - Belief Means - Within Subject.png", width = 12, height = 8)
+```
+

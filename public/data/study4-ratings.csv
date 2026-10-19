@@ -1,0 +1,560 @@
+participant,age_group,gender,race,education,religiosity,first_recommender,order,trust_first,belief_first,warmth_first,competence_first,humanlike_first,appropriate_ai,trust_humanlike,belief_humanlike,warmth_humanlike,competence_humanlike,humanlike_humanlike,appropriate_humanlike,compare_humanlike,trust_standard,belief_standard,warmth_standard,competence_standard,humanlike_standard,appropriate_standard,compare_standard,trust_doctor,belief_doctor,warmth_doctor,competence_doctor,compare_doctor
+P001,,,,,,Standard AI,NDH,0,3,4,4,2,3,0,3,4,4,2,0,2,0,3,4,4,2,3,1,0,3,4,4,1
+P002,,,,,,Humanlike AI,HND,2,2,3,3,3,1,2,2,3,3,3,1,,2,2,2,3,2,2,1,,,,,
+P003,18-44,Man,White,No college degree,Not at all to slightly,Humanlike AI,HDN,0,0,2,2,2,0,0,0,2,2,2,0,2,0,-2,2,3,3,1,1,0,1,3,2,1
+P004,45-59,Woman,White,College degree or more,Moderately,Standard AI,NDH,3,3,3,3,2,3,3,3,4,4,4,3,3,3,3,3,3,2,3,3,3,3,4,4,3
+P005,18-44,Man,White,College degree or more,Moderately,Humanlike AI,HND,2,3,3,3,3,-1,2,3,3,3,3,-1,2,1,2,1,3,4,1,2,-3,0,3,2,2
+P006,45-59,Woman,Another or multiple,College degree or more,Moderately,Humanlike AI,HND,2,2,2,2,2,0,2,2,2,2,2,0,1,2,2,2,2,2,0,1,0,0,2,2,1
+P007,18-44,Woman,White,College degree or more,Moderately,Doctor,DHN,0,0,1,1,,0,0,0,1,2,2,0,1,0,0,2,2,2,0,1,0,0,1,1,1
+P008,,,,,,Humanlike AI,HND,2,3,3,3,3,3,2,3,3,3,3,3,2,,,,,,,,,,,,
+P009,45-59,Woman,White,No college degree,Not at all to slightly,Humanlike AI,HND,-1,-2,3,3,1,0,-1,-2,3,3,1,0,0,1,1,4,4,4,0,2,1,1,4,4,2
+P010,18-44,Man,Another or multiple,No college degree,Moderately,Doctor,DHN,-2,1,3,0,,-1,-2,-2,1,2,2,-3,2,-3,1,1,3,3,-3,-1,-2,1,3,0,1
+P011,45-59,Woman,White,College degree or more,Moderately,Humanlike AI,HDN,2,2,2,3,3,1,2,2,2,3,3,1,2,0,0,0,2,0,1,1,2,2,3,3,1
+P012,18-44,Woman,White,No college degree,Moderately,Humanlike AI,HDN,0,1,0,1,0,-2,0,1,0,1,0,-2,0,-3,-3,0,0,0,-3,3,1,3,2,2,-3
+P013,60-69,Woman,Another or multiple,No college degree,More than moderately,Standard AI,NHD,0,0,2,2,2,0,0,0,2,2,2,0,1,0,0,2,2,2,0,1,0,0,2,2,0
+P014,70+,Woman,White,College degree or more,More than moderately,Standard AI,NDH,-3,-3,0,0,0,-3,-3,-3,0,0,0,-3,-3,-3,-3,0,0,0,-3,-3,-3,-3,0,0,-3
+P015,45-59,Man,White,No college degree,Moderately,Humanlike AI,HDN,1,1,2,3,1,0,1,1,2,3,1,0,0,2,1,2,3,2,1,1,1,0,2,3,0
+P016,18-44,Man,White,College degree or more,Not at all to slightly,Humanlike AI,HND,0,0,1,1,1,0,0,0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,1,1,0
+P017,60-69,Woman,White,No college degree,Moderately,Doctor,DHN,0,1,2,2,,0,2,-1,3,1,3,1,2,1,1,1,2,2,-2,2,0,1,2,2,2
+P018,45-59,Man,White,College degree or more,More than moderately,Doctor,DNH,3,2,4,3,,1,2,-1,4,4,2,2,2,-1,-3,2,1,1,-2,-1,3,2,4,3,3
+P019,18-44,Man,White,College degree or more,Not at all to slightly,Standard AI,NDH,3,2,4,4,4,3,1,2,4,4,4,3,3,3,2,4,4,4,3,3,2,3,4,3,2
+P020,18-44,Man,White,No college degree,Not at all to slightly,Humanlike AI,HDN,1,0,3,3,1,-2,1,0,3,3,1,-2,1,-2,-3,3,2,4,-1,1,-2,0,1,1,0
+P021,45-59,Man,White,No college degree,Not at all to slightly,Standard AI,NDH,2,2,2,4,2,2,2,2,2,2,2,0,0,2,2,2,4,2,2,0,2,2,2,2,0
+P022,,,,,,Humanlike AI,HND,-1,-2,2,2,1,1,-1,-2,2,2,1,1,-2,-1,-2,1,3,3,0,1,0,-1,2,3,2
+P023,45-59,Woman,White,No college degree,More than moderately,Humanlike AI,HND,3,3,4,4,4,3,3,3,4,4,4,3,2,3,3,4,4,4,3,3,3,3,4,4,3
+P024,18-44,Man,Another or multiple,No college degree,Not at all to slightly,Humanlike AI,HND,3,3,4,4,4,3,3,3,4,4,4,3,3,3,3,4,4,0,3,3,3,3,4,4,3
+P025,18-44,Woman,Another or multiple,No college degree,Not at all to slightly,Humanlike AI,HDN,1,2,2,3,2,0,1,2,2,3,2,0,1,-1,-2,0,0,0,-3,-2,3,3,4,4,2
+P026,,,,,,Standard AI,NDH,1,2,0,1,0,1,2,2,2,2,2,2,0,1,2,0,1,0,1,0,2,2,2,2,0
+P027,,,,,,Standard AI,NDH,1,1,0,2,1,1,3,2,3,4,4,2,0,1,1,0,2,1,1,0,3,3,4,4,0
+P028,18-44,Woman,White,No college degree,Not at all to slightly,Standard AI,NDH,0,-2,1,1,0,0,1,2,3,3,3,0,2,0,-2,1,1,0,0,2,1,1,3,2,0
+P029,18-44,Woman,White,No college degree,Moderately,Standard AI,NHD,1,2,2,4,4,1,3,2,4,3,4,3,3,1,2,2,4,4,1,2,3,1,2,3,3
+P030,18-44,Man,White,No college degree,Moderately,Humanlike AI,HDN,0,-1,1,2,3,-1,0,-1,1,2,3,-1,2,0,-1,3,1,2,-2,-1,-1,0,3,1,2
+P031,,,,,,Humanlike AI,HDN,1,2,2,2,2,1,1,2,2,2,2,1,2,,,,,,,,3,3,4,4,3
+P032,18-44,Man,White,No college degree,Moderately,Standard AI,NHD,-3,-2,3,4,2,-3,-3,-2,3,4,2,-3,1,-3,-2,3,4,2,-3,0,-3,-2,2,3,2
+P033,60-69,Woman,White,No college degree,Not at all to slightly,Standard AI,NHD,-3,-2,0,1,1,-3,-2,-2,1,0,0,-3,1,-3,-2,0,1,1,-3,1,-2,-2,1,1,0
+P034,,,,,,Standard AI,NDH,-1,-1,1,2,0,0,1,1,1,1,1,1,1,-1,-1,1,2,0,0,1,0,1,1,1,0
+P035,18-44,Woman,White,No college degree,Not at all to slightly,Humanlike AI,HDN,0,0,1,1,1,0,0,0,1,1,1,0,1,0,0,1,1,1,0,1,0,0,1,1,1
+P036,18-44,Man,White,College degree or more,Moderately,Doctor,DHN,1,0,2,2,,0,1,0,2,2,2,0,0,1,0,2,2,2,0,0,1,0,2,2,0
+P037,45-59,Man,White,No college degree,More than moderately,Doctor,DHN,3,1,3,4,,-1,3,2,4,4,4,3,1,-1,-1,0,0,0,3,3,3,1,3,4,-1
+P038,45-59,Woman,White,No college degree,Moderately,Humanlike AI,HDN,0,0,2,2,2,0,0,0,2,2,2,0,0,0,0,2,2,2,0,0,0,0,2,2,0
+P039,70+,Man,White,No college degree,More than moderately,Doctor,DNH,1,1,3,1,,0,1,1,2,2,2,0,0,1,1,2,2,2,0,0,1,1,3,1,0
+P040,18-44,Man,White,No college degree,Not at all to slightly,Standard AI,NHD,1,1,0,2,1,-1,2,2,2,3,4,2,1,1,1,0,2,1,-1,-1,3,2,4,4,1
+P041,70+,Man,White,College degree or more,Moderately,Doctor,DHN,3,3,4,4,,3,3,3,4,4,4,3,3,2,-1,1,1,2,-1,1,3,3,4,4,2
+P042,60-69,Woman,White,No college degree,Not at all to slightly,Humanlike AI,HDN,1,1,1,1,1,0,1,1,1,1,1,0,1,0,0,0,0,0,-2,2,1,1,2,2,2
+P043,18-44,Woman,White,No college degree,More than moderately,Standard AI,NDH,1,1,2,2,2,0,1,1,2,2,2,0,1,1,1,2,2,2,0,0,0,0,2,2,0
+P044,70+,Man,White,No college degree,Moderately,Humanlike AI,HND,0,0,1,1,1,0,0,0,1,1,1,0,2,0,0,1,1,1,0,2,2,2,2,2,-1
+P045,18-44,Man,White,No college degree,Not at all to slightly,Humanlike AI,HND,2,2,3,2,2,1,2,2,3,2,2,1,0,0,1,0,1,0,0,2,1,2,2,2,1
+P046,18-44,Man,Another or multiple,No college degree,Not at all to slightly,Standard AI,NHD,-2,2,0,0,0,0,-2,2,0,0,1,0,2,-2,2,0,0,0,0,2,-2,2,0,0,-2
+P047,,,,,,Humanlike AI,HDN,3,1,0,2,1,0,3,1,0,2,1,0,3,3,3,2,0,2,1,3,3,3,3,3,3
+P048,45-59,Man,White,College degree or more,More than moderately,Standard AI,NHD,3,3,4,4,4,3,3,3,4,4,4,3,3,3,3,4,4,4,3,3,3,3,4,4,3
+P049,,,,,,Standard AI,NDH,1,1,1,1,1,1,2,2,2,1,2,1,1,1,1,1,1,1,1,0,1,2,1,1,1
+P050,45-59,Man,Another or multiple,College degree or more,Not at all to slightly,Doctor,DHN,1,1,2,2,,1,1,1,2,2,3,1,2,1,1,3,2,3,0,1,1,1,2,2,2
+P051,,,,,,Doctor,DHN,0,1,2,2,,0,0,2,2,2,2,0,0,0,0,2,2,2,0,0,0,1,2,2,0
+P052,18-44,Woman,Another or multiple,College degree or more,Moderately,Humanlike AI,HND,2,3,4,3,3,2,2,3,4,3,3,2,2,2,2,4,4,4,3,3,2,2,4,3,2
+P053,60-69,Woman,White,No college degree,Moderately,Standard AI,NDH,2,2,3,3,3,2,3,3,4,4,4,3,3,2,2,3,3,3,2,1,3,3,4,4,3
+P054,18-44,Woman,White,No college degree,More than moderately,Doctor,DHN,2,2,3,3,,-3,0,1,0,1,1,-3,3,-3,-3,0,0,0,-3,3,2,2,3,3,-3
+P055,,,,,,Standard AI,NDH,0,0,2,2,2,0,,,,,,,,0,0,2,2,2,0,1,,,,,
+P056,,,,,,Doctor,DNH,2,2,3,3,,1,,,,,,,,,,,,,,,2,2,3,3,1
+P057,70+,Man,White,College degree or more,Not at all to slightly,Standard AI,NHD,2,1,1,1,1,0,1,1,2,2,3,1,2,2,1,1,1,1,0,1,1,1,3,3,1
+P058,60-69,Woman,White,College degree or more,Moderately,Standard AI,NDH,0,1,0,1,0,0,0,1,0,0,1,-3,3,0,1,0,1,0,0,3,2,2,2,1,-2
+P059,18-44,Woman,Another or multiple,No college degree,Moderately,Humanlike AI,HND,2,2,0,1,1,2,2,2,0,1,1,2,3,-1,-2,0,0,0,-2,3,3,3,4,4,-3
+P060,45-59,Woman,White,No college degree,More than moderately,Humanlike AI,HDN,0,3,4,3,1,0,0,3,4,3,1,0,3,-3,-3,0,0,0,-3,-3,3,3,4,3,0
+P061,18-44,Woman,White,No college degree,Not at all to slightly,Standard AI,NHD,0,0,2,2,2,1,0,0,2,2,2,0,1,0,0,2,2,2,1,-1,1,1,3,3,2
+P062,45-59,Man,Another or multiple,No college degree,Not at all to slightly,Doctor,DHN,3,2,4,4,,2,2,1,2,2,2,0,2,0,0,1,1,1,-1,-2,3,2,4,4,2
+P063,45-59,Woman,White,No college degree,Moderately,Standard AI,NDH,0,0,2,2,2,0,0,0,2,2,2,0,1,0,0,2,2,2,0,1,0,0,2,2,1
+P064,60-69,Woman,Another or multiple,No college degree,Not at all to slightly,Standard AI,NHD,1,0,2,1,1,0,1,1,2,2,3,-1,3,1,0,2,1,1,0,3,1,1,2,2,3
+P065,70+,Man,White,No college degree,Not at all to slightly,Standard AI,NHD,1,-2,1,1,1,0,3,3,3,3,3,2,1,1,-2,1,1,1,0,1,3,3,4,4,1
+P066,,,,,,Humanlike AI,HDN,0,1,3,2,2,1,0,1,3,2,2,1,2,,,,,,,,2,2,3,3,2
+P067,18-44,Man,White,No college degree,Not at all to slightly,Doctor,DNH,-3,-2,3,2,,-3,0,-1,1,1,1,0,3,0,-2,1,2,2,-2,2,-3,-2,3,2,2
+P068,70+,Man,White,No college degree,Not at all to slightly,Standard AI,NHD,2,2,3,3,2,2,1,1,3,3,3,2,0,2,2,3,3,2,2,0,2,2,3,3,2
+P069,60-69,Man,White,No college degree,Moderately,Standard AI,NHD,1,0,2,2,1,0,1,1,3,1,1,0,1,1,0,2,2,1,0,0,1,1,3,2,0
+P070,18-44,Woman,White,No college degree,Moderately,Doctor,DHN,1,1,3,3,,1,-3,1,3,2,2,0,-1,0,-1,3,3,3,-1,2,1,1,3,3,1
+P071,18-44,Man,Another or multiple,College degree or more,More than moderately,Humanlike AI,HND,3,3,4,4,4,3,3,3,4,4,4,3,3,3,3,4,4,4,3,3,3,3,4,4,3
+P072,,,,,,Humanlike AI,HDN,3,3,2,3,2,1,3,3,2,3,2,1,3,2,2,0,0,0,1,3,3,3,2,4,3
+P073,18-44,Man,White,College degree or more,More than moderately,Humanlike AI,HND,2,3,4,3,3,2,2,3,4,3,3,2,3,2,2,3,4,4,2,3,2,3,3,2,3
+P074,18-44,Man,White,College degree or more,More than moderately,Doctor,DNH,3,3,4,4,,3,3,3,4,4,4,3,3,3,3,4,4,4,3,3,3,3,4,4,3
+P075,18-44,Woman,Another or multiple,No college degree,Moderately,Humanlike AI,HDN,3,3,4,4,4,3,3,3,4,4,4,3,3,3,3,4,4,4,-3,3,3,3,4,4,3
+P076,60-69,Woman,White,No college degree,More than moderately,Humanlike AI,HND,-3,-3,4,4,0,-3,-3,-3,4,4,0,-3,-3,-3,-3,4,0,0,-3,-3,-3,-3,4,0,-3
+P077,70+,Woman,White,College degree or more,More than moderately,Doctor,DNH,0,0,1,1,,0,0,0,2,2,2,0,-1,0,0,1,1,1,0,-1,0,0,1,1,-1
+P078,18-44,Woman,Another or multiple,College degree or more,Moderately,Humanlike AI,HND,0,0,2,2,2,0,0,0,2,2,2,0,0,0,0,2,2,2,0,0,0,0,2,2,-1
+P079,18-44,Woman,White,No college degree,More than moderately,Standard AI,NHD,2,2,0,0,0,-2,2,2,3,3,3,2,1,2,2,0,0,0,-2,3,3,3,4,4,0
+P080,18-44,Woman,White,College degree or more,More than moderately,Humanlike AI,HND,3,3,4,4,4,3,3,3,4,4,4,3,3,3,3,4,4,4,3,3,3,3,4,4,3
+P081,45-59,Woman,Another or multiple,No college degree,More than moderately,Doctor,DNH,1,1,2,2,,1,2,1,1,3,1,-3,3,1,1,0,1,1,-2,3,1,1,2,2,2
+P082,45-59,Woman,Another or multiple,College degree or more,Not at all to slightly,Doctor,DHN,0,0,2,2,,-2,0,0,2,2,2,0,0,0,0,2,2,2,0,,0,0,2,2,0
+P083,18-44,Woman,Another or multiple,College degree or more,Moderately,Standard AI,NDH,3,3,4,4,4,3,3,3,4,4,4,3,3,3,3,4,4,4,3,3,3,3,4,4,3
+P084,18-44,Man,White,College degree or more,More than moderately,Doctor,DHN,3,2,3,3,,3,2,3,3,2,2,3,3,-2,-2,1,1,0,1,-1,3,2,3,3,2
+P085,70+,Woman,White,College degree or more,Moderately,Humanlike AI,HND,0,0,2,2,2,0,0,0,2,2,2,0,-1,-2,-2,0,0,0,-3,-2,1,1,2,2,1
+P086,18-44,Woman,White,No college degree,Not at all to slightly,Humanlike AI,HDN,1,1,0,2,1,2,1,1,0,2,1,2,3,-1,-1,0,2,0,-1,1,1,1,1,2,3
+P087,18-44,Woman,Another or multiple,College degree or more,Moderately,Doctor,DHN,3,3,4,4,,3,3,3,4,4,4,3,3,2,3,3,3,0,3,3,3,3,4,4,3
+P088,70+,Woman,White,No college degree,Not at all to slightly,Humanlike AI,HND,0,0,2,1,0,0,0,0,2,1,0,0,1,-2,-2,0,1,0,0,1,0,0,3,2,-1
+P089,18-44,Woman,Another or multiple,No college degree,More than moderately,Standard AI,NHD,1,2,4,3,0,3,3,1,3,0,2,0,1,1,2,4,3,0,3,1,3,3,4,4,2
+P090,60-69,Man,White,No college degree,More than moderately,Doctor,DHN,2,2,3,3,,2,3,3,4,4,4,3,2,3,3,4,4,4,3,3,2,2,3,3,2
+P091,45-59,Woman,White,No college degree,More than moderately,Standard AI,NDH,3,3,4,4,4,3,3,3,4,4,4,3,3,3,3,4,4,4,3,3,3,3,4,4,3
+P092,18-44,,Another or multiple,College degree or more,Not at all to slightly,Humanlike AI,HND,1,2,0,1,1,2,1,2,0,1,1,2,1,-3,1,0,0,0,-3,3,2,2,2,1,1
+P093,18-44,Man,White,No college degree,More than moderately,Humanlike AI,HND,0,0,2,2,2,0,0,0,2,2,2,0,1,0,0,2,2,2,0,1,0,0,2,2,1
+P094,45-59,Woman,White,No college degree,More than moderately,Humanlike AI,HDN,2,2,2,3,3,0,2,2,2,3,3,0,2,2,1,4,2,4,-1,2,0,1,4,3,2
+P095,18-44,Woman,White,College degree or more,Moderately,Standard AI,NHD,0,-2,0,0,0,-2,-2,-3,0,0,0,-2,0,0,-2,0,0,0,-2,0,-2,-2,0,0,0
+P096,18-44,Woman,Another or multiple,College degree or more,Moderately,Humanlike AI,HND,1,1,3,3,3,2,1,1,3,3,3,2,2,-1,-1,1,1,0,2,-1,1,1,3,3,3
+P097,18-44,Woman,White,No college degree,Not at all to slightly,Humanlike AI,HND,-2,-3,0,0,0,-3,-2,-3,0,0,0,-3,3,0,0,0,1,0,-3,3,0,0,2,2,
+P098,45-59,Man,White,No college degree,Moderately,Doctor,DHN,2,1,3,3,,2,2,2,2,2,2,1,2,1,1,2,2,2,0,1,2,1,3,3,1
+P099,18-44,Woman,White,College degree or more,Moderately,Humanlike AI,HND,2,2,2,3,3,-1,2,2,2,3,3,-1,1,0,2,1,3,1,1,1,1,1,2,2,2
+P100,,,,,,Humanlike AI,HDN,0,2,3,3,2,2,0,2,3,3,2,2,0,,,,,,,,,,,,
+P101,18-44,Woman,Another or multiple,No college degree,Moderately,Humanlike AI,HDN,0,0,2,2,2,0,0,0,2,2,2,0,0,0,0,2,2,2,0,0,0,0,2,2,0
+P102,,,,,,Humanlike AI,HND,0,1,3,1,2,0,0,1,3,1,2,0,2,0,0,3,3,3,1,0,,,,,
+P103,18-44,Woman,White,No college degree,Not at all to slightly,Humanlike AI,HDN,0,0,2,2,2,0,0,0,2,2,2,0,1,-1,-1,0,0,0,-2,1,0,0,2,2,1
+P104,60-69,Woman,White,No college degree,More than moderately,Standard AI,NDH,1,1,1,1,1,-1,1,-1,1,1,1,-1,-2,1,1,1,1,1,-1,1,1,-1,1,1,-3
+P105,45-59,Woman,White,No college degree,Moderately,Humanlike AI,HND,2,0,2,1,1,0,2,0,2,1,1,0,1,-1,-1,0,1,0,-1,2,0,2,2,2,-1
+P106,45-59,Man,Another or multiple,College degree or more,More than moderately,Humanlike AI,HND,0,2,2,2,2,1,0,2,2,2,2,1,3,2,2,4,4,3,2,3,1,3,2,2,3
+P107,,,,,,Humanlike AI,HDN,3,3,4,4,4,3,3,3,4,4,4,3,-3,,,,,,,,3,3,4,4,-2
+P108,18-44,Woman,Another or multiple,No college degree,More than moderately,Humanlike AI,HDN,3,3,3,4,3,3,3,3,3,4,3,3,1,1,3,0,4,0,1,3,3,3,3,4,1
+P109,18-44,Man,Another or multiple,No college degree,Not at all to slightly,Doctor,DHN,2,3,4,3,,3,3,3,4,4,4,3,3,1,1,1,2,1,2,1,2,3,4,3,3
+P110,60-69,Man,White,No college degree,More than moderately,Humanlike AI,HND,3,3,3,3,3,3,3,3,3,3,3,3,0,3,3,3,3,3,3,0,3,3,3,3,0
+P111,18-44,Man,White,College degree or more,More than moderately,Doctor,DNH,2,3,3,4,,2,2,3,3,4,4,2,3,3,2,3,4,4,3,3,2,3,3,4,3
+P112,18-44,Woman,Another or multiple,No college degree,Moderately,Standard AI,NHD,-3,-3,1,1,1,-2,-3,-2,1,1,1,-2,2,-3,-3,1,1,1,-2,2,-1,-2,1,1,1
+P113,,,,,,Humanlike AI,HDN,-3,-3,0,0,0,-3,-3,-3,0,0,0,-3,2,,,,,,,,,,,,
+P114,18-44,Man,Another or multiple,No college degree,More than moderately,Humanlike AI,HND,0,0,1,0,1,-1,0,0,1,0,1,-1,0,-3,-3,0,0,0,-3,0,0,0,1,1,0
+P115,18-44,Woman,White,No college degree,Moderately,Standard AI,NHD,3,3,3,3,3,2,3,3,3,3,4,3,3,3,3,3,3,3,2,3,3,2,3,4,3
+P116,70+,Woman,White,No college degree,Not at all to slightly,Humanlike AI,HDN,0,1,2,2,0,-2,0,1,2,2,0,-2,2,-1,-1,0,0,0,0,3,0,0,1,2,2
+P117,18-44,Woman,Another or multiple,College degree or more,More than moderately,Standard AI,NHD,2,3,3,3,3,2,2,3,3,3,2,2,3,2,3,3,3,3,2,2,3,3,4,3,3
+P118,18-44,Man,White,No college degree,More than moderately,Humanlike AI,HND,1,2,3,3,3,2,1,2,3,3,3,2,1,2,3,3,3,2,2,1,1,2,3,3,1
+P119,45-59,Woman,White,No college degree,Moderately,Doctor,DHN,2,2,3,3,,2,0,2,3,3,3,1,0,0,1,2,1,1,0,1,2,2,3,3,0
+P120,45-59,Woman,White,College degree or more,More than moderately,Standard AI,NDH,0,0,2,2,2,0,0,0,3,3,2,0,2,0,0,2,2,2,0,1,0,0,2,2,0
+P121,60-69,Woman,White,No college degree,More than moderately,Doctor,DHN,1,0,1,2,,0,0,0,2,2,3,0,1,0,0,1,1,1,0,1,1,0,1,2,-1
+P122,18-44,Woman,White,No college degree,More than moderately,Humanlike AI,HND,3,3,4,4,2,0,3,3,4,4,2,0,3,0,0,0,2,0,0,0,3,3,4,4,3
+P123,70+,Man,White,No college degree,Not at all to slightly,Standard AI,NHD,0,3,1,1,3,-2,0,2,1,1,2,0,1,0,3,1,1,3,-2,1,0,1,1,3,0
+P124,45-59,Man,White,College degree or more,Not at all to slightly,Doctor,DNH,3,2,3,3,,2,2,3,4,3,4,2,2,0,0,0,0,0,0,-2,3,2,3,3,2
+P125,18-44,Woman,White,No college degree,Moderately,Doctor,DNH,1,-1,3,3,,2,1,2,4,4,3,3,3,0,0,3,3,3,-1,1,1,-1,3,3,1
+P126,,,,,,Standard AI,NHD,0,1,3,3,1,-1,,,,,,,,0,1,3,3,1,-1,2,,,,,
+P127,60-69,Man,White,College degree or more,Moderately,Humanlike AI,HND,2,1,3,2,2,2,2,1,3,2,2,2,1,-1,0,0,1,0,-1,2,2,2,3,3,2
+P128,70+,Woman,White,College degree or more,More than moderately,Standard AI,NHD,2,2,2,2,2,2,2,2,3,3,4,2,1,2,2,2,2,2,2,0,3,3,4,4,1
+P129,,,,,,Humanlike AI,HND,3,2,4,4,4,0,3,2,4,4,4,0,2,0,1,0,1,0,0,2,,,,,
+P130,60-69,Man,White,College degree or more,Not at all to slightly,Standard AI,NDH,1,1,1,1,2,0,1,1,1,1,2,0,0,1,1,1,1,2,0,0,1,0,1,1,0
+P131,70+,Man,White,No college degree,Not at all to slightly,Standard AI,NDH,0,0,1,1,0,0,1,1,3,3,3,1,1,0,0,1,1,0,0,-1,0,0,2,2,1
+P132,18-44,Man,White,College degree or more,More than moderately,Standard AI,NDH,3,3,4,4,4,3,3,3,4,4,4,3,3,3,3,4,4,4,3,3,3,3,4,4,3
+P133,18-44,Woman,White,No college degree,Moderately,Doctor,DNH,0,1,1,2,,0,1,0,1,1,1,0,1,0,1,0,2,0,0,2,0,1,1,2,1
+P134,18-44,Woman,Another or multiple,College degree or more,More than moderately,Doctor,DHN,2,2,3,3,,2,2,2,3,3,3,2,3,2,2,3,3,3,2,3,2,2,3,3,3
+P135,70+,Man,White,No college degree,Not at all to slightly,Standard AI,NDH,0,1,1,2,0,-2,2,2,2,2,2,0,0,0,1,1,2,0,-2,2,2,2,2,2,-2
+P136,18-44,Man,White,No college degree,Not at all to slightly,Doctor,DNH,0,0,1,1,,0,0,0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,1,1,0
+P137,,,,,,Humanlike AI,HDN,-3,,2,2,3,-1,-3,,2,2,3,-1,0,,,,,,,,-3,,,2,0
+P138,18-44,Woman,Another or multiple,No college degree,More than moderately,Doctor,DNH,1,1,4,4,,0,0,0,1,1,2,0,0,-2,-2,1,1,0,0,0,1,1,4,4,0
+P139,18-44,Woman,Another or multiple,College degree or more,More than moderately,Humanlike AI,HDN,3,3,4,4,4,3,3,3,4,4,4,3,0,3,3,4,4,4,3,3,3,3,4,4,3
+P140,45-59,Man,White,No college degree,More than moderately,Humanlike AI,HND,1,0,2,2,1,1,1,0,2,2,1,1,1,1,1,3,3,3,1,1,3,3,4,3,2
+P141,60-69,Man,White,No college degree,Not at all to slightly,Humanlike AI,HDN,3,3,4,4,4,2,3,3,4,4,4,2,2,1,1,1,1,1,0,2,3,2,4,4,0
+P142,45-59,Woman,White,No college degree,Not at all to slightly,Humanlike AI,HND,3,3,3,3,3,3,3,3,3,3,3,3,2,1,2,1,2,0,1,1,2,3,1,3,1
+P143,18-44,Woman,White,College degree or more,Not at all to slightly,Humanlike AI,HND,1,1,2,2,2,1,1,1,2,2,2,1,1,0,0,1,1,1,0,0,1,1,2,2,1
+P144,18-44,Man,Another or multiple,College degree or more,More than moderately,Doctor,DNH,2,2,3,3,,2,2,2,4,4,3,3,3,2,2,3,3,3,2,3,2,2,3,3,3
+P145,,,,,,Humanlike AI,HND,-3,-3,0,0,0,-3,-3,-3,0,0,0,-3,2,-3,-3,0,0,0,-3,1,-3,-3,0,0,1
+P146,60-69,Woman,Another or multiple,No college degree,Moderately,Humanlike AI,HND,1,1,1,1,2,1,1,1,1,1,2,1,0,1,1,3,3,3,1,0,1,1,3,3,1
+P147,,,,,,Standard AI,NDH,0,0,2,2,2,-2,,,,,,,,0,0,2,2,2,-2,1,0,0,2,2,1
+P148,,,,,,Humanlike AI,HDN,3,3,4,3,3,2,3,3,4,3,3,2,3,,,,,,,,3,3,3,3,3
+P149,,,,,,Humanlike AI,HND,0,2,3,2,3,2,0,2,3,2,3,2,0,-2,-2,1,1,1,-2,3,,,,,
+P150,18-44,Woman,White,No college degree,Moderately,Humanlike AI,HND,1,2,3,3,2,2,1,2,3,3,2,2,1,0,0,1,1,1,0,2,2,2,3,3,1
+P151,45-59,Woman,White,No college degree,More than moderately,Standard AI,NHD,0,0,0,0,0,-3,0,-3,0,0,0,-3,-2,0,0,0,0,0,-3,-2,-2,-3,0,0,-2
+P152,18-44,Woman,White,No college degree,Not at all to slightly,Doctor,DNH,1,2,2,2,,-1,2,2,2,2,2,-1,2,1,0,3,2,3,1,1,1,2,2,2,1
+P153,45-59,Woman,Another or multiple,No college degree,More than moderately,Standard AI,NHD,3,3,4,4,4,3,3,3,4,4,4,3,2,3,3,4,4,4,3,2,3,3,4,4,3
+P154,,Man,Another or multiple,No college degree,More than moderately,Standard AI,NDH,2,0,2,3,2,2,2,3,4,3,3,0,2,2,0,2,3,2,2,2,1,2,2,4,2
+P155,70+,Man,White,No college degree,Not at all to slightly,Standard AI,NHD,2,2,2,4,2,3,2,2,2,3,2,3,3,2,2,2,4,2,3,3,2,2,2,3,3
+P156,18-44,Man,Another or multiple,No college degree,Not at all to slightly,Standard AI,NDH,0,1,2,1,0,-1,-2,-1,1,2,3,-2,1,0,1,2,1,0,-1,3,1,-1,2,3,2
+P157,18-44,Woman,Another or multiple,No college degree,Moderately,Standard AI,NHD,2,1,0,3,0,2,1,1,1,3,1,2,0,2,1,0,3,0,2,0,1,1,2,3,0
+P158,45-59,Woman,White,No college degree,Moderately,Humanlike AI,HND,-2,-2,1,2,1,1,-2,-2,1,2,1,1,1,1,1,2,2,1,0,1,0,0,1,2,1
+P159,,,,,,Humanlike AI,HDN,0,0,2,2,2,0,0,0,2,2,2,0,1,,,,,,,,1,0,2,2,2
+P160,18-44,Woman,Another or multiple,No college degree,Moderately,Humanlike AI,HDN,1,1,3,3,3,1,1,1,3,3,3,1,3,-3,-3,0,0,0,-3,-3,1,1,3,3,3
+P161,45-59,Woman,White,No college degree,Moderately,Standard AI,NHD,2,2,3,3,3,2,-1,3,2,2,3,0,2,2,2,3,3,3,2,3,2,0,3,3,2
+P162,60-69,Woman,White,No college degree,Moderately,Standard AI,NHD,1,1,0,2,1,1,1,1,1,2,1,1,3,1,1,0,2,1,1,3,1,1,2,2,1
+P163,18-44,Woman,White,No college degree,Not at all to slightly,Doctor,DNH,2,3,3,2,,1,0,0,1,1,1,-2,3,-2,-1,0,0,0,-2,2,2,3,3,2,0
+P164,18-44,Woman,White,No college degree,Not at all to slightly,Doctor,DHN,3,3,3,3,,2,3,3,4,4,4,3,3,2,2,3,3,2,2,2,3,3,3,3,2
+P165,,,,,,Humanlike AI,HDN,2,1,3,3,4,1,2,1,3,3,4,1,2,,,,,,,,,,,,
+P166,18-44,Woman,White,No college degree,Moderately,Doctor,DNH,0,0,2,2,,0,0,0,3,2,3,1,0,0,0,2,2,2,0,1,0,0,2,2,1
+P167,18-44,Man,White,College degree or more,Moderately,Doctor,DHN,1,2,1,2,,1,1,2,2,3,2,2,2,1,1,2,2,2,1,1,1,2,1,2,1
+P168,60-69,Man,White,No college degree,More than moderately,Humanlike AI,HND,2,3,3,4,3,2,2,3,3,4,3,2,2,2,2,3,3,3,2,1,3,2,4,3,2
+P169,18-44,Woman,Another or multiple,College degree or more,Not at all to slightly,Humanlike AI,HDN,2,0,3,3,4,2,2,0,3,3,4,2,3,1,1,2,2,2,1,1,1,1,2,3,3
+P170,18-44,Woman,Another or multiple,College degree or more,More than moderately,Standard AI,NHD,-1,-1,0,1,0,0,1,1,1,1,0,-2,0,-1,-1,0,1,0,0,0,-2,-2,1,1,0
+P171,60-69,Woman,White,No college degree,More than moderately,Standard AI,NHD,1,1,3,3,3,1,3,3,4,4,4,3,0,1,1,3,3,3,1,0,3,3,4,4,0
+P172,,,,,,Doctor,DHN,3,3,4,4,,3,,,,,,,,,,,,,,,3,3,4,4,3
+P173,18-44,Woman,White,No college degree,Moderately,Humanlike AI,HDN,1,1,2,2,2,0,1,1,2,2,2,0,0,0,0,0,0,0,0,0,1,1,2,2,0
+P174,70+,Woman,White,No college degree,More than moderately,Standard AI,NHD,2,2,2,2,2,1,2,2,2,2,2,2,2,2,2,2,2,2,1,2,2,2,3,3,1
+P175,60-69,Man,White,No college degree,Not at all to slightly,Humanlike AI,HDN,2,2,3,3,2,2,2,2,3,3,2,2,0,2,2,2,2,1,0,0,2,2,3,3,0
+P176,45-59,Woman,White,No college degree,Moderately,Humanlike AI,HND,0,0,1,2,0,-2,0,0,1,2,0,-2,-1,0,0,0,1,0,0,,0,-2,1,2,-1
+P177,18-44,Man,White,No college degree,More than moderately,Doctor,DNH,1,2,3,3,,2,1,2,4,3,3,3,3,-1,-2,1,0,0,0,-1,1,2,3,3,2
+P178,60-69,Woman,White,College degree or more,Not at all to slightly,Humanlike AI,HDN,1,2,1,1,2,1,1,2,1,1,2,1,0,1,1,0,1,0,1,2,1,1,1,2,-1
+P179,18-44,Woman,White,College degree or more,Moderately,Doctor,DNH,1,1,3,3,,1,1,1,3,4,3,1,1,-1,-1,1,1,1,-2,1,1,1,3,3,-1
+P180,18-44,Man,White,No college degree,More than moderately,Doctor,DHN,-1,2,0,2,,2,-1,-2,0,2,4,-1,3,-3,1,1,3,2,-3,2,-1,2,0,2,1
+P181,18-44,Man,Another or multiple,College degree or more,More than moderately,Standard AI,NDH,2,2,3,3,3,2,2,2,3,3,3,1,3,2,2,3,3,3,2,3,2,2,3,3,3
+P182,18-44,Woman,White,No college degree,Not at all to slightly,Standard AI,NDH,1,1,1,1,2,0,2,1,3,3,3,0,1,1,1,1,1,2,0,2,1,1,3,3,1
+P183,45-59,Man,White,No college degree,More than moderately,Doctor,DHN,2,1,1,1,,-3,2,2,2,3,2,-2,,-2,-2,0,0,0,-3,-3,2,1,1,1,0
+P184,18-44,Man,White,No college degree,Not at all to slightly,Doctor,DNH,1,1,2,2,,1,1,1,2,2,2,1,0,0,0,1,1,1,0,0,1,1,2,2,0
+P185,,,,,,Standard AI,NHD,3,3,0,3,0,2,3,2,1,3,2,1,3,3,3,0,3,0,2,3,2,2,2,3,0
+P186,18-44,Woman,Another or multiple,College degree or more,Not at all to slightly,Humanlike AI,HDN,1,1,3,3,1,0,1,1,3,3,1,0,1,-2,-1,0,0,0,-3,-2,2,1,3,3,0
+P187,,,,,,Standard AI,NHD,1,1,1,1,2,0,,,,,,,,1,1,1,1,2,0,0,,,,,
+P188,18-44,Woman,Another or multiple,No college degree,Moderately,Standard AI,NHD,2,2,3,3,3,2,1,2,3,3,4,2,2,2,2,3,3,3,2,1,3,3,,4,2
+P189,18-44,Man,Another or multiple,No college degree,Moderately,Humanlike AI,HND,0,0,2,2,1,0,0,0,2,2,1,0,,0,0,2,2,2,0,0,0,0,2,2,1
+P190,70+,Man,White,College degree or more,More than moderately,Humanlike AI,HND,0,1,1,2,2,1,0,1,1,2,2,1,0,-1,0,2,1,3,0,1,1,0,1,2,0
+P191,18-44,Man,White,No college degree,Not at all to slightly,Standard AI,NHD,-3,-2,0,1,1,-3,-2,-2,1,0,0,-2,2,-3,-2,0,1,1,-3,2,-3,-2,3,2,2
+P192,45-59,Woman,Another or multiple,No college degree,Not at all to slightly,Standard AI,NDH,1,0,3,0,1,0,-2,-2,3,2,0,0,1,1,0,3,0,1,0,0,-1,-2,2,2,-1
+P193,45-59,Woman,White,No college degree,More than moderately,Humanlike AI,HDN,3,3,4,4,2,2,3,3,4,4,2,2,0,3,3,3,3,0,2,0,3,3,4,4,0
+P194,70+,Man,White,No college degree,Moderately,Humanlike AI,HND,1,1,3,3,2,1,1,1,3,3,2,1,1,1,1,3,3,2,1,1,1,1,3,3,-1
+P195,45-59,Woman,Another or multiple,College degree or more,Moderately,Humanlike AI,HND,1,1,1,1,1,0,1,1,1,1,1,0,2,0,0,0,0,0,0,3,2,2,2,1,2
+P196,45-59,Woman,White,No college degree,More than moderately,Doctor,DNH,0,0,2,3,,-1,0,0,2,2,2,-2,-1,0,0,2,2,2,0,-1,0,0,2,3,-1
+P197,45-59,Man,White,No college degree,More than moderately,Humanlike AI,HND,-3,3,0,0,1,-2,-3,3,0,0,1,-2,3,0,0,0,0,0,-3,3,0,0,1,1,3
+P198,18-44,Woman,White,No college degree,Moderately,Humanlike AI,HDN,2,2,3,3,2,2,2,2,3,3,2,2,1,1,1,1,1,2,1,1,1,2,3,3,1
+P199,70+,Man,White,No college degree,Moderately,Humanlike AI,HDN,1,1,2,2,2,1,1,1,2,2,2,1,0,1,1,1,2,1,1,0,2,2,3,3,0
+P200,18-44,Woman,White,No college degree,Not at all to slightly,Standard AI,NDH,0,0,1,2,2,0,0,0,0,2,1,0,0,0,0,1,2,2,0,0,0,0,0,2,0
+P201,18-44,Woman,White,No college degree,Moderately,Humanlike AI,HDN,0,0,2,2,2,0,0,0,2,2,2,0,0,-1,0,1,1,0,0,-2,0,0,3,3,-1
+P202,18-44,Woman,White,College degree or more,Moderately,Standard AI,NHD,0,0,2,2,2,0,0,0,2,2,4,0,2,0,0,2,2,2,0,1,0,0,2,2,2
+P203,18-44,Woman,Another or multiple,College degree or more,More than moderately,Humanlike AI,HDN,3,3,4,4,3,2,3,3,4,4,3,2,3,-1,0,0,2,0,0,2,3,3,4,4,2
+P204,45-59,Man,White,No college degree,Not at all to slightly,Humanlike AI,HDN,1,1,2,2,2,1,1,1,2,2,2,1,0,1,1,2,2,2,1,0,1,1,2,2,0
+P205,18-44,Man,White,No college degree,Not at all to slightly,Humanlike AI,HDN,0,0,1,2,2,0,0,0,1,2,2,0,3,0,0,0,0,0,0,3,0,0,1,1,3
+P206,45-59,Man,White,No college degree,Not at all to slightly,Humanlike AI,HND,-2,-2,0,2,1,0,-2,-2,0,2,1,0,-2,0,0,2,1,2,-1,0,1,1,3,3,1
+P207,,,,,,Humanlike AI,HND,2,2,2,2,2,0,2,2,2,2,2,0,2,,,,,,,,,,,,
+P208,18-44,Woman,White,No college degree,Not at all to slightly,Humanlike AI,HND,2,2,4,3,3,2,2,2,4,3,3,2,0,0,0,0,1,0,-2,3,2,2,4,4,1
+P209,18-44,Man,White,College degree or more,Not at all to slightly,Standard AI,NDH,0,1,2,2,2,1,1,2,4,4,2,1,0,0,1,2,2,2,1,0,0,1,3,4,0
+P210,45-59,Man,White,No college degree,Moderately,Doctor,DNH,2,2,2,3,,-1,2,2,2,2,4,0,0,1,0,0,0,1,-1,2,2,2,2,3,-1
+P211,60-69,Man,White,No college degree,Not at all to slightly,Doctor,DHN,2,1,1,0,,-2,2,1,3,3,2,2,3,-2,-3,0,1,0,-3,-3,2,1,1,0,-2
+P212,18-44,Woman,Another or multiple,No college degree,Moderately,Standard AI,NDH,0,0,2,1,2,2,-1,-1,2,2,2,0,1,0,0,2,1,2,2,1,2,-1,1,2,1
+P213,,,,,,Humanlike AI,HDN,3,3,4,4,4,3,3,3,4,4,4,3,3,,,,,,,,3,3,4,4,3
+P214,18-44,Woman,White,College degree or more,Moderately,Humanlike AI,HND,2,2,0,3,3,3,2,2,0,3,3,3,0,2,2,0,3,2,3,0,2,2,1,3,1
+P215,,,,,,Humanlike AI,HDN,3,3,4,4,4,3,3,3,4,4,4,3,3,3,3,4,4,4,3,3,3,3,4,4,3
+P216,45-59,Woman,White,College degree or more,Moderately,Humanlike AI,HDN,3,3,4,4,4,2,3,3,4,4,4,2,0,-1,0,1,2,1,-1,-2,3,3,4,4,0
+P217,60-69,Man,Another or multiple,College degree or more,Moderately,Humanlike AI,HDN,3,3,4,4,4,3,3,3,4,4,4,3,3,3,3,4,4,4,3,3,3,3,4,4,3
+P218,18-44,Woman,Another or multiple,College degree or more,Not at all to slightly,Standard AI,NHD,-2,-1,2,3,3,2,1,1,0,1,1,-1,2,-2,-1,2,3,3,2,2,1,1,3,2,2
+P219,,,,,,Standard AI,NDH,3,3,3,3,3,2,,,,,,,,3,3,3,3,3,2,0,3,3,4,4,0
+P220,60-69,Man,White,No college degree,Not at all to slightly,Doctor,DNH,1,2,1,1,,-2,0,1,2,2,2,-3,3,-2,1,1,1,0,-3,3,1,2,1,1,-3
+P221,18-44,Woman,Another or multiple,College degree or more,Moderately,Standard AI,NHD,1,1,2,2,3,1,1,2,3,2,3,3,2,1,1,2,2,3,1,2,2,3,4,3,2
+P222,45-59,Man,Another or multiple,No college degree,Moderately,Standard AI,NDH,2,2,2,3,2,2,2,2,2,3,3,2,1,2,2,2,3,2,2,2,2,2,3,3,2
+P223,18-44,Woman,Another or multiple,College degree or more,More than moderately,Humanlike AI,HND,2,1,3,3,3,2,2,1,3,3,3,2,2,-2,-3,0,0,0,-3,-3,3,3,4,4,3
+P224,60-69,Man,White,No college degree,More than moderately,Humanlike AI,HDN,2,3,3,3,3,2,2,3,3,3,3,2,0,0,2,0,1,1,1,-1,2,2,3,3,0
+P225,45-59,Woman,White,College degree or more,Not at all to slightly,Standard AI,NHD,0,-1,0,0,0,-1,-1,-2,1,0,1,-1,0,0,-1,0,0,0,-1,,0,1,2,2,0
+P226,45-59,Man,White,No college degree,More than moderately,Humanlike AI,HDN,-1,-1,2,2,2,-1,-1,-1,2,2,2,-1,0,0,0,2,2,2,0,0,0,0,2,2,0
+P227,18-44,Woman,Another or multiple,No college degree,More than moderately,Humanlike AI,HND,1,1,2,2,1,2,1,1,2,2,1,2,2,1,1,2,2,1,1,0,1,1,2,2,2
+P228,18-44,Woman,White,No college degree,Moderately,Humanlike AI,HND,1,2,0,2,0,-1,1,2,0,2,0,-1,2,1,2,2,3,2,2,2,-1,0,2,2,1
+P229,70+,Woman,White,No college degree,More than moderately,Humanlike AI,HND,1,2,1,2,2,0,1,2,1,2,2,0,1,1,1,1,1,2,0,0,1,1,2,2,0
+P230,18-44,Man,Another or multiple,No college degree,Moderately,Standard AI,NHD,0,0,2,2,2,0,0,0,2,2,2,0,2,0,0,2,2,2,0,1,0,0,2,3,1
+P231,60-69,Man,White,No college degree,More than moderately,Humanlike AI,HND,2,2,3,3,4,2,2,2,3,3,4,2,0,2,2,3,3,4,2,0,2,2,4,3,0
+P232,18-44,Woman,Another or multiple,No college degree,Not at all to slightly,Standard AI,NDH,-2,-1,2,1,1,0,1,0,3,2,3,0,1,-2,-1,2,1,1,0,1,0,1,3,1,2
+P233,45-59,Man,Another or multiple,No college degree,Not at all to slightly,Standard AI,NDH,2,2,1,2,2,1,3,3,3,3,3,2,1,2,2,1,2,2,1,2,2,2,4,3,0
+P234,18-44,Woman,White,No college degree,Not at all to slightly,Standard AI,NDH,-2,-1,2,2,2,-2,0,-1,1,2,2,-2,2,-2,-1,2,2,2,-2,1,-1,1,2,2,2
+P235,18-44,Woman,Another or multiple,No college degree,More than moderately,Doctor,DNH,2,2,4,3,,2,3,3,4,4,4,1,2,1,1,4,3,4,1,1,2,2,4,3,3
+P236,18-44,Woman,Another or multiple,College degree or more,Not at all to slightly,Humanlike AI,HDN,1,1,2,1,3,0,1,1,2,1,3,0,1,0,0,1,1,1,0,2,1,1,3,1,-1
+P237,,,,,,Standard AI,NHD,-2,-2,1,1,1,-2,,,,,,,,-2,-2,1,1,1,-2,-1,,,,,
+P238,60-69,Woman,White,College degree or more,Not at all to slightly,Doctor,DNH,0,1,2,2,,-2,-2,-2,1,0,1,-3,2,-3,-3,0,0,0,-3,2,0,1,2,2,-3
+P239,18-44,Woman,Another or multiple,No college degree,Moderately,Humanlike AI,HDN,3,1,4,3,3,1,3,1,4,3,3,1,2,2,1,1,3,4,1,2,1,2,3,4,2
+P240,,,,,,Doctor,DNH,0,-1,3,2,,0,,,,,,,,,,,,,,,0,-1,3,2,1
+P241,,,,,,Standard AI,NDH,-1,0,3,2,3,1,,,,,,,,-1,0,3,2,3,1,2,0,0,2,2,
+P242,18-44,Man,Another or multiple,No college degree,More than moderately,Humanlike AI,HND,3,2,3,3,4,3,3,2,3,3,4,3,1,3,2,4,4,4,3,2,3,3,3,4,0
+P243,,,,,,Humanlike AI,HND,0,-1,0,0,0,-3,0,-1,0,0,0,-3,-2,,,,,,,,,,,,
+P244,60-69,Woman,White,College degree or more,Not at all to slightly,Humanlike AI,HDN,-2,2,2,2,2,1,-2,2,2,2,2,1,2,2,2,1,2,2,1,1,2,2,2,2,1
+P245,45-59,Woman,White,No college degree,Not at all to slightly,Humanlike AI,HDN,2,1,1,1,1,-1,2,1,1,1,1,-1,1,-1,0,0,0,0,-2,2,1,2,2,2,0
+P246,70+,Woman,White,College degree or more,Moderately,Humanlike AI,HDN,0,0,1,1,1,0,0,0,1,1,1,0,0,0,0,2,2,2,0,0,1,0,1,1,0
+P247,18-44,Woman,Another or multiple,No college degree,Moderately,Doctor,DNH,2,2,4,4,,3,2,2,4,4,4,3,2,-3,-3,0,0,0,3,2,2,2,4,4,2
+P248,18-44,Woman,White,No college degree,Not at all to slightly,Doctor,DHN,1,2,3,3,,1,1,2,3,3,3,2,2,-1,-2,0,0,0,-2,1,1,2,3,3,2
+P249,70+,Woman,White,College degree or more,Not at all to slightly,Standard AI,NHD,2,2,3,3,3,2,2,2,3,3,3,2,1,2,2,3,3,3,2,1,2,2,3,3,1
+P250,,,,,,Standard AI,NDH,0,0,2,2,2,0,,,,,,,,0,0,2,2,2,0,0,,,,,
+P251,18-44,Man,White,No college degree,More than moderately,Standard AI,NDH,1,0,2,2,1,0,1,1,3,3,3,2,2,1,0,2,2,1,0,2,2,2,3,4,2
+P252,,,,,,Doctor,DNH,3,3,2,4,,2,,,,,,,,,,,,,,,3,3,2,4,
+P253,45-59,Woman,White,College degree or more,Not at all to slightly,Humanlike AI,HDN,3,3,4,4,4,3,3,3,4,4,4,3,0,3,3,4,4,4,3,0,3,3,4,4,0
+P254,18-44,Woman,Another or multiple,No college degree,Not at all to slightly,Doctor,DNH,1,1,2,2,,0,1,1,1,1,2,0,2,0,0,0,0,0,0,2,1,1,2,2,-3
+P255,18-44,Man,White,No college degree,Moderately,Humanlike AI,HDN,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-2,3,0,3,-3,0,0,0,0,0,0
+P256,18-44,Woman,White,College degree or more,Moderately,Doctor,DNH,3,3,4,4,,3,2,3,4,4,4,3,3,2,2,3,3,3,2,2,3,3,4,4,3
+P257,,,,,,Standard AI,NHD,1,1,3,3,2,2,,,,,,,,1,1,3,3,2,2,2,,,,,
+P258,18-44,Man,Another or multiple,No college degree,Not at all to slightly,Standard AI,NDH,1,1,3,1,2,-1,-2,1,2,2,2,-1,0,1,1,3,1,2,-1,2,2,0,2,3,0
+P259,18-44,Man,White,No college degree,More than moderately,Doctor,DHN,2,3,3,4,,2,2,3,4,3,3,3,2,2,3,4,3,3,2,2,2,3,3,4,2
+P260,18-44,Woman,Another or multiple,No college degree,More than moderately,Standard AI,NDH,0,0,1,2,2,0,0,1,3,3,2,1,2,0,0,1,2,2,0,1,0,0,3,2,2
+P261,18-44,Woman,White,College degree or more,More than moderately,Standard AI,NDH,3,3,4,4,4,3,3,3,3,3,3,3,3,3,3,4,4,4,3,3,-1,1,1,3,-1
+P262,18-44,Woman,Another or multiple,No college degree,Not at all to slightly,Humanlike AI,HND,0,0,4,3,2,3,0,0,4,3,2,3,1,1,2,3,3,4,1,1,1,2,4,3,2
+P263,45-59,Woman,White,College degree or more,More than moderately,Doctor,DNH,1,1,3,3,,1,-2,0,1,2,3,-2,2,0,-1,0,0,0,-3,-1,1,1,3,3,2
+P264,18-44,Woman,White,No college degree,Not at all to slightly,Humanlike AI,HND,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+P265,18-44,Woman,White,No college degree,Not at all to slightly,Doctor,DHN,1,1,3,3,,-1,1,1,3,3,1,-2,-2,1,1,0,1,0,-3,-3,1,1,3,3,-2
+P266,,,,,,Humanlike AI,HND,0,0,2,2,2,0,0,0,2,2,2,0,0,0,0,2,2,2,0,0,0,0,2,2,1
+P267,70+,Woman,White,College degree or more,More than moderately,Doctor,DNH,0,0,2,1,,-2,0,0,2,1,0,-3,1,-2,-2,2,1,0,-3,2,0,0,2,1,-2
+P268,18-44,Man,White,College degree or more,More than moderately,Standard AI,NHD,3,2,3,4,4,2,3,3,3,4,3,2,3,3,2,3,4,4,2,2,2,3,3,4,3
+P269,60-69,Woman,White,No college degree,More than moderately,Doctor,DHN,0,0,1,0,,-3,0,0,0,0,0,-3,-3,-1,-2,0,0,0,-3,-3,0,0,1,0,-3
+P270,18-44,Woman,White,No college degree,More than moderately,Doctor,DHN,3,3,3,4,,3,3,3,4,4,2,3,3,-3,-2,0,0,0,-3,0,3,3,3,4,3
+P271,18-44,Man,White,College degree or more,Moderately,Humanlike AI,HND,3,3,4,4,4,3,3,3,4,4,4,3,3,3,1,2,2,2,2,1,3,3,4,4,3
+P272,,,,,,Standard AI,NDH,-3,-1,3,3,2,-1,,,,,,,,-3,-1,3,3,2,-1,2,3,3,4,4,2
+P273,60-69,Woman,White,College degree or more,More than moderately,Doctor,DHN,3,3,4,4,,3,3,3,4,4,4,3,3,2,2,3,3,3,2,2,3,3,4,4,-3
+P274,,,,,,Humanlike AI,HDN,2,2,2,2,3,1,2,2,2,2,3,1,1,,,,,,,,2,2,2,3,1
+P275,18-44,Man,White,No college degree,Not at all to slightly,Standard AI,NDH,0,0,2,2,2,0,0,0,2,2,2,0,0,0,0,2,2,2,0,0,0,0,2,2,0
+P276,18-44,Man,Another or multiple,College degree or more,Moderately,Standard AI,NDH,3,3,2,3,2,2,3,3,2,3,2,2,2,3,3,2,3,2,2,2,3,3,2,4,3
+P277,,,,,,Standard AI,NDH,-1,0,1,1,0,0,,,,,,,,-1,0,1,1,0,0,0,1,0,2,2,1
+P278,18-44,Woman,White,College degree or more,More than moderately,Doctor,DHN,1,1,2,2,,1,-2,-2,2,1,1,2,1,-3,-3,0,1,0,-2,1,1,1,2,2,1
+P279,60-69,Man,White,No college degree,More than moderately,Standard AI,NDH,0,-1,0,1,1,-2,-1,-1,1,1,2,-2,2,0,-1,0,1,1,-2,2,1,1,1,1,-2
+P280,18-44,Woman,Another or multiple,No college degree,More than moderately,Standard AI,NDH,0,0,2,2,2,0,3,3,4,4,4,2,3,0,0,2,2,2,0,1,2,2,3,3,2
+P281,18-44,Woman,Another or multiple,No college degree,More than moderately,Humanlike AI,HDN,-1,1,1,3,1,-3,-1,1,1,3,1,-3,1,-2,-2,0,2,3,0,2,-1,-2,3,2,-1
+P282,18-44,Woman,White,College degree or more,Not at all to slightly,Standard AI,NDH,0,0,1,2,0,0,1,1,3,3,3,1,2,0,0,1,2,0,0,1,1,1,3,2,1
+P283,45-59,Woman,White,College degree or more,Not at all to slightly,Doctor,DNH,1,1,2,2,,1,1,1,2,2,2,1,2,1,1,1,2,0,0,2,1,1,2,2,1
+P284,18-44,Woman,Another or multiple,College degree or more,More than moderately,Standard AI,NDH,1,1,3,2,2,1,2,-1,3,3,4,1,3,1,1,3,2,2,1,3,2,1,3,2,-1
+P285,70+,Woman,White,No college degree,More than moderately,Doctor,DHN,3,2,2,3,,1,-1,1,0,1,0,-3,-1,-2,0,0,2,1,-2,3,3,2,2,3,-3
+P286,,,,,,Standard AI,NHD,0,0,2,2,0,0,0,0,2,2,0,0,3,0,0,2,2,0,0,3,,,,,
+P287,60-69,Man,White,No college degree,More than moderately,Doctor,DHN,-3,-2,1,0,,3,-2,-1,2,2,2,0,2,-3,-2,1,1,2,-2,1,-3,-2,1,0,1
+P288,,,,,,Standard AI,NHD,0,0,2,2,2,0,0,0,2,2,3,0,0,0,0,2,2,2,0,0,0,0,2,2,0
+P289,18-44,,Another or multiple,No college degree,More than moderately,Standard AI,NHD,-1,1,2,1,1,2,1,0,3,2,2,1,2,-1,1,2,1,1,2,1,-1,0,2,2,2
+P290,18-44,Man,Another or multiple,No college degree,More than moderately,Standard AI,NDH,0,0,1,2,1,2,0,1,3,3,3,0,1,0,0,1,2,1,2,1,1,0,2,3,2
+P291,45-59,Woman,Another or multiple,No college degree,Moderately,Humanlike AI,HND,0,0,2,2,2,0,0,0,2,2,2,0,0,0,0,2,2,2,0,0,0,0,2,2,0
+P292,18-44,Woman,Another or multiple,No college degree,Moderately,Standard AI,NDH,3,3,1,2,1,1,3,3,3,4,2,1,1,3,3,1,2,1,1,2,3,3,3,4,3
+P293,70+,Woman,White,College degree or more,More than moderately,Humanlike AI,HDN,0,1,2,2,1,-2,0,1,2,2,1,-2,2,-2,-2,0,1,0,-2,3,0,-1,2,1,0
+P294,18-44,Man,Another or multiple,No college degree,Not at all to slightly,Humanlike AI,HND,1,1,1,2,2,0,1,1,1,2,2,0,1,0,0,2,2,2,0,2,1,1,3,3,0
+P295,60-69,Woman,White,College degree or more,More than moderately,Humanlike AI,HND,2,3,2,2,2,3,2,3,2,2,2,3,1,0,2,0,0,0,2,3,2,3,3,3,
+P296,18-44,Woman,White,No college degree,Not at all to slightly,Standard AI,NHD,2,2,1,2,2,1,2,2,2,2,4,2,-2,2,2,1,2,2,1,-2,2,2,2,2,-1
+P297,18-44,Woman,White,No college degree,Not at all to slightly,Standard AI,NDH,0,0,1,2,1,0,0,0,2,2,2,0,0,0,0,1,2,1,0,0,0,0,1,2,0
+P298,18-44,Woman,Another or multiple,No college degree,Not at all to slightly,Doctor,DHN,0,0,2,1,,0,0,0,2,2,2,0,0,0,0,0,0,0,0,-1,0,0,2,1,0
+P299,45-59,Woman,White,College degree or more,Not at all to slightly,Standard AI,NHD,1,1,1,1,1,0,0,0,1,1,1,0,,1,1,1,1,1,0,2,0,1,1,1,1
+P300,18-44,Man,White,College degree or more,More than moderately,Standard AI,NDH,3,3,3,3,3,3,2,3,4,3,3,3,3,3,3,3,3,3,3,3,3,3,3,4,3
+P301,,,,,,Standard AI,NDH,-1,-1,1,1,0,-1,,,,,,,,-1,-1,1,1,0,-1,0,,,,,
+P302,18-44,Woman,Another or multiple,No college degree,More than moderately,Standard AI,NDH,1,2,3,3,3,0,2,1,4,2,3,1,3,1,2,3,3,3,0,1,1,2,4,4,2
+P303,18-44,Woman,Another or multiple,No college degree,More than moderately,Humanlike AI,HND,1,2,3,3,3,2,1,2,3,3,3,2,0,3,2,4,4,4,3,1,2,2,4,3,1
+P304,18-44,Woman,Another or multiple,No college degree,Moderately,Humanlike AI,HDN,0,0,0,2,0,0,0,0,0,2,0,0,0,-3,-3,0,2,0,0,0,0,0,0,2,0
+P305,18-44,Man,White,No college degree,Moderately,Humanlike AI,HDN,1,0,2,3,3,0,1,0,2,3,3,0,2,1,0,2,3,3,0,1,1,0,4,4,1
+P306,45-59,Woman,White,College degree or more,More than moderately,Humanlike AI,HDN,1,1,1,2,2,1,1,1,1,2,2,1,0,1,1,2,2,2,0,0,2,1,3,3,0
+P307,18-44,Woman,White,No college degree,Moderately,Standard AI,NDH,1,1,3,3,3,2,3,3,4,4,4,3,3,1,1,3,3,3,2,2,2,3,4,4,3
+P308,45-59,Man,White,College degree or more,More than moderately,Humanlike AI,HND,2,2,4,3,4,3,2,2,4,3,4,3,3,2,3,4,3,3,3,3,2,3,4,3,3
+P309,18-44,Man,Another or multiple,No college degree,More than moderately,Doctor,DHN,3,3,4,4,,3,3,3,4,4,4,3,1,3,3,4,4,4,3,2,3,3,4,4,3
+P310,,,,,,Humanlike AI,HND,1,1,1,2,3,1,1,1,1,2,3,1,,1,1,1,2,1,1,0,1,1,1,3,0
+P311,18-44,Man,Another or multiple,No college degree,Not at all to slightly,Humanlike AI,HDN,0,1,2,3,2,0,0,1,2,3,2,0,0,0,0,1,1,1,0,0,0,1,2,2,0
+P312,45-59,Man,Another or multiple,No college degree,Moderately,Standard AI,NDH,0,2,2,2,0,0,0,0,1,1,1,0,0,0,2,2,2,0,0,0,0,0,2,2,0
+P313,18-44,Man,White,College degree or more,More than moderately,Standard AI,NDH,3,3,4,3,3,3,3,3,4,4,4,2,2,3,3,4,3,3,3,2,3,3,4,4,2
+P314,45-59,Woman,White,No college degree,Not at all to slightly,Doctor,DNH,1,3,4,4,,3,3,3,4,4,4,3,-2,3,3,1,4,4,1,1,1,3,4,4,1
+P315,45-59,Man,Another or multiple,No college degree,Moderately,Humanlike AI,HDN,2,2,3,4,3,2,2,2,3,4,3,2,2,2,3,4,3,3,2,3,2,2,4,4,3
+P316,,,,,,Humanlike AI,HDN,1,1,1,3,2,1,1,1,1,3,2,1,2,2,2,0,3,1,2,2,2,2,0,2,-2
+P317,18-44,Woman,White,No college degree,Moderately,Humanlike AI,HDN,0,0,1,1,1,1,0,0,1,1,1,1,0,-3,-3,0,0,0,-1,1,0,0,2,2,1
+P318,18-44,Woman,White,No college degree,Moderately,Standard AI,NDH,0,1,3,2,3,-2,2,1,2,2,1,2,0,0,1,3,2,3,-2,1,2,1,2,3,2
+P319,18-44,Woman,White,No college degree,Not at all to slightly,Standard AI,NHD,3,1,2,2,1,1,2,1,2,2,2,1,0,3,1,2,2,1,1,0,2,2,3,3,0
+P320,60-69,Woman,White,No college degree,More than moderately,Standard AI,NHD,1,2,2,2,2,0,2,2,3,3,4,0,0,1,2,2,2,2,0,0,2,2,2,2,1
+P321,,,,,,Standard AI,NHD,2,3,2,4,2,2,1,1,4,3,4,2,2,2,3,2,4,2,2,2,,,,,
+P322,18-44,Man,White,College degree or more,Moderately,Standard AI,NHD,3,2,4,4,4,3,2,3,4,3,4,2,3,3,2,4,4,4,3,2,2,3,3,3,3
+P323,60-69,Woman,White,No college degree,Moderately,Humanlike AI,HND,0,0,2,2,2,-1,0,0,2,2,2,-1,0,0,0,1,1,1,-1,0,0,0,2,2,0
+P324,18-44,Woman,Another or multiple,No college degree,Moderately,Standard AI,NDH,1,1,3,3,3,2,2,3,3,3,3,2,2,1,1,3,3,3,2,2,1,2,3,4,2
+P325,45-59,Man,Another or multiple,College degree or more,Not at all to slightly,Standard AI,NHD,0,1,1,1,1,0,0,0,1,1,2,1,1,0,1,1,1,1,0,1,1,0,1,2,1
+P326,60-69,Man,White,No college degree,More than moderately,Standard AI,NDH,0,0,2,2,2,0,2,2,3,3,3,2,3,0,0,2,2,2,0,1,0,0,2,2,2
+P327,18-44,Man,White,No college degree,Moderately,Standard AI,NHD,-1,2,4,1,1,-1,-1,-3,1,2,3,0,1,-1,2,4,1,1,-1,2,-1,-3,3,4,1
+P328,18-44,Woman,Another or multiple,No college degree,Moderately,Humanlike AI,HDN,0,1,1,2,1,-1,0,1,1,2,1,-1,0,-1,0,2,1,0,-1,-1,0,0,1,2,1
+P329,,,,,,Standard AI,NHD,0,0,1,2,2,2,2,2,0,2,3,2,3,0,0,1,2,2,2,2,,,,,
+P330,18-44,Woman,Another or multiple,No college degree,More than moderately,Humanlike AI,HND,-1,1,2,2,2,1,-1,1,2,2,2,1,0,1,-1,2,2,2,1,0,1,1,1,1,0
+P331,18-44,Woman,White,No college degree,Not at all to slightly,Standard AI,NHD,0,-1,2,1,2,0,0,-2,2,1,1,0,0,0,-1,2,1,2,0,0,0,0,2,1,1
+P332,18-44,Man,White,No college degree,More than moderately,Doctor,DHN,1,1,2,3,,2,-1,0,3,3,4,1,1,-2,-2,3,2,2,-2,-1,1,1,2,3,1
+P333,18-44,Woman,White,No college degree,Not at all to slightly,Standard AI,NHD,0,0,0,1,1,0,0,0,1,1,2,0,0,0,0,0,1,1,0,0,1,1,2,2,1
+P334,18-44,Woman,Another or multiple,No college degree,Moderately,Doctor,DNH,2,2,3,3,,1,2,2,2,3,3,0,2,1,1,0,1,1,-1,3,2,2,3,3,-2
+P335,18-44,Man,Another or multiple,College degree or more,Not at all to slightly,Humanlike AI,HND,1,1,2,2,2,1,1,1,2,2,2,1,0,1,1,2,2,1,0,0,1,1,3,3,0
+P336,18-44,Woman,White,No college degree,Not at all to slightly,Standard AI,NHD,0,0,3,3,2,2,-3,-1,0,3,1,3,3,0,0,3,3,2,2,3,0,0,2,2,3
+P337,,,,,,Humanlike AI,HDN,0,2,1,3,1,0,0,2,1,3,1,0,2,0,2,1,2,1,0,1,0,2,2,2,1
+P338,60-69,Man,White,College degree or more,Moderately,Humanlike AI,HDN,1,1,3,3,3,1,1,1,3,3,3,1,1,1,1,3,3,3,1,1,1,1,3,3,1
+P339,18-44,Woman,White,No college degree,Moderately,Standard AI,NDH,1,1,1,2,2,0,1,1,2,2,2,0,1,1,1,1,2,2,0,0,1,1,1,2,1
+P340,60-69,Woman,White,College degree or more,Not at all to slightly,Humanlike AI,HND,3,3,4,4,4,2,3,3,4,4,4,2,1,3,3,0,4,1,3,1,3,3,4,4,1
+P341,18-44,Man,Another or multiple,No college degree,Not at all to slightly,Humanlike AI,HDN,1,0,2,3,1,0,1,0,2,3,1,0,0,-1,1,2,2,0,0,0,0,1,2,2,0
+P342,,,,,,Humanlike AI,HDN,-1,2,1,1,2,0,-1,2,1,1,2,0,2,,,,,,,,-1,2,1,1,2
+P343,45-59,Woman,White,No college degree,Not at all to slightly,Doctor,DHN,-2,-2,0,0,,-3,-3,-3,0,0,0,-3,2,-3,-3,0,0,0,-3,2,-2,-2,0,0,-3
+P344,18-44,Woman,Another or multiple,No college degree,Moderately,Humanlike AI,HND,-3,-2,2,3,2,1,-3,-2,2,3,2,1,1,2,2,3,3,3,2,1,2,2,2,3,1
+P345,,,,,,Standard AI,NHD,1,1,2,2,2,-1,-1,0,2,2,3,0,2,1,1,2,2,2,-1,1,,,,,
+P346,45-59,Man,Another or multiple,No college degree,Moderately,Humanlike AI,HDN,3,3,4,4,4,3,3,3,4,4,4,3,3,1,1,2,2,1,1,-1,3,3,4,4,3
+P347,,,,,,Humanlike AI,HND,1,3,2,2,2,-2,1,3,2,2,2,-2,2,,,,,,,,,,,,
+P348,45-59,Man,White,College degree or more,More than moderately,Humanlike AI,HDN,1,1,3,3,3,1,1,1,3,3,3,1,2,2,3,3,4,3,2,3,2,2,2,2,1
+P349,45-59,Woman,White,College degree or more,Moderately,Doctor,DNH,3,3,4,4,,3,3,3,4,4,4,3,3,3,3,4,4,3,3,3,3,3,4,4,3
+P350,,,,,,Standard AI,NDH,2,2,1,2,1,0,,,,,,,,2,2,1,2,1,0,2,1,1,2,2,0
+P351,18-44,Woman,White,No college degree,Moderately,Standard AI,NHD,2,-1,2,2,3,-1,0,2,2,3,3,1,2,2,-1,2,2,3,-1,1,-2,2,3,3,-2
+P352,18-44,Woman,White,No college degree,Not at all to slightly,Humanlike AI,HND,1,2,1,2,2,0,1,2,1,2,2,0,2,0,0,0,1,0,0,2,2,2,3,3,1
+P353,70+,Woman,White,College degree or more,Not at all to slightly,Standard AI,NHD,2,2,1,2,1,1,2,2,2,2,1,2,2,2,2,1,2,1,1,2,1,1,2,2,2
+P354,45-59,Man,White,No college degree,Moderately,Standard AI,NDH,1,0,1,1,1,-2,0,0,1,1,1,-1,2,1,0,1,1,1,-2,2,0,0,1,1,2
+P355,45-59,Woman,White,No college degree,Not at all to slightly,Humanlike AI,HND,1,1,2,1,1,0,1,1,2,1,1,0,2,0,0,0,1,0,0,3,1,1,3,1,2
+P356,45-59,Man,Another or multiple,College degree or more,More than moderately,Humanlike AI,HDN,3,3,4,4,4,3,3,3,4,4,4,3,2,3,3,4,4,4,3,3,3,3,4,4,3
+P357,18-44,Woman,White,No college degree,More than moderately,Standard AI,NDH,0,0,2,2,2,0,0,0,2,2,2,0,0,0,0,2,2,2,0,0,0,0,2,2,0
+P358,18-44,Man,White,No college degree,Moderately,Doctor,DNH,0,0,2,2,,0,0,0,2,2,2,0,-2,0,0,2,3,2,0,-2,0,0,2,2,0
+P359,18-44,Woman,White,No college degree,Moderately,Humanlike AI,HND,0,0,2,2,2,0,0,0,2,2,2,0,0,0,0,2,2,0,0,0,0,0,2,2,0
+P360,18-44,Woman,Another or multiple,No college degree,Moderately,Humanlike AI,HDN,0,0,2,3,2,0,0,0,2,3,2,0,0,0,1,1,2,2,0,0,0,1,2,3,1
+P361,18-44,Woman,Another or multiple,No college degree,Not at all to slightly,Doctor,DNH,1,2,3,3,,0,0,0,2,2,2,0,0,1,-1,1,1,0,-3,-1,1,2,3,3,1
+P362,45-59,Woman,White,College degree or more,More than moderately,Humanlike AI,HDN,3,2,4,4,3,3,3,2,4,4,3,3,0,1,1,0,1,0,1,-1,3,2,4,4,0
+P363,,,,,,Doctor,DNH,0,0,2,1,,-1,,,,,,,,0,0,1,1,1,0,3,0,0,2,1,3
+P364,45-59,Woman,White,No college degree,Moderately,Humanlike AI,HDN,2,0,1,2,0,2,2,0,1,2,0,2,2,2,1,0,1,1,-2,0,3,2,2,1,0
+P365,18-44,Woman,White,No college degree,Not at all to slightly,Doctor,DNH,-3,-3,1,1,,-3,-2,-2,1,1,1,0,-3,-3,-3,0,0,0,-3,-3,-3,-3,1,1,-3
+P366,45-59,Man,White,College degree or more,Not at all to slightly,Standard AI,NDH,1,1,2,2,3,2,2,1,3,4,3,2,1,1,1,2,2,3,2,2,1,1,3,3,2
+P367,,,,,,Humanlike AI,HDN,0,0,2,2,2,-1,0,0,2,2,2,-1,0,,,,,,,,,,,,
+P368,45-59,Woman,White,No college degree,More than moderately,Doctor,DNH,-1,-2,1,3,,-1,-2,2,3,2,2,-3,0,-1,-2,2,1,4,0,-1,-1,-2,1,3,0
+P369,18-44,Woman,White,College degree or more,Not at all to slightly,Doctor,DHN,2,3,1,1,,1,2,3,3,2,4,2,0,-3,-3,0,0,0,1,3,2,3,1,1,0
+P370,18-44,Man,Another or multiple,No college degree,Not at all to slightly,Doctor,DHN,3,2,4,4,,3,3,3,4,4,4,3,3,3,3,4,4,4,3,3,3,2,4,4,2
+P371,18-44,Woman,Another or multiple,No college degree,More than moderately,Doctor,DNH,3,3,4,4,,3,3,3,4,4,4,3,3,3,3,4,4,4,3,3,3,3,4,4,3
+P372,45-59,Woman,White,No college degree,More than moderately,Humanlike AI,HND,2,2,3,2,3,0,2,2,3,2,3,0,2,0,0,1,1,1,2,3,3,3,4,4,3
+P373,18-44,Woman,Another or multiple,College degree or more,Not at all to slightly,Standard AI,NDH,1,1,0,1,0,-1,1,1,2,1,2,-1,3,1,1,0,1,0,-1,3,2,2,2,2,-1
+P374,18-44,Woman,White,No college degree,Not at all to slightly,Standard AI,NDH,0,1,3,3,2,-1,0,-1,3,1,2,-1,-2,0,1,3,3,2,-1,1,0,0,1,3,2
+P375,18-44,Man,Another or multiple,No college degree,Moderately,Standard AI,NHD,-3,-2,0,1,1,-1,-1,0,2,3,2,0,3,-3,-2,0,1,1,-1,3,0,-1,2,2,3
+P376,70+,Woman,White,College degree or more,More than moderately,Standard AI,NHD,0,1,0,2,2,1,1,1,0,2,1,1,3,0,1,0,2,2,1,3,2,2,3,3,-2
+P377,,,,,,Standard AI,NHD,2,1,2,3,2,1,2,1,3,3,1,2,2,2,1,2,3,2,1,2,2,2,1,3,1
+P378,18-44,Woman,Another or multiple,College degree or more,More than moderately,Humanlike AI,HDN,2,2,3,3,3,2,2,2,3,3,3,2,2,2,2,3,3,3,2,,2,2,3,3,2
+P379,18-44,Man,White,No college degree,Moderately,Doctor,DNH,-1,3,3,4,,2,3,3,4,0,4,-1,1,2,2,3,3,4,0,1,-1,3,3,4,1
+P380,,,,,,Standard AI,NDH,2,3,4,4,4,3,,,,,,,,2,3,4,4,4,3,3,,,,,
+P381,45-59,Woman,Another or multiple,College degree or more,More than moderately,Standard AI,NDH,-1,-1,2,2,2,0,1,1,2,1,3,1,3,-1,-1,2,2,2,0,2,0,0,2,2,2
+P382,18-44,Man,Another or multiple,No college degree,More than moderately,Standard AI,NHD,0,0,1,1,1,-1,0,0,1,1,1,0,0,0,0,1,1,1,-1,0,0,0,1,1,0
+P383,18-44,Woman,White,No college degree,More than moderately,Standard AI,NDH,2,1,2,3,3,3,2,1,3,3,4,2,2,2,1,2,3,3,3,3,0,1,3,4,2
+P384,45-59,Man,White,College degree or more,More than moderately,Doctor,DNH,2,2,4,3,,2,2,3,4,3,3,2,3,2,2,3,4,1,3,3,2,2,4,3,2
+P385,18-44,Woman,White,No college degree,More than moderately,Standard AI,NDH,3,3,4,4,4,3,3,3,4,4,4,3,3,3,3,4,4,4,3,3,3,3,4,4,3
+P386,45-59,Man,Another or multiple,No college degree,More than moderately,Standard AI,NHD,3,3,1,3,0,2,1,2,1,2,0,1,2,3,3,1,3,0,2,2,2,2,1,3,2
+P387,,,,,,Humanlike AI,HDN,0,0,0,0,0,-2,0,0,0,0,0,-2,2,-1,-1,0,0,0,3,0,-1,0,2,0,-2
+P388,45-59,Man,Another or multiple,College degree or more,Not at all to slightly,Humanlike AI,HDN,-2,-1,0,2,4,2,-2,-1,0,2,4,2,1,-3,-1,2,1,1,-1,1,-3,1,0,1,2
+P389,18-44,Man,White,College degree or more,More than moderately,Standard AI,NDH,3,3,4,4,4,3,3,3,4,4,4,3,3,3,3,4,4,4,3,3,3,3,4,4,3
+P390,,Man,White,No college degree,Not at all to slightly,Standard AI,NDH,0,2,1,2,0,0,0,1,2,2,2,0,2,0,2,1,2,0,0,2,1,1,2,2,-1
+P391,70+,Man,White,No college degree,More than moderately,Standard AI,NDH,0,0,2,3,2,-2,0,0,2,2,2,0,3,0,0,2,3,2,-2,1,0,0,2,2,1
+P392,18-44,Woman,White,No college degree,Moderately,Doctor,DHN,3,3,4,3,,3,3,2,4,4,3,3,0,0,1,1,2,0,1,1,3,3,4,3,2
+P393,18-44,Woman,White,No college degree,Moderately,Humanlike AI,HDN,1,2,3,3,3,0,1,2,3,3,3,0,-1,0,-1,1,1,0,-2,-1,2,1,2,3,1
+P394,70+,Woman,White,No college degree,Not at all to slightly,Doctor,DHN,2,3,4,3,,2,2,3,4,4,4,2,-1,1,1,2,0,1,1,1,2,3,4,3,1
+P395,60-69,Woman,Another or multiple,No college degree,Moderately,Standard AI,NDH,2,2,3,2,3,0,2,2,3,3,3,2,3,2,2,3,2,3,0,3,2,2,2,2,0
+P396,70+,Man,White,No college degree,More than moderately,Humanlike AI,HND,0,3,2,2,2,0,0,3,2,2,2,0,1,2,2,2,2,3,1,1,2,2,3,3,2
+P397,,Man,Another or multiple,College degree or more,Not at all to slightly,Standard AI,NHD,-1,0,2,2,3,0,0,2,2,3,2,-2,2,-1,0,2,2,3,0,2,-2,-3,2,3,2
+P398,18-44,Man,Another or multiple,No college degree,More than moderately,Humanlike AI,HDN,-2,-3,2,0,2,-1,-2,-3,2,0,2,-1,2,0,2,3,2,3,1,2,-3,0,2,3,2
+P399,45-59,Man,White,No college degree,More than moderately,Humanlike AI,HND,1,1,0,1,1,-1,1,1,0,1,1,-1,2,-1,0,0,0,0,-1,1,1,1,1,1,2
+P400,45-59,Woman,Another or multiple,No college degree,Not at all to slightly,Humanlike AI,HND,0,-1,1,2,2,0,0,-1,1,2,2,0,2,1,0,1,2,3,-2,1,1,-1,3,3,2
+P401,,,,,,Humanlike AI,HND,2,3,3,3,1,2,2,3,3,3,1,2,2,2,3,1,1,1,1,2,3,3,3,3,2
+P402,18-44,Man,White,No college degree,More than moderately,Doctor,DHN,-3,-1,3,1,,2,-2,1,1,3,0,-1,2,-2,1,3,0,1,-1,2,-3,-1,3,1,1
+P403,,,,,,Humanlike AI,HND,0,0,3,3,2,2,0,0,3,3,2,2,0,-3,-3,1,2,3,-2,0,,,,,
+P404,,,,,,Standard AI,NHD,0,0,2,2,2,0,,,,,,,,0,0,2,2,2,0,1,,,,,
+P405,,Man,White,No college degree,Not at all to slightly,Standard AI,NHD,1,1,1,2,0,1,1,2,1,2,1,2,2,1,1,1,2,0,1,2,2,2,2,3,0
+P406,45-59,Woman,White,College degree or more,More than moderately,Standard AI,NHD,1,1,1,2,2,1,2,2,3,3,3,2,2,1,1,1,2,2,1,2,2,2,3,3,2
+P407,18-44,Man,White,No college degree,Moderately,Humanlike AI,HND,1,1,0,2,0,-2,1,1,0,2,0,-2,1,0,-1,0,0,0,-3,3,0,-2,2,1,2
+P408,45-59,Woman,White,No college degree,More than moderately,Standard AI,NHD,1,1,3,3,3,1,1,1,3,3,3,1,1,1,1,3,3,3,1,0,1,1,3,2,0
+P409,60-69,Woman,White,No college degree,More than moderately,Standard AI,NDH,2,2,3,2,2,-3,0,0,3,3,2,2,3,2,2,3,2,2,-3,3,3,3,3,4,-3
+P410,18-44,Woman,White,No college degree,Moderately,Humanlike AI,HDN,3,3,4,4,4,3,3,3,4,4,4,3,2,3,3,4,4,4,3,3,3,3,4,4,3
+P411,18-44,Woman,White,College degree or more,Not at all to slightly,Standard AI,NDH,-1,-1,3,1,4,-1,-2,-3,2,1,1,0,1,-1,-1,3,1,4,-1,1,-1,0,0,1,-2
+P412,18-44,Woman,White,No college degree,More than moderately,Humanlike AI,HND,2,1,3,3,4,2,2,1,3,3,4,2,2,2,2,3,3,4,2,2,2,2,3,3,1
+P413,18-44,Woman,White,No college degree,Moderately,Doctor,DNH,2,2,1,2,,2,2,2,2,3,4,2,1,1,1,0,2,0,0,-1,2,2,1,2,2
+P414,18-44,Woman,White,College degree or more,Not at all to slightly,Humanlike AI,HND,1,1,1,2,1,0,1,1,1,2,1,0,2,-1,1,0,2,0,0,2,1,1,0,2,-1
+P415,45-59,Woman,White,No college degree,Moderately,Doctor,DNH,3,3,4,4,,3,2,2,4,4,4,2,3,1,-1,3,3,1,-2,-1,3,3,4,4,3
+P416,,,,,,Doctor,DNH,1,-1,1,2,,0,,,,,,,,,,,,,,,1,-1,1,2,1
+P417,70+,Woman,White,College degree or more,Not at all to slightly,Humanlike AI,HDN,2,2,1,2,2,0,2,2,1,2,2,0,1,1,2,2,2,2,1,0,1,2,1,1,1
+P418,45-59,Man,White,No college degree,Not at all to slightly,Doctor,DNH,0,0,2,2,,-1,0,0,3,2,2,0,-1,0,0,3,2,2,1,-1,0,0,2,2,1
+P419,18-44,Woman,White,No college degree,Not at all to slightly,Doctor,DHN,1,1,3,2,,2,1,2,3,3,3,2,2,0,0,2,2,2,1,0,1,1,3,2,2
+P420,18-44,Woman,White,No college degree,Not at all to slightly,Doctor,DHN,0,0,0,0,,0,0,0,0,0,1,0,-3,0,0,0,0,0,0,-3,0,0,0,0,-3
+P421,45-59,Woman,White,No college degree,Not at all to slightly,Standard AI,NHD,0,0,0,0,0,0,0,0,2,2,2,0,0,0,0,0,0,0,0,-3,0,0,2,2,2
+P422,18-44,Woman,Another or multiple,No college degree,Moderately,Doctor,DNH,3,3,4,4,,2,-3,-3,0,1,0,-2,0,-1,-1,0,0,0,-3,-2,3,3,4,4,0
+P423,18-44,Man,White,No college degree,More than moderately,Humanlike AI,HND,0,0,2,2,2,0,0,0,2,2,2,0,0,0,0,2,2,2,0,0,0,0,2,2,0
+P424,,,,,,Humanlike AI,HND,0,0,2,2,2,0,0,0,2,2,2,0,,,,,,,,,,,,,
+P425,18-44,Man,White,College degree or more,Moderately,Doctor,DHN,0,1,3,3,,2,1,1,3,3,3,2,3,2,3,4,4,4,3,3,0,1,3,3,3
+P426,18-44,Woman,White,No college degree,Not at all to slightly,Standard AI,NDH,2,2,2,3,2,2,2,3,4,3,4,2,2,2,2,2,3,2,2,2,3,3,4,4,0
+P427,18-44,Woman,White,No college degree,Moderately,Standard AI,NHD,1,2,3,1,2,1,2,2,4,3,3,2,3,1,2,3,1,2,1,1,3,3,4,4,3
+P428,,,,,,Humanlike AI,HDN,0,0,2,2,2,0,0,0,2,2,2,0,1,,,,,,,,0,0,2,2,2
+P429,70+,Woman,White,No college degree,More than moderately,Standard AI,NHD,3,3,2,4,3,3,3,3,4,4,4,3,1,3,3,2,4,3,3,3,3,3,4,4,2
+P430,45-59,Man,White,College degree or more,Not at all to slightly,Doctor,DHN,2,2,3,3,,3,2,2,3,3,3,2,1,2,2,3,3,3,2,1,2,2,3,3,1
+P431,,,,,,Humanlike AI,HDN,-2,-2,1,1,1,-2,-2,-2,1,1,1,-2,2,,,,,,,,,,,,
+P432,45-59,Man,White,No college degree,More than moderately,Humanlike AI,HND,0,0,2,2,1,0,0,0,2,2,1,0,0,0,1,1,1,1,0,0,0,1,1,1,0
+P433,18-44,Man,White,No college degree,More than moderately,Standard AI,NHD,2,2,3,3,3,2,2,2,3,3,3,2,2,2,2,3,3,3,2,2,2,2,3,3,3
+P434,60-69,Man,White,College degree or more,Moderately,Standard AI,NHD,1,1,1,2,2,1,1,1,2,2,2,1,1,1,1,1,2,2,1,1,1,1,3,2,2
+P435,45-59,Man,White,College degree or more,More than moderately,Doctor,DNH,3,3,3,3,,2,2,2,4,4,4,2,3,3,3,4,3,4,2,3,3,3,3,3,3
+P436,70+,Man,White,No college degree,Moderately,Doctor,DHN,2,3,3,3,,2,3,3,3,3,2,3,0,3,3,2,3,2,3,1,2,3,3,3,0
+P437,18-44,Woman,White,No college degree,Not at all to slightly,Standard AI,NHD,1,0,1,2,3,-1,2,1,3,2,3,0,3,1,0,1,2,3,-1,-1,-1,-2,3,2,3
+P438,18-44,Man,Another or multiple,College degree or more,Not at all to slightly,Humanlike AI,HND,2,-1,3,3,3,-2,2,-1,3,3,3,-2,2,2,3,3,1,3,2,3,2,3,3,1,1
+P439,70+,Woman,Another or multiple,No college degree,More than moderately,Standard AI,NHD,3,3,4,4,1,3,3,3,4,4,4,3,3,3,3,4,4,1,3,3,3,3,4,4,3
+P440,,,,,,Doctor,DHN,-1,0,2,2,,-1,-2,-1,1,2,4,-2,-2,,,,,,,,-1,0,2,2,2
+P441,,,,,,Standard AI,NHD,0,0,2,2,2,0,0,0,2,2,2,0,0,0,0,2,2,2,0,0,,,,,
+P442,70+,Man,Another or multiple,No college degree,More than moderately,Standard AI,NHD,2,2,1,2,3,2,2,1,1,2,2,2,1,2,2,1,2,3,2,1,1,2,1,2,1
+P443,70+,Woman,White,No college degree,Not at all to slightly,Humanlike AI,HND,3,3,3,3,2,2,3,3,3,3,2,2,3,3,2,1,3,2,2,3,3,3,4,4,3
+P444,45-59,Man,White,No college degree,Not at all to slightly,Standard AI,NHD,2,2,2,4,3,3,3,3,3,4,4,3,0,2,2,2,4,3,3,0,3,3,4,4,0
+P445,18-44,Woman,Another or multiple,No college degree,More than moderately,Doctor,DHN,3,3,4,3,,1,3,3,3,4,3,2,2,2,2,3,3,3,2,3,3,3,4,3,1
+P446,45-59,Woman,Another or multiple,No college degree,More than moderately,Standard AI,NDH,0,1,2,1,1,0,1,1,2,2,2,0,2,0,1,2,1,1,0,2,1,1,2,2,-2
+P447,45-59,Woman,White,No college degree,Moderately,Doctor,DNH,1,0,4,3,,0,1,0,3,3,1,0,1,-3,-2,2,0,0,-3,-2,1,0,4,3,2
+P448,70+,Woman,White,No college degree,Moderately,Humanlike AI,HND,1,1,0,0,0,-3,1,1,0,0,0,-3,1,-1,-1,0,0,0,-3,1,-2,-2,0,0,1
+P449,,,,,,Doctor,DHN,-2,-1,3,3,,1,,,,,,,,,,,,,,,-2,-1,3,3,1
+P450,70+,Man,White,No college degree,Moderately,Doctor,DHN,2,2,3,2,,2,0,0,2,2,3,0,0,0,0,0,2,0,0,0,2,2,3,2,0
+P451,60-69,Woman,White,College degree or more,More than moderately,Standard AI,NHD,1,1,1,2,2,0,1,1,2,1,1,-1,-1,1,1,1,2,2,0,0,-1,-1,2,1,-1
+P452,18-44,Woman,White,No college degree,Moderately,Standard AI,NHD,-3,-3,4,4,4,3,3,3,4,4,4,3,3,-3,-3,4,4,4,3,3,3,3,4,4,3
+P453,,,,,,Humanlike AI,HND,2,2,0,2,2,2,2,2,0,2,2,2,2,,,,,,,,,,,,
+P454,18-44,Man,White,No college degree,More than moderately,Standard AI,NHD,2,3,3,1,1,2,3,2,2,2,3,2,2,2,3,3,1,1,2,2,2,2,4,4,2
+P455,45-59,Woman,White,No college degree,Not at all to slightly,Standard AI,NHD,2,2,3,3,3,2,2,2,3,3,3,2,2,2,2,3,3,3,2,1,2,2,3,3,2
+P456,18-44,Woman,Another or multiple,No college degree,More than moderately,Standard AI,NDH,0,0,2,3,1,-2,-1,0,4,3,3,-2,1,0,0,2,3,1,-2,-2,1,0,4,1,2
+P457,18-44,Woman,White,College degree or more,More than moderately,Humanlike AI,HDN,1,1,2,3,2,1,1,1,2,3,2,1,2,1,2,3,3,2,2,2,1,1,4,3,2
+P458,18-44,Man,White,College degree or more,More than moderately,Standard AI,NHD,3,2,3,4,4,2,1,2,2,3,4,1,2,3,2,3,4,4,2,1,2,1,3,4,2
+P459,,,,,,Humanlike AI,HDN,0,1,1,0,0,0,0,1,1,0,0,0,-1,,,,,,,,-3,-3,0,1,-1
+P460,45-59,Woman,White,No college degree,Not at all to slightly,Doctor,DNH,1,2,4,2,,-1,0,1,1,1,2,-1,2,-2,-1,0,0,0,-1,3,1,2,4,2,0
+P461,60-69,Woman,Another or multiple,No college degree,Moderately,Humanlike AI,HND,0,1,0,2,0,-1,0,1,0,2,0,-1,-2,1,1,1,1,0,1,1,-1,-1,1,1,-2
+P462,18-44,Man,White,College degree or more,More than moderately,Humanlike AI,HND,3,3,4,4,4,3,3,3,4,4,4,3,3,3,3,4,4,4,3,3,3,3,4,4,3
+P463,70+,Man,White,College degree or more,More than moderately,Humanlike AI,HDN,1,1,1,2,1,1,1,1,1,2,1,1,1,1,1,1,2,2,1,1,1,1,2,2,1
+P464,18-44,Woman,Another or multiple,No college degree,Not at all to slightly,Standard AI,NHD,2,2,0,2,1,1,2,2,3,3,3,2,3,2,2,0,2,1,1,3,2,2,3,3,3
+P465,18-44,Woman,White,No college degree,More than moderately,Standard AI,NDH,2,2,1,1,2,-1,2,0,2,3,1,0,-1,2,2,1,1,2,-1,0,2,0,2,3,-1
+P466,45-59,Woman,Another or multiple,College degree or more,More than moderately,Standard AI,NDH,0,1,2,4,2,-2,0,1,2,2,2,0,2,0,1,2,4,2,-2,2,0,-1,2,2,2
+P467,70+,Man,White,College degree or more,Moderately,Doctor,DNH,0,-3,0,0,,-3,-3,-3,0,0,0,-3,-1,-3,-3,0,0,0,-3,-1,0,-3,0,0,-2
+P468,,,,,,Standard AI,NDH,2,1,2,1,1,1,,,,,,,,2,1,2,1,1,1,2,,,,,
+P469,45-59,Man,Another or multiple,College degree or more,More than moderately,Standard AI,NHD,0,0,2,2,2,0,1,1,3,1,2,0,1,0,0,2,2,2,0,0,1,1,2,1,1
+P470,18-44,Woman,White,No college degree,More than moderately,Doctor,DHN,2,2,3,3,,2,2,2,3,3,3,2,2,-1,-2,2,2,0,0,-1,2,2,3,3,1
+P471,18-44,Woman,White,No college degree,More than moderately,Standard AI,NDH,1,1,2,1,1,-2,1,0,3,2,1,-1,1,1,1,2,1,1,-2,2,1,1,1,1,2
+P472,,,,,,Doctor,DHN,3,3,4,4,,3,3,3,4,4,3,2,,,,,,,,,3,3,4,4,0
+P473,,,,,,Humanlike AI,HDN,0,2,2,1,2,-3,0,2,2,1,2,-3,3,,,,,,,,1,2,2,2,1
+P474,18-44,Man,White,College degree or more,Not at all to slightly,Humanlike AI,HDN,0,-2,2,2,2,-2,0,-2,2,2,2,-2,1,1,2,4,1,2,1,1,0,-1,1,1,2
+P475,18-44,Woman,White,No college degree,Moderately,Standard AI,NHD,3,3,2,4,0,2,3,3,4,4,4,3,0,3,3,2,4,0,2,0,2,1,4,3,0
+P476,18-44,Woman,White,No college degree,Not at all to slightly,Humanlike AI,HDN,0,1,0,2,2,1,0,1,0,2,2,1,1,-1,0,0,2,0,-1,1,0,-2,2,2,1
+P477,70+,Man,White,College degree or more,Not at all to slightly,Standard AI,NDH,0,0,2,1,2,0,0,0,2,2,2,0,0,0,0,2,1,2,0,0,0,0,2,2,0
+P478,,,,,,Humanlike AI,HND,1,1,2,2,2,1,1,1,2,2,2,1,0,-1,-1,1,1,1,-1,1,2,2,3,3,-1
+P479,70+,Woman,White,No college degree,Moderately,Standard AI,NHD,-2,2,2,2,1,2,3,3,4,4,4,3,2,-2,2,2,2,1,2,1,3,3,4,4,3
+P480,,,,,,Standard AI,NDH,2,2,3,2,2,1,,,,,,,,2,2,3,2,2,1,2,2,2,3,3,2
+P481,60-69,Man,Another or multiple,No college degree,Moderately,Standard AI,NHD,2,2,0,1,0,0,2,2,1,3,2,0,1,2,2,0,1,0,0,1,2,2,1,3,0
+P482,,,,,,Standard AI,NDH,1,1,1,3,1,1,,,,,,,,1,1,1,3,1,1,2,2,2,3,3,2
+P483,18-44,Man,Another or multiple,No college degree,Moderately,Doctor,DNH,0,0,2,2,,0,0,0,2,2,2,0,0,0,0,2,2,2,0,0,0,0,2,2,0
+P484,18-44,Woman,Another or multiple,College degree or more,More than moderately,Doctor,DHN,-2,0,1,3,,2,1,1,2,3,3,1,2,0,0,3,3,0,2,-1,-2,0,1,3,2
+P485,,,,,,Humanlike AI,HND,-2,-1,1,1,1,0,-2,-1,1,1,1,0,-1,,,,,,,,,,,,
+P486,,,,,,Standard AI,NHD,-1,-1,2,3,1,-1,-1,-1,3,4,2,-1,-1,-1,-1,2,3,1,-1,0,,,,,
+P487,,,,,,Humanlike AI,HND,2,2,0,2,2,2,2,2,0,2,2,2,0,,,,,,,,,,,,
+P488,18-44,Man,White,No college degree,More than moderately,Standard AI,NHD,2,2,2,3,2,2,2,2,4,3,4,2,3,2,2,2,3,2,2,3,3,3,4,4,-1
+P489,60-69,Woman,White,No college degree,More than moderately,Humanlike AI,HDN,-2,-2,2,1,2,0,-2,-2,2,1,2,0,-2,1,2,0,1,0,-2,-2,-1,1,3,1,-2
+P490,70+,Man,White,No college degree,More than moderately,Standard AI,NHD,1,1,2,2,2,1,1,1,2,2,2,1,1,1,1,2,2,2,1,1,1,1,2,2,-1
+P491,18-44,Woman,White,No college degree,Moderately,Standard AI,NHD,-3,0,3,2,2,2,-1,0,2,3,3,2,3,-3,0,3,2,2,2,2,1,2,3,3,2
+P492,18-44,Woman,Another or multiple,College degree or more,Not at all to slightly,Standard AI,NDH,3,3,2,4,2,3,3,3,2,4,2,3,3,3,3,2,4,2,3,3,3,3,2,4,3
+P493,18-44,Man,Another or multiple,College degree or more,More than moderately,Standard AI,NHD,2,2,3,4,3,1,2,2,3,3,1,0,1,2,2,3,4,3,1,2,2,3,3,2,1
+P494,18-44,Woman,White,No college degree,Not at all to slightly,Standard AI,NHD,0,1,0,1,0,0,0,1,0,1,0,0,1,0,1,0,1,0,0,1,0,0,2,1,1
+P495,45-59,Man,White,No college degree,More than moderately,Humanlike AI,HDN,1,1,3,3,3,-1,1,1,3,3,3,-1,2,1,2,4,2,2,2,2,2,2,3,4,2
+P496,60-69,Woman,White,College degree or more,Not at all to slightly,Standard AI,NHD,1,1,1,1,1,1,2,3,4,4,4,2,0,1,1,1,1,1,1,1,3,3,4,4,2
+P497,,,,,,Doctor,DNH,2,2,3,3,,2,,,,,,,,,,,,,,,2,2,3,3,0
+P498,18-44,Man,Another or multiple,College degree or more,Not at all to slightly,Humanlike AI,HND,1,3,4,3,3,3,1,3,4,3,3,3,2,3,3,4,3,3,3,2,3,1,4,4,2
+P499,18-44,Woman,White,No college degree,Not at all to slightly,Humanlike AI,HND,-1,0,2,3,2,0,-1,0,2,3,2,0,1,0,1,0,1,0,0,2,1,2,3,3,1
+P500,45-59,Man,White,College degree or more,Not at all to slightly,Doctor,DNH,1,1,3,3,,2,2,2,3,3,2,2,1,2,2,2,2,1,1,1,1,1,3,3,2
+P501,18-44,Woman,Another or multiple,No college degree,Moderately,Doctor,DNH,3,3,4,4,,3,3,3,4,4,4,3,3,3,3,4,4,4,3,3,3,3,4,4,3
+P502,18-44,Woman,White,No college degree,Not at all to slightly,Doctor,DHN,3,3,4,4,,3,3,3,4,4,4,3,3,3,3,4,4,4,3,3,3,3,4,4,2
+P503,,,,,,Humanlike AI,HND,1,3,2,2,2,1,1,3,2,2,2,1,0,-1,-1,0,0,1,-1,-2,1,1,3,2,0
+P504,18-44,Woman,White,No college degree,More than moderately,Standard AI,NHD,-1,-2,2,1,2,-1,0,-3,1,3,3,-2,1,-1,-2,2,1,2,-1,0,-2,0,3,1,1
+P505,18-44,Man,White,College degree or more,More than moderately,Humanlike AI,HND,3,2,4,3,4,2,3,2,4,3,4,2,2,3,2,4,3,3,3,2,3,2,3,4,3
+P506,45-59,Woman,White,No college degree,More than moderately,Standard AI,NHD,3,3,3,4,3,2,3,3,4,4,4,3,3,3,3,3,4,3,2,2,3,3,4,4,3
+P507,60-69,Man,White,No college degree,Moderately,Standard AI,NHD,0,0,2,2,2,0,0,0,2,2,2,0,0,0,0,2,2,2,0,0,0,0,2,2,0
+P508,18-44,Woman,White,No college degree,Not at all to slightly,Doctor,DNH,1,3,3,3,,2,2,1,2,3,2,1,2,1,2,3,2,3,1,2,1,3,3,3,1
+P509,18-44,Woman,White,No college degree,Moderately,Humanlike AI,HDN,0,0,4,4,1,0,0,0,4,4,1,0,3,0,0,4,2,0,0,3,0,0,4,4,3
+P510,45-59,Man,White,No college degree,Not at all to slightly,Humanlike AI,HND,2,2,1,2,2,2,2,2,1,2,2,2,1,1,1,1,2,1,0,2,2,2,1,2,2
+P511,60-69,Woman,White,College degree or more,More than moderately,Humanlike AI,HDN,2,2,1,2,2,2,2,2,1,2,2,2,1,-1,-1,0,0,0,0,1,1,1,1,1,1
+P512,70+,Woman,White,No college degree,Moderately,Standard AI,NHD,0,1,0,2,0,-2,0,1,1,1,1,-2,2,0,1,0,2,0,-2,2,0,1,1,1,2
+P513,70+,Man,White,No college degree,Not at all to slightly,Standard AI,NHD,0,0,0,1,0,-3,0,0,0,1,0,-3,3,0,0,0,1,0,-3,2,-2,0,2,0,-3
+P514,18-44,Woman,Another or multiple,No college degree,More than moderately,Standard AI,NHD,-3,-3,0,0,0,-3,-3,-3,0,0,1,-2,-3,-3,-3,0,0,0,-3,-1,-3,-2,0,1,-3
+P515,,,,,,Standard AI,NDH,1,3,0,2,3,-2,,,,,,,,1,3,0,2,3,-2,-1,3,3,4,4,2
+P516,18-44,Man,Another or multiple,No college degree,Not at all to slightly,Humanlike AI,HND,0,1,3,3,2,2,0,1,3,3,2,2,1,0,-1,0,1,0,2,,-1,1,3,3,1
+P517,18-44,Woman,White,College degree or more,Not at all to slightly,Humanlike AI,HDN,1,1,2,2,2,0,1,1,2,2,2,0,1,0,0,2,2,2,0,0,0,0,2,2,0
+P518,18-44,Man,White,College degree or more,More than moderately,Doctor,DHN,3,2,4,3,,3,3,2,3,4,4,3,3,3,2,3,4,4,3,3,3,2,4,3,3
+P519,18-44,Woman,White,No college degree,More than moderately,Humanlike AI,HND,-1,0,3,1,1,-1,-1,0,3,1,1,-1,2,-2,-3,0,1,2,-3,2,-3,-3,0,0,-2
+P520,18-44,Man,White,No college degree,More than moderately,Humanlike AI,HND,3,3,3,2,3,0,3,3,3,2,3,0,3,3,3,3,3,4,1,2,2,2,4,4,1
+P521,70+,Man,White,No college degree,More than moderately,Humanlike AI,HDN,2,2,3,3,3,2,2,2,3,3,3,2,0,1,1,1,1,2,-1,3,2,2,3,3,0
+P522,,,,,,Standard AI,NDH,0,0,0,0,0,-3,0,0,0,0,0,-3,0,0,0,0,0,0,-3,1,0,0,0,0,0
+P523,18-44,Man,White,No college degree,Not at all to slightly,Humanlike AI,HDN,-3,-3,0,0,0,-3,-3,-3,0,0,0,-3,1,0,1,3,1,3,1,2,2,2,3,4,2
+P524,60-69,Man,White,College degree or more,More than moderately,Humanlike AI,HDN,2,2,3,3,3,2,2,2,3,3,3,2,3,1,1,0,1,1,1,1,2,2,3,3,2
+P525,45-59,Man,Another or multiple,College degree or more,Not at all to slightly,Humanlike AI,HND,2,2,3,2,2,2,2,2,3,2,2,2,2,2,2,1,2,2,2,2,2,2,3,3,2
+P526,18-44,Woman,White,No college degree,Moderately,Standard AI,NHD,-1,1,1,1,0,-2,0,1,1,1,0,0,2,-1,1,1,1,0,-2,3,1,0,1,1,1
+P527,18-44,Woman,Another or multiple,No college degree,Not at all to slightly,Humanlike AI,HND,3,3,0,4,0,3,3,3,0,4,0,3,0,-3,-3,0,0,0,-3,-3,-3,-3,0,0,-3
+P528,18-44,Woman,Another or multiple,No college degree,More than moderately,Humanlike AI,HDN,0,0,3,3,3,0,0,0,3,3,3,0,2,0,0,2,2,2,0,1,0,0,2,2,1
+P529,18-44,Woman,Another or multiple,No college degree,Not at all to slightly,Standard AI,NHD,0,0,1,1,3,1,1,0,2,3,2,0,1,0,0,1,1,3,1,-1,1,0,2,2,1
+P530,18-44,Woman,White,College degree or more,Moderately,Standard AI,NHD,2,2,3,3,3,2,2,2,3,3,3,1,1,2,2,3,3,3,2,2,2,3,3,3,2
+P531,60-69,Woman,Another or multiple,No college degree,More than moderately,Doctor,DHN,0,0,0,3,,0,0,0,0,1,1,0,-1,0,0,0,1,1,0,-2,0,0,0,3,-1
+P532,60-69,Man,White,No college degree,Not at all to slightly,Humanlike AI,HDN,0,0,2,2,2,0,0,0,2,2,2,0,0,0,0,2,2,2,0,0,0,0,2,2,0
+P533,18-44,Woman,Another or multiple,No college degree,Not at all to slightly,Humanlike AI,HDN,1,2,2,3,3,1,1,2,2,3,3,1,1,-2,-2,3,4,3,2,-1,-1,-2,3,3,1
+P534,18-44,Woman,White,No college degree,Moderately,Doctor,DHN,0,0,2,2,,2,0,0,3,2,1,0,2,-1,-1,0,0,0,-1,-3,0,0,2,2,2
+P535,18-44,Woman,White,No college degree,Not at all to slightly,Standard AI,NHD,-2,-3,1,1,0,-2,0,0,1,1,3,1,3,-2,-3,1,1,0,-2,-3,-2,-2,1,2,-3
+P536,18-44,Woman,White,College degree or more,More than moderately,Humanlike AI,HDN,1,2,1,3,3,0,1,2,1,3,3,0,0,-2,-2,0,1,0,-2,2,1,1,1,3,0
+P537,60-69,Woman,White,No college degree,More than moderately,Humanlike AI,HND,2,2,1,1,2,1,2,2,1,1,2,1,2,2,2,0,1,1,1,2,2,2,1,2,-2
+P538,18-44,Man,Another or multiple,College degree or more,Not at all to slightly,Standard AI,NDH,1,2,3,4,2,2,3,2,4,4,4,2,3,1,2,3,4,2,2,2,3,2,4,4,2
+P539,18-44,Man,White,College degree or more,Not at all to slightly,Standard AI,NHD,1,3,2,3,3,1,1,0,2,1,3,1,1,1,3,2,3,3,1,1,-1,-2,2,1,1
+P540,18-44,Man,White,No college degree,More than moderately,Humanlike AI,HND,1,0,2,2,2,0,1,0,2,2,2,0,1,-1,1,2,3,3,0,1,1,2,1,2,1
+P541,18-44,Man,Another or multiple,No college degree,Not at all to slightly,Doctor,DHN,3,3,4,4,,3,3,3,4,4,4,3,3,3,3,4,4,4,3,1,3,3,4,4,3
+P542,18-44,Woman,Another or multiple,College degree or more,More than moderately,Doctor,DNH,1,0,2,2,,0,1,2,1,1,1,0,0,1,0,1,1,1,0,-1,1,0,2,2,0
+P543,45-59,Woman,White,College degree or more,Moderately,Doctor,DHN,0,0,2,2,,0,0,0,2,2,2,-1,1,0,0,2,2,2,0,1,0,0,2,2,2
+P544,18-44,Woman,Another or multiple,College degree or more,More than moderately,Humanlike AI,HND,2,2,3,3,3,2,2,2,3,3,3,2,2,2,2,3,3,3,2,2,2,2,3,3,2
+P545,18-44,Woman,Another or multiple,No college degree,More than moderately,Humanlike AI,HDN,0,0,2,2,1,0,0,0,2,2,1,0,3,0,0,2,2,1,0,3,0,0,1,2,3
+P546,18-44,Man,White,No college degree,Moderately,Humanlike AI,HND,0,0,2,3,2,0,0,0,2,3,2,0,0,0,0,1,2,2,0,0,0,0,2,2,0
+P547,18-44,Woman,White,No college degree,Not at all to slightly,Humanlike AI,HDN,3,3,3,4,3,3,3,3,3,4,3,3,3,3,3,4,4,4,3,3,3,3,3,3,3
+P548,18-44,Woman,Another or multiple,No college degree,More than moderately,Doctor,DNH,2,2,4,2,,-1,1,2,3,4,3,0,2,2,3,4,2,2,0,2,2,2,4,2,3
+P549,18-44,Man,White,College degree or more,Moderately,Humanlike AI,HDN,2,1,3,3,4,2,2,1,3,3,4,2,2,2,2,3,3,4,1,2,2,3,3,3,2
+P550,18-44,Woman,White,College degree or more,Not at all to slightly,Humanlike AI,HDN,0,0,2,2,2,0,0,0,2,2,2,0,0,0,0,2,2,2,0,0,0,0,2,2,1
+P551,45-59,Woman,Another or multiple,College degree or more,More than moderately,Humanlike AI,HND,3,3,4,4,4,3,3,3,4,4,4,3,3,3,3,4,4,4,3,3,3,3,4,4,3
+P552,18-44,Man,Another or multiple,College degree or more,Not at all to slightly,Standard AI,NHD,3,3,4,3,4,3,3,3,4,4,4,3,3,3,3,4,3,4,3,3,3,3,4,4,3
+P553,18-44,Woman,White,No college degree,Not at all to slightly,Doctor,DHN,1,-1,3,3,,-1,1,-1,2,3,2,-1,-2,-3,-3,0,1,0,-3,-3,1,-1,3,3,-2
+P554,,,,,,Standard AI,NDH,0,0,2,2,2,0,,,,,,,,0,0,2,2,2,0,1,0,0,2,1,1
+P555,18-44,Man,White,No college degree,Moderately,Standard AI,NDH,0,0,2,2,2,0,0,0,2,2,1,0,0,0,0,2,2,2,0,0,0,0,2,2,0
+P556,60-69,Man,White,College degree or more,More than moderately,Doctor,DNH,2,2,3,3,,0,2,2,3,3,3,2,0,2,2,3,3,3,2,0,2,2,3,3,0
+P557,,Man,White,No college degree,More than moderately,Humanlike AI,HND,1,2,4,3,3,2,1,2,4,3,3,2,2,0,2,2,3,3,1,2,2,2,3,2,2
+P558,18-44,Man,White,No college degree,Moderately,Humanlike AI,HND,0,0,2,2,2,1,0,0,2,2,2,1,1,0,0,1,1,2,0,1,1,1,1,1,1
+P559,70+,Woman,White,College degree or more,More than moderately,Doctor,DHN,2,2,3,3,,0,2,2,2,2,2,2,1,2,2,2,2,2,1,0,2,2,3,3,0

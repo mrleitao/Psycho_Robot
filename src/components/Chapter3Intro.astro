@@ -1,0 +1,30 @@
+---
+// A short introduction to Chapter 3 of the dissertation, the chapter that holds Studies 3, 4 and 5.
+import { href } from '../utils/url';
+import s3 from '../data/trust-in-medical-ai/study3-full.json';
+import s4 from '../data/trust-in-medical-ai/study4-full.json';
+import s5 from '../data/trust-in-medical-ai/study5-full.json';
+interface Props { current?: '3' | '4' | '5' }
+const { current } = Astro.props;
+const n = (x: number) => x.toLocaleString('en-US');
+const link = (k: '3' | '4' | '5') => `/projects/trust-in-medical-ai/study-${k}/`;
+---
+<aside class="chapter" aria-labelledby="chapter3-title">
+  <h2 id="chapter3-title">Chapter 3: Can a humanlike AI close the gap?</h2>
+  <p>
+    Chapter 2 found that people trust a doctor more than an AI. Chapter 3 asks whether describing an AI in humanlike terms narrows that gap. In the
+    humanlike version, the AI was named Jordan and spoke like a person. In the standard version it was called JO76N. The advice was the same in every condition.
+  </p>
+  <p>
+    {current === '3' ? <strong>Study 3</strong> : <a href={href(link('3'))}>Study 3</a>} ({n(s3.sample.n)} adults) put each person in one of three conditions, so no one saw more than one recommender.
+    {current === '4' ? <strong>Study 4</strong> : <a href={href(link('4'))}>Study 4</a>} ({n(s4.sample.n)} adults) repeated that design with a voice reading the advice, then had everyone
+    rate all three recommenders side by side.
+    {current === '5' ? <strong>Study 5</strong> : <a href={href(link('5'))}>Study 5</a>} ({n(s5.sample.n)} adults) had everyone rate all three, half hearing a voice and half reading only,
+    and tested whether mind perception explains the results.
+  </p>
+</aside>
+<style>
+  .chapter { margin: 2rem 0 0; padding: 1.1rem 1.4rem 0.4rem; border-left: 4px solid var(--coral); background: var(--wash); max-width: 70ch; }
+  .chapter h2 { font-size: 1.15rem; margin: 0 0 0.6rem; }
+  .chapter p { margin: 0 0 0.8rem; }
+</style>

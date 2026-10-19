@@ -1,0 +1,244 @@
+---
+import DeepNav from '../../../../components/DeepNav.astro';
+import Base from '../../../../layouts/Base.astro';
+import StatTable from '../../../../components/StatTable.astro';
+import Raincloud from '../../../../components/Raincloud.astro';
+import DotPanels from '../../../../components/DotPanels.astro';
+import DotRows from '../../../../components/DotRows.astro';
+import CorrGrid from '../../../../components/CorrGrid.astro';
+import Contents from '../../../../components/Contents.astro';
+import Glossary from '../../../../components/Glossary.astro';
+import full from '../../../../data/trust-in-medical-ai/study3-full.json';
+import pts from '../../../../data/trust-in-medical-ai/study3-points.json';
+import { href } from '../../../../utils/url';
+import {
+  f2, noZero, minus, pv, r3, descCols, descRow, betweenCols, betweenRow, olsCols, olsRows, olsFit, coefFig, coefDomain,
+  dRefs, sampleRows, sampleFig, missingNote,
+} from '../../../../utils/fmt';
+
+const MEAS = [
+  { id: 'trust', label: 'Trust', scale: '−3 to 3' },
+  { id: 'belief', label: 'Belief', scale: '−3 to 3' },
+  { id: 'warmth', label: 'Warmth', scale: '0 to 4' },
+  { id: 'competence', label: 'Competence', scale: '0 to 4' },
+];
+const CONDS = [['humanlike', 'Humanlike AI'], ['standard', 'Standard AI'], ['doctor', 'Doctor']] as const;
+const desc = (id: string) => full.descriptives.find((d: any) => d.id === id)!;
+const n = full.sample.n;
+
+// Table 3: descriptives
+const descRows = MEAS.flatMap((m) => CONDS.map(([k, name]) => descRow((desc(m.id).cells as any)[k], `${m.label} (${m.scale}): ${name}`)));
+// Figure: means with intervals, four panels
+const cell = (c: any) => ({ mean: c.mean, lo: c.lo, hi: c.hi, n: c.n });
+const meanItems = [
+  { label: 'Doctor', kind: 'human', cells: MEAS.map((m) => cell((desc(m.id).cells as any).doctor)) },
+  { label: 'Humanlike AI', kind: 'hybrid', cells: MEAS.map((m) => cell((desc(m.id).cells as any).humanlike)) },
+  { label: 'Standard AI', kind: 'ai', cells: MEAS.map((m) => cell((desc(m.id).cells as any).standard)) },
+];
+const meanPanels = [
+  { title: 'Trust', domain: [-0.5, 1.5], tickStep: 0.5, axisLabel: 'Mean (−3 to 3)' },
+  { title: 'Belief', domain: [-0.5, 1.5], tickStep: 0.5, axisLabel: 'Mean (−3 to 3)' },
+  { title: 'Warmth', domain: [1, 2.5], tickStep: 0.5, axisLabel: 'Mean (0 to 4)' },
+  { title: 'Competence', domain: [1.5, 2.5], tickStep: 0.25, axisLabel: 'Mean (0 to 4)' },
+];
+
+// Table 4: ANOVA
+const anovaRows = MEAS.map((m) => {
+  const a = (full.anova as any)[m.id];
+  return {
+    measure: m.label, n: a.n, F: `F(${a.df1}, ${a.df2}) = ${f2(a.F)}`, p: pv(a.p), eta: noZero(a.eta2.toFixed(3)),
+    ds: pv(a.tukey['Doctor|Standard AI']), dh: pv(a.tukey['Doctor|Humanlike AI']), hs: pv(a.tukey['Humanlike AI|Standard AI']),
+  };
+});
+const anovaFig = MEAS.map((m) => ({ label: m.label, v: (full.anova as any)[m.id].eta2, tip: `η² = ${(full.anova as any)[m.id].eta2}` }));
+
+// Table 5: tests
+const testIds = ['ai-doc', 'hum-std', 'doc-std', 'doc-hum'];
+const tests = (m: string) => testIds.map((id) => (full.tests as any)[m].find((t: any) => t.id === id));
+const testRows = MEAS.flatMap((m) => tests(m.id).map((t: any) => ({ ...betweenRow(t, `${m.label}: ${t.label}`), role: t.role === 'planned' ? 'Planned' : 'Additional', pt: t.pTukey == null ? '' : pv(t.pTukey) })));
+const testCols = [...betweenCols('First', 'Second'), { key: 'role', label: 'Kind' }, { key: 'pt', label: 'Tukey p', num: true, hint: 'p adjusted for the three pairwise comparisons among the conditions' }];
+const SHORT: Record<string, string> = { 'ai-doc': 'Doctor versus both AIs', 'hum-std': 'Humanlike versus standard AI', 'doc-std': 'Doctor versus standard AI', 'doc-hum': 'Doctor versus humanlike AI' };
+const dFig = MEAS.flatMap((m) => [{ head: m.label }, ...tests(m.id).map((t: any) => ({ label: SHORT[t.id], v: t.d, lo: t.dLo, hi: t.dHi, tip: `d = ${t.d.toFixed(2)} (95% CI ${t.dLo.toFixed(2)} to ${t.dHi.toFixed(2)})` }))]);
+
+// Table 6: sensitivity
+const sensRows = full.sensitivity.map((s: any) => ({ text: s.label, nA: s.nA, nB: s.nB, d: f2(s.minD) }));
+const sensFig = full.sensitivity.map((s: any) => ({ label: SHORT[s.id], v: s.minD, tip: `d = ${s.minD.toFixed(2)}` }));
+
+// Models
+const modelFigs = (key: 'trust' | 'belief') => (full.models as any)[key];
+const check = full.manipulationCheck;
+const hum = pts.humanlike;
+const corr = full.correlations;
+const corrRows: any[] = [];
+for (let i = 0; i < corr.labels.length; i++) for (let j = i + 1; j < corr.labels.length; j++) corrRows.push({ pair: `${corr.labels[i]} and ${corr.labels[j]}`, r: r3(corr.r[i][j]) });
+
+const F = (label: string, h: string) => ({ label, href: h, kind: 'figure' as const });
+const Tb = (label: string, h: string) => ({ label, href: h, kind: 'table' as const });
+const contents = [
+  { title: 'Who took part', href: '#sample', items: [Tb('1. The people in the released file', '#table-sample')] },
+  { title: 'The three sources and the check', href: '#design', items: [Tb('2. The manipulation check', '#table-check'), F('1. How humanlike the AI seemed', '#fig-check')] },
+  { title: 'Trust, belief, warmth and competence', href: '#outcomes', items: [
+    Tb('3. Ratings by source', '#table-desc'), F('2 to 5. Every person, by source', '#fig-trust'), F('6. Means and intervals', '#fig-means'),
+    Tb('4. One-way ANOVAs', '#table-anova'), Tb('5. Planned and additional comparisons', '#table-tests'), F('7. Effect sizes', '#fig-d'), Tb('6. What the study could detect', '#table-sens')] },
+  { title: 'Regression models', href: '#models', items: [Tb('7. Trust', '#table-m-trust'), Tb('8. Belief', '#table-m-belief')] },
+  { title: 'What goes with trust', href: '#corr', items: [Tb('9. Correlations among the four ratings', '#table-corr'), F('10. Correlation grid', '#fig-corr')] },
+  { title: 'More', href: '#dig', items: [{ label: 'Dig deeper: figure map and Bayes factors', href: href('/projects/trust-in-medical-ai/study-3/dig-deeper/'), kind: 'page' as const }] },
+];
+---
+
+<Base
+  title="Trust in medical AI: Study 3, every table and figure"
+  description="Every table and figure from the Study 3 analysis, rebuilt from the public data with hover details."
+>
+  <div class="wrap">
+    <header class="page-head">
+      <p class="back small"><a href={href('/projects/trust-in-medical-ai/study-3/')}>Study 3</a> · <a href={href('/projects/trust-in-medical-ai/')}>Trust in medical AI</a></p>
+      <h1>Study 3: every table and figure</h1>
+      <p class="lede">Each analysis from the dissertation, rebuilt from the released data, with a figure beside every table. Hover over any mark for the details.</p>
+    </header>
+    <DeepNav study="3" current="full" />
+    <div class="deep">
+      <h2 id="deep-dive">Deep dive: every table and figure</h2>
+      <p>The rest of this page rebuilds each analysis from the public data. Hover over any mark for the details, and open the guide below if a term is unfamiliar.</p>
+      <Glossary />
+    </div>
+
+    <Contents groups={contents} />
+
+    <div class="prose">
+      <p class="how small muted">
+        How to read this page. Each person saw one source only, so every comparison is between groups of different people. Trust and belief are on a scale from −3 to 3,
+        warmth and competence from 0 to 4. The public file groups age into four bands, so the models that used age in years use the band number
+        (1 = 18 to 44, 4 = 70 and over); their age coefficients differ from the dissertation's in scale.
+      </p>
+    </div>
+
+    <section class="section" id="sample" aria-labelledby="sample-title">
+      <h2 id="sample-title">Who took part</h2>
+      <p class="intro">{n} adults rated trust. {full.design.groups.map((g: any) => `${g.n} saw the ${g.condition.toLowerCase()}`).join(', ')}.</p>
+      <StatTable id="table-sample" title="Table 1. The people in the released file"
+        look="The share in each group. Younger adults and women make up the largest groups."
+        columns={[{ key: 'label', label: 'Group' }, { key: 'n', label: 'People', num: true }, { key: 'pct', label: 'Share', num: true }]}
+        rows={sampleRows(full.sample)}
+        note={`Shares are of all ${n} people. Left blank in the file: ${missingNote(full.sample)}. Race is shown as White or another or multiple because no other group reached 30 people. Age is in bands; exact age is not released.`} />
+      <h3 class="fig-title mini">Table 1 as a figure</h3>
+      <p class="leadin">Each bar is the share of the {n} people in that group. Hover a bar for the head count.</p>
+      <DotRows rows={sampleFig(full.sample)} domain={[0, 100]} tickStep={20} axisLabel="Share of people (%)" bars unit="%" digits={0} ariaLabel="Share of participants in each age, gender, race, education and religiosity group" />
+    </section>
+
+    <section class="section" id="design" aria-labelledby="design-title">
+      <h2 id="design-title">The three sources and the check</h2>
+      <p class="intro">
+        People were randomly assigned to read the same health recommendation from a doctor, from a standard AI or from an AI described in humanlike terms.
+        To check the framing, people in the two AI conditions rated how humanlike the AI seemed on a scale from 0 to 4.
+      </p>
+      <StatTable id="table-check" title="Table 2. How humanlike the AI seemed (0 to 4)"
+        look="The two means are close together and the interval for the difference includes zero, so people did not see the humanlike AI as more humanlike."
+        columns={betweenCols('Humanlike AI', 'Standard AI')} rows={[betweenRow(check)]}
+        note="Welch t test, two-sided. Only the two AI conditions answered this question." />
+      <h3 class="fig-title" id="fig-check">Figure 1. How humanlike the AI seemed</h3>
+      <p class="leadin">Each dot is one person's rating, from 0 (not at all humanlike) to 4 (very humanlike). The two clouds overlap almost completely.</p>
+      <Raincloud rows={hum} grid={pts.gridScale4} domain={[0, 4]} tickStep={1} xJitter={0.15} xLabel="How humanlike the AI seemed (0 to 4)" ariaLabel="Each person's rating of how humanlike the AI seemed, by condition" />
+    </section>
+
+    <section class="section" id="outcomes" aria-labelledby="outcomes-title">
+      <h2 id="outcomes-title">Trust, belief, warmth and competence</h2>
+      <p class="intro">
+        The preregistered questions were whether the doctor was trusted more than the AIs, and whether the humanlike AI was trusted more than the standard one.
+        The tables give the descriptives, the omnibus test and then each comparison.
+      </p>
+      <StatTable id="table-desc" title="Table 3. Ratings by source"
+        look="Compare means within a measure. The doctor is highest on trust, belief and warmth; the two AIs sit close together."
+        columns={descCols.map((c) => (c.key === 'label' ? { ...c, label: 'Measure and source' } : c))} rows={descRows}
+        note="Standard errors and intervals are for each group's mean." />
+      <h3 class="fig-title" id="fig-trust">Figure 2. Trust, every person</h3>
+      <p class="leadin">Each dot is one person's trust rating, from −3 (no trust) to 3 (complete trust). The curve shows where ratings pile up, and the bar marks the mean with its 95% interval.</p>
+      <Raincloud rows={pts.trust} grid={pts.gridTrust} domain={[-3, 3]} tickStep={1} xJitter={0.15} xLabel="Trust (−3 to 3)" ariaLabel="Distribution of trust ratings by source" />
+      <h3 class="fig-title" id="fig-belief">Figure 3. Belief, every person</h3>
+      <p class="leadin">The same display for belief in the recommendation.</p>
+      <Raincloud rows={pts.belief} grid={pts.gridTrust} domain={[-3, 3]} tickStep={1} xJitter={0.15} xLabel="Belief (−3 to 3)" ariaLabel="Distribution of belief ratings by source" />
+      <h3 class="fig-title" id="fig-warmth">Figure 4. Warmth, every person</h3>
+      <p class="leadin">The same display for how warm the source seemed, from 0 to 4.</p>
+      <Raincloud rows={pts.warmth} grid={pts.gridScale4} domain={[0, 4]} tickStep={1} xJitter={0.15} xLabel="Warmth (0 to 4)" ariaLabel="Distribution of warmth ratings by source" />
+      <h3 class="fig-title" id="fig-competence">Figure 5. Competence, every person</h3>
+      <p class="leadin">The same display for how competent the source seemed, from 0 to 4.</p>
+      <Raincloud rows={pts.competence} grid={pts.gridScale4} domain={[0, 4]} tickStep={1} xJitter={0.15} xLabel="Competence (0 to 4)" ariaLabel="Distribution of competence ratings by source" />
+      <h3 class="fig-title" id="fig-means">Figure 6. Means and intervals</h3>
+      <p class="leadin">Table 3 as a figure. Each dot is a mean with its 95% interval, one panel per measure. Where the doctor's interval sits clear of the other two, the doctor was rated higher.</p>
+      <DotPanels items={meanItems} panels={meanPanels} ariaLabel="Mean trust, belief, warmth and competence for each source, with 95% intervals" tableLabel="Source" valueLabel="Mean" />
+
+      <StatTable id="table-anova" title="Table 4. One-way ANOVAs across the three sources"
+        look="The F and p columns say whether the three sources differ at all; the last three columns say which pairs do, after adjusting for three comparisons."
+        columns={[
+          { key: 'measure', label: 'Measure' }, { key: 'n', label: 'n', num: true }, { key: 'F', label: 'F (df)', num: true }, { key: 'p', label: 'p', num: true },
+          { key: 'eta', label: 'η²', num: true, hint: 'Share of the variance explained by the source' },
+          { key: 'ds', label: 'Tukey p: doctor, standard AI', num: true, wrap: true, minw: '7rem' },
+          { key: 'dh', label: 'Tukey p: doctor, humanlike AI', num: true, wrap: true, minw: '7rem' },
+          { key: 'hs', label: 'Tukey p: humanlike, standard AI', num: true, wrap: true, minw: '7rem' },
+        ]} rows={anovaRows} note="Tukey HSD for the three pairwise comparisons." />
+      <h3 class="fig-title mini">Table 4 as a figure</h3>
+      <p class="leadin">Each bar is η², the share of the variation in that rating that the source explains. All are small; warmth is the largest.</p>
+      <DotRows rows={anovaFig} domain={[0, 0.06]} tickStep={0.01} bars axisLabel="η²" digits={3} ariaLabel="Variance in each rating explained by the source" />
+
+      <StatTable id="table-tests" title="Table 5. Planned and additional comparisons"
+        look="The d column, with its interval, tells you how large each difference is. Compare the doctor rows with the humanlike-versus-standard rows."
+        columns={testCols} rows={testRows}
+        note="Welch t tests, two-sided. d uses the pooled standard deviation and is positive when the first group is higher. Planned comparisons were preregistered; the rest are additional. The Tukey column adjusts for the three pairwise comparisons." />
+      <h3 class="fig-title" id="fig-d">Figure 7. Effect sizes</h3>
+      <p class="leadin">Table 5 as a figure. Each dot is Cohen's d with a 95% interval. The dashed lines mark a small, medium and large effect on the Funder and Ozer scale. An interval that crosses zero cannot rule out no difference.</p>
+      <DotRows rows={dFig} domain={[-0.4, 0.8]} tickStep={0.2} zero refs={dRefs} axisLabel="Cohen's d, first group minus second" ariaLabel="Effect sizes for each comparison and rating" />
+
+      <StatTable id="table-sens" title="Table 6. What the study could detect"
+        look="The d column is the smallest true difference this design would find 80% of the time. Smaller true differences could easily have been missed."
+        columns={[{ key: 'text', label: 'Comparison', wrap: true, minw: '14rem' }, { key: 'nA', label: 'n, first', num: true }, { key: 'nB', label: 'n, second', num: true }, { key: 'd', label: 'Smallest detectable d', num: true }]}
+        rows={sensRows} note="Two-sided Welch test, α = .05, power = .80." />
+      <h3 class="fig-title mini">Table 6 as a figure</h3>
+      <p class="leadin">Each bar is the smallest effect, in standard deviations, that the comparison could reliably detect.</p>
+      <DotRows rows={sensFig} domain={[0, 0.4]} tickStep={0.1} bars axisLabel="Smallest detectable d" digits={2} ariaLabel="Smallest detectable effect for each comparison" />
+    </section>
+
+    <section class="section" id="models" aria-labelledby="models-title">
+      <h2 id="models-title">Regression models</h2>
+      <p class="intro">
+        Each model predicts a rating from the source. The reference group is the humanlike AI. The second model adds gender and age group, and the third adds warmth and competence.
+        When warmth and competence enter, the doctor's coefficient falls close to zero.
+      </p>
+      {(['trust', 'belief'] as const).map((key, ki) => (
+        <>
+          {modelFigs(key).map((m: any, i: number) => (
+            <>
+              <StatTable id={i === 0 ? `table-m-${key}` : `table-m-${key}-${i + 1}`} title={`Table ${7 + ki}${['a', 'b', 'c'][i]}. ${key === 'trust' ? 'Trust' : 'Belief'}: ${m.label.toLowerCase()}`}
+                look="The Doctor row is the gap from the humanlike AI. Compare it across the three versions of the model."
+                columns={olsCols} rows={olsRows(m)} note={olsFit(m)} />
+              <p class="leadin">Table {7 + ki}{['a', 'b', 'c'][i]} as a figure. Each dot is a coefficient (b) with its 95% interval; zero means no difference from the reference.</p>
+              <DotRows rows={coefFig(m)} domain={coefDomain(coefFig(m))} tickStep={0.2} zero axisLabel={`Effect on ${key} (points)`} ariaLabel={`Coefficients: ${key}, ${m.label.toLowerCase()}`} />
+            </>
+          ))}
+        </>
+      ))}
+    </section>
+
+    <section class="section" id="corr" aria-labelledby="corr-title">
+      <h2 id="corr-title">What goes with trust</h2>
+      <p class="intro">Trust and belief are very close (r = {r3(full.trustBelieve.r)}). Competence goes with trust more than warmth does.</p>
+      <StatTable id="table-corr" title="Table 9. Correlations among the four ratings"
+        look="Every correlation is positive. Trust moves most with belief and next with competence."
+        columns={[{ key: 'pair', label: 'Pair', wrap: true, minw: '16rem' }, { key: 'r', label: 'r', num: true }]} rows={corrRows}
+        note={`Pearson correlations among the ${corr.n} people with all four ratings.`} />
+      <h3 class="fig-title" id="fig-corr">Figure 10. Correlation grid</h3>
+      <p class="leadin">Table 9 as a figure. Each square is the correlation between two ratings. Darker means the two move together more strongly.</p>
+      <CorrGrid vars={corr.labels} r={corr.r} title="All sources together" ariaLabel="Correlations among trust, belief, warmth and competence" />
+    </section>
+  </div>
+</Base>
+
+<style>
+  .deep { margin-top: 4rem; padding-top: 2rem; border-top: 5px solid; border-image: var(--five) 1; }
+  .deep h2 { margin-bottom: 0.5rem; }
+  .deep p { max-width: 62ch; color: var(--muted); }
+  .mini { margin: 0 0 -0.4rem; font-size: 0.98rem; }
+  .how { margin-top: 1.5rem; font-family: var(--display); }
+  .intro { max-width: 64ch; color: var(--muted); }
+  .fig-title { margin-top: 3rem; font-size: 1.15rem; }
+  section :global(h2) { margin-bottom: 0.75rem; }
+</style>

@@ -10,6 +10,7 @@ import MainFindings from '../../components/MainFindings.astro';
 import Glossary from '../../components/Glossary.astro';
 import s2 from '../../data/trust-in-medical-ai/study2-full.json';
 import ChapterIntro from '../../components/ChapterIntro.astro';
+import Chapter3Intro from '../../components/Chapter3Intro.astro';
 import Placeholder from '../../components/Placeholder.astro';
 import BayesPlot from '../../components/BayesPlot.astro';
 import { times } from '../../utils/bayes';
@@ -22,6 +23,9 @@ import ranked from '../../data/trust-in-medical-ai/trust-by-recommender.json';
 import study1 from '../../data/trust-in-medical-ai/study1-tests.json';
 import outcomes from '../../data/trust-in-medical-ai/study1-outcomes.json';
 import meta from '../../data/trust-in-medical-ai/meta.json';
+import full3 from '../../data/trust-in-medical-ai/study3-full.json';
+import full4 from '../../data/trust-in-medical-ai/study4-full.json';
+import full5 from '../../data/trust-in-medical-ai/study5-full.json';
 import { href } from '../../utils/url';
 const o = outcomes.outcomes;
 const stretch = s2.tests.find((t) => t.id === 'prevent_injury_stretching')!;
@@ -60,7 +64,7 @@ const findings = [
       'I gave the same health advice to everyone. In one version it came from a doctor named Jordan. In another it came from an AI called JO76N. In a third it came from an AI also named Jordan, who spoke like a person.',
       'People who saw only one version did not trust the humanlike AI more. People who saw all three did, and it closed most of the distance to the doctor. Being able to compare changed how the AI was judged.',
     ],
-    visual: { type: 'pairs', aName: 'Seen alone (Study 3)', bName: 'Seen side by side (Study 5)', rows: [{ label: 'How much more people trusted the humanlike AI than the standard AI', a: 0.07, b: 0.46, max: 1 }], caption: 'Effect size (d): 0 is no difference, 0.5 is a medium one. Studies 3 to 5 included about 1,800 people.' },
+    visual: { type: 'pairs', aName: 'Seen alone (Study 3)', bName: 'Seen side by side (Study 5)', rows: [{ label: 'How much more people trusted the humanlike AI than the standard AI', a: 0.07, b: 0.46, max: 1 }], caption: 'Effect size (d): 0 is no difference, 0.5 is a medium one. Studies 3 to 5 included about 2,000 people.' },
   },
   {
     head: 'Trust did not change what people did',
@@ -74,17 +78,19 @@ const findings = [
 
 const bayesRows = bayes.rows.filter((r) => ['Study 3', 'Study 4', 'Study 5', 'Study 6'].includes(r.study)).map((r) => ({ ...r, group: `${r.study}: ${r.group}` }));
 const bf = (id: string) => bayes.rows.find((r) => r.id === id)!;
-const wait = 'Waiting on the data';
+const wait = 'Waiting on the Study 6 data';
+const S = (n: number, p = '') => `/projects/trust-in-medical-ai/study-${n}/${p}`;
 const figureMap36 = [
   { diss: 'Figures 13, 14, 17, 22, 28, 29', what: 'Vignette images, conceptual models and the sleep infographic', here: 'In the dissertation and on OSF', note: 'Materials, not data; not redrawn here' },
-  { diss: 'Figures 15 and 16', what: 'Study 3: mean trust and belief by recommender, with 95% intervals', here: wait, note: 'The effect sizes are in the chart further up' },
-  { diss: 'Figures 18 to 21', what: 'Study 4: trust and belief, between people and side by side', here: wait },
-  { diss: 'Figures 23 and 24', what: 'Study 5: trust and belief by recommender, with and without a voice', here: wait },
-  { diss: 'Figures 25 to 27', what: 'Study 5: mediation through mind perception', here: wait, note: 'Estimates are in the dissertation text' },
+  { diss: 'Figures 15 and 16', what: 'Study 3: mean trust and belief by recommender, with 95% intervals', here: 'Study 3, Figures 2, 3 and 6', href: S(3, 'full/#fig-trust') },
+  { diss: 'Figures 18 to 21', what: 'Study 4: trust and belief, between people and side by side', here: 'Study 4, Figures 2 to 12', href: S(4, 'full/#fig-btrust') },
+  { diss: 'Figures 23 and 24', what: 'Study 5: trust and belief by recommender, with and without a voice', here: 'Study 5, Figures 4 and 8 to 10', href: S(5, 'full/#fig-tb') },
+  { diss: 'Figures 25 to 27', what: 'Study 5: mediation through mind perception', here: 'Study 5, Figures 15 to 18', href: S(5, 'full/#fig-med-0') },
   { diss: 'Figures 30 to 33', what: 'Study 6: adherence to the sleep and phone-in-bed advice across days, and mediation', here: wait },
-  { diss: 'Tables 14 to 19', what: 'Studies 3 and 4: regression and mixed-model tables', here: wait },
-  { diss: 'Tables 20 to 24', what: 'Studies 5 and 6: ANOVA, mixed-model and adherence tables', here: wait },
-  { diss: 'All t tests in the text', what: 'Planned and follow-up comparisons in Studies 3 to 6', here: 'Bayes factors below', href: '#bayes-36', note: 'Computed from the reported t, d and degrees of freedom' },
+  { diss: 'Tables 14 to 19', what: 'Studies 3 and 4: regression and mixed-model tables', here: 'Study 3 and Study 4 pages', href: S(3, 'full/#models'), note: 'Age is in four bands in the public files, so age coefficients differ in scale' },
+  { diss: 'Tables 20 to 22', what: 'Study 5: ANOVA and mixed-model tables', here: 'Study 5, Tables 5 and 12 to 14', href: S(5, 'full/#models') },
+  { diss: 'Tables 23 and 24', what: 'Study 6: adherence tables', here: wait },
+  { diss: 'All t tests in the text', what: 'Planned and follow-up comparisons in Studies 3 to 6', here: 'Bayes factors below', href: '#bayes-36', note: 'Studies 3 to 5 from the raw data; Study 6 from the reported t, d and degrees of freedom' },
 ];
 ---
 
@@ -120,7 +126,8 @@ const figureMap36 = [
       <h2 id="deep-dive">Deep dive: the evidence, study by study</h2>
       <p>
         Everything below shows the data behind these findings. Each chart has hover details, and the full analyses are on separate pages for
-        <a href={href('/projects/trust-in-medical-ai/study-1/')}>Study 1</a> and <a href={href('/projects/trust-in-medical-ai/study-2/')}>Study 2</a>.
+        <a href={href('/projects/trust-in-medical-ai/study-1/')}>Study 1</a>, <a href={href('/projects/trust-in-medical-ai/study-2/')}>Study 2</a>, <a href={href('/projects/trust-in-medical-ai/study-3/')}>Study 3</a>,
+        <a href={href('/projects/trust-in-medical-ai/study-4/')}>Study 4</a> and <a href={href('/projects/trust-in-medical-ai/study-5/')}>Study 5</a>.
       </p>
       <Glossary />
     </div>
@@ -258,12 +265,25 @@ const figureMap36 = [
       <p><a class="go" href={href('/projects/trust-in-medical-ai/study-2/')}>Open Study 2</a> · <a href={href('/projects/trust-in-medical-ai/study-2/full/')}>every table and figure</a> · <a href={href('/projects/trust-in-medical-ai/study-2/dig-deeper/')}>dig deeper</a></p>
     </section>
 
+    <Chapter3Intro />
+
+    <section class="section chart" id="study3-data" aria-labelledby="full3-title">
+      <h2 id="full3-title">Every table and figure from Studies 3, 4 and 5</h2>
+      <p class="sub">
+        Each study has an overview, a page with every table and figure rebuilt from the released data, and a page with a figure map and Bayes factors. The de-identified data, codebooks, R scripts, original analysis notebooks
+        and OSF preregistrations are linked from each overview. Studies 3 to 5 are also on OSF
+        (<a href={meta.publicLinks.study3}>Study 3</a>, <a href={meta.publicLinks.study4}>Study 4</a>, <a href={meta.publicLinks.study5}>Study 5</a>).
+      </p>
+      <p><a class="go" href={href('/projects/trust-in-medical-ai/study-3/')}>Study 3</a> ({full3.sample.n} adults) · <a class="go" href={href('/projects/trust-in-medical-ai/study-4/')}>Study 4</a> ({full4.sample.n} adults) · <a class="go" href={href('/projects/trust-in-medical-ai/study-5/')}>Study 5</a> ({full5.sample.n} adults)</p>
+      <p><a href={href('/projects/trust-in-medical-ai/study-3/full/')}>Study 3 in full</a> · <a href={href('/projects/trust-in-medical-ai/study-4/full/')}>Study 4 in full</a> · <a href={href('/projects/trust-in-medical-ai/study-5/full/')}>Study 5 in full</a></p>
+    </section>
+
     <section class="section chart wide" id="dig-deeper" aria-labelledby="dig-title">
       <div class="deep inner">
         <h2 id="dig-title">Dig deeper: Studies 3 to 6</h2>
         <p>
-          Studies 1 and 2 have their own pages, built from the released data. Studies 3 to 6 do not have raw data here yet, so this section does what the numbers in the
-          dissertation allow: it lists where each figure will go, and it runs Bayes factors on every comparison the dissertation reports.
+          Studies 1 to 5 have their own pages, built from the released data. Study 6 does not have raw data here yet, so for that study this section does what the numbers in the
+          dissertation allow. It lists where each figure and table sits, and it runs Bayes factors on the comparisons the dissertation reports.
         </p>
       </div>
       <h3 class="fig-title">Where each dissertation figure and table stands</h3>
@@ -284,8 +304,9 @@ const figureMap36 = [
           changed by a voice (the data are {times(bf('S5-doc-voice').bf01)} under no change), and voice overall made no difference ({times(bf('S5-voice-main').bf01)} under none).
         </p>
         <p>
-          <strong>The humanlike AI and the doctor are hard to separate between people, and not side by side.</strong> Seen alone (Studies 3 and 4), the evidence about humanlike AI versus doctor is
-          anecdotal either way. Seen side by side in Study 5, people rated the humanlike AI above the doctor, and the data are {times(bf('S5-hum-doc').bf10)} under a difference, strong evidence.
+          <strong>The humanlike AI and the doctor are hard to separate between people, and the doctor is ahead side by side.</strong> Seen alone (Studies 3 and 4), the evidence about humanlike AI versus doctor is
+          anecdotal either way. Seen side by side in Study 4 the gap is small and the evidence stays anecdotal. In Study 5, with more people, the doctor was rated above the humanlike AI, and the data are {times(bf('S5-hum-doc').bf10)} under a difference, very strong evidence
+          for a small gap. Once warmth, competence and mind perception are accounted for, the data favor no remaining gap ({times(bf('S5-doc-adj').bf01)}).
         </p>
         <p>
           <strong>The recommender did not change what people did.</strong> In Study 6 the change in sleep and in phone use after the advice was the same for the AI and the doctor. The data are {times(bf('S6-sleep-int').bf01)} under no difference for sleep
@@ -293,8 +314,8 @@ const figureMap36 = [
           The mediation results ({times(bf('S6-sleep-med').bf01)} and {times(bf('S6-dib-med').bf01)}, under no indirect effect) come from a bell-shaped approximation for indirect effects, so treat them as a guide.
         </p>
         <p class="small muted">
-          Bayes factors in this section come from the reported statistics, not from the raw data. For two-group tests, the effective sample size is recovered as (t / d)², and coefficients use the estimate and
-          the width of the reported interval. The dissertation prints some values with rounding, so the Bayes factors are accurate to roughly the first digit.
+          Bayes factors for Studies 3 to 5 come from the raw data. For Study 6 they come from the reported statistics: the effective sample size of a two-group test is recovered as (t / d)², and coefficients use the estimate and
+          the width of the reported interval. The dissertation prints some values with rounding, so the Study 6 Bayes factors are accurate to roughly the first digit.
         </p>
       </div>
     </section>
@@ -322,13 +343,6 @@ const figureMap36 = [
     <section class="section slots" aria-labelledby="more-title">
       <h2 id="more-title">More charts for this page</h2>
       <div class="slot-grid">
-        <Placeholder
-          title="Condition means for Studies 3 to 5"
-          provide={[
-            'Mean trust and 95% confidence interval for each condition in each study, if you want means instead of effect sizes',
-            'The figure from the dissertation, if you want the chart to match it',
-          ]}
-        />
         <Placeholder
           title="Adherence over 15 days in Study 6"
           provide={[

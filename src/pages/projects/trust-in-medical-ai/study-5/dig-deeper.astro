@@ -1,0 +1,75 @@
+---
+import DeepNav from '../../../../components/DeepNav.astro';
+import Base from '../../../../layouts/Base.astro';
+import BayesPlot from '../../../../components/BayesPlot.astro';
+import BayesGuide from '../../../../components/BayesGuide.astro';
+import FigureMap from '../../../../components/FigureMap.astro';
+import bayes from '../../../../data/trust-in-medical-ai/bayes.json';
+import { times } from '../../../../utils/bayes';
+import { href } from '../../../../utils/url';
+
+const bf = (id: string) => bayes.rows.find((r) => r.id === id)!;
+const bayesRows = bayes.rows.filter((r) => r.study === 'Study 5');
+const FULL = '/projects/trust-in-medical-ai/study-5/full/';
+const figureMap = [
+  { diss: 'Figure 22', what: 'A study material or conceptual model, not data', here: 'In the dissertation', note: 'Not redrawn here' },
+  { diss: 'Figures 23 and 24', what: 'Trust and belief by recommender, with and without a voice', here: 'Figures 4 and 8 to 10', href: `${FULL}#fig-tb` },
+  { diss: 'Figures 25 to 27', what: 'Mediation through mind perception, for each pair of recommenders', here: 'Figures 15 to 18', href: `${FULL}#fig-med-0`, note: 'The dissertation prints the humanlike-versus-doctor effect with a reversed sign' },
+  { diss: 'Tables 20 to 22', what: 'Mixed ANOVA and mixed models for Study 5', here: 'Tables 5, 5b and 12 to 14', href: `${FULL}#table-anova`, note: 'Table 22, the model with mind perception, warmth, competence, age and gender, is Table 14 here. Age is in four bands, so its coefficient differs in scale. The dissertation\'s ANOVA degrees of freedom imply more people than the 727 who rated all three' },
+  { diss: 'Paired t tests in the text', what: 'Comparisons among the three recommenders', here: 'Tables 4 and 9', href: `${FULL}#table-paired`, note: 'dz is used for paired effect sizes; the text uses 2t over the root of the degrees of freedom' },
+  { diss: 'Mind-perception items', what: 'Seven items and their correlations', here: 'Tables 10 and 11', href: `${FULL}#mind` },
+];
+---
+
+<Base
+  title="Trust in medical AI: Study 5, dig deeper"
+  description="Where each Study 5 figure and table lives, and Bayes factors for every comparison."
+>
+  <div class="wrap">
+    <header class="page-head">
+      <p class="back small"><a href={href('/projects/trust-in-medical-ai/study-5/')}>Study 5</a> · <a href={href('/projects/trust-in-medical-ai/')}>Trust in medical AI</a></p>
+      <h1>Study 5: dig deeper</h1>
+    </header>
+    <DeepNav study="5" current="dig" />
+    <section class="section" id="dig-deeper" aria-labelledby="dig-title">
+      <div class="deep">
+        <h2 id="dig-title">Dig deeper</h2>
+        <p>Two more things for readers who want them: where each figure and table of the dissertation sits on these pages, and a Bayesian check on every comparison, computed from the raw ratings.</p>
+      </div>
+      <h3 class="fig-title">Where each dissertation figure and table lives</h3>
+      <FigureMap rows={figureMap.map((r) => (r.href ? { ...r, href: href(r.href) } : r))} />
+
+      <h3 class="fig-title" id="bayes">What the Bayes factors say</h3>
+      <BayesGuide />
+      <BayesPlot rows={bayesRows} />
+      <div class="prose">
+        <p>
+          <strong>Voice made no overall difference.</strong> The data are {times(bf('S5-voice-main').bf01)} under no voice effect, {times(bf('S5-voice-std-int').bf01)} under no voice-by-standard-AI interaction and {times(bf('S5-voice-doc-int').bf01)} under no voice-by-doctor interaction. All are moderate evidence.
+          A voice did not change the doctor's ratings either ({times(bf('S5-doc-voice').bf01)} under no change).
+        </p>
+        <p>
+          <strong>The two within-recommender voice effects are weak.</strong> For the humanlike AI the data are {times(bf('S5-hum-voice').bf10)} under an effect, despite p = .017. For the standard AI they are {times(bf('S5-std-voice').bf10)}, about even. I would not lean on either.
+        </p>
+        <p>
+          <strong>The three recommenders are clearly ordered.</strong> The humanlike AI over the standard AI, and the doctor over the standard AI, are supported by extreme evidence. The doctor over the humanlike AI is supported too, {times(bf('S5-hum-doc').bf10)} under a difference, very strong evidence even though the gap is small.
+          Once warmth, competence, mind perception and the rest are in the model, the data move to {times(bf('S5-doc-adj').bf01)} under no remaining doctor advantage, moderate evidence.
+        </p>
+        <p>
+          <strong>Mind perception explains the gaps against the standard AI, and none of the doctor's small edge over the humanlike AI.</strong> The indirect effects for the doctor and for the humanlike AI against the standard AI have extreme evidence behind them, while the indirect effect for humanlike versus doctor has
+          strong evidence for none ({times(bf('S5-med-hum-doc').bf01)} under no effect). The indirect-effect factors use a bell-shaped approximation, so treat them as a guide.
+        </p>
+        <p class="small muted">
+          Bayes factors in this section come from the raw ratings. Paired t tests use the Rouder default Bayes factor with a Cauchy prior on d, with widths set to a small (0.20), medium (0.41) and large (0.63) effect on the Funder and Ozer scale. Coefficients use a normal likelihood.
+        </p>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .deep { margin-top: 4rem; padding-top: 2rem; border-top: 5px solid; border-image: var(--five) 1; }
+  .deep h2 { margin-bottom: 0.5rem; }
+  .deep p { max-width: 62ch; color: var(--muted); }
+  .fig-title { margin-top: 3rem; font-size: 1.15rem; }
+  section :global(h2) { margin-bottom: 0.75rem; }
+</style>

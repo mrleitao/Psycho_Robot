@@ -1,0 +1,414 @@
+---
+title: "Study 3 - original analysis"
+author: "Matthew Leitao"
+date: "2/15/2022"
+output:
+  html_document: 
+      #code_folding: hide
+    df_print: paged
+    toc: yes
+    toc_float: true
+    toc_depth: 5
+    toc_collapse: False
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r loading packages}
+if(!require(haven))  {install.packages("haven")}
+if(!require(tidyverse))  {install.packages("tidyverse")}
+if(!require(psych))  {install.packages("psych")}
+if(!require(ggplot2))  {install.packages("ggplot2")}
+if(!require(ggdist))  {install.packages("ggdist")}
+if(!require(gghalves))  {install.packages("gghalves")}
+if(!require(PupillometryR))  {install.packages("PupillometryR")}
+if(!require(jmv))  {install.packages("jmv")}
+if(!require(plyr))  {install.packages("plyr")}
+if(!require(lme4))  {install.packages("lme4")}
+if(!require(lmerTest))  {install.packages("lmerTest")}
+if(!require(modelsummary))  {install.packages("modelsummary")}
+if(!require(MuMIn))  {install.packages("MuMIn")}
+if(!require(papaja))  {install.packages("papaja")}
+if(!require(reghelper))  {install.packages("reghelper")}
+if(!require(emmeans))  {install.packages("emmeans")}
+if(!require(lavaan))  {install.packages("lavaan")}
+if(!require(semPlot))  {install.packages("semPlot")}
+if(!require(bmlm))  {install.packages("bmlm")}
+if(!require(sjPlot))  {install.packages("sjPlot")}
+if(!require(sjmisc))  {install.packages("sjmisc")}
+if(!require(EMAtools))  {install.packages("EMAtools")}
+if(!require(report))  {install.packages("report")}
+if(!require(MplusAutomation))  {install.packages("MplusAutomation")}
+if(!require(rstatix))  {install.packages("rstatix")}
+
+```
+
+#Health Algorithm - Belief 1
+
+<!-- Study 3 (Chapter 3), from the author's combined notebook. The raw survey export is not released: the read_sav() line is kept so you can see which file the analysis used, and the de-identified ratings are in study3-ratings.csv. Local file paths were removed. -->
+
+## Loading the data
+```{r}
+Digital_Belief_Cleaned <- read_sav("Study 1 - Beliefs/Data/Digital Beliefs - Study 1 - Cleaned - July 1, 2021.sav")
+```
+
+
+
+```{r}
+describe(Digital_Belief_Cleaned$Age)
+
+prop.table(table(Digital_Belief_Cleaned$Gender))
+
+describe(Digital_Belief_Cleaned$IsMale)
+```
+
+```{r}
+describe(Digital_Belief_Cleaned$Trust)
+```
+
+
+
+## Between Subjects ANOVA
+```{r}
+anovaOneW(
+  formula = Trust + Believe ~ Condition,
+  data = Digital_Belief_Cleaned,
+  welchs = FALSE,
+  fishers = TRUE,
+  desc = TRUE,
+  descPlot = TRUE,
+  norm = TRUE,
+  eqv = TRUE
+)
+
+HealBelief.1.Trust <- aov(Trust + Believe ~ Condition, data = Digital_Belief_Cleaned)
+summary(HealBelief.1.Trust)
+```
+
+```{r}
+HealBelief.1.Trust <- aov(Trust ~ Condition, data = Digital_Belief_Cleaned)
+summary(HealBelief.1.Trust)
+TukeyHSD(HealBelief.1.Trust, conf.level = .95)
+```
+
+```{r}
+HealBelief.1.Believe <- aov(Believe ~ Condition, data = Digital_Belief_Cleaned)
+summary(HealBelief.1.Believe)
+TukeyHSD(HealBelief.1.Believe, conf.level = .95)
+```
+
+
+##T-Tests
+###Simplified All
+#### Trust
+```{r}
+pairwise.t.test(Digital_Belief_Cleaned$Trust, Digital_Belief_Cleaned$Condition, p.adjust.method = "none")
+
+#Digital_Belief_Cleaned %>% cohen.d(Trust ~ as.factor(Condition))
+```
+
+#### Believe
+```{r}
+pairwise.t.test(Digital_Belief_Cleaned$Believe, Digital_Belief_Cleaned$Condition, p.adjust.method = "none")
+```
+
+###Planned Comparsons
+
+####Non-Human-Like Vs Doctor
+```{r}
+ttestIS(
+    formula = Trust + Believe ~ Coding_NONvHum,
+    data = Digital_Belief_Cleaned,
+    vars = vars(Trust, Believe),
+    meanDiff = TRUE,
+    effectSize = TRUE,
+    desc = TRUE,
+    plots = TRUE)
+```
+```{r}
+t.test(Trust ~ Coding_NONvHum, data = Digital_Belief_Cleaned)
+report(t.test(Trust ~ Coding_NONvHum, data = Digital_Belief_Cleaned))
+```
+
+```{r}
+t.test(Believe ~ Coding_NONvHum, data = Digital_Belief_Cleaned)
+report(t.test(Believe ~ Coding_NONvHum, data = Digital_Belief_Cleaned))
+
+```
+
+
+#### Human-Like vs Doctor
+```{r}
+ttestIS(
+    formula = Trust + Believe ~ Coding_HumvHum,
+    data = Digital_Belief_Cleaned,
+    vars = vars(Trust, Believe),
+    meanDiff = TRUE,
+    effectSize = TRUE,
+    desc = TRUE,
+    plots = TRUE)
+```
+
+
+```{r}
+t.test(Trust ~ Coding_HumvHum, data = Digital_Belief_Cleaned)
+report(t.test(Trust ~ Coding_HumvHum, data = Digital_Belief_Cleaned))
+```
+
+```{r}
+t.test(Believe ~ Coding_HumvHum, data = Digital_Belief_Cleaned)
+report(t.test(Believe ~ Coding_HumvHum, data = Digital_Belief_Cleaned))
+```
+
+#### Both AI vs Doctor
+
+```{r}
+ttestIS(
+    formula = Trust + Believe ~ Coding_AIvHum,
+    data = Digital_Belief_Cleaned,
+    vars = vars(Trust, Believe),
+    meanDiff = TRUE,
+    effectSize = TRUE,
+    desc = TRUE,
+    plots = TRUE)
+```
+
+
+#### Non-Human vs Human-Like
+```{r}
+ttestIS(
+    formula = Trust + Believe ~ Coding_AIvAI,
+    data = Digital_Belief_Cleaned,
+    vars = vars(Trust, Believe),
+    meanDiff = TRUE,
+    effectSize = TRUE,
+    desc = TRUE,
+    plots = TRUE)
+```
+
+## Exploritory Analysis
+### ANCOVA
+
+```{r}
+DigitalBeliefs1_ANCOVA <- aov(Trust ~ Condition + Warmth + Competent + IsMale + Age, data = Digital_Belief_Cleaned)
+
+summary(DigitalBeliefs1_ANCOVA)
+```
+
+
+
+### LM
+#### Trust
+##### Models 
+```{r}
+DigitalBeliefs_LM_1 <- lm(Trust ~ as.factor(Condition), data = Digital_Belief_Cleaned)
+
+summary(DigitalBeliefs_LM_1)
+```
+
+
+```{r}
+DigitalBeliefs_LM_2 <- lm(Trust ~ as.factor(Condition) + IsMale + Age, data = Digital_Belief_Cleaned)
+
+summary(DigitalBeliefs_LM_2)
+```
+
+```{r}
+DigitalBeliefs_LM_3 <- lm(Trust ~ as.factor(Condition) + IsMale + Age + Warmth + Competent , data = Digital_Belief_Cleaned)
+
+summary(DigitalBeliefs_LM_3)
+```
+
+##### Exporting Models
+```{r}
+Study3_TrustModels <- list(
+  "Model 1" = DigitalBeliefs_LM_1, "Model 2" = DigitalBeliefs_LM_2, "Model 3" = DigitalBeliefs_LM_3
+)
+```
+
+
+```{r}
+modelsummary(Study3_TrustModels, , fmt = 2, estimate = "{estimate}{stars}", statistic = c("std.error"), stars = c("*" = .05, "**" = .01, "***" = .001), gof_map = c("nobs", "r.squared", "adj.r.squared"), align = "lccc", notes = "Note. * = .05, ** = .01, *** = .001", title = "OLS Regression On Trust", output = "Study3_TrustModels.docx")
+
+```
+
+#### Belief
+##### Models 
+```{r}
+DigitalBeliefs_LM_1 <- lm(Believe ~ as.factor(Condition), data = Digital_Belief_Cleaned)
+
+summary(DigitalBeliefs_LM_1)
+```
+
+
+```{r}
+DigitalBeliefs_LM_2 <- lm(Believe ~ as.factor(Condition) + IsMale + Age, data = Digital_Belief_Cleaned)
+
+summary(DigitalBeliefs_LM_2)
+```
+
+```{r}
+DigitalBeliefs_LM_3 <- lm(Believe ~ as.factor(Condition) + IsMale + Age + Warmth + Competent , data = Digital_Belief_Cleaned)
+
+summary(DigitalBeliefs_LM_3)
+```
+
+##### Exporting Models
+```{r}
+Study3_Belief_Models <- list(
+  "Model 1" = DigitalBeliefs_LM_1, "Model 2" = DigitalBeliefs_LM_2, "Model 3" = DigitalBeliefs_LM_3
+)
+```
+
+
+```{r}
+modelsummary(Study3_Belief_Models, , fmt = 2, estimate = "{estimate}{stars}", statistic = c("std.error"), stars = c("*" = .05, "**" = .01, "***" = .001), gof_map = c("nobs", "r.squared", "adj.r.squared"), align = "lccc", notes = "Note. * = .05, ** = .01, *** = .001", title = "OLS Regression On Belief", output = "Study3_Belief_Models.docx")
+
+```
+
+
+```{r}
+Chp2_St3_Mediation <- 
+  'Trust ~ Coding_HumvHum
+  Trust ~ Warmth
+  Warmth ~ Coding_HumvHum'
+
+Chp2_St3_Mediation_Model <- sem(model = Chp2_St3_Mediation, data = Digital_Belief_Cleaned, estimator = "REML")
+  
+
+summary(Chp2_St3_Mediation_Model, standardized = TRUE, fit.measures = TRUE, rsq = TRUE)
+
+```
+
+```{r}
+Chp2_St3_Mediation <- 
+  'Trust ~ Coding_HumvHum
+  Trust ~ Competent
+  Competent ~ Coding_HumvHum'
+
+Chp2_St3_Mediation_Model <- sem(model = Chp2_St3_Mediation, data = Digital_Belief_Cleaned, estimator = "REML")
+  
+
+summary(Chp2_St3_Mediation_Model, standardized = TRUE, fit.measures = TRUE, rsq = TRUE)
+
+
+
+```
+
+
+## Better Plots
+
+### Trust
+
+```{r}
+Digital_Belief_Cleaned$Condition
+
+
+Digital_Belief_Cleaned <- Digital_Belief_Cleaned %>%
+  mutate(
+    Condition_Fix = case_when(
+      Condition == "Non-Humanlike AI" ~ "Standard AI",
+      TRUE ~ Condition
+    )
+  )
+
+
+Digital_Beliefs_3_Longer$Condition <- factor(
+  Digital_Beliefs_3_Longer$Condition,
+  levels = c(1,2,3),
+  labels =c("Humanlike AI", "Standard AI", "Doctor")
+)
+
+
+Digital_Belief_Cleaned$Condition
+
+```
+
+
+```{r}
+Digital_Belief_Cleaned %>%
+  filter(!is.na(Condition_Fix))  %>%
+  mutate(Condition_Fix = fct_reorder(Condition_Fix, Trust, .fun = "mean")) %>%
+  ggplot(., aes(x = Condition_Fix, y = Trust, fill = Condition_Fix, col = Condition_Fix, na.rm = TRUE)) +
+    geom_flat_violin(position = position_nudge(x = .2, y = 0), adjust = 4)+
+    geom_point(position=position_jitter(width = .15),size = 2, alpha = 1/2, color = "black")+
+   stat_summary(fun.data = "mean_cl_normal", geom = "errorbar", width = 1/4, size = 1.25, color = "white") + 
+ stat_summary(fun = "mean", geom = "point",shape = 23, stroke = 1.25, size = 4, color = "white") +  
+      scale_fill_manual(values = c("#F8737F", "#FCBB6D", "#475C7A"))+
+    scale_colour_manual(values = c("#F8737F", "#FCBB6D", "#475C7A"))+
+    guides(fill = FALSE, col = FALSE, scale = "none") +
+  geom_boxplot(aes(x = as.numeric(Condition_Fix)+ 0.25, y = Trust),outlier.shape = NA, alpha = 0.4, width = .1, colour = "BLACK") + 
+  ggtitle("Trust In Recommendation by Recommender") +
+  ggtitle("Trust In Recommendation by Recommender") +
+  ylab('Trust In Recommendation')+ 
+  xlab('Recommender') +
+  theme_apa() +  theme(plot.title = element_text(face = "bold", size = 16), axis.title = element_text(face = "bold", size = 14), panel.background = element_rect("transparent"), plot.background = element_rect("transparent", color = NA), legend.background = element_blank(), legend.box.background = element_rect("transparent", colour = 'white'), axis.text = element_text(colour = "white", size = 14, face = "bold"), axis.ticks = element_line(colour = "white"), axis.line = element_line(colour = "white")) +
+  scale_y_continuous(breaks=seq(-3,3,.5))
+
+
+ggsave("Study 3 - Trust Means.png", width = 11, height = 8)
+```
+
+
+### Believe
+
+```{r}
+Digital_Belief_Cleaned %>%
+  filter(!is.na(Condition_Fix))  %>%
+  mutate(Condition_Fix = fct_reorder(Condition_Fix, Trust, .fun = "mean")) %>%
+  ggplot(., aes(x = Condition_Fix, y = Believe, fill = Condition_Fix, col = Condition_Fix, na.rm = TRUE)) +
+    geom_flat_violin(position = position_nudge(x = .2, y = 0), adjust = 4)+
+    geom_point(position=position_jitter(width = .15),size = 2, alpha = 1/2, color = "black")+
+   stat_summary(fun.data = "mean_cl_normal", geom = "errorbar", width = 1/4, size = 1.25, color = "white") + 
+ stat_summary(fun = "mean", geom = "point",shape = 23, stroke = 1.25, size = 4, color = "white") +  
+      scale_fill_manual(values = c("#F8737F", "#FCBB6D", "#475C7A"))+
+    scale_colour_manual(values = c("#F8737F", "#FCBB6D", "#475C7A"))+
+    guides(fill = FALSE, col = FALSE, scale = "none") +
+  geom_boxplot(aes(x = as.numeric(Condition_Fix)+ 0.25, y = Trust),outlier.shape = NA, alpha = 0.4, width = .1, colour = "BLACK") + 
+  ggtitle("Belief In Recommendation by Recommender") +
+  ggtitle("Belief In Recommendation by Recommender") +
+  ylab('Trust In Recommendation')+ 
+  xlab('Recommender') +
+  theme_apa() +  theme(plot.title = element_text(face = "bold", size = 16), axis.title = element_text(face = "bold", size = 14), panel.background = element_rect("transparent"), plot.background = element_rect("transparent", color = NA), legend.background = element_blank(), legend.box.background = element_rect("transparent", colour = 'white'), axis.text = element_text(colour = "white", size = 14, face = "bold"), axis.ticks = element_line(colour = "white"), axis.line = element_line(colour = "white")) +
+  scale_y_continuous(breaks=seq(-3,3,.5))
+
+
+ggsave("Study 3 - Belief Means.png", width = 11, height = 8)
+```
+
+```{r}
+Digital_Belief_Cleaned %>%
+  filter(!is.na(Condition))  %>%
+  ggplot(., aes(x = Condition, y = Believe, fill = Condition, col = Condition, na.rm = TRUE)) + geom_flat_violin(position = position_nudge(x = .2, y = 0), alpha = .2, adjust = 4) +
+    geom_point(position=position_jitter(width = .15),size = 1, alpha = 1/3)+
+      scale_fill_manual(values = c("#AF1B3F", "#B0A61A", "#144252"))+
+    scale_colour_manual(values = c("#5B2C38", "#333221", "#1B3842"))+
+    guides(fill = FALSE, col = FALSE, scale = "none") +
+  geom_boxplot(aes(x = as.numeric(Condition)+ 0.25, y = Believe),outlier.shape = NA, alpha = 0.4, width = .1, colour = "BLACK") + 
+ stat_summary(fun.data = "mean_cl_normal", geom = "errorbar", width = 1/4, color = "black") + 
+ stat_summary(fun = "mean", geom = "point",shape = 23, stroke = 1, size = 1.5,  color = "black", fill = "#FCBB6D") +
+  ggtitle("Belief In Recommendation by Recommender") +
+  ylab('Belief In Recommendation')+ 
+  xlab('Recommender') +
+  theme_apa() +
+  scale_y_continuous(breaks=seq(-3,3,.5))
+
+#ggsave("Study 3 - Belief Means.png", width = 12, height = 8)
+```
+
+
+
+
+
+#Health Algorithm - Belief 2 - Voiced
+
+Disclaimer - For some reason 87 more participants took the study since last time, we did not compensate them in any way and yet they still have an "aid" number meaning they came from Cloud Research. I opted to keep them in, but also verified that nothing changed as a result of this extra power.
+
+

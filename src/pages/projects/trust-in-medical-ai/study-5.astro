@@ -1,0 +1,159 @@
+---
+import DeepNav from '../../../components/DeepNav.astro';
+import Base from '../../../layouts/Base.astro';
+import MainFindings from '../../../components/MainFindings.astro';
+import Chapter3Intro from '../../../components/Chapter3Intro.astro';
+import full from '../../../data/trust-in-medical-ai/study5-full.json';
+import bayes from '../../../data/trust-in-medical-ai/bayes.json';
+import { times } from '../../../utils/bayes';
+import { href } from '../../../utils/url';
+import { f1, f2, pEq, REPO } from '../../../utils/fmt';
+
+const pt = (m: string, id: string) => (full.pairedTests as any)[m].find((t: any) => t.id === id);
+const d = (id: string) => (full.descriptives as any[]).find((x) => x.id === id)!;
+const bf = (id: string) => bayes.rows.find((r) => r.id === id)!;
+const vt = (id: string) => (full.voiceTests as any).tb.find((t: any) => t.id === id);
+const med = full.mediation as any[];
+const rk = full.ranking as any;
+const n = full.sample.n;
+const docStd = pt('tb', 'doc-std'), humStd = pt('tb', 'hum-std'), humDoc = pt('tb', 'hum-doc');
+const mind = pt('mind', 'doc-std');
+const firstDoc = rk.rows.find((r: any) => r.rec === 'Doctor');
+const mixed3 = (full.mixedModels as any[])[2];
+const ma = (full.mixedAnova as any).rows;
+const humVoice = vt('voice-humanlike'), stdVoice = vt('voice-standard');
+
+const findings = [
+  {
+    head: 'People trusted the doctor most, the humanlike AI next, the standard AI least',
+    body: [
+      `${n} adults rated a doctor, a humanlike AI and a standard AI on trust and belief, from −3 to 3. The averages were ${f2(d('tb').cells.doctor.mean)} for the doctor, ${f2(d('tb').cells.humanlike.mean)} for the humanlike AI and ${f2(d('tb').cells.standard.mean)} for the standard AI.`,
+      `Asked to rank the three on trust, ${firstDoc.first} of ${rk.n} people put the doctor first. Both orderings point the same way.`,
+    ],
+    visual: { type: 'stat', value: `${Math.round((100 * firstDoc.first) / rk.n)}%`, label: 'of people ranked the doctor first for trust', caption: `${firstDoc.first} of ${rk.n} people in Study 5. Chance would be 33%.` },
+  },
+  {
+    head: 'The humanlike AI gained clearly on the standard AI',
+    body: [
+      `Rated side by side, the humanlike AI was trusted ${f2(humStd.diff)} points more than the standard AI (d = ${f2(humStd.d)}, p < .001). That is about as large as the doctor's own edge over the standard AI, ${f2(docStd.diff)} points (d = ${f2(docStd.d)}).`,
+      `${humStd.higher} of ${humStd.n} people trusted the humanlike AI more, and ${humStd.lower} trusted it less.`,
+    ],
+    visual: { type: 'pairs', aName: 'Humanlike AI', bName: 'Standard AI', rows: [
+      { label: 'Warmth (0 to 4)', a: d('warmth').cells.humanlike.mean, b: d('warmth').cells.standard.mean, max: 4 },
+      { label: 'Competence (0 to 4)', a: d('competence').cells.humanlike.mean, b: d('competence').cells.standard.mean, max: 4 },
+      { label: 'Mind perception (0 to 10)', a: d('mind').cells.humanlike.mean, b: d('mind').cells.standard.mean, max: 10 },
+    ], caption: 'Average ratings, Study 5.' },
+  },
+  {
+    head: 'It still did not match the doctor',
+    body: [
+      `The doctor was trusted ${f2(-humDoc.diff)} points more than the humanlike AI (d = ${f2(-humDoc.d)}, p < .001). The gap is small, but it is clear in this sample: the data are ${times(bf('S5-hum-doc').bf10)} under a difference than under none, very strong evidence.`,
+      'So a humanlike AI closed most of the gap to the doctor without closing all of it.',
+    ],
+    visual: { type: 'pairs', aName: 'Compared with the standard AI', bName: 'Compared with the humanlike AI', rows: [{ label: 'Doctor advantage in trust and belief (d)', a: docStd.d, b: -humDoc.d, max: 0.6 }], caption: 'Doctor minus AI, side by side. Study 5.' },
+  },
+  {
+    head: 'A voice made little difference',
+    body: [
+      `Half of the people also heard the recommendation spoken. Overall, the voice did not change ratings (the data are ${times(bf('S5-voice-main').bf01)} under no effect, moderate evidence).`,
+      `There were hints that a voice helped the humanlike AI (+${f2(humVoice.diff)}, ${pEq(humVoice.p)}) and hurt the standard AI (${f2(stdVoice.diff).replace('-', '−')}, ${pEq(stdVoice.p)}). Neither is firm. For the humanlike AI the data are only ${times(bf('S5-hum-voice').bf10)} under an effect, and for the standard AI they are ${times(bf('S5-std-voice').bf10)} under an effect.`,
+    ],
+    visual: { type: 'stat', value: `d = ${f2((full.voiceAll as any).d)}`, label: 'voiced against written only, all three recommenders averaged', caption: 'Zero is no difference. Study 5.' },
+  },
+  {
+    head: 'Perceived mind explains most of the gaps',
+    body: [
+      `People credited the doctor with more of a mind than the standard AI (${f1(mind.meanA)} against ${f1(mind.meanB)} out of 10), and credited the humanlike AI with more too. Mind perception was the average of seven items, such as whether the recommender could understand or anticipate.`,
+      `It carried ${med[0].share.toFixed(0)}% of the doctor's edge over the standard AI and ${med[1].share.toFixed(0)}% of the humanlike AI's. In the humanlike-versus-doctor gap, mind perception carried almost none of it.`,
+    ],
+    visual: { type: 'stat', value: `${med[1].share.toFixed(0)}%`, label: 'of the humanlike AI\'s advantage over the standard AI runs through perceived mind', caption: 'Mediation analysis, Study 5.' },
+  },
+];
+---
+
+<Base
+  title="Trust in medical AI: Study 5"
+  description="Study 5 of my dissertation: how a humanlike AI, a standard AI and a doctor compare when the same people rate all three, with and without a voice."
+>
+  <div class="wrap">
+    <header class="page-head">
+      <p class="back small"><a href={href('/projects/trust-in-medical-ai/')}>Trust in medical AI</a></p>
+      <h1>Study 5</h1>
+      <p class="lede">
+        {n} adults rated a doctor, a humanlike AI and a standard AI on the same health recommendation. Some also heard it spoken, and some only read it. They rated trust, belief, warmth,
+        competence and how much of a mind each seemed to have. This page gives the main findings and what they mean. Every table and figure is on the next page, rebuilt from the released data.
+      </p>
+    </header>
+    <Chapter3Intro current="5" />
+    <DeepNav study="5" current="overview" />
+
+    <section class="section" id="main-findings" aria-labelledby="mf-title">
+      <h2 id="mf-title">Main findings</h2>
+      <MainFindings findings={findings} />
+    </section>
+
+    <section class="section" id="implications" aria-labelledby="implications-title">
+      <h2 id="implications-title">What this means</h2>
+      <div class="prose">
+        <p>
+          <strong>Making an AI seem human can raise trust, if people can compare.</strong> As in Study 4, when people judge one recommender the framing barely moves trust, and when they
+          judge several it does. The effect is about as large as the doctor's advantage, so a modest change in how an AI is presented can move trust a long way.
+        </p>
+        <p>
+          <strong>Perceived mind is the main route.</strong> About {med[1].share.toFixed(0)}% of the humanlike AI's gain over the standard AI ran through mind perception. This is statistical mediation in a design where
+          the recommender was manipulated and mind perception was measured, so it supports the account without proving the order of cause. It fits Chapter 2, where how capable people thought a recommender was tracked trust.
+        </p>
+        <p>
+          <strong>A voice is not the lever.</strong> The overall test of voice was null, with moderate evidence for no effect. The recommender-by-voice interaction was significant (F({ma[2].df1}, {ma[2].df2}) = {f2(ma[2].F)}, partial η² = {ma[2].pes.toFixed(3).replace(/^0/, '')}),
+          because the voiced humanlike AI gained and the voiced standard AI lost, but each of those results is close to the edge of evidence and was not preregistered per recommender.
+        </p>
+        <p>
+          <strong>A caution for design and policy.</strong> The same lever works on a weak AI. If a humanlike presentation raises trust by raising perceived mind, it can make a poor system look better than it is. That is a reason to
+          pair any such design with honest information about what the system can do.
+        </p>
+        <p>
+          <strong>A correction to the dissertation.</strong> The dissertation's comparison of the humanlike AI with the doctor has its sign reversed relative to the data. In the data the doctor was rated higher (dz = {f2(humDoc.d)} for humanlike minus doctor).
+          I have used the direction the data show.
+        </p>
+        <p>
+          <strong>Cautions.</strong> Trust and belief were averaged into one rating because they correlate at r = {f2((full.trustBelief as any).r).replace(/^0/, '')}. The recommendation was
+          one scenario, and ratings are stated trust, not behavior.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" id="files" aria-labelledby="files-title">
+      <h2 id="files-title">Files and methods</h2>
+      <div class="prose">
+        <ul class="filelist">
+          <li><a href={href('/data/study5-ratings.csv')}>study5-ratings.csv</a>, the de-identified ratings, one row per person</li>
+          <li><a href={href('/data/study5-codebook.csv')}>study5-codebook.csv</a>, what every column means</li>
+          <li><a href={href('/code/study5-analysis.R')}>study5-analysis.R</a>, the main tests in R, from the public file</li>
+          <li><a href={href('/code/study5-original-analysis.Rmd')}>study5-original-analysis.Rmd</a>, my original notebook for this study, with local file paths removed</li>
+          <li><a href="https://doi.org/10.17605/OSF.IO/WYD8Z">Preregistration and materials on OSF</a>, written before data collection</li>
+          <li><a href={`${REPO}/blob/main/analysis/study5-full-results.py`}>study5-full-results.py</a>, the code behind every table and figure</li>
+          <li><a href={`${REPO}/blob/main/analysis/study5-deidentify.py`}>study5-deidentify.py</a>, how the raw export became the public file</li>
+        </ul>
+        <p>
+          Everything on these pages was computed in Python from the released file. Paired comparisons are t tests with a Bonferroni correction and dz as the effect size. Voice comparisons are Welch t tests. The mixed ANOVA is
+          on the {full.design.allThree} people who rated all three recommenders, and the mixed models use a random intercept for each person. Mediation uses the Montoya and Hayes difference-score method for repeated measures, with 3,000 bootstrap resamples of people.
+          The released file has {n} people with shuffled row order, no IDs, locations, timestamps or free text, and age in four bands.
+        </p>
+        <p>
+          The dissertation reports 596 people where the released file has {n}, and its mixed-ANOVA degrees of freedom imply a larger sample than the {full.design.allThree} who rated all three. The recommender effect
+          and the interaction agree closely with the dissertation; I use the file throughout.
+        </p>
+        <p class="small muted">
+          The data, codebook and code are shared under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> (data) and the MIT license (code). Please do not use the file to try to identify anyone.
+          Please cite the dissertation: Leitao, M. R. (2024). <em>Artificial Intelligence, Humanization, and Health Beliefs</em>. Georgetown University.
+        </p>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .filelist { padding-left: 1.2rem; font-family: var(--display); }
+  .filelist li { margin-bottom: 0.3rem; }
+  section :global(h2) { margin-bottom: 0.75rem; }
+</style>

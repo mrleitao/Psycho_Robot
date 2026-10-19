@@ -1,0 +1,149 @@
+---
+import DeepNav from '../../../components/DeepNav.astro';
+import Base from '../../../layouts/Base.astro';
+import MainFindings from '../../../components/MainFindings.astro';
+import Chapter3Intro from '../../../components/Chapter3Intro.astro';
+import full from '../../../data/trust-in-medical-ai/study3-full.json';
+import bayes from '../../../data/trust-in-medical-ai/bayes.json';
+import { times } from '../../../utils/bayes';
+import { href } from '../../../utils/url';
+import { f1, f2, noZero, pEq, REPO } from '../../../utils/fmt';
+
+const T = (m: 'trust' | 'belief' | 'warmth' | 'competence', id: string) => (full.tests as any)[m].find((t: any) => t.id === id);
+const D = (id: string) => full.descriptives.find((d: any) => d.id === id)!;
+const bf = (id: string) => bayes.rows.find((r) => r.id === id)!;
+const g = (id: string, k: 'humanlike' | 'standard' | 'doctor') => (D(id).cells as any)[k];
+const trustAiDoc = T('trust', 'ai-doc');
+const trustHumStd = T('trust', 'hum-std');
+const warm = T('warmth', 'ai-doc');
+const comp = T('competence', 'ai-doc');
+const models = full.models.trust;
+const check = full.manipulationCheck;
+const n = full.sample.n;
+
+const findings = [
+  {
+    head: 'Seen alone, a humanlike AI was trusted no more than a standard one',
+    body: [
+      `${n} adults read the same health advice from one of three sources: a doctor, a standard AI, or an AI that was given a human name and spoke like a person. Each person saw only one. The humanlike AI was rated ${f2(g('trust', 'humanlike').mean)} on trust and the standard AI ${f2(g('trust', 'standard').mean)}, on a scale from −3 to 3.`,
+      `That difference is too small to tell apart from chance (${pEq(trustHumStd.p)}, d = ${f2(trustHumStd.d)}). The data are ${times(bf('S3-trust-hum-std').bf01)} under no difference than under a medium one, moderate evidence that the humanlike framing did nothing here.`,
+    ],
+    visual: { type: 'stat', value: `d = ${f2(trustHumStd.d)}`, label: 'humanlike AI against standard AI, on trust', caption: 'Zero is no difference. About 0.4 would be a medium one.' },
+  },
+  {
+    head: 'The doctor was trusted more than either AI, but by a modest amount',
+    body: [
+      `People who saw the doctor rated trust at ${f2(g('trust', 'doctor').mean)}, against ${f2(trustAiDoc.meanB)} for the two AIs combined. That is a gap of ${f1(trustAiDoc.diff)} points, or d = ${f2(trustAiDoc.d)}.`,
+      `The gaps in Chapter 2, where each person rated a doctor and an AI side by side, were larger.`,
+    ],
+    visual: { type: 'stat', value: `+${f1(trustAiDoc.diff)} points`, label: 'more trust in the doctor than in the AIs', caption: 'Trust runs from −3 to 3. Study 3, doctor against both AI conditions.' },
+  },
+  {
+    head: 'People saw the doctor as warmer and more competent',
+    body: [
+      `On warmth, the doctor scored ${f1(warm.meanA)} and the AIs ${f1(warm.meanB)} out of 4. On competence, the scores were ${f1(comp.meanA)} and ${f1(comp.meanB)}.`,
+      'The humanlike AI did not close these gaps either. It looked no warmer than the standard AI.',
+    ],
+    visual: { type: 'pairs', aName: 'Doctor', bName: 'Both AIs', rows: [
+      { label: 'Warmth (0 to 4)', a: warm.meanA, b: warm.meanB, max: 4 },
+      { label: 'Competence (0 to 4)', a: comp.meanA, b: comp.meanB, max: 4 },
+    ], caption: 'Average ratings, Study 3.' },
+  },
+  {
+    head: 'Warmth and competence account for the doctor\'s edge',
+    body: [
+      `When I compared only the three sources, the doctor sat ${f2(models[0].terms[2].b)} points above the humanlike AI. After I accounted for how warm and competent people found each one, that gap fell to ${f2(models[2].terms[2].b)}.`,
+      `Competence carried most of it. Each extra point of competence went with ${f2(models[2].terms[6].b)} more points of trust. That fits Chapter 2, where people who found a recommender more capable also trusted it more.`,
+    ],
+    visual: { type: 'stat', value: `${f2(models[0].terms[2].b)} to ${f2(models[2].terms[2].b)}`, label: 'doctor advantage over the humanlike AI, before and after accounting for warmth and competence', caption: 'Points of trust, Study 3.' },
+  },
+  {
+    head: 'The humanlike framing may not have registered',
+    body: [
+      `I asked people how humanlike the AI seemed, from 0 to 4. The humanlike AI scored ${f2(check.meanA)} and the standard AI ${f2(check.meanB)}. That is no meaningful difference (${pEq(check.p)}).`,
+      'So the weak result may reflect a weak manipulation rather than a real absence of effect. Study 4 strengthened it by adding a voice.',
+    ],
+    visual: { type: 'pairs', aName: 'Humanlike AI', bName: 'Standard AI', rows: [{ label: 'How humanlike the AI seemed (0 to 4)', a: check.meanA, b: check.meanB, max: 4 }], caption: 'Manipulation check, Study 3.' },
+  },
+];
+---
+
+<Base
+  title="Trust in medical AI: Study 3"
+  description="Study 3 of my dissertation: does describing an AI in humanlike terms raise trust when people see one recommender alone?"
+>
+  <div class="wrap">
+    <header class="page-head">
+      <p class="back small"><a href={href('/projects/trust-in-medical-ai/')}>Trust in medical AI</a></p>
+      <h1>Study 3</h1>
+      <p class="lede">
+        {n} adults were randomly assigned to read a health recommendation from a doctor, a standard AI or a humanlike AI, and then rated how much they trusted and believed it,
+        and how warm and competent its source seemed. This page gives the main findings and what they mean. Every table and figure is on the next page, rebuilt from the released data.
+      </p>
+    </header>
+    <Chapter3Intro current="3" />
+    <DeepNav study="3" current="overview" />
+
+    <section class="section" id="main-findings" aria-labelledby="mf-title">
+      <h2 id="mf-title">Main findings</h2>
+      <MainFindings findings={findings} />
+    </section>
+
+    <section class="section" id="implications" aria-labelledby="implications-title">
+      <h2 id="implications-title">What this means</h2>
+      <div class="prose">
+        <p>
+          <strong>A human name and humanlike wording were not enough.</strong> Describing the AI this way did not raise trust or belief when people judged
+          one recommender alone. The result is a null, and I read it with the manipulation check in mind: people did not rate the humanlike AI as more humanlike. The test also had limited
+          power. With these group sizes the smallest difference it could reliably detect between the two AIs was d = {f2(full.sensitivity.find((s: any) => s.id === 'hum-std')!.minD)}.
+        </p>
+        <p>
+          <strong>The doctor's advantage was real but modest.</strong> It held for trust, belief, warmth and competence in the planned test of the doctor against both AIs. Against the
+          humanlike AI alone, the edge in trust (d = {f2(T('trust', 'doc-hum').d)}) and belief did not survive correction for the three pairwise comparisons (Tukey p = {noZero(f2(full.anova.trust.tukey['Doctor|Humanlike AI']))} and {noZero(f2(full.anova.belief.tukey['Doctor|Humanlike AI']))}). For warmth and competence it did.
+        </p>
+        <p>
+          <strong>Perceived competence does most of the work.</strong> Once warmth and competence were in the model, the doctor's edge was close to zero. That matches Chapter 2, where how capable
+          people thought a recommender was explained about half the gap. It suggests that an AI would earn trust by looking capable, not by sounding friendly.
+        </p>
+        <p>
+          <strong>Cautions.</strong> People rated one recommender each, so differences between conditions are differences between groups. The advice was
+          also a single piece of advice, so I cannot say how far the result carries to other health decisions. Studies 4 and 5 address the weak manipulation and the single-recommender design.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" id="files" aria-labelledby="files-title">
+      <h2 id="files-title">Files and methods</h2>
+      <div class="prose">
+        <ul class="filelist">
+          <li><a href={href('/data/study3-ratings.csv')}>study3-ratings.csv</a>, the de-identified ratings</li>
+          <li><a href={href('/data/study3-codebook.csv')}>study3-codebook.csv</a>, what every column means</li>
+          <li><a href={href('/code/study3-analysis.R')}>study3-analysis.R</a>, the main tests in R, from the public file</li>
+          <li><a href={href('/code/study3-original-analysis.Rmd')}>study3-original-analysis.Rmd</a>, my original notebook for this study, with local file paths removed</li>
+          <li><a href="https://doi.org/10.17605/OSF.IO/6BAWV">Preregistration and materials on OSF</a>, written before data collection</li>
+          <li><a href={`${REPO}/blob/main/analysis/study3-full-results.py`}>study3-full-results.py</a>, the code behind every table and figure</li>
+          <li><a href={`${REPO}/blob/main/analysis/study3-deidentify.py`}>study3-deidentify.py</a>, how the raw export became the public file</li>
+        </ul>
+        <p>
+          Everything on these pages was computed in Python from the released file. Group comparisons are Welch t tests, with Cohen's d from the pooled standard deviation
+          and intervals from the noncentral t distribution. The three-group tests are one-way ANOVAs with Tukey adjustment. The released file keeps the {n} people who
+          rated trust. It contains no IDs, locations, timestamps or free text, age appears only in four bands, and the order of rows is shuffled.
+        </p>
+        <p>
+          The dissertation reports Cohen's d as 2t divided by the square root of the degrees of freedom. These pages use the pooled standard deviation, which gives values a
+          little different from the dissertation's in some tests. The conclusions are the same.
+        </p>
+        <p class="small muted">
+          The data, codebook and code are shared under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> (data) and the MIT license (code). Please do not use the file to try to identify anyone.
+          Please cite the dissertation: Leitao, M. R. (2024). <em>Artificial Intelligence, Humanization, and Health Beliefs</em>. Georgetown University.
+        </p>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .filelist { padding-left: 1.2rem; font-family: var(--display); }
+  .filelist li { margin-bottom: 0.3rem; }
+  section :global(h2) { margin-bottom: 0.75rem; }
+</style>

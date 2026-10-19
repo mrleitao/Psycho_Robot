@@ -1,0 +1,1186 @@
+---
+title: "Study 5 - original analysis"
+author: "Matthew Leitao"
+date: "2/15/2022"
+output:
+  html_document: 
+      #code_folding: hide
+    df_print: paged
+    toc: yes
+    toc_float: true
+    toc_depth: 5
+    toc_collapse: False
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r loading packages}
+if(!require(haven))  {install.packages("haven")}
+if(!require(tidyverse))  {install.packages("tidyverse")}
+if(!require(psych))  {install.packages("psych")}
+if(!require(ggplot2))  {install.packages("ggplot2")}
+if(!require(ggdist))  {install.packages("ggdist")}
+if(!require(gghalves))  {install.packages("gghalves")}
+if(!require(PupillometryR))  {install.packages("PupillometryR")}
+if(!require(jmv))  {install.packages("jmv")}
+if(!require(plyr))  {install.packages("plyr")}
+if(!require(lme4))  {install.packages("lme4")}
+if(!require(lmerTest))  {install.packages("lmerTest")}
+if(!require(modelsummary))  {install.packages("modelsummary")}
+if(!require(MuMIn))  {install.packages("MuMIn")}
+if(!require(papaja))  {install.packages("papaja")}
+if(!require(reghelper))  {install.packages("reghelper")}
+if(!require(emmeans))  {install.packages("emmeans")}
+if(!require(lavaan))  {install.packages("lavaan")}
+if(!require(semPlot))  {install.packages("semPlot")}
+if(!require(bmlm))  {install.packages("bmlm")}
+if(!require(sjPlot))  {install.packages("sjPlot")}
+if(!require(sjmisc))  {install.packages("sjmisc")}
+if(!require(EMAtools))  {install.packages("EMAtools")}
+if(!require(report))  {install.packages("report")}
+if(!require(MplusAutomation))  {install.packages("MplusAutomation")}
+if(!require(rstatix))  {install.packages("rstatix")}
+
+```
+
+#Health Algorithm - Belief 1
+
+<!-- Study 5 (Chapter 3), from the author's combined notebook. The raw survey export is not released and its read_sav() line was not part of this notebook; the de-identified ratings are in study5-ratings.csv. Sections of the notebook that were scratch work are omitted. Local file paths were removed. -->
+
+# Health Algorithm - Belief 3
+
+## Hypotheses
+Hypothesis 1:
+People in the voiced conditions will on average rate that they trust health recommendations more than those people in the unvoiced conditions
+Hypothesis 1a:
+People will report that they trust the doctor more when the doctor is accompanied by a voice than when he is not accompanied by a voice.
+Hypothesis 2:
+We will find a significant within-subject effect of condition on people’s ratings of trust.
+Hypothesis 2a:
+Participants on average will rate that they trust the health recommendation of a human expert more than the recommendation given by a non-human-like algorithm. 
+Hypothesis 2b
+Participants on average will rate that they trust the health recommendation of a human-like algorithm more than the recommendation given by a non-human-like algorithm. 
+
+## Planned 
+Done - We will use a Mixed Effects ANCOVA with planned comparisons. 
+Done - We initially will determine whether the between-subject Voiced/Unvoiced conditions are significantly different in general.
+Done - We will then do a planned comparison between people's ratings of trust in the voiced doctor condition and the unvoiced doctor's condition
+Done - We will also determine whether the within-subject conditions of the recommenders is significant in predicting trust
+We will then do two planned comparisons.
+Done - First comparing ratings of trust in the human expert condition to the non-humanized algorithm condition
+Done - Second comparing ratings of trust in the humanized algorithm condition to the non-humanized algorithm condition
+
+
+## Exploritory Analysis
+Done - Evaluate the within-subject difference in trust between a humanized algorithm and a human expert.
+Not Done - We will also evaluate the difference in trust between the voiced humanized algorithm and the unvoiced human expert.
+Done - Evaluate the interaction effects between the between-subjects conditions of Voiced/Unvoiced and the within-subjects conditions of recommendation giver.
+Not Done - We intend to evaluate how ascribing human-like traits to the recommender impacts ratings of trust as well as whether these attributions of humanness mediate the effect of condition in predicting trust. 
+Not Done - We intend to look into the relationship between a few our conditions and some additional variables in predicting trust
+Done - If participants report that they prefer the advice from an algorithm or a doctor
+Not Done - How gender identity, age, socio-economic status, and ethnicity may interact with the conditions
+Not Done - How human-like they see the algorithm (through a direct question)
+Not Done - How human-like they see the algorithm through Mind Perception Indices
+Not Done - How appropriate do participants believe the doctor/algorithm for making these types of health decisions?
+Not Done - Examine the differences in how much participants blame/praise the recommender for successes and failures of the recommendation based on the recommender
+
+
+```{r}
+describe(Digital_Beliefs_3_Tight$Age)
+
+prop.table(table(Digital_Beliefs_3$Gender))
+
+Digital_Beliefs_3_Tight %>%
+  filter(!is.na(Age)) %>%
+  summarise(Mean = mean(IsMale))
+
+```
+
+
+```{r}
+
+ggplot(Digital_Beliefs_3_Longer, aes(x = as.factor(Cond), y = TruBel_WS, fill = Cond, col = Cond, na.rm = TRUE)) + 
+  geom_boxplot() + facet_wrap(~as.factor(IsVoiced))
+```
+
+
+#Planned Comparision
+## Plots
+Digital_Belief_Voiced_Longer %>%
+  filter(!is.na(Cond))  %>%
+  ggplot(., aes(x = Cond, y = Trust_WS, fill = Cond, col = Cond, na.rm = TRUE)) +
+    geom_flat_violin(position = position_nudge(x = .2, y = 0), alpha = .25, adjust = 4)+
+    geom_point(position=position_jitter(width = .15),size = 1, alpha = 1/3)+
+      scale_fill_manual(values = c("#AF1B3F", "#B0A61A", "#144252"))+
+    scale_colour_manual(values = c("#5B2C38", "#333221", "#1B3842"))+
+    guides(fill = FALSE, col = FALSE, scale = "none") +
+  geom_boxplot(aes(x = as.numeric(Cond)+ 0.25, y = Trust_WS),outlier.shape = NA, alpha = 0.4, width = .1, colour = "BLACK") + 
+ stat_summary(fun.data = "mean_cl_normal", geom = "errorbar", width = 1/4, color = "black") + 
+ stat_summary(fun = "mean", geom = "point",shape = 23, stroke = 1, size = 1.5,  color = "black", fill = "#FBC760") +  ggtitle("Trust In Recommendation by Recommender - Within Subjects") +
+  ylab('Trust In Recommendation')+ 
+  xlab('Recommender') +
+  theme_apa() +
+  scale_y_continuous(breaks=seq(-3,3,.5))
+
+  guides(fill = FALSE, col = FALSE, scale = "none") +
+  
+```{r}
+Digital_Beliefs_3_Longer$Cond <- factor(
+  Digital_Beliefs_3_Longer$Cond,
+  levels = c(1,2,3),
+  labels =c("Humanlike AI", "Standard AI", "Doctor")
+)
+
+Digital_Beliefs_3_Longer$Cond
+
+
+```
+
+```{r}
+as.numeric(Digital_Beliefs_3_Longer$IsVoiced)
+
+Digital_Beliefs_3_Longer <- Digital_Beliefs_3_Longer %>%
+  mutate(
+    IsVoiced_Fix = case_when(
+      IsVoiced == 1 ~ 0,
+      IsVoiced == 2 ~ 1,
+      TRUE ~ NA_real_
+    )
+)
+
+Digital_Beliefs_3_Longer$IsVoiced <- Digital_Beliefs_3_Longer$IsVoiced_Fix
+
+Digital_Beliefs_3_Longer$IsVoiced <- factor(
+  Digital_Beliefs_3_Longer$IsVoiced,
+  levels = c(0,1),
+  labels =c("Written Only", "Written and Voiced")
+)
+
+Digital_Beliefs_3_Longer$IsVoiced 
+```
+
+  
+```{r}
+Digital_Beliefs_3_Longer %>%
+  filter(!is.na(Cond)) %>%
+  mutate(Cond = fct_reorder(Cond, TruBel_WS, .fun = "mean")) %>%
+  ggplot(., aes(x = Cond, y = TruBel_WS, fill = Cond, col = Cond, na.rm = TRUE)) +
+  geom_flat_violin(position = position_nudge(x = .2, y = 0), alpha = .75, adjust = 4)+
+  geom_point(position=position_jitter(width = .15),size = 2, alpha = 1/2, color = "black")+
+  geom_boxplot(position = position_nudge(x = .25, y = 0),outlier.shape = NA, alpha = 0.4, width = .1, colour = "BLACK") + 
+      scale_fill_manual(values = c("#F8737F", "#FCBB6D", "#475C7A"))+
+    scale_colour_manual(values = c("#F8737F", "#FCBB6D", "#475C7A"))+
+      guides(fill = FALSE, col = FALSE, scale = "none") +
+  stat_summary(fun.data = "mean_cl_normal", geom = "errorbar", width = 1/4, size = 1.25, color = "white") + 
+ stat_summary(fun = "mean", geom = "point",shape = 23, stroke = 1.25, size = 4, color = "white") +
+  ggtitle("Trust/Belief In Recommendation by Recommender") +
+  ylab('Trust/Belif In Recommendation') + 
+  xlab('Recommender') +
+  theme_apa() + theme(plot.title = element_text(face = "bold", size = 16), axis.title = element_text(face = "bold", size = 14), panel.background = element_rect("transparent"), plot.background = element_rect("transparent", color = NA), legend.background = element_blank(), legend.box.background = element_rect("transparent", colour = 'white'), axis.text = element_text(colour = "white", size = 14, face = "bold"), axis.ticks = element_line(colour = "white"), axis.line = element_line(colour = "white")) +
+  scale_y_continuous(breaks=seq(-3,3,.5))
+
+ggsave("Study 5 - Trust and Belief Means - Within Subjects.png", width = 12, height = 8)
+```
+
+
+```{r}
+Digital_Beliefs_3_Longer %>%
+  filter(!is.na(Cond)) %>%
+  mutate(Cond = fct_reorder(Cond, TruBel_WS, .fun = "mean")) %>%
+  ggplot(., aes(x = as.factor(IsVoiced), y = TruBel_WS, fill = IsVoiced, col = IsVoiced, na.rm = TRUE)) +
+  geom_flat_violin(position = position_nudge(x = .2, y = 0), alpha = .75, adjust = 4)+
+  geom_point(position=position_jitter(width = .15),size = 2, alpha = 1/2, color = "black")+
+  facet_wrap(~ Cond) +
+  geom_boxplot(position = position_nudge(x = .25, y = 0),outlier.shape = NA, alpha = 0.4, width = .1, colour = "BLACK") + 
+        scale_fill_manual(values = c("#F2CC8C", "#325D79"))+
+    scale_colour_manual(values = c("#F2CC8C", "#325D79"))+
+      guides(fill = FALSE, col = FALSE, scale = "none") +
+  stat_summary(fun.data = "mean_cl_normal", geom = "errorbar", width = 1/4, size = 1.5, color = "white") + 
+ stat_summary(fun = "mean", geom = "point",shape = 23, stroke = 1.5, size = 4, color = "white") +
+  ggtitle("Trust/Belief In Recommendation by Recommender") +
+  ylab('Trust/Belief In Recommendation') + 
+  xlab('Condition') +
+  theme_apa() + theme(plot.title = element_text(face = "bold", size = 16), axis.title = element_text(face = "bold", size = 14), panel.background = element_rect("transparent"), plot.background = element_rect("transparent", color = NA), legend.background = element_blank(), legend.box.background = element_rect("transparent", colour = 'white'), axis.text = element_text(colour = "white", size = 14, face = "bold"), axis.ticks = element_line(colour = "white"), axis.line = element_line(colour = "white"), strip.text = element_text(colour = "white", size = 14, face = "bold")) +
+  scale_y_continuous(breaks=seq(-3,3,.5))
+
+
+ggsave("Study 5 - Trust and Belief Means - Within Subjects - Voice - Written.png", width = 12, height = 8)
+```
+
+## Voiced vs UnVoiced - Doctor
+```{r}
+ttestIS(
+    formula = Cond_3.Trust_WS + Cond_3.Believe_WS + Cond_3.TruBel_WS ~ IsVoiced,
+    data = Digital_Beliefs_3_Tight,
+    vars = vars(Cond_3.Trust_WS, Cond_3.Believe_WS, Cond_3.TruBel_WS),
+    meanDiff = TRUE,
+    effectSize = TRUE,
+    desc = TRUE,
+    plots = TRUE)
+```
+
+```{r}
+tidy(t.test(Cond_3.TruBel_WS ~ IsVoiced, data = Digital_Beliefs_3_Tight))
+
+```
+
+```{r}
+report(t.test(Cond_3.TruBel_WS ~ IsVoiced, data = Digital_Beliefs_3_Tight))
+```
+
+
+
+
+## Voiced vs UnVoiced - All
+```{r}
+ttestIS(
+    formula = Trust_WS + Believe_WS + TruBel_WS ~ IsVoiced,
+    data = Digital_Beliefs_3_Longer,
+    vars = vars(Trust_WS, Believe_WS, TruBel_WS),
+    meanDiff = TRUE,
+    effectSize = TRUE,
+    desc = TRUE,
+    plots = TRUE)
+```
+
+## Voiced vs UnVoiced - Human-Like
+```{r}
+ttestIS(
+    formula = Cond_1.Trust_WS + Cond_1.Believe_WS + Cond_1.TruBel_WS ~ IsVoiced,
+    data = Digital_Beliefs_3_Tight,
+    vars = vars(Cond_1.Trust_WS, Cond_1.Believe_WS, Cond_1.TruBel_WS),
+    meanDiff = TRUE,
+    effectSize = TRUE,
+    desc = TRUE,
+    plots = TRUE)
+```
+
+
+```{r}
+tidy(t.test(Cond_1.TruBel_WS ~ IsVoiced, data = Digital_Beliefs_3_Tight))
+
+```
+
+```{r}
+report(t.test(Cond_1.TruBel_WS ~ IsVoiced, data = Digital_Beliefs_3_Tight))
+```
+
+
+## Voiced vs UnVoiced - Non-Human-Like
+```{r}
+ttestIS(
+    formula = Cond_2.Trust_WS + Cond_2.Believe_WS + Cond_2.TruBel_WS ~ IsVoiced,
+    data = Digital_Beliefs_3_Tight,
+    vars = vars(Cond_2.Trust_WS, Cond_2.Believe_WS, Cond_2.TruBel_WS),
+    meanDiff = TRUE,
+    effectSize = TRUE,
+    desc = TRUE,
+    plots = TRUE)
+```
+
+
+```{r}
+tidy(t.test(Cond_2.TruBel_WS ~ IsVoiced, data = Digital_Beliefs_3_Tight))
+
+```
+
+```{r}
+report(t.test(Cond_2.TruBel_WS ~ IsVoiced, data = Digital_Beliefs_3_Tight))
+```
+
+```{r}
+HealBelief.3 <- aov(TruBel_WS + Believe_WS + TruBel_WS ~ IsVoiced + Cond, data = Digital_Beliefs_3_Longer)
+summary(HealBelief.3)
+```
+
+
+
+```{r}
+HealBelief.3 <- anova_test(data = Digital_Beliefs_3_Longer, dv = TruBel_WS, wid = ResponseId, between =  IsVoiced, within= Cond, detailed = TRUE, effect.size = "pes")
+get_anova_table(HealBelief.3)
+```
+
+```{r}
+anova_summary(Mixed_Effects_Anova_3.1, detailed = TRUE)
+```
+
+
+### Non-Human-Like vs Doctor
+## Fix to Paired Samples T-Test
+```{r}
+
+Digital_Beliefs_3_Longer %>%
+  filter(Cond != 1) %>%
+    ttestIS(
+    formula = Trust_WS + Believe_WS + TruBel_WS ~ Cond,
+    vars = vars(Trust_WS, Believe_WS, TruBel_WS),
+    meanDiff = TRUE,
+    effectSize = TRUE,
+    desc = TRUE,
+    plots = TRUE)
+```
+
+
+
+Need to try and run this with voiced and unvoiced condition only for a robustness check
+```{r}
+Digital_Beliefs_3_Tight %>%
+  dplyr::filter(IsVoiced == 0) %>%
+    jmv::ttestPS(
+    data = .,
+    pairs = list(
+        list(
+            i1="Cond_1.TruBel_WS",
+            i2="Cond_3.TruBel_WS"),
+        list(
+            i1="Cond_1.TruBel_WS",
+            i2="Cond_2.TruBel_WS"),
+        list(
+            i1="Cond_3.TruBel_WS",
+            i2="Cond_2.TruBel_WS")),
+    effectSize = TRUE,
+    plots = TRUE)
+```
+
+```{r}
+Digital_Beliefs_3 %>%
+  dplyr::select(Cond_1.TruBel_WS, Cond_2.TruBel_WS, Cond_3.TruBel_WS) %>%
+  describe()
+```
+
+
+```{r}
+
+Digital_Beliefs_3_Tight %>%
+  dplyr::filter(IsVoiced == 1) %>%
+    jmv::ttestPS(
+    data = .,
+    pairs = list(
+        list(
+            i1="Cond_1.TruBel_WS",
+            i2="Cond_3.TruBel_WS"),
+        list(
+            i1="Cond_1.TruBel_WS",
+            i2="Cond_2.TruBel_WS"),
+        list(
+            i1="Cond_3.TruBel_WS",
+            i2="Cond_2.TruBel_WS")),
+    effectSize = TRUE,
+    plots = TRUE)
+```
+
+
+```{r}
+jmv::ttestPS(
+    data = Digital_Beliefs_3_Tight,
+    pairs = list(
+        list(
+            i1="Cond_1.TruBel_WS",
+            i2="Cond_3.TruBel_WS"),
+        list(
+            i1="Cond_1.TruBel_WS",
+            i2="Cond_2.TruBel_WS"),
+        list(
+            i1="Cond_3.TruBel_WS",
+            i2="Cond_2.TruBel_WS")),
+    effectSize = TRUE,
+    plots = TRUE)
+```
+
+### Human-Like vs Non-Human-Like
+```{r}
+Digital_Beliefs_3_Longer %>%
+  filter(Cond != 3) %>%
+    ttestIS(
+    formula = Trust_WS + Believe_WS + TruBel_WS ~ Cond,
+    vars = vars(Trust_WS, Believe_WS, TruBel_WS),
+    meanDiff = TRUE,
+    effectSize = TRUE,
+    desc = TRUE,
+    plots = TRUE)
+```
+
+
+### Human-Like vs Doctor
+```{r}
+Digital_Beliefs_3_Longer %>%
+  filter(Cond != 2) %>%
+    ttestIS(
+    formula = Trust_WS + Believe_WS + TruBel_WS ~ Cond,
+    vars = vars(Trust_WS, Believe_WS, TruBel_WS),
+    meanDiff = TRUE,
+    effectSize = TRUE,
+    desc = TRUE,
+    plots = TRUE)
+```
+
+
+```{r}
+Digital_Beliefs_3_Tight %>%
+    t.test(Cond_1.TruBel_WS ~ IsVoiced)
+```
+
+
+# Mixed Effects ANOVA
+
+## Pre-Registered
+```{r}
+Mixed_Effects_Anova_3.1 <- aov(TruBel_WS ~ as.factor(Cond) + as.factor(IsVoiced) + Error(ResponseId/IsVoiced), data = Digital_Beliefs_3_Longer)
+
+summary(Mixed_Effects_Anova_3.1)
+
+anova_summary(Mixed_Effects_Anova_3.1, effect.size = "pes")3
+
+```
+
+```{r}
+report(Mixed_Effects_Anova_3.1)
+```
+
+
+```{r}
+Mixed_Effects_Anova_3.1 <- aov(TruBel_WS ~ as.factor(Cond) + as.factor(IsVoiced) + Error(ResponseId/IsVoiced), data = Digital_Beliefs_3_Longer)
+
+anova_summary(Mixed_Effects_Anova_3.1)
+```
+
+```{r}
+Mixed_Effects_Anova_3.1 <- aov(TruBel_WS ~ as.factor(Cond) * as.factor(IsVoiced) + Error(ResponseId/IsVoiced), data = Digital_Beliefs_3_Longer)
+
+summary(Mixed_Effects_Anova_3.1)
+
+anova_summary(Mixed_Effects_Anova_3.1, detailed = TRUE, effect.size = "pes")
+```
+
+```{r}
+report(Mixed_Effects_Anova_3.1)
+```
+
+
+
+
+```{r}
+model.tables(Mixed_Effects_Anova_3.1, "means")
+```
+
+
+
+```{r}
+Mixed_Effects_Anova_3 <- lmer(TruBel_WS ~ as.factor(Cond) + as.factor(IsVoiced) + (1|ResponseId), data = Digital_Beliefs_3_Longer)
+
+summary(Mixed_Effects_Anova_3)
+```
+
+```{r}
+tab_model(Mixed_Effects_Anova_3, show.stat = TRUE, show.std = TRUE, show.df = TRUE)
+```
+
+```{r}
+lme.dscore(Mixed_Effects_Anova_3, data = Digital_Beliefs_3_Longer, type = "lme4")
+```
+
+
+```{r}
+r.squaredGLMM(Mixed_Effects_Anova_3)
+```
+
+
+```{r}
+report(Mixed_Effects_Anova_3)
+```
+
+
+## Exploritory Interaction
+```{r}
+Mixed_Effects_Anova_3_Exp <- lmer(TruBel_WS ~ as.factor(Cond) * as.factor(IsVoiced) + (1|ResponseId), data = Digital_Beliefs_3_Longer)
+
+summary(Mixed_Effects_Anova_3_Exp)
+```
+
+```{r}
+r.squaredGLMM(Mixed_Effects_Anova_3_Exp)
+```
+```{r}
+lme.dscore(Mixed_Effects_Anova_3_Exp, data = Digital_Beliefs_3_Longer, type = "lme4")
+```
+
+```{r}
+anova(Mixed_Effects_Anova_3, Mixed_Effects_Anova_3_Exp)
+
+```
+### Full Robust Model
++ Praise_WS + Blame_WS + Mind_Perception +
+
+Person Mean Centering
+```{r}
+
+Digital_Beliefs_3_Longer$Mind_Perception_PM <- pmean(Digital_Beliefs_3_Longer$ResponseId, Digital_Beliefs_3_Longer$Mind_Perception)
+
+Digital_Beliefs_3_Longer$Mind_Perception_PMC <- pcenter(Digital_Beliefs_3_Longer$ResponseId, Digital_Beliefs_3_Longer$Mind_Perception)
+
+
+Digital_Beliefs_3_Longer$Warm_WS_PM <- pmean(Digital_Beliefs_3_Longer$ResponseId, Digital_Beliefs_3_Longer$Warm_WS)
+
+Digital_Beliefs_3_Longer$Warm_WS_PMC <- pcenter(Digital_Beliefs_3_Longer$ResponseId, Digital_Beliefs_3_Longer$Warm_WS)
+
+Digital_Beliefs_3_Longer$Competent_WS_PM <- pmean(Digital_Beliefs_3_Longer$ResponseId, Digital_Beliefs_3_Longer$Competent_WS)
+
+Digital_Beliefs_3_Longer$Competent_WS_PMC <- pcenter(Digital_Beliefs_3_Longer$ResponseId, Digital_Beliefs_3_Longer$Competent_WS)
+
+```
+
+
+### Mind Perception Model
+```{r}
+Mixed_Effects_Anova_3_MP <- lmer(TruBel_WS ~ as.factor(Cond) +  as.factor(IsVoiced) + Mind_Perception + (1|ResponseId), data = Digital_Beliefs_3_Longer)
+
+summary(Mixed_Effects_Anova_3_MP)
+```
+
+```{r}
+r.squaredGLMM(Mixed_Effects_Anova_3_MP)
+```
+
+```{r}
+tab_model(Mixed_Effects_Anova_3_MP, show.std = TRUE)
+```
+
+
+```{r}
+lme.dscore(Mixed_Effects_Anova_3_MP, data = Digital_Beliefs_3_Longer, type = "lme4")
+```
+
+```{r}
+lm.beta.lmer(Mixed_Effects_Anova_3_MP)
+```
+
+
+```{r}
+report(Mixed_Effects_Anova_3_MP)
+```
+
+```{r}
+```{r}
+Mixed_Effects_Anova_3_MP <- lmer(TruBel_WS ~ as.factor(Cond) +  as.factor(IsVoiced) + Mind_Perception_Alt + (1|ResponseId), data = Digital_Beliefs_3_Longer)
+
+summary(Mixed_Effects_Anova_3_MP)
+```
+```{r}
+tab_model(Mixed_Effects_Anova_3_MP, show.std = TRUE)
+```
+
+#### Warmth
+```{r}
+Mixed_Effects_Anova_3_Cov <- lmer(TruBel_WS ~ as.factor(Cond) * as.factor(IsVoiced) + Mind_Perception + Warm_WS + Competent_WS + Age + IsMale + (1|ResponseId), data = Digital_Beliefs_3_Longer)
+
+summary(Mixed_Effects_Anova_3_Cov)
+```
+
+```{r}
+r.squaredGLMM(Mixed_Effects_Anova_3_Cov)
+```
+
+```{r}
+tab_model(Mixed_Effects_Anova_3_Cov, show.std = TRUE)
+```
+
+
+```{r}
+lme.dscore(Mixed_Effects_Anova_3_Cov, data = Digital_Beliefs_3_Longer, type = "lme4")
+```
+
+```{r}
+lm.beta.lmer(Mixed_Effects_Anova_3_Cov)
+```
+
+```{r}
+report(Mixed_Effects_Anova_3_Cov)
+```
+
+
+
+```{r}
+anova(Mixed_Effects_Anova_3_MP,  Mixed_Effects_Anova_3_Cov)
+```
+
+## Post Hoc
+```{r}
+emmeans(Mixed_Effects_Anova_3_Exp, list(pairwise ~ Cond + IsVoiced), adjust = "tukey")
+```
+
+
+```{r}
+lm.beta(Repeated_Measures)
+```
+
+
+
+### Relgiousity
+```{r}
+ReligiousMind <- lmer(Mind_Perception  ~ Religious +  (1|ResponseId), data = Digital_Beliefs_3_Longer)
+
+summary(ReligiousMind)
+```
+
+```{r}
+tab_model(ReligiousMind)
+```
+
+
+```{r}
+lme.dscore(ReligiousMind, data = Digital_Beliefs_3_Longer, type = "lme4")
+```
+
+```{r}
+ReligiousMind <- lmer(Humanlike_WS  ~ Religious +  (1|ResponseId), data = Digital_Beliefs_3_Longer)
+
+summary(ReligiousMind)
+```
+```{r}
+tab_model(ReligiousMind)
+```
+
+
+```{r}
+lme.dscore(ReligiousMind, data = Digital_Beliefs_3_Longer, type = "lme4")
+```
+
+
+
+
+
+### Mediation using Process for R
+#### Creating Variables
+
+```{r}
+Digital_Beliefs_3_Tight <- Digital_Beliefs_3_Tight %>%
+  mutate(
+    Trubel_DocHum = Cond_3.TruBel_WS - Cond_1.TruBel_WS,
+    MindPercept_DocHum = Cond_3.Mind_Perception - Cond_1.Mind_Perception,
+    avgMindPercept_DocHum = (Cond_3.Mind_Perception + Cond_1.Mind_Perception)/2,
+    gmavgMindPercept_DocHum = mean(avgMindPercept_DocHum, na.rm = TRUE),
+    gmcavgMindPercept_DocHum = avgMindPercept_DocHum - gmavgMindPercept_DocHum,
+    Const = 1
+  )
+```
+
+
+
+### Attempt to use Process
+
+The paths should look like
+
+path c  = y ~ x
+path a  = M ~ x
+path b  = y ~ M
+path c' = y ~ x (with path b)
+path d  = y ~ M+
+
+```{r}
+process(data = Digital_Beliefs_3_Tight, y = "Trubel_DocHum", x = "Const", m = "MindPercept_DocHum",  model = 4, boot = 10000)
+```
+
+There doesn't work because x is a constant which makes me wonder how they ran it using their data.
+
+```{r}
+
+DocHumPath <- 
+'Trubel_DocHum ~ Const
+Trubel_DocHum ~ MindPercept_DocHum
+Trubel_DocHum ~ gmavgMindPercept_DocHum
+MindPercept_DocHum ~ Const'
+
+DocHumPathAnalysis <- sem(model = DocHumPath, data = Digital_Beliefs_3_Tight, estimator = "ML")
+
+summary(PAModel, standardized = TRUE, fit.measures = TRUE, rsq = TRUE)
+```
+This also doesn't seem to work because there is no variation to the constant that Moytoya and Hayes mentioned using, the same error I receive when I try to use the processes. There something happening in their process code that I am unsure about.
+
+
+### MLM based Mediation
+This is based on Vuorre & Bolger 2017.
+This will theoretically allow me to determine the mediation for multiple groups
+
+
+
+
+
+#### Base/Path C- Trubel ~ Condition
+```{r}
+Mixed_Effects_Anova_3_Exp <- lmer(TruBel_WS ~ as.factor(Cond) + as.factor(IsVoiced) + (1|ResponseId), data = Digital_Beliefs_3_Longer)
+
+summary(Mixed_Effects_Anova_3_Exp)
+```
+
+#### A Path - Mind_Perception ~ Condition
+```{r}
+Mixed_Effects_Anova_3_A.Path <- lmer(Mind_Perception ~ as.factor(Cond) + (1|ResponseId), data = Digital_Beliefs_3_Longer)
+
+summary(Mixed_Effects_Anova_3_A.Path)
+```
+
+#### Path B&C' - Trubel ~ Condition + Mind_Peception
+```{r}
+Mixed_Effects_Anova_3_Path.BC <- lmer(TruBel_WS ~ as.factor(Cond) + as.factor(IsVoiced) + Mind_Perception + (1|ResponseId), data = Digital_Beliefs_3_Longer)
+
+summary(Mixed_Effects_Anova_3_Path.BC)
+```
+
+
+#### Indirect Effect
+
+```{r}
+# Condition 1 - 2
+-0.86898*0.40143
+
+# Condition 1 - 3
+0.08506*0.40143
+```
+
+
+### Bayes Model
+This is also from Vuorre & Bolger (2017)
+```{r}
+bmlm.mindpercept <-
+  Digital_Beliefs_3_Longer %>%
+  drop_na () %>%
+                 mlm(d = .,
+                        id = "ResponseId",
+                         x = "Cond",
+                         m = "Mind_Perception",
+                         y = "TruBel_WS")
+```
+
+
+```{r}
+mlm_summary(bmlm.mindpercept)
+```
+
+```{r}
+mlm_path_plot(bmlm.mindpercept)
+```
+
+```{r}
+-.83*.38
+```
+
+## Mplus Export File
+```{r}
+Digital_Beliefs_3_Longer <- Digital_Beliefs_3_Longer %>% 
+  mutate(
+    IsDoctor = case_when(
+      Cond == 3 ~ 1,
+      Cond == 1 ~ 0,
+      Cond == 2 ~ 0,
+      TRUE ~ NA_real_
+    ),
+    
+    IsNon   = case_when(
+      Cond == 2 ~ 1,
+      Cond == 1 ~ 0,
+      Cond == 3 ~ 0,
+      TRUE ~ NA_real_
+    )
+  )
+```
+
+
+
+
+
+
+### Only Humanized/NonHumanized Algorithm
+```{r}
+Digital_Beliefs_3_Longer %>%
+  dplyr::select(ID, TruBel_WS, Mind_Perception, Cond, Warm_WS, Competent_WS, IsNon, IsDoctor) %>%
+  drop_na() %>%
+  write_csv(., "MPLus_Multilevel_Mediation_Study3_AlgOnly.csv")
+```
+
+## Mplus Automation
+
+### Mind Perception
+
+#### Humanlike AI vs Standardized AI
+```{r}
+MPlus_MindPercept_Study3 <- Digital_Beliefs_3_Longer %>%
+  dplyr::select(ID, TruBel_WS, Mind_Perception, Cond, Warm_WS, Competent_WS, IsDoctor, IsNon) %>%
+  drop_na() 
+#%>%
+# write_csv(., "MPLus_Multilevel_Mediation_Study3.csv")
+
+describe(MPlus_MindPercept_Study3)
+```
+
+```{r}
+Mediation_Mind <- mplusObject(
+  TITLE = "MIND PERCEPTION MEDIATION",
+
+VARIABLE = "
+USEVARIABLES ARE ID TruBel_WS IsNon IsDoctor;
+CLUSTER IS ID;",
+
+ANALYSIS =  "TYPE IS TWOLEVEL RANDOM;",
+
+MODEL =  
+  "%WITHIN%
+	TruBel_WS IsNon IsDoctor;
+	TruBel_WS ON IsNon;
+	TruBel_WS ON IsDoctor;
+	
+	%BETWEEN%
+	TruBel_WS IsNon IsDoctor;
+	TruBel_WS ON IsNon;
+  TruBel_WS ON IsDoctor;",
+
+OUTPUT = "SAMPSTAT STANDARDIZED(CLUSTER) STDYX TECH1 TECH8 CINTERVAL;",
+
+usevariables = colnames(MPlus_MindPercept_Study3),
+
+rdata = MPlus_MindPercept_Study3)
+
+
+Mediation_Mind_Output <-   mplusModeler(Mediation_Mind, dataout = "Mind_R.dat", modelout = "Mind_R.inp", check = TRUE, run = TRUE, hashfilename = FALSE)
+
+
+Test_Output_Mplus <- readModels("Mind_R.out")
+
+Test_Output_Mplus$parameters
+```
+
+```{r}
+Mediation_Mind <- mplusObject(
+  TITLE = "MIND PERCEPTION MEDIATION",
+
+VARIABLE = "
+USEVARIABLES ARE ID TruBel_WS Mind_Perception IsDoctor IsNon;
+
+CLUSTER IS ID;",
+
+ANALYSIS =  "TYPE IS TWOLEVEL RANDOM;",
+
+MODEL =  
+  "%WITHIN%
+	TruBel_WS Mind_Perception IsDoctor IsNon;
+	TruBel_WS ON IsDoctor;
+	TruBel_WS ON IsNon;
+	Mind_Perception ON IsDoctor(a);
+	Mind_Perception ON IsNon(x);
+	TruBel_WS ON Mind_Perception(b);
+	%BETWEEN%
+	TruBel_WS Mind_Perception IsDoctor IsNon;
+	TruBel_WS ON Mind_Perception;
+	TruBel_WS ON IsDoctor;
+	TruBel_WS ON IsNon;
+	MODEL CONSTRAINT:
+	NEW(indb);
+	indb=a*b;
+  NEW(inxy);
+	inxy=x*b;",
+
+OUTPUT = "SAMPSTAT STANDARDIZED(CLUSTER) STDYX TECH1 TECH8 CINTERVAL;",
+
+usevariables = colnames(MPlus_MindPercept_Study3),
+
+rdata = MPlus_MindPercept_Study3)
+
+
+Mediation_Mind_Output <-   mplusModeler(Mediation_Mind, dataout = "Mind_R.dat", modelout = "Mind_R.inp", check = TRUE, run = TRUE, hashfilename = FALSE)
+
+
+Test_Output_Mplus <- readModels("Mind_R.out")
+
+Test_Output_Mplus$parameters
+
+Test_Output_Mplus$data_summary
+```
+
+#### Humanlike AI vs Doctor
+
+```{r}
+MPlus_MindPercept_Study3 <- Digital_Beliefs_3_Longer %>%
+  filter(Cond != 2) %>%
+  dplyr::select(ID, TruBel_WS, Mind_Perception, Cond, Warm_WS, Competent_WS, IsDoctor, IsNon) %>%
+  drop_na() 
+#%>%
+# write_csv(., "MPLus_Multilevel_Mediation_Study3.csv")
+
+describe(MPlus_MindPercept_Study3)
+```
+
+
+```{r}
+Mediation_Mind <- mplusObject(
+  TITLE = "MIND PERCEPTION MEDIATION",
+
+VARIABLE = "
+USEVARIABLES ARE ID TruBel_WS IsDoctor;
+CLUSTER IS ID;",
+
+ANALYSIS =  "TYPE IS TWOLEVEL RANDOM;",
+
+MODEL =  
+  "%WITHIN%
+	TruBel_WS IsDoctor;
+	TruBel_WS ON IsDoctor;
+	%BETWEEN%
+	TruBel_WS IsDoctor;
+	TruBel_WS ON IsDoctor;",
+
+OUTPUT = "SAMPSTAT STANDARDIZED(CLUSTER) STDYX TECH1 TECH8 CINTERVAL;",
+
+usevariables = colnames(MPlus_MindPercept_Study3),
+
+rdata = MPlus_MindPercept_Study3)
+
+
+Mediation_Mind_Output <-   mplusModeler(Mediation_Mind, dataout = "Mind_R.dat", modelout = "Mind_R.inp", check = TRUE, run = TRUE, hashfilename = FALSE)
+
+
+Test_Output_Mplus <- readModels("Mind_R.out")
+
+Test_Output_Mplus$parameters
+```
+
+```{r}
+Mediation_Mind <- mplusObject(
+  TITLE = "MIND PERCEPTION MEDIATION",
+
+VARIABLE = "
+USEVARIABLES ARE ID TruBel_WS Mind_Perception IsDoctor;
+
+CLUSTER IS ID;",
+
+ANALYSIS =  "TYPE IS TWOLEVEL RANDOM;",
+
+MODEL =  
+  "%WITHIN%
+	TruBel_WS IsDoctor;
+	TruBel_WS ON IsDoctor;
+	Mind_Perception ON IsDoctor(a);
+	TruBel_WS ON Mind_Perception(b);
+	%BETWEEN%
+	TruBel_WS Mind_Perception IsDoctor;
+	Mind_Perception ON IsDoctor;
+	TruBel_WS ON Mind_Perception;
+	TruBel_WS ON IsDoctor;
+	MODEL CONSTRAINT:
+	NEW(indb);
+	indb=a*b;",
+
+OUTPUT = "SAMPSTAT STANDARDIZED(CLUSTER) STDYX TECH1 TECH8 CINTERVAL;",
+
+usevariables = colnames(MPlus_MindPercept_Study3),
+
+rdata = MPlus_MindPercept_Study3)
+
+
+Mediation_Mind_Output <-   mplusModeler(Mediation_Mind, dataout = "Mind_R.dat", modelout = "Mind_R.inp", check = TRUE, run = TRUE, hashfilename = FALSE)
+
+
+Test_Output_Mplus <- readModels("Mind_R.out")
+
+Test_Output_Mplus$parameters
+
+Test_Output_Mplus$data_summary
+```
+
+#### Standardized AI vs Doctor
+
+```{r}
+MPlus_MindPercept_Study3 <- Digital_Beliefs_3_Longer %>%
+  filter(Cond != 1) %>%
+  dplyr::select(ID, TruBel_WS, Mind_Perception, Cond, Warm_WS, Competent_WS, IsDoctor, IsNon) %>%
+  drop_na() 
+#%>%
+# write_csv(., "MPLus_Multilevel_Mediation_Study3.csv")
+
+describe(MPlus_MindPercept_Study3)
+```
+
+
+```{r}
+Mediation_Mind <- mplusObject(
+  TITLE = "MIND PERCEPTION MEDIATION",
+
+VARIABLE = "
+USEVARIABLES ARE ID TruBel_WS IsDoctor;
+CLUSTER IS ID;",
+
+ANALYSIS =  "TYPE IS TWOLEVEL RANDOM;",
+
+MODEL =  
+  "%WITHIN%
+	TruBel_WS IsDoctor;
+	TruBel_WS ON IsDoctor;
+	%BETWEEN%
+	TruBel_WS IsDoctor;
+	TruBel_WS ON IsDoctor;",
+
+OUTPUT = "SAMPSTAT STANDARDIZED(CLUSTER) STDYX TECH1 TECH8 CINTERVAL;",
+
+usevariables = colnames(MPlus_MindPercept_Study3),
+
+rdata = MPlus_MindPercept_Study3)
+
+
+Mediation_Mind_Output <-   mplusModeler(Mediation_Mind, dataout = "Mind_R.dat", modelout = "Mind_R.inp", check = TRUE, run = TRUE, hashfilename = FALSE)
+
+
+Test_Output_Mplus <- readModels("Mind_R.out")
+
+Test_Output_Mplus$parameters
+```
+
+```{r}
+Mediation_Mind <- mplusObject(
+  TITLE = "MIND PERCEPTION MEDIATION",
+
+VARIABLE = "
+USEVARIABLES ARE ID TruBel_WS Mind_Perception IsDoctor;
+
+CLUSTER IS ID;",
+
+ANALYSIS =  "TYPE IS TWOLEVEL RANDOM;",
+
+MODEL =  
+  "%WITHIN%
+	TruBel_WS IsDoctor;
+	TruBel_WS ON IsDoctor;
+	Mind_Perception ON IsDoctor(a);
+	TruBel_WS ON Mind_Perception(b);
+	%BETWEEN%
+	TruBel_WS Mind_Perception IsDoctor;
+	Mind_Perception ON IsDoctor;
+	TruBel_WS ON Mind_Perception;
+	TruBel_WS ON IsDoctor;
+	MODEL CONSTRAINT:
+	NEW(indb);
+	indb=a*b;",
+
+OUTPUT = "SAMPSTAT STANDARDIZED(CLUSTER) STDYX TECH1 TECH8 CINTERVAL;",
+
+usevariables = colnames(MPlus_MindPercept_Study3),
+
+rdata = MPlus_MindPercept_Study3)
+
+
+Mediation_Mind_Output <-   mplusModeler(Mediation_Mind, dataout = "Mind_R.dat", modelout = "Mind_R.inp", check = TRUE, run = TRUE, hashfilename = FALSE)
+
+
+Test_Output_Mplus <- readModels("Mind_R.out")
+
+Test_Output_Mplus$parameters
+
+Test_Output_Mplus$data_summary
+
+```
+#### Stop
+
+
+```{r}
+Mediation_Mind <- mplusObject(
+  TITLE = "MIND PERCEPTION MEDIATION",
+
+VARIABLE = "
+USEVARIABLES ARE ID TruBel_WS Mind_Perception Cond;
+
+CLUSTER IS ID;",
+
+ANALYSIS =  "TYPE IS TWOLEVEL RANDOM;",
+
+MODEL =  
+  "%WITHIN%
+	TruBel_WS Cond;
+	TruBel_WS ON Cond;
+	Mind_Perception ON Cond(a);
+	TruBel_WS ON Mind_Perception(b);
+	%BETWEEN%
+	Cond Mind_Perception Cond;
+	Mind_Perception ON Cond;
+	TruBel_WS ON Mind_Perception;
+	TruBel_WS ON Cond;
+	MODEL CONSTRAINT:
+	NEW(indb);
+	indb=a*b;",
+
+OUTPUT = "SAMPSTAT STANDARDIZED(CLUSTER) STDYX TECH1 TECH8 CINTERVAL;",
+
+usevariables = colnames(MPlus_MindPercept_Study3),
+
+rdata = MPlus_MindPercept_Study3)
+
+
+Mediation_Mind_Output <-   mplusModeler(Mediation_Mind, dataout = "Mind_R.dat", modelout = "Mind_R.inp", check = TRUE, run = TRUE, hashfilename = FALSE)
+
+
+Test_Output_Mplus <- readModels("Mind_R.out")
+
+Test_Output_Mplus$parameters
+```
+
+## Clustering with Lavaan
+```{r}
+Mediation_Path <- '
+
+#Direct Effect
+TruBel_WS ~ c*Cond
+
+#Mediator
+Mind_Perception ~ a*Cond
+TruBel_WS ~ b*Mind_Perception
+
+#Indirect Effect (a*b)
+ab :=a*b
+
+#total effect
+total := c + (a*b)
+
+'
+PathModel <- sem(Mediation_Path, data = Digital_Beliefs_3_Longer, group = "ResponseId")
+
+summary(PathModel, standardized = TRUE, fit.measures = TRUE, rsq = TRUE)
+```
+
+
+```{r}
+fitmeasures(PathModel, c("chisq", "cfi", "rmsea", "df"))
+```
+
+
+```{r}
+semPaths(PathModel, what = 'std', whatLabel ='std', residuals = TRUE, rotation = 2,sizeMan=6, edge.label.cex=.8)
+```
+
+
+
+## Doc First
+
+#```{r}
+pairwise.t.test(Digital_Belief_Combined$WS_Non_DocFirst_Trust, Digital_Belief_Combined$Study, p.adjust.method = "none")
+
+pairwise.t.test(Digital_Belief_Combined$WS_Non_DocFirst_Believe, Digital_Belief_Combined$Study, p.adjust.method = "none")
+#```
+
+
+#```{r}
+ttestIS(
+    formula = WS_Non_DocFirst_Trust + WS_Non_DocFirst_Believe ~ Study,
+    data = Digital_Belief_Combined,
+    vars = vars(WS_Non_DocFirst_Trust, WS_Non_DocFirst_Believe),
+    meanDiff = TRUE,
+    effectSize = TRUE,
+    desc = TRUE,
+    plots = TRUE)
+#```
+
+
+
+
