@@ -1,0 +1,36 @@
+---
+// Every kind of analysis, grouped, with a filled dot for "have" and a ring for "developing".
+import analyses from '../data/analyses.json';
+const total = analyses.reduce((n, g) => n + g.items.length, 0);
+---
+<section class="an" aria-labelledby="an-h">
+  <h2 id="an-h">Analyses I know</h2>
+  <p class="an-lead">{total} kinds of analysis. A filled dot means I have used it. A ring means I am still developing it.</p>
+  <div class="an-grid">
+    {analyses.map((g) => (
+      <div class="an-group">
+        <h3>{g.name}</h3>
+        <ul>
+          {g.items.map((i) => (
+            <li class={i.level}><span class="d" aria-hidden="true"></span>{i.name}<span class="sr"> ({i.level === 'have' ? 'have' : 'developing'})</span></li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
+</section>
+<style>
+  .an { margin-top: 3rem; }
+  .an-lead { margin: 0.3rem 0 1.2rem; color: var(--muted); }
+  .an-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1.2rem 1.5rem; }
+  .an-group { border-top: 4px solid var(--coral); padding-top: 0.5rem; }
+  .an-group:nth-child(4n + 2) { border-color: var(--steel); }
+  .an-group:nth-child(4n + 3) { border-color: var(--peach); }
+  .an-group:nth-child(4n) { border-color: var(--deep); }
+  h3 { font-size: 1rem; margin: 0 0 0.4rem; }
+  ul { list-style: none; margin: 0; padding: 0; font-size: 0.97rem; line-height: 1.4; }
+  li { display: flex; gap: 0.5rem; align-items: baseline; padding: 0.15rem 0; }
+  .d { flex: none; width: 0.65rem; height: 0.65rem; border-radius: 50%; border: 1.5px solid var(--ink); }
+  .have .d { background: var(--ink); }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+</style>

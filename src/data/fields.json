@@ -1,0 +1,16 @@
+[
+ {"id":"ai","name":"AI and human behavior"},
+ {"id":"xpr","name":"Experimentation and product research"},
+ {"id":"ssp","name":"Survey science and measurement"},
+ {"id":"bar","name":"Behavioral and applied research"},
+ {"id":"hlth","name":"Health and digital health"},
+ {"id":"rpm","name":"Research programs and operations"},
+ {"id":"eval","name":"Evaluation and social impact"},
+ {"id":"ins","name":"People and consumer insights"},
+ {"id":"lnd","name":"Learning and organizational programs"},
+ {"id":"pol","name":"Policy and government research"},
+ {"id":"acad","name":"Academic research and faculty roles"},
+ {"id":"tsi","name":"Trust, safety and integrity"},
+ {"id":"dsa","name":"Data and decision science"},
+ {"id":"game","name":"Games and entertainment"}
+]

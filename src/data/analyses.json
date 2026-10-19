@@ -1,0 +1,265 @@
+[
+ {
+  "name": "Tests and group comparisons",
+  "items": [
+   {
+    "name": "t-tests",
+    "level": "have"
+   },
+   {
+    "name": "ANOVA and mixed ANOVA",
+    "level": "have"
+   },
+   {
+    "name": "Planned contrasts",
+    "level": "have"
+   }
+  ]
+ },
+ {
+  "name": "Regression",
+  "items": [
+   {
+    "name": "Linear regression",
+    "level": "have"
+   },
+   {
+    "name": "Logistic regression",
+    "level": "have"
+   },
+   {
+    "name": "Ordinal regression",
+    "level": "have"
+   },
+   {
+    "name": "Negative-binomial regression",
+    "level": "have"
+   },
+   {
+    "name": "Forward stepwise regression",
+    "level": "have"
+   },
+   {
+    "name": "Mixed-effects logistic regression",
+    "level": "have"
+   },
+   {
+    "name": "Dominance and all-subsets analysis",
+    "level": "have"
+   }
+  ]
+ },
+ {
+  "name": "Multilevel and longitudinal",
+  "items": [
+   {
+    "name": "Multilevel (mixed-effects) models",
+    "level": "have"
+   },
+   {
+    "name": "Person-mean centering",
+    "level": "have"
+   },
+   {
+    "name": "Lagged predictors and week effects",
+    "level": "have"
+   },
+   {
+    "name": "Diary and experience-sampling analysis",
+    "level": "have"
+   },
+   {
+    "name": "Latent growth models",
+    "level": "developing"
+   }
+  ]
+ },
+ {
+  "name": "Mechanisms and subgroups",
+  "items": [
+   {
+    "name": "Moderation and interactions",
+    "level": "have"
+   },
+   {
+    "name": "Causal mediation (ACME)",
+    "level": "have"
+   },
+   {
+    "name": "Multilevel mediation",
+    "level": "have"
+   },
+   {
+    "name": "Mediated moderation",
+    "level": "have"
+   }
+  ]
+ },
+ {
+  "name": "Causal inference",
+  "items": [
+   {
+    "name": "Randomized experiments",
+    "level": "have"
+   },
+   {
+    "name": "Propensity-score matching",
+    "level": "have"
+   },
+   {
+    "name": "Difference-in-differences",
+    "level": "have"
+   },
+   {
+    "name": "Regression discontinuity",
+    "level": "have"
+   },
+   {
+    "name": "Instrumental variables",
+    "level": "developing"
+   }
+  ]
+ },
+ {
+  "name": "Measurement",
+  "items": [
+   {
+    "name": "Exploratory factor analysis",
+    "level": "have"
+   },
+   {
+    "name": "Confirmatory factor analysis",
+    "level": "have"
+   },
+   {
+    "name": "Reliability and validity testing",
+    "level": "have"
+   },
+   {
+    "name": "Structural equation and path models",
+    "level": "have"
+   },
+   {
+    "name": "Multi-group models",
+    "level": "developing"
+   },
+   {
+    "name": "Latent profile analysis",
+    "level": "developing"
+   }
+  ]
+ },
+ {
+  "name": "Planning and robustness",
+  "items": [
+   {
+    "name": "Power and sensitivity analysis",
+    "level": "have"
+   },
+   {
+    "name": "Specification-curve analysis",
+    "level": "have"
+   },
+   {
+    "name": "Bonferroni and Tukey corrections",
+    "level": "have"
+   },
+   {
+    "name": "Variance inflation checks",
+    "level": "have"
+   },
+   {
+    "name": "Intent-to-treat analysis",
+    "level": "have"
+   },
+   {
+    "name": "Blind outcome rating",
+    "level": "have"
+   }
+  ]
+ },
+ {
+  "name": "Evidence for null results",
+  "items": [
+   {
+    "name": "Bayes factors",
+    "level": "developing"
+   },
+   {
+    "name": "Bayesian t-tests",
+    "level": "developing"
+   }
+  ]
+ },
+ {
+  "name": "Text",
+  "items": [
+   {
+    "name": "Dictionary-based text analysis (LIWC)",
+    "level": "have"
+   },
+   {
+    "name": "Text-similarity metrics",
+    "level": "have"
+   },
+   {
+    "name": "TF-IDF and bag of words",
+    "level": "developing"
+   },
+   {
+    "name": "Topic models and embeddings",
+    "level": "developing"
+   }
+  ]
+ },
+ {
+  "name": "Prediction",
+  "items": [
+   {
+    "name": "Classification trees",
+    "level": "developing"
+   },
+   {
+    "name": "Support vector machines",
+    "level": "developing"
+   },
+   {
+    "name": "Nearest neighbors",
+    "level": "developing"
+   },
+   {
+    "name": "Naive Bayes",
+    "level": "developing"
+   },
+   {
+    "name": "Cross-validation",
+    "level": "developing"
+   },
+   {
+    "name": "ROC curves and confusion matrices",
+    "level": "developing"
+   }
+  ]
+ },
+ {
+  "name": "Data integration and place",
+  "items": [
+   {
+    "name": "Pooled raw-data analysis",
+    "level": "have"
+   },
+   {
+    "name": "Data harmonization",
+    "level": "have"
+   },
+   {
+    "name": "Geospatial mapping",
+    "level": "developing"
+   },
+   {
+    "name": "Cost-benefit analysis",
+    "level": "developing"
+   }
+  ]
+ }
+]

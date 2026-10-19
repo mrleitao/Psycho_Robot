@@ -1,6 +1,31 @@
 [
  {
   "group": "Study design",
+  "type": "hard",
+  "name": "Theory and construct development",
+  "level": "have",
+  "also": [
+   "Behavioral diagnosis",
+   "Mechanism development",
+   "Theory-driven intervention design"
+  ],
+  "includes": [
+   "Conceptual models",
+   "Construct definition",
+   "Hypothesis formation"
+  ],
+  "fields": [
+   "bar",
+   "ai",
+   "hlth",
+   "acad",
+   "ins"
+  ],
+  "proof": "I developed the theory behind Risk Creep, the parasocial identification paper, the smartphone wellbeing review, my thesis and my dissertation."
+ },
+ {
+  "group": "Study design",
+  "type": "hard",
   "name": "Experimental design",
   "level": "have",
   "also": [
@@ -8,10 +33,27 @@
    "Experiment design and measurement",
    "Causal tests"
   ],
+  "includes": [
+   "Random assignment",
+   "Between-subjects designs",
+   "Vignettes",
+   "Manipulation checks",
+   "Cover stories"
+  ],
+  "fields": [
+   "xpr",
+   "bar",
+   "ai",
+   "hlth",
+   "acad",
+   "tsi",
+   "game"
+  ],
   "proof": "I designed and ran six studies for my dissertation, with plans registered in advance, and recruited more than 3,000 people. My master's thesis was an experiment with 305 participants, also registered in advance."
  },
  {
   "group": "Study design",
+  "type": "hard",
   "name": "Longitudinal and repeated-measures design",
   "level": "have",
   "also": [
@@ -19,10 +61,24 @@
    "Diary and experience-sampling studies",
    "Real-world behavioral measurement"
   ],
+  "includes": [
+   "Field studies",
+   "Lagged predictors",
+   "Adherence tracking"
+  ],
+  "fields": [
+   "bar",
+   "hlth",
+   "ssp",
+   "ins",
+   "tsi",
+   "acad"
+  ],
   "proof": "I ran a 15-day behavior-change study (560 recruited, 455 retained) and managed seven-day student diary studies, with about four surveys a day."
  },
  {
   "group": "Study design",
+  "type": "hard",
   "name": "Causal and quasi-experimental methods",
   "level": "have",
   "also": [
@@ -31,20 +87,43 @@
    "Propensity-score matching",
    "Regression discontinuity"
   ],
+  "includes": [
+   "Randomized designs",
+   "Matching",
+   "Difference-in-differences",
+   "Regression discontinuity"
+  ],
+  "fields": [
+   "xpr",
+   "eval",
+   "pol",
+   "dsa",
+   "bar"
+  ],
   "proof": "I used matching, regression discontinuity and difference-in-differences on records for more than 100,000 students."
  },
  {
   "group": "Study design",
+  "type": "hard",
   "name": "Crossover trial analysis",
   "level": "have",
   "also": [
    "Clinical outcomes analysis",
    "Secondary analysis of a randomized trial"
   ],
+  "includes": [
+   "Drug and placebo comparisons",
+   "Order effects"
+  ],
+  "fields": [
+   "hlth",
+   "acad"
+  ],
   "proof": "I am first author on a 2026 analysis of a randomized, double-blind crossover trial of a ghrelin-receptor blocker in 29 people with alcohol use disorder. The NIH team designed the trial. I ran the analysis."
  },
  {
   "group": "Study design",
+  "type": "hard",
   "name": "Mixed-methods program evaluation",
   "level": "have",
   "also": [
@@ -52,10 +131,24 @@
    "Evaluation design",
    "Mixed-methods research"
   ],
+  "includes": [
+   "Surveys",
+   "Focus groups",
+   "Interviews",
+   "Administrative data"
+  ],
+  "fields": [
+   "eval",
+   "ins",
+   "lnd",
+   "pol",
+   "bar"
+  ],
   "proof": "I evaluated a university summer-skills program with focus groups, surveys and student outcome data, then presented what worked to department leaders."
  },
  {
   "group": "Study design",
+  "type": "hard",
   "name": "Research synthesis",
   "level": "have",
   "also": [
@@ -63,10 +156,21 @@
    "Literature review",
    "Research agenda development"
   ],
+  "includes": [
+   "Theory integration",
+   "Evidence comparison"
+  ],
+  "fields": [
+   "bar",
+   "eval",
+   "acad",
+   "ai"
+  ],
   "proof": "I wrote literature reviews on smartphone use and on COVID-19 social contact, and pooled the raw data from eight experiments."
  },
  {
   "group": "Study design",
+  "type": "hard",
   "name": "Open and reproducible research",
   "level": "have",
   "also": [
@@ -74,10 +178,86 @@
    "Reproducible workflows",
    "Open science"
   ],
+  "includes": [
+   "Preregistration",
+   "Public code and materials",
+   "Quarto reports"
+  ],
+  "fields": [
+   "acad",
+   "bar",
+   "ai",
+   "xpr",
+   "eval",
+   "dsa"
+  ],
   "proof": "I write my analysis plan down and register it publicly before I look at results. I share code and materials, and I co-founded a campus open-science group."
  },
  {
+  "group": "Study design",
+  "type": "hard",
+  "name": "Digital behavior and technology effects",
+  "level": "have",
+  "also": [
+   "Technology-use measurement",
+   "Digital wellbeing"
+  ],
+  "includes": [
+   "Social connection",
+   "Sleep",
+   "Next-day depletion"
+  ],
+  "fields": [
+   "bar",
+   "hlth",
+   "game",
+   "tsi",
+   "ins"
+  ],
+  "proof": "I studied how phone use relates to face-to-face connection, wellbeing and sleep, and how time with close and distant contacts online related to stress during COVID-19."
+ },
+ {
+  "group": "Study design",
+  "type": "hard",
+  "name": "Applied memory and cognition research",
+  "level": "developing",
+  "also": [
+   "Cognitive research synthesis",
+   "Applied research proposals"
+  ],
+  "includes": [
+   "Memory theory comparison",
+   "Experiment and grant proposals"
+  ],
+  "fields": [
+   "acad",
+   "bar"
+  ],
+  "proof": "I wrote a graduate-seminar proposal that turned theories of memory into an applied study. I have not run a memory experiment."
+ },
+ {
+  "group": "Study design",
+  "type": "hard",
+  "name": "Socio-technical systems analysis",
+  "level": "developing",
+  "also": [
+   "Deblackboxing technology",
+   "Systems and design thinking"
+  ],
+  "includes": [
+   "AI and cloud systems",
+   "Social and policy dependencies"
+  ],
+  "fields": [
+   "ai",
+   "pol",
+   "lnd"
+  ],
+  "proof": "I analyzed how AI, cloud and data systems depend on people and policy in a graduate course. Applying it to a live project is still ahead."
+ },
+ {
   "group": "Measurement and participants",
+  "type": "hard",
   "name": "Survey and questionnaire development",
   "level": "have",
   "also": [
@@ -85,10 +265,25 @@
    "Questionnaire programming",
    "Qualtrics"
   ],
+  "includes": [
+   "Item writing",
+   "Piloting",
+   "Study launch and monitoring"
+  ],
+  "fields": [
+   "ssp",
+   "bar",
+   "ins",
+   "eval",
+   "pol",
+   "game",
+   "hlth"
+  ],
   "proof": "I built the surveys for every study I have run, programmed them in Qualtrics, and wrote items for a published gaming-motivation scale."
  },
  {
   "group": "Measurement and participants",
+  "type": "hard",
   "name": "Scale development and psychometrics",
   "level": "have",
   "also": [
@@ -96,10 +291,24 @@
    "Instrument development",
    "Factor analysis"
   ],
+  "includes": [
+   "Item analysis",
+   "EFA and CFA",
+   "Reliability and validity"
+  ],
+  "fields": [
+   "ssp",
+   "bar",
+   "ins",
+   "hlth",
+   "game",
+   "ai"
+  ],
   "proof": "I built the trust measures for my dissertation and a smartphone self-inclusion scale (in preparation, first author). I also contributed to a published gaming scale and a VR symptom questionnaire."
  },
  {
   "group": "Measurement and participants",
+  "type": "hard",
   "name": "Participant recruitment",
   "level": "have",
   "also": [
@@ -107,10 +316,46 @@
    "Panel research",
    "Clinical recruitment support"
   ],
+  "includes": [
+   "In-person outreach",
+   "Research pools",
+   "Online panels",
+   "Scheduling and tracking"
+  ],
+  "fields": [
+   "rpm",
+   "hlth",
+   "ssp",
+   "xpr",
+   "ins",
+   "tsi"
+  ],
   "proof": "I recruit in person, through university pools, and on MTurk, CloudResearch and Prolific. I also handle recruitment administration for an NIH clinical trial."
  },
  {
   "group": "Measurement and participants",
+  "type": "hard",
+  "name": "Participant-centered communication",
+  "level": "have",
+  "also": [
+   "Participant experience",
+   "Research communication"
+  ],
+  "includes": [
+   "Clear instructions",
+   "Consent-sensitive communication"
+  ],
+  "fields": [
+   "rpm",
+   "hlth",
+   "ssp",
+   "ins"
+  ],
+  "proof": "I wrote the instructions and handled questions for general-public, student, online-panel and clinical-study participants."
+ },
+ {
+  "group": "Measurement and participants",
+  "type": "hard",
   "name": "Online-panel data quality",
   "level": "have",
   "also": [
@@ -118,10 +363,22 @@
    "Fitness for use",
    "Attention checks"
   ],
+  "includes": [
+   "Exclusions",
+   "Duplicate and bot screening"
+  ],
+  "fields": [
+   "ssp",
+   "tsi",
+   "bar",
+   "dsa",
+   "pol"
+  ],
   "proof": "I screen out inattentive and duplicate respondents. In a COVID-19 survey, 674 people consented and 569 passed."
  },
  {
   "group": "Measurement and participants",
+  "type": "hard",
   "name": "Behavioral intervention measurement",
   "level": "have",
   "also": [
@@ -129,10 +386,20 @@
    "Adherence measurement",
    "Behavior-change outcomes"
   ],
+  "includes": [
+   "Baseline and follow-up",
+   "Repeated measurement"
+  ],
+  "fields": [
+   "hlth",
+   "bar",
+   "eval"
+  ],
   "proof": "I designed dissertation Study 6, which tracked trust, adherence and behavior for 15 days. It found no reliable effect, and I reported it that way."
  },
  {
   "group": "Measurement and participants",
+  "type": "hard",
   "name": "Content and media coding",
   "level": "have",
   "also": [
@@ -140,10 +407,23 @@
    "Content analysis",
    "Transcription"
   ],
+  "includes": [
+   "Video evaluation",
+   "Transcription",
+   "Emotional speech analysis"
+  ],
+  "fields": [
+   "tsi",
+   "ins",
+   "pol",
+   "game",
+   "eval"
+  ],
   "proof": "I coded video for prejudice in media, transcribed focus groups, and analyzed emotional speech in earlier lab roles."
  },
  {
   "group": "Analysis",
+  "type": "hard",
   "name": "Regression and multilevel modeling",
   "level": "have",
   "also": [
@@ -151,10 +431,25 @@
    "Predictor modeling",
    "Nested-data analysis"
   ],
+  "includes": [
+   "Linear, logistic, ordinal, negative-binomial",
+   "Forward stepwise",
+   "Mixed-effects models",
+   "Person-mean centering"
+  ],
+  "fields": [
+   "bar",
+   "xpr",
+   "dsa",
+   "ins",
+   "hlth",
+   "acad"
+  ],
   "proof": "I fit linear, logistic, ordinal, negative-binomial and mixed-effects models. I pooled eight experiments (1,778 people) into one multilevel model."
  },
  {
   "group": "Analysis",
+  "type": "hard",
   "name": "Mediation and moderation",
   "level": "have",
   "also": [
@@ -162,10 +457,26 @@
    "Subgroup and conditional effects",
    "Pathway testing"
   ],
+  "includes": [
+   "Interaction terms",
+   "Planned contrasts",
+   "Causal mediation (ACME)",
+   "Multilevel mediation",
+   "Dominance analysis"
+  ],
+  "fields": [
+   "bar",
+   "ai",
+   "hlth",
+   "xpr",
+   "ins",
+   "acad"
+  ],
   "proof": "I tested who is affected and why: a multilevel mediated-moderation model in my dissertation, and causal mediation in the generative AI experiments."
  },
  {
   "group": "Analysis",
+  "type": "hard",
   "name": "Structural equation modeling",
   "level": "have",
   "also": [
@@ -173,10 +484,23 @@
    "Path analysis",
    "Structural validity"
   ],
+  "includes": [
+   "CFA",
+   "Path models",
+   "Multi-group models",
+   "Mplus through R"
+  ],
+  "fields": [
+   "ssp",
+   "bar",
+   "dsa",
+   "acad"
+  ],
   "proof": "I built latent-variable path models for an award-winning data competition entry, replicated a published model in R for a graduate course, and ran Mplus models for my dissertation."
  },
  {
   "group": "Analysis",
+  "type": "hard",
   "name": "Power and sensitivity analysis",
   "level": "have",
   "also": [
@@ -184,10 +508,23 @@
    "Minimum detectable effect",
    "Power analysis"
   ],
+  "includes": [
+   "A priori power planning",
+   "Sensitivity analysis"
+  ],
+  "fields": [
+   "xpr",
+   "bar",
+   "ssp",
+   "hlth",
+   "eval",
+   "acad"
+  ],
   "proof": "I plan sample sizes before each study and check what each one can detect. I taught a power-analysis workshop in 2023."
  },
  {
   "group": "Analysis",
+  "type": "hard",
   "name": "Robustness checks",
   "level": "have",
   "also": [
@@ -195,10 +532,44 @@
    "Specification-curve analysis",
    "Trustworthy results"
   ],
+  "includes": [
+   "Bonferroni and Tukey corrections",
+   "Intent-to-treat",
+   "Deviation coding",
+   "Variance inflation checks"
+  ],
+  "fields": [
+   "xpr",
+   "ai",
+   "dsa",
+   "bar",
+   "acad"
+  ],
   "proof": "In the generative AI study I tested the main result 69 ways, so the conclusion does not rest on one analysis choice."
  },
  {
   "group": "Analysis",
+  "type": "hard",
+  "name": "Blind outcome rating",
+  "level": "have",
+  "also": [
+   "Independent evaluation",
+   "Quality scoring"
+  ],
+  "includes": [
+   "Judges blind to condition",
+   "Quality-per-time ratio"
+  ],
+  "fields": [
+   "ai",
+   "xpr",
+   "bar"
+  ],
+  "proof": "In the generative AI experiments, judges who did not know the condition rated the work, and I compared quality with time spent."
+ },
+ {
+  "group": "Analysis",
+  "type": "hard",
   "name": "Cross-study data integration",
   "level": "have",
   "also": [
@@ -206,10 +577,23 @@
    "Dataset standardization",
    "Pooled analysis"
   ],
+  "includes": [
+   "Study indicators",
+   "Sensitivity checks"
+  ],
+  "fields": [
+   "bar",
+   "eval",
+   "ins",
+   "dsa",
+   "rpm",
+   "acad"
+  ],
   "proof": "I pooled eight experiments for a published analysis. Along the way I found and removed 173 placeholder rows."
  },
  {
   "group": "Analysis",
+  "type": "hard",
   "name": "Data cleaning and quality control",
   "level": "have",
   "also": [
@@ -217,10 +601,24 @@
    "Data integrity",
    "Analysis-ready data"
   ],
+  "includes": [
+   "Exclusions",
+   "Missing-data review",
+   "Variable harmonization"
+  ],
+  "fields": [
+   "dsa",
+   "pol",
+   "eval",
+   "ins",
+   "bar",
+   "ssp"
+  ],
   "proof": "I prepared the data for the parasocial study, the pooled analysis, and more than 100,000 student records."
  },
  {
   "group": "Analysis",
+  "type": "hard",
   "name": "Data visualization and dashboards",
   "level": "have",
   "also": [
@@ -228,30 +626,64 @@
    "Decision-support reporting",
    "Tableau"
   ],
+  "includes": [
+   "ggplot",
+   "Tableau",
+   "Figures for stakeholders"
+  ],
+  "fields": [
+   "dsa",
+   "eval",
+   "ins",
+   "xpr",
+   "rpm",
+   "pol"
+  ],
   "proof": "I built Tableau dashboards that department chairs and administrators used each semester, and the figures for the generative AI study."
  },
  {
   "group": "Analysis",
+  "type": "hard",
   "name": "Bayesian inference",
   "level": "developing",
   "also": [
    "Bayes factors",
    "Evidence for null effects"
   ],
+  "includes": [
+   "Bayesian t-tests",
+   "Bayes factors"
+  ],
+  "fields": [
+   "bar",
+   "ssp",
+   "acad",
+   "dsa"
+  ],
   "proof": "I use Bayes factors to show how strongly the data support a null result, including on the Studies 1 and 2 pages of this site. I have not built full Bayesian models."
  },
  {
   "group": "Analysis",
+  "type": "hard",
   "name": "Latent profile analysis",
   "level": "developing",
   "also": [
    "Person-centered analysis",
    "Segmentation"
   ],
+  "includes": [
+   "Latent profiles"
+  ],
+  "fields": [
+   "bar",
+   "ins",
+   "dsa"
+  ],
   "proof": "I completed a 2023 methods workshop. My first applied project is still ahead."
  },
  {
   "group": "Analysis",
+  "type": "hard",
   "name": "Machine learning and prediction",
   "level": "developing",
   "also": [
@@ -259,10 +691,43 @@
    "Classifiers",
    "Model evaluation"
   ],
+  "includes": [
+   "Trees, SVM, KNN, Naive Bayes",
+   "Cross-validation",
+   "ROC and confusion matrices",
+   "App-usage prediction"
+  ],
+  "fields": [
+   "dsa",
+   "xpr",
+   "game",
+   "acad"
+  ],
   "proof": "I built and tested classifiers in an end-to-end Python project for a graduate course, and presented a poster predicting app use. I have not deployed a model."
  },
  {
+  "group": "Analysis",
+  "type": "hard",
+  "name": "Economic and cost-benefit analysis",
+  "level": "developing",
+  "also": [
+   "Policy appraisal",
+   "Cost-benefit analysis"
+  ],
+  "includes": [
+   "Market failure",
+   "Public goods",
+   "Social insurance"
+  ],
+  "fields": [
+   "pol",
+   "eval"
+  ],
+  "proof": "I used cost-benefit and market-failure analysis in graduate economics courses. I have not applied it to a live decision."
+ },
+ {
   "group": "Code and tools",
+  "type": "hard",
   "name": "R, Stata and SPSS",
   "level": "have",
   "also": [
@@ -270,10 +735,29 @@
    "Reproducible analytics",
    "Research automation"
   ],
+  "includes": [
+   "R and RStudio",
+   "Stata",
+   "SPSS",
+   "Mplus",
+   "Jamovi and JASP",
+   "Quarto"
+  ],
+  "fields": [
+   "dsa",
+   "bar",
+   "xpr",
+   "eval",
+   "hlth",
+   "ins",
+   "acad",
+   "ssp"
+  ],
   "proof": "R is my main language for modeling, figures and teaching. I used Stata across a graduate sequence in regression and program evaluation."
  },
  {
   "group": "Code and tools",
+  "type": "hard",
   "name": "Cloud and API experiment engineering",
   "level": "have",
   "also": [
@@ -281,10 +765,20 @@
    "Model and API integration",
    "Cloud-hosted data collection"
   ],
+  "includes": [
+   "ChatGPT API",
+   "AWS",
+   "Qualtrics randomization"
+  ],
+  "fields": [
+   "ai",
+   "xpr"
+  ],
   "proof": "I built a participant-facing task on the ChatGPT API, hosted on AWS, with random assignment in Qualtrics. It is a research tool, not production software."
  },
  {
   "group": "Code and tools",
+  "type": "hard",
   "name": "Text analysis with dictionaries",
   "level": "have",
   "also": [
@@ -292,10 +786,45 @@
    "LIWC",
    "Text-similarity metrics"
   ],
+  "includes": [
+   "LIWC",
+   "Cosine, Jaccard and Sørensen-Dice similarity"
+  ],
+  "fields": [
+   "ai",
+   "bar",
+   "ins",
+   "game"
+  ],
   "proof": "I ran LIWC text analysis at a university lab in 2018 and 2019, and compared human and AI writing with similarity scores in the generative AI study."
  },
  {
   "group": "Code and tools",
+  "type": "hard",
+  "name": "Web, design and automation tools",
+  "level": "have",
+  "also": [
+   "Workflow automation",
+   "Light web development"
+  ],
+  "includes": [
+   "HTML5 and JavaScript",
+   "LaTeX",
+   "WordPress",
+   "Canva",
+   "Excel macros",
+   "Praat scripts"
+  ],
+  "fields": [
+   "rpm",
+   "lnd",
+   "ins"
+  ],
+  "proof": "I use these tools lightly: Excel macros and Praat scripts in earlier lab work, and web pages, slides and posters since."
+ },
+ {
+  "group": "Code and tools",
+  "type": "hard",
   "name": "Modern text analysis",
   "level": "developing",
   "also": [
@@ -303,40 +832,85 @@
    "Embeddings",
    "Topic models"
   ],
+  "includes": [
+   "TF-IDF",
+   "Bag of words",
+   "Language-model coding"
+  ],
+  "fields": [
+   "ai",
+   "dsa",
+   "ins"
+  ],
   "proof": "I took a 2023 text-analytics workshop and a graduate course on TF-IDF and language processing. My first applied project is still ahead."
  },
  {
   "group": "Code and tools",
+  "type": "hard",
   "name": "Python",
   "level": "developing",
   "also": [
    "Applied research computing",
    "pandas and scikit-learn"
   ],
+  "includes": [
+   "Pandas",
+   "Jupyter",
+   "Web scraping",
+   "APIs",
+   "scikit-learn"
+  ],
+  "fields": [
+   "dsa",
+   "xpr",
+   "ai"
+  ],
   "proof": "I used pandas, Jupyter, web scraping and scikit-learn in graduate coursework. R is the language I use daily."
  },
  {
   "group": "Code and tools",
+  "type": "hard",
   "name": "SQL",
   "level": "developing",
   "also": [
    "Data access",
    "Querying data warehouses"
   ],
+  "includes": [
+   "Queries",
+   "Joins"
+  ],
+  "fields": [
+   "dsa",
+   "xpr",
+   "tsi",
+   "ssp"
+  ],
   "proof": "I am building SQL skills through self-directed practice and have not used it in a project yet."
  },
  {
   "group": "Code and tools",
+  "type": "hard",
   "name": "Geospatial analysis",
   "level": "developing",
   "also": [
    "ArcGIS",
    "Open government data"
   ],
+  "includes": [
+   "ArcGIS",
+   "Open county data"
+  ],
+  "fields": [
+   "pol",
+   "eval",
+   "ins"
+  ],
   "proof": "I mapped open Los Angeles County data in ArcGIS for a 2018 data competition entry."
  },
  {
   "group": "AI and human behavior",
+  "type": "hard",
   "name": "Human-AI trust and reliance research",
   "level": "have",
   "also": [
@@ -344,10 +918,25 @@
    "Calibrated trust",
    "Over-trust"
   ],
+  "includes": [
+   "Trust",
+   "Reliance",
+   "Anthropomorphism",
+   "Autonomy",
+   "Weight-on-Advice"
+  ],
+  "fields": [
+   "ai",
+   "hlth",
+   "bar",
+   "tsi",
+   "acad"
+  ],
   "proof": "My six-study dissertation compares trust in doctors and medical AI. It measures reliance by how far people move their own answer toward the advice."
  },
  {
   "group": "AI and human behavior",
+  "type": "hard",
   "name": "Human-AI collaboration experiments",
   "level": "have",
   "also": [
@@ -355,20 +944,42 @@
    "Human-AI collaboration",
    "Worker experience"
   ],
+  "includes": [
+   "Draft versus edit",
+   "Ownership",
+   "Engagement"
+  ],
+  "fields": [
+   "ai",
+   "ins",
+   "xpr",
+   "acad"
+  ],
   "proof": "I am co-first author on two experiments (N = 1,299) on drafting with generative AI versus editing its output. Judges who did not know the condition rated the work."
  },
  {
   "group": "AI and human behavior",
+  "type": "hard",
   "name": "Obedience to computer authority",
   "level": "have",
   "also": [
    "Socio-technical research",
    "Compliance with automated instructions"
   ],
+  "includes": [
+   "Text-to-speech versus human voice",
+   "Perceived sophistication"
+  ],
+  "fields": [
+   "ai",
+   "tsi",
+   "bar"
+  ],
   "proof": "My master's thesis (N = 305) tested whether people obey computer instructors as readily as human ones. They did, about equally, and I reported that as a null."
  },
  {
   "group": "AI and human behavior",
+  "type": "hard",
   "name": "Health and risk communication research",
   "level": "have",
   "also": [
@@ -376,10 +987,21 @@
    "Patient-centered research",
    "Health beliefs"
   ],
+  "includes": [
+   "Genetic-risk interpretation",
+   "Virtual patients",
+   "Demographic cues"
+  ],
+  "fields": [
+   "hlth",
+   "ai",
+   "bar"
+  ],
   "proof": "I study how people read genetic-risk information. On a virtual-patient project (N = 200) I collected, cleaned and analyzed the data."
  },
  {
   "group": "Leading and operating",
+  "type": "hard",
   "name": "Research program management",
   "level": "have",
   "also": [
@@ -387,10 +1009,42 @@
    "Prioritizing concurrent workstreams",
    "Study coordination"
   ],
+  "includes": [
+   "Sequencing",
+   "Delegation",
+   "Milestone tracking"
+  ],
+  "fields": [
+   "rpm",
+   "hlth",
+   "eval"
+  ],
   "proof": "I managed six to seven projects at once at Georgetown with a student team, and I now support six NIH projects."
  },
  {
   "group": "Leading and operating",
+  "type": "hard",
+  "name": "Study operations",
+  "level": "have",
+  "also": [
+   "Study coordination",
+   "Fieldwork management"
+  ],
+  "includes": [
+   "Survey builds",
+   "Launches and monitoring",
+   "Data handoffs"
+  ],
+  "fields": [
+   "rpm",
+   "hlth",
+   "ins"
+  ],
+  "proof": "I run studies from ethics approval through launch, monitoring and data handoff, for my own projects and for NIH collaborators."
+ },
+ {
+  "group": "Leading and operating",
+  "type": "hard",
   "name": "Supervising and mentoring",
   "level": "have",
   "also": [
@@ -398,10 +1052,21 @@
    "Delegation",
    "Mentoring and coaching"
   ],
+  "includes": [
+   "Training",
+   "Monitoring",
+   "Honors thesis advising"
+  ],
+  "fields": [
+   "rpm",
+   "lnd",
+   "acad"
+  ],
   "proof": "I have supervised research assistants since 2017, on teams of up to 15. I guided an honors thesis and served as a conference graduate mentor."
  },
  {
   "group": "Leading and operating",
+  "type": "hard",
   "name": "Research governance",
   "level": "have",
   "also": [
@@ -409,10 +1074,59 @@
    "Protocol development",
    "IRB management"
   ],
+  "includes": [
+   "Human-subjects procedures",
+   "Protocol preparation"
+  ],
+  "fields": [
+   "rpm",
+   "hlth",
+   "eval",
+   "pol"
+  ],
   "proof": "I wrote and managed ethics-board protocols at two universities and support regulated clinical-study administration at NIH."
  },
  {
   "group": "Leading and operating",
+  "type": "hard",
+  "name": "Clinical-study administration",
+  "level": "have",
+  "also": [
+   "Regulated study operations",
+   "Clinical recruitment support"
+  ],
+  "includes": [
+   "Recruitment tracking",
+   "Study coordination"
+  ],
+  "fields": [
+   "hlth",
+   "rpm"
+  ],
+  "proof": "I support recruitment administration for an NIH clinical trial that tests a drug. I am not a clinician."
+ },
+ {
+  "group": "Leading and operating",
+  "type": "hard",
+  "name": "Recruitment operations",
+  "level": "have",
+  "also": [
+   "Research-pool administration",
+   "Yield monitoring"
+  ],
+  "includes": [
+   "Channel selection",
+   "Research-pool rules"
+  ],
+  "fields": [
+   "rpm",
+   "ssp"
+  ],
+  "proof": "I coordinated the Georgetown research participant pool and combined in-person, university and online recruitment."
+ },
+ {
+  "group": "Leading and operating",
+  "type": "hard",
   "name": "Workflow and process improvement",
   "level": "have",
   "also": [
@@ -420,10 +1134,21 @@
    "Process improvement",
    "Operational documentation"
   ],
+  "includes": [
+   "Templates",
+   "Standard displays",
+   "Process documentation"
+  ],
+  "fields": [
+   "rpm",
+   "lnd",
+   "eval"
+  ],
   "proof": "I redesigned the Georgetown participant pool, and research yield reportedly rose 50% the next year. I also built reusable lab templates."
  },
  {
   "group": "Leading and operating",
+  "type": "hard",
   "name": "Grants and budgets",
   "level": "have",
   "also": [
@@ -431,21 +1156,82 @@
    "Budget development",
    "Grantsmanship"
   ],
+  "includes": [
+   "Specific aims",
+   "Budgets",
+   "Timelines"
+  ],
+  "fields": [
+   "rpm",
+   "acad"
+  ],
   "proof": "I won three named grants and fellowships, and I wrote the budgets and timelines for my funded and independent research."
  },
  {
   "group": "Leading and operating",
-  "name": "Policy work",
+  "type": "hard",
+  "name": "Grant-proposal writing",
+  "level": "developing",
+  "also": [
+   "Proposal writing",
+   "Short-form grant writing"
+  ],
+  "includes": [
+   "Specific aims",
+   "Significance",
+   "Research design"
+  ],
+  "fields": [
+   "acad",
+   "rpm"
+  ],
+  "proof": "I wrote full proposals in graduate seminars and presented grant literature at a university lab. I have not led a funded federal proposal."
+ },
+ {
+  "group": "Leading and operating",
+  "type": "hard",
+  "name": "Policy analysis and memos",
   "level": "have",
   "also": [
    "Policy recommendations",
    "Data governance",
-   "Stakeholder engagement"
+   "Briefings"
   ],
-  "proof": "I served on the task force whose recommendation on storing and showing gender identity and pronouns became policy. I also sat on the committee behind making the GRE optional at Georgetown."
+  "includes": [
+   "Policy memos",
+   "Congressional testimony project",
+   "Options and recommendations"
+  ],
+  "fields": [
+   "pol",
+   "eval",
+   "lnd"
+  ],
+  "proof": "I served on the task force whose recommendation on storing and showing gender identity and pronouns became policy, and on the committee behind making the GRE optional at Georgetown. I also wrote policy memos and testimony in graduate work."
+ },
+ {
+  "group": "Leading and operating",
+  "type": "hard",
+  "name": "Consultative analysis",
+  "level": "developing",
+  "also": [
+   "Internal consulting",
+   "Client-oriented analysis"
+  ],
+  "includes": [
+   "Semi-structured interviews",
+   "Management reports"
+  ],
+  "fields": [
+   "lnd",
+   "eval",
+   "ins"
+  ],
+  "proof": "I led a team that interviewed an organization and wrote a 20 to 30 page consulting report in a graduate course. I have not consulted professionally."
  },
  {
   "group": "Teaching and communicating",
+  "type": "hard",
   "name": "Curriculum and course design",
   "level": "have",
   "also": [
@@ -453,10 +1239,41 @@
    "Backward design",
    "Active learning"
   ],
+  "includes": [
+   "Assessment design",
+   "Peer review",
+   "Scaffolded assignments"
+  ],
+  "fields": [
+   "lnd",
+   "acad"
+  ],
   "proof": "I designed and taught Psychology of Technology as instructor of record. It won Georgetown's 2023 Graduate Student Teaching Award."
  },
  {
   "group": "Teaching and communicating",
+  "type": "hard",
+  "name": "Teaching across settings",
+  "level": "have",
+  "also": [
+   "Training delivery",
+   "Tutoring",
+   "Guest lecturing"
+  ],
+  "includes": [
+   "University recitation",
+   "Test prep",
+   "Guest lectures"
+  ],
+  "fields": [
+   "lnd",
+   "acad"
+  ],
+  "proof": "I have taught at Georgetown, CSUN and Kaplan, led recitations, tutored, and given guest lectures in people analytics and learning analytics."
+ },
+ {
+  "group": "Teaching and communicating",
+  "type": "hard",
   "name": "Workshop design and facilitation",
   "level": "have",
   "also": [
@@ -464,27 +1281,456 @@
    "Capability building",
    "Training delivery"
   ],
+  "includes": [
+   "Hands-on instruction",
+   "Reusable materials"
+  ],
+  "fields": [
+   "lnd",
+   "rpm",
+   "acad"
+  ],
   "proof": "I taught workshops on power analysis, R and open science, then Introduction to R and Quarto at NIH."
  },
  {
   "group": "Teaching and communicating",
+  "type": "hard",
+  "name": "Documentation and reusable resources",
+  "level": "have",
+  "also": [
+   "Knowledge products",
+   "Operational documentation"
+  ],
+  "includes": [
+   "Open materials",
+   "Templates",
+   "Training guides"
+  ],
+  "fields": [
+   "lnd",
+   "rpm"
+  ],
+  "proof": "I made public R, Quarto and power-analysis materials on OSF and lab templates that others can reuse."
+ },
+ {
+  "group": "Teaching and communicating",
+  "type": "hard",
   "name": "Scientific writing",
   "level": "have",
   "also": [
    "Research writing",
    "Authoring for publication"
   ],
+  "includes": [
+   "Manuscripts",
+   "Thesis and dissertation"
+  ],
+  "fields": [
+   "acad",
+   "bar"
+  ],
   "proof": "I wrote all of my thesis and dissertation, and I contributed writing to several papers."
  },
  {
   "group": "Teaching and communicating",
-  "name": "Talks and public communication",
+  "type": "hard",
+  "name": "Technical translation",
+  "level": "have",
+  "also": [
+   "Data storytelling",
+   "Research storytelling",
+   "Communicating to non-technical audiences"
+  ],
+  "includes": [
+   "Audience adaptation",
+   "Recommendations"
+  ],
+  "fields": [
+   "ins",
+   "dsa",
+   "eval",
+   "xpr",
+   "pol",
+   "bar"
+  ],
+  "proof": "I turn statistics into plain recommendations for papers, talks, dashboards, workshops and policy discussions."
+ },
+ {
+  "group": "Teaching and communicating",
+  "type": "hard",
+  "name": "Public science communication",
+  "level": "have",
+  "also": [
+   "Popular-press writing",
+   "Science communication"
+  ],
+  "includes": [
+   "Nonexpert audiences",
+   "Policy and business implications"
+  ],
+  "fields": [
+   "lnd",
+   "pol",
+   "bar"
+  ],
+  "proof": "I taught students to write a magazine-style article from a research paper, and I explain my own work in plain words on this site."
+ },
+ {
+  "group": "Teaching and communicating",
+  "type": "hard",
+  "name": "Talks and speaking",
   "level": "have",
   "also": [
    "Presenting to leadership",
-   "Research storytelling",
    "Public science communication"
   ],
+  "includes": [
+   "Session chairing",
+   "Invited talks",
+   "Posters"
+  ],
+  "fields": [
+   "acad",
+   "lnd"
+  ],
   "proof": "I chaired a 2024 conference session on AI, and gave invited talks at the University of Virginia and a film festival."
+ },
+ {
+  "group": "Ownership and leadership",
+  "type": "soft",
+  "name": "Ownership",
+  "level": "have",
+  "also": [
+   "Led end to end",
+   "Accountable for delivery"
+  ],
+  "includes": [],
+  "fields": [
+   "bar",
+   "rpm",
+   "acad",
+   "ai"
+  ],
+  "proof": "I carried my thesis and six-study dissertation from the first question through design, recruitment, analysis and writing."
+ },
+ {
+  "group": "Ownership and leadership",
+  "type": "soft",
+  "name": "Project leadership",
+  "level": "have",
+  "also": [
+   "Led parallel workstreams",
+   "Coordinated delivery"
+  ],
+  "includes": [],
+  "fields": [
+   "rpm",
+   "hlth",
+   "eval"
+  ],
+  "proof": "I built a student team, delegated work, and kept six to seven projects moving at once."
+ },
+ {
+  "group": "Ownership and leadership",
+  "type": "soft",
+  "name": "People leadership",
+  "level": "have",
+  "also": [
+   "Supervised and trained staff",
+   "Delegated and monitored work"
+  ],
+  "includes": [],
+  "fields": [
+   "rpm",
+   "lnd"
+  ],
+  "proof": "I have supervised research assistants since 2017. My teams reached 14 to 15 people."
+ },
+ {
+  "group": "Ownership and leadership",
+  "type": "soft",
+  "name": "Prioritization",
+  "level": "have",
+  "also": [
+   "Sequencing competing demands"
+  ],
+  "includes": [],
+  "fields": [
+   "rpm",
+   "bar"
+  ],
+  "proof": "I handed off secondary projects to protect my dissertation deadlines and kept the wider research moving."
+ },
+ {
+  "group": "Ownership and leadership",
+  "type": "soft",
+  "name": "Mentorship and development",
+  "level": "have",
+  "also": [
+   "Mentored",
+   "Developed capability"
+  ],
+  "includes": [],
+  "fields": [
+   "lnd",
+   "acad",
+   "rpm"
+  ],
+  "proof": "I guided an undergraduate honors project from start to finish and supported a former student's conference project."
+ },
+ {
+  "group": "Collaboration and communication",
+  "type": "soft",
+  "name": "Team science",
+  "level": "have",
+  "also": [
+   "Collaborated across disciplines",
+   "Integrated expertise"
+  ],
+  "includes": [],
+  "fields": [
+   "hlth",
+   "rpm",
+   "acad",
+   "ai"
+  ],
+  "proof": "I work with teams in psychology, medicine, genomics, policy, business and clinical research, and completed formal team-science training."
+ },
+ {
+  "group": "Collaboration and communication",
+  "type": "soft",
+  "name": "Stakeholder communication",
+  "level": "have",
+  "also": [
+   "Engaged stakeholders",
+   "Adapted communication"
+  ],
+  "includes": [],
+  "fields": [
+   "eval",
+   "ins",
+   "pol",
+   "dsa",
+   "lnd"
+  ],
+  "proof": "I represented graduate students to faculty, answered participants, and explained results to learners, administrators and collaborators."
+ },
+ {
+  "group": "Collaboration and communication",
+  "type": "soft",
+  "name": "Facilitation",
+  "level": "have",
+  "also": [
+   "Facilitated discussion",
+   "Enabled participation"
+  ],
+  "includes": [],
+  "fields": [
+   "lnd",
+   "eval"
+  ],
+  "proof": "I ran workshops, guest lectures, a journal club and class discussions, and set the rules for respectful disagreement in my course."
+ },
+ {
+  "group": "Collaboration and communication",
+  "type": "soft",
+  "name": "Collaborative authorship",
+  "level": "have",
+  "also": [
+   "Clarified roles",
+   "Credited contributions"
+  ],
+  "includes": [],
+  "fields": [
+   "acad"
+  ],
+  "proof": "I have worked as first, co-first, middle and contributing author across labs and spelled out each contribution."
+ },
+ {
+  "group": "Collaboration and communication",
+  "type": "soft",
+  "name": "Advocacy and representation",
+  "level": "have",
+  "also": [
+   "Represented",
+   "Advised"
+  ],
+  "includes": [],
+  "fields": [
+   "pol",
+   "eval"
+  ],
+  "proof": "I served on the diversity committee and data-governance task force and brought student needs and evidence into policy discussions."
+ },
+ {
+  "group": "Collaboration and communication",
+  "type": "soft",
+  "name": "Audience awareness",
+  "level": "have",
+  "also": [
+   "Tailored content",
+   "Designed for users"
+  ],
+  "includes": [],
+  "fields": [
+   "lnd",
+   "ins"
+  ],
+  "proof": "I design participant instructions, course assignments and technical materials for readers with different backgrounds."
+ },
+ {
+  "group": "Judgment and integrity",
+  "type": "soft",
+  "name": "Methodological judgment",
+  "level": "have",
+  "also": [
+   "Fit-for-purpose research judgment"
+  ],
+  "includes": [],
+  "fields": [
+   "bar",
+   "xpr",
+   "dsa",
+   "ssp"
+  ],
+  "proof": "I match the analysis to the question: count models for counts, multilevel models for nested data, scale methods for measures, causal designs for cause."
+ },
+ {
+  "group": "Judgment and integrity",
+  "type": "soft",
+  "name": "Honest reporting",
+  "level": "have",
+  "also": [
+   "Reported results candidly",
+   "Scientific integrity"
+  ],
+  "includes": [],
+  "fields": [
+   "bar",
+   "ai",
+   "acad",
+   "eval",
+   "tsi"
+  ],
+  "proof": "I reported null results as nulls in my thesis and in dissertation Study 6, disclosed changes to my plans, and named the limits of each design."
+ },
+ {
+  "group": "Judgment and integrity",
+  "type": "soft",
+  "name": "Learning from null results",
+  "level": "have",
+  "also": [
+   "Refined hypotheses",
+   "Adapted study design"
+  ],
+  "includes": [],
+  "fields": [
+   "bar",
+   "ai",
+   "acad"
+  ],
+  "proof": "After my thesis null, I studied what it implies for authority in new situations, and my dissertation studies each refined the one before."
+ },
+ {
+  "group": "Judgment and integrity",
+  "type": "soft",
+  "name": "Ethical judgment",
+  "level": "have",
+  "also": [
+   "Surfaced tradeoffs",
+   "Defined decision criteria"
+  ],
+  "includes": [],
+  "fields": [
+   "pol",
+   "eval",
+   "tsi",
+   "ai"
+  ],
+  "proof": "I weigh evidence against values, rights and fairness in policy work, and studied privacy, accountability and bias in data courses."
+ },
+ {
+  "group": "Judgment and integrity",
+  "type": "soft",
+  "name": "Ethical risk assessment",
+  "level": "have",
+  "also": [
+   "Assessed participant risk",
+   "Designed with safeguards"
+  ],
+  "includes": [],
+  "fields": [
+   "tsi",
+   "ai",
+   "hlth"
+  ],
+  "proof": "My studies involved deception, participant discomfort, clinical samples and genetic-risk data, and I looked at how trust in AI can be wrong, not just high."
+ },
+ {
+  "group": "Judgment and integrity",
+  "type": "soft",
+  "name": "Systems thinking",
+  "level": "have",
+  "also": [
+   "Mapped dependencies",
+   "Designed systems"
+  ],
+  "includes": [],
+  "fields": [
+   "rpm",
+   "eval",
+   "xpr"
+  ],
+  "proof": "In the participant pool I connected participant experience, researcher needs, recruitment rules and course credit into one system."
+ },
+ {
+  "group": "Learning and adapting",
+  "type": "soft",
+  "name": "Initiative and community building",
+  "level": "have",
+  "also": [
+   "Established",
+   "Launched",
+   "Convened"
+  ],
+  "includes": [],
+  "fields": [
+   "lnd",
+   "rpm",
+   "acad"
+  ],
+  "proof": "I co-founded an open-science group and a journal club and started workshops that keep running."
+ },
+ {
+  "group": "Learning and adapting",
+  "type": "soft",
+  "name": "Adaptability",
+  "level": "have",
+  "also": [
+   "Adapted delivery",
+   "Navigated change"
+  ],
+  "includes": [],
+  "fields": [
+   "rpm",
+   "lnd"
+  ],
+  "proof": "I moved research, teaching and collaboration online during the pandemic and kept delivering."
+ },
+ {
+  "group": "Learning and adapting",
+  "type": "soft",
+  "name": "Continuous learning",
+  "level": "have",
+  "also": [
+   "Built capability",
+   "Adopted new methods"
+  ],
+  "includes": [],
+  "fields": [
+   "acad",
+   "lnd"
+  ],
+  "proof": "I trained in management, team science, latent profiles, text analytics and longitudinal methods, then used them where I could."
  }
 ]

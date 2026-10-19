@@ -5,45 +5,106 @@ interface Skill {
   level: 'have' | 'developing';
   proof: string;
   also?: string[];
+  includes?: string[];
+  fields?: string[];
+  type?: 'hard' | 'soft';
 }
 
 interface Props {
   skills: Skill[];
+  fields: { id: string; name: string }[];
 }
 
-const { skills } = Astro.props;
+const { skills, fields } = Astro.props;
 
 const levels = [
   { id: 'have', label: 'Have', note: 'I have done this work, on my own or as part of a published project.' },
   { id: 'developing', label: 'Developing', note: 'Real practice, and I am still building depth.' },
 ] as const;
 
+const slug = (s: string) => s.toLowerCase().replace(/\W+/g, '-').replace(/^-|-$/g, '');
+const tone = ['var(--ai)', 'var(--doctor)', 'var(--coral)', 'var(--muted)'];
 const labelOf = Object.fromEntries(levels.map((l) => [l.id, l.label]));
 const counts = Object.fromEntries(levels.map((l) => [l.id, skills.filter((s) => s.level === l.id).length]));
 
-const groups: { name: string; items: Skill[] }[] = [];
+const groups: { name: string; items: Skill[]; color: string }[] = [];
 for (const s of skills) {
   let g = groups.find((x) => x.name === s.group);
   if (!g) {
-    g = { name: s.group, items: [] };
+    g = { name: s.group, items: [], color: tone[groups.length % tone.length] };
     groups.push(g);
   }
   g.items.push(s);
 }
+const fieldRows = fields
+  .map((f) => ({
+    ...f,
+    have: skills.filter((s) => s.level === 'have' && s.fields?.includes(f.id)).length,
+    dev: skills.filter((s) => s.level === 'developing' && s.fields?.includes(f.id)).length,
+  }))
+  .sort((a, b) => b.have + b.dev - (a.have + a.dev));
+const maxField = Math.max(...fieldRows.map((f) => f.have + f.dev));
+const nHard = skills.filter((s) => s.type !== 'soft').length;
+const nSoft = skills.length - nHard;
 ---
 
 <div class="matrix" data-matrix data-total={skills.length}>
-  <div class="filters" role="group" aria-label="Filter skills by evidence level">
-    <button type="button" aria-pressed="true" data-filter="all">
-      All <span class="n">{skills.length}</span>
-    </button>
-    {
-      levels.map((l) => (
-        <button type="button" aria-pressed="false" data-filter={l.id}>
-          {l.label} <span class="n">{counts[l.id]}</span>
-        </button>
-      ))
-    }
+  <section class="viz" aria-labelledby="map-h">
+    <h2 id="map-h">Skill map</h2>
+    <p class="viz-lead">Each dot is one skill. Filled means I have it, a ring means I am developing it. Select a dot to jump to the evidence.</p>
+    <div class="clusters">
+      {groups.map((g) => (
+        <div class="cluster" style={`--tone:${g.color}`}>
+          <h3>{g.name} <span class="n">{g.items.length}</span></h3>
+          <div class="dots">
+            {g.items.map((s) => (
+              <a class={`dot ${s.level}`} href={`#s-${slug(s.name)}`} data-name={s.name} aria-label={`${s.name}, ${labelOf[s.level]}`}></a>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="viz" aria-labelledby="fields-h">
+    <h2 id="fields-h">Where the skills apply</h2>
+    <p class="viz-lead">How many of my skills each kind of work draws on. Select a row to filter the list.</p>
+    <ul class="fbars">
+      {fieldRows.map((f) => (
+        <li>
+          <button type="button" class="frow" data-field-pick={f.id}>
+            <span class="fname">{f.name}</span>
+            <span class="fbar" aria-hidden="true">
+              <span class="have" style={`width:${(f.have / maxField) * 100}%`}></span><span class="dev" style={`width:${(f.dev / maxField) * 100}%`}></span>
+            </span>
+            <span class="fn">{f.have + f.dev}</span>
+          </button>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <slot />
+
+  <h2 class="list-h">The evidence, skill by skill</h2>
+  <div class="controls">
+    <div class="filters" role="group" aria-label="Filter skills by level">
+      <button type="button" aria-pressed="true" data-filter="all">All <span class="n">{skills.length}</span></button>
+      {levels.map((l) => (
+        <button type="button" aria-pressed="false" data-filter={l.id}>{l.label} <span class="n">{counts[l.id]}</span></button>
+      ))}
+    </div>
+    <div class="filters" role="group" aria-label="Filter skills by type">
+      <button type="button" aria-pressed="true" data-type="all">Any type</button>
+      <button type="button" aria-pressed="false" data-type="hard">Technical <span class="n">{nHard}</span></button>
+      <button type="button" aria-pressed="false" data-type="soft">Working style <span class="n">{nSoft}</span></button>
+    </div>
+    <label class="fsel">Field
+      <select data-field>
+        <option value="all">All fields</option>
+        {fields.map((f) => <option value={f.id}>{f.name}</option>)}
+      </select>
+    </label>
   </div>
 
   <dl class="legend">
@@ -63,7 +124,7 @@ for (const s of skills) {
     }
   </dl>
 
-  <p class="hint">Hover over or tap a skill name to see how employers describe it.</p>
+  <p class="hint">Hover over or tap a skill name to see what else it is called and what it covers.</p>
 
   <p class="count" aria-live="polite" data-count>Showing all {skills.length} skills.</p>
 
@@ -73,14 +134,20 @@ for (const s of skills) {
         <h2>{g.name}</h2>
         <ul class="rows">
           {g.items.map((s) => (
-            <li class="skill" data-level={s.level}>
+            <li class="skill" id={`s-${slug(s.name)}`} data-level={s.level} data-type={s.type ?? "hard"} data-fields={(s.fields ?? []).join(" ")}>
               <h3>
                 {s.also?.length ? (
                   <span class="has-tip" tabindex="0" aria-describedby={`tip-${s.name.replace(/\W+/g, '-')}`}>
                     {s.name}
                     <span class="tip" role="tooltip" id={`tip-${s.name.replace(/\W+/g, '-')}`}>
-                      <span class="tip-h">In job postings</span>
-                      {s.also.join(', ')}
+                      <span class="tip-h">Also referred to as</span>
+                      {s.also.join('; ')}
+                      {s.includes?.length ? (
+                        <>
+                          <span class="tip-h tip-h2">Skill encompasses</span>
+                          {s.includes.join('; ')}
+                        </>
+                      ) : null}
                     </span>
                   </span>
                 ) : (
@@ -106,37 +173,81 @@ for (const s of skills) {
 <script>
   document.querySelectorAll<HTMLElement>('[data-matrix]').forEach((root) => {
     const total = Number(root.dataset.total);
-    const buttons = root.querySelectorAll<HTMLButtonElement>('[data-filter]');
     const items = root.querySelectorAll<HTMLElement>('.skill');
     const groups = root.querySelectorAll<HTMLElement>('[data-group]');
     const count = root.querySelector<HTMLElement>('[data-count]')!;
+    const select = root.querySelector<HTMLSelectElement>('[data-field]')!;
+    const state = { level: 'all', type: 'all', field: 'all' };
 
-    const apply = (filter: string) => {
+    const apply = () => {
       let shown = 0;
       items.forEach((li) => {
-        const match = filter === 'all' || li.dataset.level === filter;
+        const match =
+          (state.level === 'all' || li.dataset.level === state.level) &&
+          (state.type === 'all' || li.dataset.type === state.type) &&
+          (state.field === 'all' || (li.dataset.fields ?? '').split(' ').includes(state.field));
         li.hidden = !match;
         if (match) shown += 1;
       });
       groups.forEach((g) => {
         g.hidden = !g.querySelector('.skill:not([hidden])');
       });
-      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.filter === filter)));
-      count.textContent = filter === 'all' ? `Showing all ${total} skills.` : `Showing ${shown} of ${total} skills.`;
+      root.querySelectorAll<HTMLButtonElement>('[data-filter]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.filter === state.level)));
+      root.querySelectorAll<HTMLButtonElement>('[data-type]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.type === state.type)));
+      select.value = state.field;
+      count.textContent = shown === total ? `Showing all ${total} skills.` : `Showing ${shown} of ${total} skills.`;
     };
 
-    buttons.forEach((b) => b.addEventListener('click', () => apply(b.dataset.filter ?? 'all')));
+    root.querySelectorAll<HTMLButtonElement>('[data-filter]').forEach((b) => b.addEventListener('click', () => { state.level = b.dataset.filter ?? 'all'; apply(); }));
+    root.querySelectorAll<HTMLButtonElement>('[data-type]').forEach((b) => b.addEventListener('click', () => { state.type = b.dataset.type ?? 'all'; apply(); }));
+    select.addEventListener('change', () => { state.field = select.value; apply(); });
+    root.querySelectorAll<HTMLButtonElement>('[data-field-pick]').forEach((b) =>
+      b.addEventListener('click', () => {
+        state.field = b.dataset.fieldPick ?? 'all';
+        apply();
+        root.querySelector('.list-h')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      })
+    );
+    root.querySelectorAll<HTMLAnchorElement>('.dot').forEach((a) =>
+      a.addEventListener('click', () => {
+        state.level = 'all'; state.type = 'all'; state.field = 'all';
+        apply();
+      })
+    );
   });
 </script>
 
 <style>
+  .viz { margin-top: 2.5rem; }
+  .viz-lead { margin: 0.3rem 0 1.1rem; color: var(--muted); max-width: 46rem; }
+  .clusters { display: grid; grid-template-columns: repeat(auto-fit, minmax(13.5rem, 1fr)); gap: 0.9rem; }
+  .cluster { background: var(--wash); border-radius: 10px; padding: 0.8rem 0.9rem 1rem; border-top: 4px solid var(--tone); }
+  .cluster h3 { font-size: 0.95rem; margin: 0 0 0.6rem; }
+  .dots { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+  .dot { position: relative; width: 1.35rem; height: 1.35rem; border-radius: 50%; border: 2px solid var(--tone); background: var(--tone); display: block; }
+  .dot.developing { background: transparent; }
+  .dot:hover, .dot:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+  .dot::after { content: attr(data-name); position: absolute; left: 50%; bottom: calc(100% + 0.45rem); transform: translateX(-50%); width: max-content; max-width: 14rem; padding: 0.35rem 0.55rem; background: var(--ink); color: var(--paper); border-radius: 5px; font-family: var(--display); font-size: 0.82rem; line-height: 1.3; display: none; pointer-events: none; z-index: 6; }
+  .dot:hover::after, .dot:focus-visible::after { display: block; }
+  .fbars { list-style: none; margin: 0; padding: 0; max-width: 46rem; }
+  .frow { width: 100%; display: grid; grid-template-columns: minmax(8rem, 15rem) 1fr 2rem; gap: 0.7rem; align-items: center; text-align: left; border: 0; border-radius: 6px; padding: 0.3rem 0.4rem; font-size: 0.93rem; }
+  .frow:hover { background: var(--wash); border: 0; }
+  .fbar { display: flex; height: 0.8rem; }
+  .fbar .have { background: var(--steel); border-radius: 4px 0 0 4px; }
+  .fbar .dev { background: repeating-linear-gradient(45deg, var(--peach) 0 3px, transparent 3px 6px); border: 1.5px solid var(--peach); border-left: 0; }
+  .fn { font-variant-numeric: tabular-nums; color: var(--muted); }
+  .list-h { margin-top: 3.5rem; }
+  .controls { display: grid; gap: 0.7rem; margin-top: 0.8rem; }
+  .fsel { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; font-family: var(--display); font-size: 0.95rem; }
+  select { font: inherit; font-family: var(--display); color: var(--ink); background: var(--paper); border: 1.5px solid var(--rule); border-radius: 6px; padding: 0.4rem 0.6rem; max-width: 100%; }
+  .tip-h2 { margin-top: 0.5rem; }
+  @media (max-width: 520px) { .frow { grid-template-columns: 1fr 2rem; } .frow .fbar { grid-column: 1 / -1; grid-row: 2; } .frow .fn { grid-row: 1; grid-column: 2; } }
   .hint { margin: 1.25rem 0 0; font-family: var(--display); font-size: 0.9rem; color: var(--muted); }
   .has-tip { position: relative; display: inline-block; cursor: help; text-decoration: underline dotted var(--muted); text-underline-offset: 0.25em; text-decoration-thickness: 1.5px; }
   .has-tip:focus-visible { outline: 3px solid var(--steel); outline-offset: 3px; border-radius: 2px; }
-  .tip { position: absolute; left: 0; top: calc(100% + 0.5rem); z-index: 5; width: max-content; max-width: min(19rem, 80vw); padding: 0.6rem 0.8rem; background: var(--ink); color: var(--paper); border-radius: 6px; font-family: var(--display); font-weight: 400; font-size: 0.88rem; line-height: 1.4; text-decoration: none; opacity: 0; visibility: hidden; transition: opacity 0.12s; pointer-events: none; }
+  .tip { position: absolute; left: 0; top: calc(100% + 0.5rem); z-index: 5; width: max-content; max-width: min(19rem, 80vw); padding: 0.6rem 0.8rem; background: var(--ink); color: var(--paper); border-radius: 6px; font-family: var(--display); font-weight: 400; font-size: 0.88rem; line-height: 1.4; text-decoration: none; display: none; pointer-events: none; }
   .tip-h { display: block; font-weight: 600; margin-bottom: 0.15rem; }
-  .has-tip:hover .tip, .has-tip:focus .tip { opacity: 1; visibility: visible; }
-  @media (prefers-reduced-motion: reduce) { .tip { transition: none; } }
+  .has-tip:hover .tip, .has-tip:focus .tip { display: block; }
   .filters {
     display: flex;
     flex-wrap: wrap;
