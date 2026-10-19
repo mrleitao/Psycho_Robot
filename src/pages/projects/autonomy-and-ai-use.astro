@@ -1,0 +1,47 @@
+---
+import PaperPage from '../../components/PaperPage.astro';
+import MainFindings from '../../components/MainFindings.astro';
+
+const findings = [
+  {
+    head: 'Two in three people chose to use the outside judge',
+    body: ['800 people judged whether each of 10 high-school students scored above the 75th percentile on a math test. They earned bonus pay for being right. Then they could keep their own call or use an outside judge’s call.', 'Overall, 67% chose the outside judge. The outside judges were described as 80% accurate in every condition.'],
+    visual: { type: 'people', total: 100, count: 67, label: 'chose the outside judge', caption: 'All four conditions combined, N = 800.' },
+  },
+  {
+    head: 'Giving people choice did not clearly change this',
+    body: ['The four conditions differed in the outside judge: one algorithm, three algorithms, one group of lay people or three groups. About 200 people were in each condition.', 'The autonomy effect reported by Dietvorst and colleagues (2018) did not replicate here. I read this as a null result, not as evidence that choice does nothing.'],
+  },
+  {
+    head: 'People who chose the outside judge were more confident',
+    body: ['Those who chose the outside judge reported higher confidence than those who kept their own call.'],
+  },
+];
+---
+<PaperPage
+  title="Choice and the use of AI in decisions"
+  description="An experiment on whether choice at the start of a decision changes willingness to use an outside judge, algorithm or people."
+  heading="Does choice change how much people use an algorithm?"
+  role="First author, with Logg and Ulu"
+  status="Presented at INFORMS 2023, Phoenix. No paper yet."
+  lede="People often reject algorithms after seeing them err. I tested whether having a say at the start changes how willing they are to rely on an outside judge."
+  backHref="/projects/"
+  backLabel="Projects"
+>
+  <dl class="facts">
+    <div><dt>Who</dt><dd>800 people. 48.25% women.</dd></div>
+    <div><dt>Design</dt><dd>Four conditions of about 200 each. Outside judge: one algorithm, three algorithms, one lay group or three lay groups.</dd></div>
+    <div><dt>Source</dt><dd>My conference presentation. Figures from the talk, not from a paper.</dd></div>
+  </dl>
+  <section class="section" id="main-findings" aria-labelledby="mf-title">
+    <h2 id="mf-title">Main findings</h2>
+    <MainFindings findings={findings} />
+  </section>
+  <section class="section" id="implications" aria-labelledby="imp-title">
+    <h2 id="imp-title">What this means</h2>
+    <div class="prose">
+      <p><strong>Many people chose to use an outside judge.</strong> Two in three did, whether it was an algorithm or a group of people.</p>
+      <p><strong>Limits.</strong> This is a conference result and has not been peer reviewed. The result is null or inconclusive, so I do not claim that choice raises or lowers use of algorithms.</p>
+    </div>
+  </section>
+</PaperPage>

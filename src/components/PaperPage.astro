@@ -7,25 +7,27 @@ interface Props {
   title: string;
   description: string;
   heading: string;
-  cite: string; // HTML
+  cite?: string; // HTML
+  backHref?: string;
+  backLabel?: string;
   role: string;
   status: string;
   lede: string;
   links?: Link[];
 }
-const { title, description, heading, cite, role, status, lede, links = [] } = Astro.props;
+const { title, description, heading, cite, role, status, lede, links = [], backHref = '/research/', backLabel = 'Research' } = Astro.props;
 ---
 <Base title={title} description={description}>
   <div class="wrap paper">
     <header class="page-head">
-      <p class="back small"><a href={href('/research/')}>Research</a></p>
+      <p class="back small"><a href={href(backHref)}>{backLabel}</a></p>
       <h1>{heading}</h1>
       <p class="lede">{lede}</p>
       <dl class="meta">
         <div><dt>My role</dt><dd>{role}</dd></div>
         <div><dt>Status</dt><dd>{status}</dd></div>
       </dl>
-      <p class="cite small" set:html={cite} />
+      {cite && <p class="cite small" set:html={cite} />}
       {links.length > 0 && (
         <ul class="links">
           {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}

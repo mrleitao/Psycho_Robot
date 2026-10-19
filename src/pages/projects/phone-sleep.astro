@@ -1,0 +1,34 @@
+---
+import PaperPage from '../../components/PaperPage.astro';
+import MainFindings from '../../components/MainFindings.astro';
+
+const findings = [
+  {
+    head: 'Screen time in bed went with better sleep outcomes',
+    body: ['91 college students answered short surveys for seven days, which gave 536 bedtime episodes. The poster reports correlations within each person and between people.', 'Screen time in bed predicted better sleep outcomes.'],
+    visual: { type: 'stat', value: '536', label: 'bedtime episodes from 91 students', caption: 'Seven days of daily surveys.' },
+  },
+];
+---
+<PaperPage
+  title="Phone use and sleep"
+  description="A seven-day daily-survey study of phone use in bed and sleep in college students."
+  heading="Does phone use in bed hurt sleep?"
+  role="First author, with Kushlev"
+  status="Presented at SPSP 2021 as a poster"
+  lede="Many people expect phones in bed to cost them sleep. I tested it with a week of daily surveys from college students."
+  backHref="/projects/"
+  backLabel="Projects"
+>
+  <section class="section" id="main-findings" aria-labelledby="mf-title">
+    <h2 id="mf-title">Main findings</h2>
+    <MainFindings findings={findings} />
+  </section>
+  <section class="section" id="implications" aria-labelledby="imp-title">
+    <h2 id="imp-title">What this means</h2>
+    <div class="prose">
+      <p><strong>Screen time in bed did not predict worse sleep here.</strong> It predicted better sleep outcomes in this sample.</p>
+      <p><strong>Limits.</strong> This is a poster with a small student sample and self-reported measures. It has not been published.</p>
+    </div>
+  </section>
+</PaperPage>

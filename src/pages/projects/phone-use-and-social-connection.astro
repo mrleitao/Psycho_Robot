@@ -1,0 +1,69 @@
+---
+import PaperPage from '../../components/PaperPage.astro';
+import MainFindings from '../../components/MainFindings.astro';
+import { href } from '../../utils/url';
+
+const findings = [
+  {
+    head: 'A phone in view lowered connection, and more for men',
+    body: ['The project pooled eight experiments, 1,778 people in all, that put a phone in view during a short social moment. People with a phone felt less connected (d = −.18).', 'Men showed a larger drop (d = −.47) than women (d = −.15).'],
+    visual: { type: 'stat', value: 'd = −.18', label: 'effect of a phone on connectedness', caption: 'Pooled across eight experiments.' },
+  },
+  {
+    head: 'Online time with acquaintances went with more stress',
+    body: ['In a survey on April 8, 2020, 569 adults reported their social time and how they felt. Hours online with acquaintances went with more stress (r = .20) and lower connectedness (r = −.16).', 'Time with close people in person went with more positive affect (r = .19).'],
+    visual: { type: 'stat', value: 'r = .20', label: 'online time with acquaintances and stress', caption: 'One day of survey data at the peak of social distancing.' },
+  },
+  {
+    head: 'A framework ties the findings together',
+    body: ['Phones can replace other activities, interfere with what we are doing, or give us things we could not get otherwise. The first two usually lower well-being.', 'We reviewed the evidence under these three ideas and set out an agenda for future work.'],
+    visual: { type: 'stat', value: '3 ideas', label: 'displacement, interference, complementarity', caption: 'The D.I.C. framework.' },
+  },
+];
+const papers = [
+  { t: 'Smartphones undermine social connectedness more in men than women: A mini mega-analysis', r: 'First author. Technology, Mind, and Behavior, 2024.', p: '/research/phones-social-connection/' },
+  { t: 'A week during COVID-19: Online social interactions are associated with greater connection and more stress', r: 'Contributing author. Computers in Human Behavior Reports, 2021.', p: '/research/covid-week/' },
+  { t: 'The effects of smartphones on well-being: Theoretical integration and research agenda', r: 'Second author. Current Opinion in Psychology, 2020.', p: '/research/smartphones-wellbeing-review/' },
+];
+---
+<PaperPage
+  title="Phone use and social connection"
+  description="A project on how phones in face-to-face moments and phone-mediated contact relate to connection and well-being."
+  heading="Phone use and social connection"
+  role="First author of the mega-analysis"
+  status="Published work in 2020, 2021 and 2024"
+  lede="Do phones help or hurt how connected people feel? This project looks at phones in face-to-face moments, at online contact during the pandemic, and at the theory that links them."
+  backHref="/projects/"
+  backLabel="Projects"
+>
+  <section class="section" id="main-findings" aria-labelledby="mf-title">
+    <h2 id="mf-title">Main findings</h2>
+    <MainFindings findings={findings} />
+  </section>
+
+  <section class="section" id="papers" aria-labelledby="papers-title">
+    <h2 id="papers-title">The papers, with figures</h2>
+    <ul class="rows">
+      {papers.map((x) => (
+        <li>
+          <p class="cite"><a href={href(x.p)}>{x.t}</a></p>
+          <p class="small muted">{x.r}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="section" id="story" aria-labelledby="story-title">
+    <h2 id="story-title">How the work developed</h2>
+    <div class="prose">
+      <p>I first presented the mega-analysis as a poster at SPSP in 2022. It pooled nine published and unpublished studies across six experimental paradigms (N = 1,754). A phone lowered social connectedness (b = −.24) and men were affected more (men b = −.46, women b = −.15).</p>
+      <p>The published paper in 2024 pooled eight experiments (N = 1,778) and reports the same pattern (men b = −.461, women b = −.148). The published paper is the version to cite.</p>
+    </div>
+  </section>
+  <section class="section" id="files" aria-labelledby="files-title">
+    <h2 id="files-title">Data and materials</h2>
+    <div class="prose">
+      <p>The mega-analysis data, code and materials are public on <a href="https://doi.org/10.17605/OSF.IO/X73M9">OSF</a>.</p>
+    </div>
+  </section>
+</PaperPage>
