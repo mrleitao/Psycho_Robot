@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import EvidenceMatrix from '../components/EvidenceMatrix.astro';
 import Analyses from '../components/Analyses.astro';
+import Topics from '../components/Topics.astro';
 import skills from '../data/skills.json';
 import fields from '../data/fields.json';
 import evidence from '../data/evidence.json';
@@ -22,6 +23,7 @@ import evidence from '../data/evidence.json';
     <div class="body">
       <EvidenceMatrix skills={skills} fields={fields} evidence={evidence}>
         <Analyses />
+        <Topics />
       </EvidenceMatrix>
     </div>
   </div>

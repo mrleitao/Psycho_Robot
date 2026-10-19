@@ -405,5 +405,55 @@
   "kind": "course",
   "from": 2020,
   "to": 2020
+ },
+ {
+  "id": "mrleitao",
+  "name": "Personal website, mrleitao.com",
+  "kind": "project",
+  "from": 2024,
+  "to": 2026
+ },
+ {
+  "id": "thissite",
+  "name": "This research website",
+  "kind": "project",
+  "from": 2026,
+  "to": 2026,
+  "href": "/"
+ },
+ {
+  "id": "tools",
+  "name": "Custom productivity tools",
+  "kind": "project",
+  "from": 2026,
+  "to": 2026
+ },
+ {
+  "id": "jobsys",
+  "name": "AI-assisted job search workflow",
+  "kind": "project",
+  "from": 2026,
+  "to": 2026
+ },
+ {
+  "id": "c-dev",
+  "name": "Human development and policy course",
+  "kind": "course",
+  "from": 2019,
+  "to": 2019
+ },
+ {
+  "id": "c-neuro",
+  "name": "Neurophilosophy seminar",
+  "kind": "course",
+  "from": 2020,
+  "to": 2020
+ },
+ {
+  "id": "c-socog",
+  "name": "Social cognition and technology seminar",
+  "kind": "course",
+  "from": 2018,
+  "to": 2018
  }
 ]

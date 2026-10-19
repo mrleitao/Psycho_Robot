@@ -1,0 +1,51 @@
+---
+// Topics I know. Expertise: the topic appears beyond coursework (a paper, project, role or class I taught).
+// Knowledge: the topic appears only in courses I took.
+import topics from '../data/topics.json';
+import evidence from '../data/evidence.json';
+import { href } from '../utils/url';
+const evOf = (id: string) => evidence.find((e) => e.id === id)!;
+const span = (e: { from: number; to: number }) => (e.from === e.to ? `${e.from}` : `${e.from} to ${e.to}`);
+const rows = topics.map((t) => {
+  const evs = t.evidence.map(evOf);
+  return { ...t, evs, level: evs.some((e) => e.kind !== 'course') ? 'expertise' : 'knowledge' };
+});
+const exp = rows.filter((r) => r.level === 'expertise');
+const know = rows.filter((r) => r.level === 'knowledge');
+---
+<section class="tp" aria-labelledby="tp-h">
+  <h2 id="tp-h">Topics I know</h2>
+  <p class="tp-lead">{exp.length} topics where I have expertise and {know.length} where I have knowledge. Expertise means the topic shows up beyond coursework, in a paper, a project or a class I taught. Knowledge means I studied it in courses.</p>
+  <div class="tp-cols">
+    {[['Expertise', exp], ['Knowledge from courses', know]].map(([title, list]) => (
+      <div class="tp-col">
+        <h3>{title as string}</h3>
+        <ul>
+          {(list as typeof rows).map((r) => (
+            <li class={r.level}>
+              <span class="tp-name">{r.name}</span>
+              <span class="tp-ev">
+                {r.evs.map((e, k) => (
+                  <>{k > 0 ? '; ' : ''}{e.href ? <a href={href(e.href)}>{e.name}</a> : e.name}{' '}<span class="m">({span(e)})</span></>
+                ))}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
+</section>
+<style>
+  .tp { margin-top: 3rem; }
+  .tp-lead { margin: 0.3rem 0 1.2rem; color: var(--muted); max-width: 46rem; }
+  .tp-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 1.5rem; }
+  .tp-col h3 { font-size: 1rem; margin: 0 0 0.5rem; padding-top: 0.5rem; border-top: 4px solid var(--steel); }
+  .tp-col:first-child h3 { border-color: var(--coral); }
+  ul { list-style: none; margin: 0; padding: 0; }
+  li { padding: 0.45rem 0 0.5rem 0.9rem; border-left: 4px solid var(--coral); margin-bottom: 0.4rem; background: var(--wash); border-radius: 0 6px 6px 0; }
+  li.knowledge { border-left: 4px dashed var(--steel); background: transparent; }
+  .tp-name { display: block; font-family: var(--display); font-weight: 600; font-size: 0.97rem; }
+  .tp-ev { display: block; font-size: 0.88rem; line-height: 1.4; color: var(--muted); margin-top: 0.1rem; }
+  .m { white-space: nowrap; }
+</style>

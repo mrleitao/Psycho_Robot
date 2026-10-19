@@ -842,7 +842,8 @@
   "evidence": [
    "csunir",
    "genai",
-   "vrbuffet"
+   "vrbuffet",
+   "thissite"
   ]
  },
  {
@@ -1065,7 +1066,9 @@
   "proof": "I use these tools lightly: Excel macros and Praat scripts in earlier lab work, and web pages, slides and posters since.",
   "icon": "wrench",
   "evidence": [
-   "ucr"
+   "ucr",
+   "mrleitao",
+   "thissite"
   ]
  },
  {
@@ -1677,7 +1680,9 @@
    "w-r",
    "w-power",
    "mega",
-   "gios"
+   "gios",
+   "mrleitao",
+   "thissite"
   ]
  },
  {
@@ -1736,7 +1741,9 @@
    "csunir",
    "psytech",
    "w-r",
-   "w-power"
+   "w-power",
+   "mrleitao",
+   "thissite"
   ]
  },
  {
@@ -1762,7 +1769,9 @@
   "evidence": [
    "psytech",
    "c-brain",
-   "talks"
+   "talks",
+   "mrleitao",
+   "thissite"
   ]
  },
  {
@@ -1788,6 +1797,119 @@
   "evidence": [
    "talks",
    "autonomy"
+  ]
+ },
+ {
+  "group": "AI integration",
+  "type": "hard",
+  "name": "Building with LLM APIs",
+  "level": "have",
+  "also": [
+   "LLM integration",
+   "Generative AI prototyping",
+   "AI-enabled research tools"
+  ],
+  "includes": [
+   "ChatGPT API",
+   "Amazon cloud services (AWS)",
+   "Qualtrics randomization",
+   "Prompt and response handling"
+  ],
+  "fields": [
+   "ai",
+   "dsa",
+   "xpr",
+   "acad"
+  ],
+  "proof": "I built the task for the generative AI work study on the ChatGPT API. AWS sat between Qualtrics and the API and stored and transformed prompts and responses, and Qualtrics handled random assignment.",
+  "icon": "plug",
+  "evidence": [
+   "genai"
+  ]
+ },
+ {
+  "group": "AI integration",
+  "type": "hard",
+  "name": "AI-assisted analysis and coding",
+  "level": "have",
+  "also": [
+   "AI-assisted data science",
+   "Code generation and review",
+   "Analysis automation"
+  ],
+  "includes": [
+   "GenAI-generated specification curve",
+   "AI-assisted figures and site code",
+   "Checking AI output against the data"
+  ],
+  "fields": [
+   "ai",
+   "dsa",
+   "acad",
+   "ins"
+  ],
+  "proof": "I used generative AI to run a specification curve of 69 alternative analyses in the generative AI study, and I use it to build code and figures, including this website. I check what it produces against the data.",
+  "icon": "terminal",
+  "evidence": [
+   "genai",
+   "riskcreep",
+   "thissite"
+  ]
+ },
+ {
+  "group": "AI integration",
+  "type": "hard",
+  "name": "AI workflow and tool building",
+  "level": "have",
+  "also": [
+   "AI-enabled workflows",
+   "Internal tooling",
+   "Process automation"
+  ],
+  "includes": [
+   "Standing rules and project files for an AI assistant",
+   "Scoring and triage workflows",
+   "Small custom apps"
+  ],
+  "fields": [
+   "ai",
+   "dsa",
+   "ins",
+   "acad"
+  ],
+  "proof": "I built a job-search workflow around an AI assistant, with written rules, a scoring scheme and daily triage, and I build small tools of my own, such as a task-priority app.",
+  "icon": "gear",
+  "evidence": [
+   "jobsys",
+   "tools",
+   "thissite"
+  ]
+ },
+ {
+  "group": "AI integration",
+  "type": "hard",
+  "name": "Evaluating AI output",
+  "level": "have",
+  "also": [
+   "Human evaluation of AI",
+   "AI quality measurement",
+   "Model output review"
+  ],
+  "includes": [
+   "Blind third-party ratings",
+   "Quality and time comparisons",
+   "Text-similarity measures"
+  ],
+  "fields": [
+   "ai",
+   "xpr",
+   "ins",
+   "acad"
+  ],
+  "proof": "I designed the blind ratings in the generative AI study, where judges who did not know the condition scored the work, and I compared quality, time and how closely people's text matched the AI's.",
+  "icon": "circlecheck",
+  "evidence": [
+   "genai"
   ]
  },
  {

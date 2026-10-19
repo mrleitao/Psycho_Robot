@@ -68,14 +68,6 @@ const timeline = groups.map((g) => ({
   cells: YEARS.map((y) => g.items.filter((s) => yearsOf(s).includes(y)).length),
 }));
 const maxCell = Math.max(...timeline.flatMap((t) => t.cells));
-const fieldRows = fields
-  .map((f) => ({
-    ...f,
-    have: skills.filter((s) => s.level === 'have' && s.fields?.includes(f.id)).length,
-    dev: skills.filter((s) => s.level === 'developing' && s.fields?.includes(f.id)).length,
-  }))
-  .sort((a, b) => b.have + b.dev - (a.have + a.dev));
-const maxField = Math.max(...fieldRows.map((f) => f.have + f.dev));
 const nHard = skills.filter((s) => s.type !== 'soft').length;
 const nSoft = skills.length - nHard;
 ---
@@ -85,6 +77,7 @@ const nSoft = skills.length - nHard;
     <h2 id="map-h">Every skill, by area</h2>
     <p class="viz-lead">Each tile is one skill, colored by area. A solid tile is a skill I have. A dashed tile is one I am developing. Select a tile to jump to the evidence, or select an area to show only its skills.</p>
     <ul class="areas" aria-label="Areas">
+      <li><button type="button" class="area all" data-reset disabled>Show all skills</button></li>
       {groups.map((g) => (
         <li><button type="button" class={`area a${g.i}`} data-area={g.name} aria-pressed="false"><span class="sw" aria-hidden="true"></span>{g.name} <span class="n">{g.items.length}</span></button></li>
       ))}
@@ -123,24 +116,6 @@ const nSoft = skills.length - nHard;
       </div>
     </div>
     <p class="tl-key">Years are 2013 to 2026, shown as two digits.</p>
-  </section>
-
-  <section class="viz" aria-labelledby="fields-h">
-    <h2 id="fields-h">Where the skills apply</h2>
-    <p class="viz-lead">How many of my skills each kind of work draws on. Select a row to filter the list.</p>
-    <ul class="fbars">
-      {fieldRows.map((f) => (
-        <li>
-          <button type="button" class="frow" data-field-pick={f.id}>
-            <span class="fname">{f.name}</span>
-            <span class="fbar" aria-hidden="true">
-              <span class="have" style={`width:${(f.have / maxField) * 100}%`}></span><span class="dev" style={`width:${(f.dev / maxField) * 100}%`}></span>
-            </span>
-            <span class="fn">{f.have + f.dev}</span>
-          </button>
-        </li>
-      ))}
-    </ul>
   </section>
 
   <slot />
@@ -186,7 +161,8 @@ const nSoft = skills.length - nHard;
   <p class="hint">Hover over or tap a skill name to see what else it is called and what it covers.</p>
 
   <p class="count" aria-live="polite" data-count>Showing all {skills.length} skills.</p>
-  <button type="button" class="reset" data-reset hidden>Show all skills</button>
+  <button type="button" class="area all rst" data-reset disabled>Show all skills</button>
+  
 
   {
     groups.map((g) => (
@@ -229,10 +205,7 @@ const nSoft = skills.length - nHard;
                   (s.evidence ?? []).map((id, k) => {
                     const e = evOf(id);
                     return (
-                      <>
-                        {k > 0 ? '; ' : ''}
-                        {e.href ? <a href={href(e.href)}>{e.name}</a> : e.name} <span class="ev-m">({kindLabel[e.kind].toLowerCase()}, {span(e)})</span>
-                      </>
+                      <>{k > 0 ? '; ' : ''}{e.href ? <a href={href(e.href)}>{e.name}</a> : e.name}{' '}<span class="ev-m">({kindLabel[e.kind].toLowerCase()}, {span(e)})</span></>
                     );
                   })
                 ) : (
@@ -255,7 +228,7 @@ const nSoft = skills.length - nHard;
     const groups = root.querySelectorAll<HTMLElement>('[data-group]');
     const count = root.querySelector<HTMLElement>('[data-count]')!;
     const select = root.querySelector<HTMLSelectElement>('[data-field]')!;
-    const reset = root.querySelector<HTMLButtonElement>('[data-reset]')!;
+    const resets = root.querySelectorAll<HTMLButtonElement>('[data-reset]');
     const state = { level: 'all', type: 'all', field: 'all', area: 'all', year: 'all' };
 
     const matches = (li: HTMLElement) =>
@@ -284,7 +257,7 @@ const nSoft = skills.length - nHard;
       root.querySelectorAll<HTMLButtonElement>('.cell').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.cellArea === state.area && b.dataset.cellYear === state.year)));
       select.value = state.field;
       const filtered = Object.values(state).some((v) => v !== 'all');
-      reset.hidden = !filtered;
+      resets.forEach((r) => { r.disabled = !filtered; });
       const bits = [] as string[];
       if (state.area !== 'all') bits.push(state.area);
       if (state.year !== 'all') bits.push(state.year);
@@ -298,14 +271,7 @@ const nSoft = skills.length - nHard;
     root.querySelectorAll<HTMLButtonElement>('[data-year-pick]').forEach((b) => b.addEventListener('click', () => { state.year = state.year === b.dataset.yearPick ? 'all' : (b.dataset.yearPick ?? 'all'); state.area = 'all'; apply(); toList(); }));
     root.querySelectorAll<HTMLButtonElement>('.cell').forEach((b) => b.addEventListener('click', () => { state.area = b.dataset.cellArea ?? 'all'; state.year = b.dataset.cellYear ?? 'all'; apply(); toList(); }));
     select.addEventListener('change', () => { state.field = select.value; apply(); });
-    reset.addEventListener('click', () => { state.level = 'all'; state.type = 'all'; state.field = 'all'; state.area = 'all'; state.year = 'all'; apply(); });
-    root.querySelectorAll<HTMLButtonElement>('[data-field-pick]').forEach((b) =>
-      b.addEventListener('click', () => {
-        state.field = b.dataset.fieldPick ?? 'all';
-        apply();
-        toList();
-      })
-    );
+    resets.forEach((r) => r.addEventListener('click', () => { state.level = 'all'; state.type = 'all'; state.field = 'all'; state.area = 'all'; state.year = 'all'; apply(); }));
     root.querySelectorAll<HTMLAnchorElement>('.tile a').forEach((a) =>
       a.addEventListener('click', () => {
         state.level = 'all'; state.type = 'all'; state.field = 'all'; state.area = 'all'; state.year = 'all';
@@ -340,26 +306,20 @@ const nSoft = skills.length - nHard;
   .cell:disabled { background: var(--wash); cursor: default; }
   .cell:not(:disabled):hover, .cell[aria-pressed='true'] { color: #fff; outline: 2px solid var(--ink); outline-offset: 1px; background: var(--c); }
   .tl-key { margin: 0.6rem 0 0; font-family: var(--display); font-size: 0.82rem; color: var(--muted); }
-  .a0 { --c: #3b6ea8; } .a1 { --c: #1f8582; } .a2 { --c: #6a4fa3; } .a3 { --c: #55606e; } .a4 { --c: #c4553a; } .a5 { --c: #a87912; } .a6 { --c: #3d8a4a; } .a7 { --c: #a8387a; } .a8 { --c: #8a5a2b; } .a9 { --c: #6f7f1f; } .a10 { --c: #2f3f7a; }
+  .a0 { --c: #3b6ea8; } .a1 { --c: #1f8582; } .a2 { --c: #6a4fa3; } .a3 { --c: #55606e; } .a4 { --c: #c4553a; } .a5 { --c: #a87912; } .a6 { --c: #3d8a4a; } .a7 { --c: #17819f; } .a8 { --c: #a8387a; } .a9 { --c: #8a5a2b; } .a10 { --c: #6f7f1f; } .a11 { --c: #2f3f7a; }
   .skill h3 .chip { color: #fff; }
   .ev { grid-column: 1 / -1; margin: 0.35rem 0 0; font-size: 0.92rem; line-height: 1.5; color: var(--muted); }
   .ev-h { font-family: var(--display); font-weight: 600; color: var(--ink); margin-right: 0.4rem; }
   .ev-m { white-space: nowrap; }
-  .reset { margin-top: 0.7rem; }
+  .rst { margin-top: 0.6rem; }
+  .area.all { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .area.all:disabled { background: transparent; color: var(--muted); border-color: var(--rule); cursor: default; }
   @media (max-width: 520px) { .tl-head, .tl-row { grid-template-columns: repeat(14, minmax(0, 1fr)); } .tl-head > span:first-child { display: none; } .tl-name { grid-column: 1 / -1; padding-top: 0.5rem; font-weight: 600; } .cell { height: 1.9rem; } .grid { grid-template-columns: repeat(auto-fill, minmax(9.2rem, 1fr)); } }
-  .fbars { list-style: none; margin: 0; padding: 0; max-width: 46rem; }
-  .frow { width: 100%; display: grid; grid-template-columns: minmax(8rem, 15rem) 1fr 2rem; gap: 0.7rem; align-items: center; text-align: left; border: 0; border-radius: 6px; padding: 0.3rem 0.4rem; font-size: 0.93rem; }
-  .frow:hover { background: var(--wash); border: 0; }
-  .fbar { display: flex; height: 0.8rem; }
-  .fbar .have { background: var(--steel); border-radius: 4px 0 0 4px; }
-  .fbar .dev { background: repeating-linear-gradient(45deg, var(--peach) 0 3px, transparent 3px 6px); border: 1.5px solid var(--peach); border-left: 0; }
-  .fn { font-variant-numeric: tabular-nums; color: var(--muted); }
   .list-h { margin-top: 3.5rem; }
   .controls { display: grid; gap: 0.7rem; margin-top: 0.8rem; }
   .fsel { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; font-family: var(--display); font-size: 0.95rem; }
   select { font: inherit; font-family: var(--display); color: var(--ink); background: var(--paper); border: 1.5px solid var(--rule); border-radius: 6px; padding: 0.4rem 0.6rem; max-width: 100%; }
   .tip-h2 { margin-top: 0.5rem; }
-  @media (max-width: 520px) { .frow { grid-template-columns: 1fr 2rem; } .frow .fbar { grid-column: 1 / -1; grid-row: 2; } .frow .fn { grid-row: 1; grid-column: 2; } }
   .hint { margin: 1.25rem 0 0; font-family: var(--display); font-size: 0.9rem; color: var(--muted); }
   .has-tip { position: relative; display: inline-block; cursor: help; text-decoration: underline dotted var(--muted); text-underline-offset: 0.25em; text-decoration-thickness: 1.5px; }
   .has-tip:focus-visible { outline: 3px solid var(--steel); outline-offset: 3px; border-radius: 2px; }

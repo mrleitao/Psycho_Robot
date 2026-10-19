@@ -1,0 +1,173 @@
+[
+ {
+  "name": "Trust in AI and algorithms",
+  "evidence": [
+   "diss",
+   "autonomy",
+   "thesis"
+  ]
+ },
+ {
+  "name": "Human-AI collaboration at work",
+  "evidence": [
+   "genai"
+  ]
+ },
+ {
+  "name": "Anthropomorphism and mind perception",
+  "evidence": [
+   "diss"
+  ]
+ },
+ {
+  "name": "Medical AI and health decisions",
+  "evidence": [
+   "diss",
+   "nihprot"
+  ]
+ },
+ {
+  "name": "Genetic risk and health beliefs",
+  "evidence": [
+   "prs",
+   "nihprot",
+   "genetic"
+  ]
+ },
+ {
+  "name": "Digital health behavior change",
+  "evidence": [
+   "diss"
+  ]
+ },
+ {
+  "name": "Psychology of technology",
+  "evidence": [
+   "psytech",
+   "c-socog",
+   "thesis",
+   "apppost"
+  ]
+ },
+ {
+  "name": "Smartphones and wellbeing",
+  "evidence": [
+   "mega",
+   "phonereview",
+   "phonesleep",
+   "covid",
+   "ema"
+  ]
+ },
+ {
+  "name": "Virtual reality in research",
+  "evidence": [
+   "vrq",
+   "vrbuffet",
+   "visn"
+  ]
+ },
+ {
+  "name": "Clinical drug trials, behavioral outcomes",
+  "evidence": [
+   "vrbuffet",
+   "nih"
+  ]
+ },
+ {
+  "name": "COVID-19 and social behavior",
+  "evidence": [
+   "riskcreep",
+   "covid"
+  ]
+ },
+ {
+  "name": "Parasocial relationships",
+  "evidence": [
+   "parasocial"
+  ]
+ },
+ {
+  "name": "Gaming and motivation",
+  "evidence": [
+   "gaming"
+  ]
+ },
+ {
+  "name": "Obedience to authority",
+  "evidence": [
+   "thesis"
+  ]
+ },
+ {
+  "name": "Open science and reproducibility",
+  "evidence": [
+   "diss",
+   "thesis",
+   "mega",
+   "gios",
+   "w-open"
+  ]
+ },
+ {
+  "name": "Memory and cognition",
+  "evidence": [
+   "c-mem"
+  ]
+ },
+ {
+  "name": "Educational neuroscience",
+  "evidence": [
+   "c-brain"
+  ]
+ },
+ {
+  "name": "Neurophilosophy and consciousness",
+  "evidence": [
+   "c-neuro"
+  ]
+ },
+ {
+  "name": "Human development and policy",
+  "evidence": [
+   "c-dev"
+  ]
+ },
+ {
+  "name": "Public policy process",
+  "evidence": [
+   "c-policy"
+  ]
+ },
+ {
+  "name": "Public management",
+  "evidence": [
+   "c-policy"
+  ]
+ },
+ {
+  "name": "Ethics and values in policy",
+  "evidence": [
+   "c-policy"
+  ]
+ },
+ {
+  "name": "Microeconomics and public economics",
+  "evidence": [
+   "c-econ"
+  ]
+ },
+ {
+  "name": "AI, cloud computing and data systems",
+  "evidence": [
+   "c-ai"
+  ]
+ },
+ {
+  "name": "AI and data ethics",
+  "evidence": [
+   "c-ai",
+   "c-py"
+  ]
+ }
+]
