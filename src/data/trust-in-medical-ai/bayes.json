@@ -1,6 +1,23 @@
 {
- "method": "Bayes factors with a Cauchy prior centred on no effect. t tests use the Rouder et al. (2009) default (scale 0.707 on Cohen's d). Coefficients use a normal likelihood from the estimate and its standard error. BF10 is evidence for a difference; BF01 is evidence for no difference.",
- "scale": [
+ "method": "Bayes factors with a Cauchy prior centred on no effect. The width of the prior is set to a small, a medium and a large effect on the Funder and Ozer (2019) benchmarks (r = .10, .20, .30, which are d = 0.20, 0.41, 0.63); the medium prior is the headline. t tests use the Rouder et al. (2009) default Bayes factor. Coefficients use a normal likelihood from the estimate and its standard error. BF10 is how many times more likely the data are if there is a difference; BF01 is how many times more likely they are if there is none.",
+ "funderOzer": [
+  {
+   "r": 0.1,
+   "d": 0.2,
+   "size": "small"
+  },
+  {
+   "r": 0.2,
+   "d": 0.41,
+   "size": "medium"
+  },
+  {
+   "r": 0.3,
+   "d": 0.63,
+   "size": "large"
+  }
+ ],
+ "evidenceWords": [
   {
    "min": 100,
    "label": "Extreme"
@@ -36,27 +53,30 @@
     "d": -0.03,
     "nEff": 185
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 0.0892,
-   "bf01": 11.2,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 0.15,
+   "bf01": 6.65,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 0.125,
-     "bf01": 8.02
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 0.283,
+     "bf01": 3.53
     },
     {
-     "scale": 0.707,
-     "bf10": 0.0892,
-     "bf01": 11.2
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 0.15,
+     "bf01": 6.65
     },
     {
-     "scale": 1.0,
-     "bf10": 0.0634,
-     "bf01": 15.8
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.0998,
+     "bf01": 10.0
     }
    ],
-   "verdict": "Strong evidence for no difference",
+   "verdict": "Moderate evidence for no difference",
    "supportsNull": true
   },
   {
@@ -72,24 +92,27 @@
     "d": 0.41,
     "nEff": 185
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 118000.0,
-   "bf01": 8.45e-06,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 138000.0,
+   "bf01": 7.22e-06,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 135000.0,
-     "bf01": 7.43e-06
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 114000.0,
+     "bf01": 8.75e-06
     },
     {
-     "scale": 0.707,
-     "bf10": 118000.0,
-     "bf01": 8.45e-06
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 138000.0,
+     "bf01": 7.22e-06
     },
     {
-     "scale": 1.0,
-     "bf10": 95500.0,
-     "bf01": 1.05e-05
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 125000.0,
+     "bf01": 8.01e-06
     }
    ],
    "verdict": "Extreme evidence for a difference",
@@ -108,24 +131,27 @@
     "d": 0.42,
     "nEff": 186
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 173000.0,
-   "bf01": 5.76e-06,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 202000.0,
+   "bf01": 4.95e-06,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 197000.0,
-     "bf01": 5.08e-06
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 165000.0,
+     "bf01": 6.05e-06
     },
     {
-     "scale": 0.707,
-     "bf10": 173000.0,
-     "bf01": 5.76e-06
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 202000.0,
+     "bf01": 4.95e-06
     },
     {
-     "scale": 1.0,
-     "bf10": 140000.0,
-     "bf01": 7.12e-06
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 183000.0,
+     "bf01": 5.47e-06
     }
    ],
    "verdict": "Extreme evidence for a difference",
@@ -144,27 +170,30 @@
     "d": 0.19,
     "nEff": 185
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 2.11,
-   "bf01": 0.475,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 3.2,
+   "bf01": 0.312,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 2.78,
-     "bf01": 0.359
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 4.42,
+     "bf01": 0.226
     },
     {
-     "scale": 0.707,
-     "bf10": 2.11,
-     "bf01": 0.475
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 3.2,
+     "bf01": 0.312
     },
     {
-     "scale": 1.0,
-     "bf10": 1.55,
-     "bf01": 0.647
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 2.32,
+     "bf01": 0.431
     }
    ],
-   "verdict": "Anecdotal evidence for a difference",
+   "verdict": "Moderate evidence for a difference",
    "supportsNull": false
   },
   {
@@ -180,24 +209,27 @@
     "d": 0.14,
     "nEff": 186
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 0.468,
-   "bf01": 2.14,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 0.745,
+   "bf01": 1.34,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 0.634,
-     "bf01": 1.58
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 1.17,
+     "bf01": 0.851
     },
     {
-     "scale": 0.707,
-     "bf10": 0.468,
-     "bf01": 2.14
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 0.745,
+     "bf01": 1.34
     },
     {
-     "scale": 1.0,
-     "bf10": 0.338,
-     "bf01": 2.96
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.519,
+     "bf01": 1.93
     }
    ],
    "verdict": "Anecdotal evidence for no difference",
@@ -216,24 +248,27 @@
     "d": 0.58,
     "nEff": 188
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 31900000000.0,
-   "bf01": 3.14e-11,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 31200000000.0,
+   "bf01": 3.21e-11,
    "sensitivity": [
     {
-     "scale": 0.5,
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 20900000000.0,
+     "bf01": 4.78e-11
+    },
+    {
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 31200000000.0,
+     "bf01": 3.21e-11
+    },
+    {
+     "scale": 0.63,
+     "size": "large",
      "bf10": 32500000000.0,
      "bf01": 3.08e-11
-    },
-    {
-     "scale": 0.707,
-     "bf10": 31900000000.0,
-     "bf01": 3.14e-11
-    },
-    {
-     "scale": 1.0,
-     "bf10": 28100000000.0,
-     "bf01": 3.56e-11
     }
    ],
    "verdict": "Extreme evidence for a difference",
@@ -252,24 +287,27 @@
     "d": 0.79,
     "nEff": 185
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 1.24e+18,
-   "bf01": 8.09e-19,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 1.03e+18,
+   "bf01": 9.71e-19,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 1.13e+18,
-     "bf01": 8.83e-19
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 6.06e+17,
+     "bf01": 1.65e-18
     },
     {
-     "scale": 0.707,
-     "bf10": 1.24e+18,
-     "bf01": 8.09e-19
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 1.03e+18,
+     "bf01": 9.71e-19
     },
     {
-     "scale": 1.0,
-     "bf10": 1.2e+18,
-     "bf01": 8.31e-19
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 1.22e+18,
+     "bf01": 8.23e-19
     }
    ],
    "verdict": "Extreme evidence for a difference",
@@ -288,24 +326,27 @@
     "d": 0.56,
     "nEff": 188
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 5910000000.0,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 5900000000.0,
    "bf01": 1.69e-10,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 6100000000.0,
-     "bf01": 1.64e-10
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 4040000000.0,
+     "bf01": 2.48e-10
     },
     {
-     "scale": 0.707,
-     "bf10": 5910000000.0,
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 5900000000.0,
      "bf01": 1.69e-10
     },
     {
-     "scale": 1.0,
-     "bf10": 5150000000.0,
-     "bf01": 1.94e-10
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 6050000000.0,
+     "bf01": 1.65e-10
     }
    ],
    "verdict": "Extreme evidence for a difference",
@@ -324,27 +365,30 @@
     "d": -0.11,
     "nEff": 184
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 0.251,
-   "bf01": 3.98,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 0.409,
+   "bf01": 2.45,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 0.344,
-     "bf01": 2.9
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 0.685,
+     "bf01": 1.46
     },
     {
-     "scale": 0.707,
-     "bf10": 0.251,
-     "bf01": 3.98
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 0.409,
+     "bf01": 2.45
     },
     {
-     "scale": 1.0,
-     "bf10": 0.181,
-     "bf01": 5.54
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.28,
+     "bf01": 3.58
     }
    ],
-   "verdict": "Moderate evidence for no difference",
+   "verdict": "Anecdotal evidence for no difference",
    "supportsNull": true
   },
   {
@@ -360,24 +404,27 @@
     "d": 0.14,
     "nEff": 188
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 0.501,
-   "bf01": 2.0,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 0.797,
+   "bf01": 1.25,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 0.679,
-     "bf01": 1.47
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 1.25,
+     "bf01": 0.8
     },
     {
-     "scale": 0.707,
-     "bf10": 0.501,
-     "bf01": 2.0
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 0.797,
+     "bf01": 1.25
     },
     {
-     "scale": 1.0,
-     "bf10": 0.363,
-     "bf01": 2.76
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.556,
+     "bf01": 1.8
     }
    ],
    "verdict": "Anecdotal evidence for no difference",
@@ -396,27 +443,30 @@
     "d": 0.22,
     "nEff": 188
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 7.14,
-   "bf01": 0.14,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 10.5,
+   "bf01": 0.0955,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 9.25,
-     "bf01": 0.108
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 13.2,
+     "bf01": 0.0756
     },
     {
-     "scale": 0.707,
-     "bf10": 7.14,
-     "bf01": 0.14
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 10.5,
+     "bf01": 0.0955
     },
     {
-     "scale": 1.0,
-     "bf10": 5.3,
-     "bf01": 0.189
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 7.82,
+     "bf01": 0.128
     }
    ],
-   "verdict": "Moderate evidence for a difference",
+   "verdict": "Strong evidence for a difference",
    "supportsNull": false
   },
   {
@@ -432,24 +482,27 @@
     "d": 0.53,
     "nEff": 187
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 512000000.0,
-   "bf01": 1.95e-09,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 526000000.0,
+   "bf01": 1.9e-09,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 538000000.0,
-     "bf01": 1.86e-09
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 371000000.0,
+     "bf01": 2.69e-09
     },
     {
-     "scale": 0.707,
-     "bf10": 512000000.0,
-     "bf01": 1.95e-09
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 526000000.0,
+     "bf01": 1.9e-09
     },
     {
-     "scale": 1.0,
-     "bf10": 439000000.0,
-     "bf01": 2.28e-09
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 527000000.0,
+     "bf01": 1.9e-09
     }
    ],
    "verdict": "Extreme evidence for a difference",
@@ -468,24 +521,27 @@
     "d": 0.7,
     "nEff": 181
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 256000000000000.0,
-   "bf01": 3.91e-15,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 226000000000000.0,
+   "bf01": 4.42e-15,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 244000000000000.0,
-     "bf01": 4.1e-15
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 139000000000000.0,
+     "bf01": 7.2e-15
     },
     {
-     "scale": 0.707,
-     "bf10": 256000000000000.0,
-     "bf01": 3.91e-15
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 226000000000000.0,
+     "bf01": 4.42e-15
     },
     {
-     "scale": 1.0,
-     "bf10": 239000000000000.0,
-     "bf01": 4.18e-15
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 255000000000000.0,
+     "bf01": 3.92e-15
     }
    ],
    "verdict": "Extreme evidence for a difference",
@@ -504,24 +560,27 @@
     "d": 0.35,
     "nEff": 187
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 3500.0,
-   "bf01": 0.000286,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 4400.0,
+   "bf01": 0.000227,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 4150.0,
-     "bf01": 0.000241
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 4060.0,
+     "bf01": 0.000246
     },
     {
-     "scale": 0.707,
-     "bf10": 3500.0,
-     "bf01": 0.000286
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 4400.0,
+     "bf01": 0.000227
     },
     {
-     "scale": 1.0,
-     "bf10": 2740.0,
-     "bf01": 0.000365
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 3740.0,
+     "bf01": 0.000268
     }
    ],
    "verdict": "Extreme evidence for a difference",
@@ -540,24 +599,27 @@
     "d": 0.67,
     "nEff": 186
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 52400000000000.0,
-   "bf01": 1.91e-14,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 47300000000000.0,
+   "bf01": 2.11e-14,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 50700000000000.0,
-     "bf01": 1.97e-14
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 29600000000000.0,
+     "bf01": 3.38e-14
     },
     {
-     "scale": 0.707,
-     "bf10": 52400000000000.0,
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 47300000000000.0,
+     "bf01": 2.11e-14
+    },
+    {
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 52500000000000.0,
      "bf01": 1.91e-14
-    },
-    {
-     "scale": 1.0,
-     "bf10": 48300000000000.0,
-     "bf01": 2.07e-14
     }
    ],
    "verdict": "Extreme evidence for a difference",
@@ -578,24 +640,27 @@
     "diff": 0.07,
     "p": 0.5653472560577228
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 0.128,
-   "bf01": 7.79,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 0.212,
+   "bf01": 4.71,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 0.177,
-     "bf01": 5.63
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 0.377,
+     "bf01": 2.65
     },
     {
-     "scale": 0.707,
-     "bf10": 0.128,
-     "bf01": 7.79
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 0.212,
+     "bf01": 4.71
     },
     {
-     "scale": 1.0,
-     "bf10": 0.0918,
-     "bf01": 10.9
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.143,
+     "bf01": 6.99
     }
    ],
    "verdict": "Moderate evidence for no difference",
@@ -616,24 +681,27 @@
     "diff": 1.16,
     "p": 5.122455244407786e-09
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 2080000.0,
-   "bf01": 4.82e-07,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 1970000.0,
+   "bf01": 5.08e-07,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 2070000.0,
-     "bf01": 4.83e-07
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 1290000.0,
+     "bf01": 7.74e-07
     },
     {
-     "scale": 0.707,
-     "bf10": 2080000.0,
-     "bf01": 4.82e-07
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 1970000.0,
+     "bf01": 5.08e-07
     },
     {
-     "scale": 1.0,
-     "bf10": 1870000.0,
-     "bf01": 5.36e-07
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 2100000.0,
+     "bf01": 4.76e-07
     }
    ],
    "verdict": "Extreme evidence for a difference",
@@ -654,24 +722,27 @@
     "diff": 1.09,
     "p": 8.413357020241088e-11
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 108000000.0,
-   "bf01": 9.28e-09,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 95500000.0,
+   "bf01": 1.05e-08,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 103000000.0,
-     "bf01": 9.72e-09
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 59100000.0,
+     "bf01": 1.69e-08
     },
     {
-     "scale": 0.707,
-     "bf10": 108000000.0,
-     "bf01": 9.28e-09
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 95500000.0,
+     "bf01": 1.05e-08
     },
     {
-     "scale": 1.0,
-     "bf10": 101000000.0,
-     "bf01": 9.91e-09
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 107000000.0,
+     "bf01": 9.31e-09
     }
    ],
    "verdict": "Extreme evidence for a difference",
@@ -692,24 +763,27 @@
     "diff": 0.08,
     "p": 0.5810413565574819
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 0.127,
-   "bf01": 7.89,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 0.21,
+   "bf01": 4.77,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 0.175,
-     "bf01": 5.7
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 0.374,
+     "bf01": 2.68
     },
     {
-     "scale": 0.707,
-     "bf10": 0.127,
-     "bf01": 7.89
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 0.21,
+     "bf01": 4.77
     },
     {
-     "scale": 1.0,
-     "bf10": 0.0906,
-     "bf01": 11.0
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.141,
+     "bf01": 7.07
     }
    ],
    "verdict": "Moderate evidence for no difference",
@@ -730,24 +804,27 @@
     "diff": 0.01,
     "p": 0.936396703963773
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 0.109,
-   "bf01": 9.18,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 0.182,
+   "bf01": 5.5,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 0.152,
-     "bf01": 6.6
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 0.332,
+     "bf01": 3.01
     },
     {
-     "scale": 0.707,
-     "bf10": 0.109,
-     "bf01": 9.18
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 0.182,
+     "bf01": 5.5
     },
     {
-     "scale": 1.0,
-     "bf10": 0.0778,
-     "bf01": 12.9
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.122,
+     "bf01": 8.21
     }
    ],
    "verdict": "Moderate evidence for no difference",
@@ -768,24 +845,27 @@
     "diff": -0.05,
     "p": 0.7160385539503206
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 0.116,
-   "bf01": 8.63,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 0.193,
+   "bf01": 5.19,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 0.161,
-     "bf01": 6.22
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 0.348,
+     "bf01": 2.87
     },
     {
-     "scale": 0.707,
-     "bf10": 0.116,
-     "bf01": 8.63
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 0.193,
+     "bf01": 5.19
     },
     {
-     "scale": 1.0,
-     "bf10": 0.0828,
-     "bf01": 12.1
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.129,
+     "bf01": 7.73
     }
    ],
    "verdict": "Moderate evidence for no difference",
@@ -806,24 +886,27 @@
     "diff": -0.07,
     "p": 0.6458793565650363
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 0.12,
-   "bf01": 8.34,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 0.199,
+   "bf01": 5.02,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 0.166,
-     "bf01": 6.02
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 0.358,
+     "bf01": 2.79
     },
     {
-     "scale": 0.707,
-     "bf10": 0.12,
-     "bf01": 8.34
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 0.199,
+     "bf01": 5.02
     },
     {
-     "scale": 1.0,
-     "bf10": 0.0857,
-     "bf01": 11.7
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.134,
+     "bf01": 7.47
     }
    ],
    "verdict": "Moderate evidence for no difference",
@@ -841,27 +924,30 @@
     "se": 0.003,
     "note": "full model, per point on the 0 to 100 scale"
    },
-   "priorNote": "Cauchy prior on the standardized effect, scale 0.354 (per standard deviation)",
-   "bf10": 0.0675,
-   "bf01": 14.8,
+   "priorNote": "Cauchy prior on the standardized effect, width set to a small, medium and large effect (per standard deviation, r: 0.10, 0.20, 0.30)",
+   "bf10": 0.118,
+   "bf01": 8.48,
    "sensitivity": [
     {
-     "scale": 0.177,
-     "bf10": 0.133,
-     "bf01": 7.55
+     "scale": 0.1,
+     "size": "small",
+     "bf10": 0.224,
+     "bf01": 4.47
     },
     {
-     "scale": 0.354,
-     "bf10": 0.0675,
-     "bf01": 14.8
+     "scale": 0.2,
+     "size": "medium",
+     "bf10": 0.118,
+     "bf01": 8.48
     },
     {
-     "scale": 0.499,
-     "bf10": 0.0481,
-     "bf01": 20.8
+     "scale": 0.3,
+     "size": "large",
+     "bf10": 0.0795,
+     "bf01": 12.6
     }
    ],
-   "verdict": "Strong evidence for no difference",
+   "verdict": "Moderate evidence for no difference",
    "supportsNull": true
   },
   {
@@ -876,27 +962,30 @@
     "se": 0.003,
     "note": "full model"
    },
-   "priorNote": "Cauchy prior on the standardized effect, scale 0.354 (per standard deviation)",
-   "bf10": 0.0889,
-   "bf01": 11.2,
+   "priorNote": "Cauchy prior on the standardized effect, width set to a small, medium and large effect (per standard deviation, r: 0.10, 0.20, 0.30)",
+   "bf10": 0.155,
+   "bf01": 6.47,
    "sensitivity": [
     {
-     "scale": 0.177,
-     "bf10": 0.173,
-     "bf01": 5.77
+     "scale": 0.1,
+     "size": "small",
+     "bf10": 0.288,
+     "bf01": 3.47
     },
     {
-     "scale": 0.354,
-     "bf10": 0.0889,
-     "bf01": 11.2
+     "scale": 0.2,
+     "size": "medium",
+     "bf10": 0.155,
+     "bf01": 6.47
     },
     {
-     "scale": 0.499,
-     "bf10": 0.0634,
-     "bf01": 15.8
+     "scale": 0.3,
+     "size": "large",
+     "bf10": 0.105,
+     "bf01": 9.56
     }
    ],
-   "verdict": "Strong evidence for no difference",
+   "verdict": "Moderate evidence for no difference",
    "supportsNull": true
   },
   {
@@ -911,27 +1000,30 @@
     "se": 0.286,
     "note": "full model"
    },
-   "priorNote": "Cauchy prior on the standardized effect, scale 0.7071067811865476 (d-like binary predictor)",
-   "bf10": 0.0914,
-   "bf01": 10.9,
+   "priorNote": "Cauchy prior on the standardized effect, width set to a small, medium and large effect (d: 0.20, 0.41, 0.63)",
+   "bf10": 0.154,
+   "bf01": 6.5,
    "sensitivity": [
     {
-     "scale": 0.354,
-     "bf10": 0.176,
-     "bf01": 5.67
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 0.288,
+     "bf01": 3.47
     },
     {
-     "scale": 0.707,
-     "bf10": 0.0914,
-     "bf01": 10.9
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 0.154,
+     "bf01": 6.5
     },
     {
-     "scale": 0.997,
-     "bf10": 0.0652,
-     "bf01": 15.3
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.102,
+     "bf01": 9.78
     }
    ],
-   "verdict": "Strong evidence for no difference",
+   "verdict": "Moderate evidence for no difference",
    "supportsNull": true
   },
   {
@@ -946,24 +1038,27 @@
     "se": 0.124,
     "note": "full model, per age band"
    },
-   "priorNote": "Cauchy prior on the standardized effect, scale 0.354 (per standard deviation)",
-   "bf10": 0.15,
-   "bf01": 6.69,
+   "priorNote": "Cauchy prior on the standardized effect, width set to a small, medium and large effect (per standard deviation, r: 0.10, 0.20, 0.30)",
+   "bf10": 0.253,
+   "bf01": 3.96,
    "sensitivity": [
     {
-     "scale": 0.177,
-     "bf10": 0.281,
-     "bf01": 3.56
+     "scale": 0.1,
+     "size": "small",
+     "bf10": 0.436,
+     "bf01": 2.3
     },
     {
-     "scale": 0.354,
-     "bf10": 0.15,
-     "bf01": 6.69
+     "scale": 0.2,
+     "size": "medium",
+     "bf10": 0.253,
+     "bf01": 3.96
     },
     {
-     "scale": 0.499,
-     "bf10": 0.107,
-     "bf01": 9.32
+     "scale": 0.3,
+     "size": "large",
+     "bf10": 0.175,
+     "bf01": 5.72
     }
    ],
    "verdict": "Moderate evidence for no difference",
@@ -981,24 +1076,27 @@
     "se": 0.064,
     "note": "age model, per age band; the interaction is the change in the gap"
    },
-   "priorNote": "Cauchy prior on the standardized effect, scale 0.354 (per standard deviation)",
-   "bf10": 1.02,
-   "bf01": 0.977,
+   "priorNote": "Cauchy prior on the standardized effect, width set to a small, medium and large effect (per standard deviation, r: 0.10, 0.20, 0.30)",
+   "bf10": 1.73,
+   "bf01": 0.578,
    "sensitivity": [
     {
-     "scale": 0.177,
-     "bf10": 1.92,
-     "bf01": 0.521
+     "scale": 0.1,
+     "size": "small",
+     "bf10": 2.92,
+     "bf01": 0.343
     },
     {
-     "scale": 0.354,
-     "bf10": 1.02,
-     "bf01": 0.977
+     "scale": 0.2,
+     "size": "medium",
+     "bf10": 1.73,
+     "bf01": 0.578
     },
     {
-     "scale": 0.499,
-     "bf10": 0.735,
-     "bf01": 1.36
+     "scale": 0.3,
+     "size": "large",
+     "bf10": 1.2,
+     "bf01": 0.835
     }
    ],
    "verdict": "Anecdotal evidence for a difference",
@@ -1016,27 +1114,30 @@
     "se": 0.5032,
     "note": "indirect effect, trust points"
    },
-   "priorNote": "Cauchy prior on the indirect effect in standard-deviation units of trust, scale 0.707",
-   "bf10": 0.323,
-   "bf01": 3.09,
+   "priorNote": "Cauchy prior on the indirect effect in standard-deviation units of trust, width set to a small, medium and large effect (d: 0.20, 0.41, 0.63)",
+   "bf10": 0.49,
+   "bf01": 2.04,
    "sensitivity": [
     {
-     "scale": 0.354,
-     "bf10": 0.539,
-     "bf01": 1.86
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 0.718,
+     "bf01": 1.39
     },
     {
-     "scale": 0.707,
-     "bf10": 0.323,
-     "bf01": 3.09
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 0.49,
+     "bf01": 2.04
     },
     {
-     "scale": 0.997,
-     "bf10": 0.239,
-     "bf01": 4.18
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.356,
+     "bf01": 2.81
     }
    ],
-   "verdict": "Moderate evidence for no difference",
+   "verdict": "Anecdotal evidence for no difference",
    "supportsNull": true
   },
   {
@@ -1052,24 +1153,27 @@
     "d": -0.07,
     "nEff": 117.9
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 0.135,
-   "bf01": 7.39,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 0.223,
+   "bf01": 4.48,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 0.187,
-     "bf01": 5.35
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 0.395,
+     "bf01": 2.53
     },
     {
-     "scale": 0.707,
-     "bf10": 0.135,
-     "bf01": 7.39
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 0.223,
+     "bf01": 4.48
     },
     {
-     "scale": 1.0,
-     "bf10": 0.0969,
-     "bf01": 10.3
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.151,
+     "bf01": 6.63
     }
    ],
    "verdict": "Moderate evidence for no difference",
@@ -1089,24 +1193,27 @@
     "d": -0.03,
     "nEff": 100.0
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 0.116,
-   "bf01": 8.65,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 0.192,
+   "bf01": 5.2,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 0.16,
-     "bf01": 6.23
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 0.348,
+     "bf01": 2.88
     },
     {
-     "scale": 0.707,
-     "bf10": 0.116,
-     "bf01": 8.65
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 0.192,
+     "bf01": 5.2
     },
     {
-     "scale": 1.0,
-     "bf10": 0.0826,
-     "bf01": 12.1
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.129,
+     "bf01": 7.75
     }
    ],
    "verdict": "Moderate evidence for no difference",
@@ -1126,28 +1233,31 @@
     "d": -0.26,
     "nEff": 61.6
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 0.99,
-   "bf01": 1.01,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 1.4,
+   "bf01": 0.714,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 1.25,
-     "bf01": 0.797
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 1.74,
+     "bf01": 0.574
     },
     {
-     "scale": 0.707,
-     "bf10": 0.99,
-     "bf01": 1.01
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 1.4,
+     "bf01": 0.714
     },
     {
-     "scale": 1.0,
-     "bf10": 0.748,
-     "bf01": 1.34
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 1.08,
+     "bf01": 0.928
     }
    ],
-   "verdict": "Anecdotal evidence for no difference",
-   "supportsNull": true,
+   "verdict": "Anecdotal evidence for a difference",
+   "supportsNull": false,
    "page": "Chapter 3, Study 3"
   },
   {
@@ -1163,24 +1273,27 @@
     "d": -0.25,
     "nEff": 70.6
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 1.06,
-   "bf01": 0.946,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 1.51,
+   "bf01": 0.662,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 1.35,
-     "bf01": 0.742
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 1.9,
+     "bf01": 0.526
     },
     {
-     "scale": 0.707,
-     "bf10": 1.06,
-     "bf01": 0.946
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 1.51,
+     "bf01": 0.662
     },
     {
-     "scale": 1.0,
-     "bf10": 0.795,
-     "bf01": 1.26
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 1.15,
+     "bf01": 0.868
     }
    ],
    "verdict": "Anecdotal evidence for a difference",
@@ -1200,27 +1313,30 @@
     "d": -0.13,
     "nEff": 103.1
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 0.253,
-   "bf01": 3.95,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 0.403,
+   "bf01": 2.48,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 0.343,
-     "bf01": 2.92
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 0.646,
+     "bf01": 1.55
     },
     {
-     "scale": 0.707,
-     "bf10": 0.253,
-     "bf01": 3.95
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 0.403,
+     "bf01": 2.48
     },
     {
-     "scale": 1.0,
-     "bf10": 0.183,
-     "bf01": 5.46
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.281,
+     "bf01": 3.56
     }
    ],
-   "verdict": "Moderate evidence for no difference",
+   "verdict": "Anecdotal evidence for no difference",
    "supportsNull": true,
    "page": "Chapter 3, Study 4"
   },
@@ -1237,24 +1353,27 @@
     "d": -0.15,
     "nEff": 113.8
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 0.359,
-   "bf01": 2.79,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 0.564,
+   "bf01": 1.77,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 0.483,
-     "bf01": 2.07
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 0.869,
+     "bf01": 1.15
     },
     {
-     "scale": 0.707,
-     "bf10": 0.359,
-     "bf01": 2.79
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 0.564,
+     "bf01": 1.77
     },
     {
-     "scale": 1.0,
-     "bf10": 0.261,
-     "bf01": 3.83
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.397,
+     "bf01": 2.52
     }
    ],
    "verdict": "Anecdotal evidence for no difference",
@@ -1274,24 +1393,27 @@
     "d": -0.21,
     "nEff": 63.2
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 0.515,
-   "bf01": 1.94,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 0.763,
+   "bf01": 1.31,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 0.67,
-     "bf01": 1.49
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 1.05,
+     "bf01": 0.95
     },
     {
-     "scale": 0.707,
-     "bf10": 0.515,
-     "bf01": 1.94
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 0.763,
+     "bf01": 1.31
     },
     {
-     "scale": 1.0,
-     "bf10": 0.382,
-     "bf01": 2.62
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.564,
+     "bf01": 1.77
     }
    ],
    "verdict": "Anecdotal evidence for no difference",
@@ -1311,27 +1433,30 @@
     "d": -0.15,
     "nEff": 61.9
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 0.269,
-   "bf01": 3.72,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 0.418,
+   "bf01": 2.39,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 0.359,
-     "bf01": 2.78
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 0.643,
+     "bf01": 1.55
     },
     {
-     "scale": 0.707,
-     "bf10": 0.269,
-     "bf01": 3.72
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 0.418,
+     "bf01": 2.39
     },
     {
-     "scale": 1.0,
-     "bf10": 0.196,
-     "bf01": 5.09
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.297,
+     "bf01": 3.37
     }
    ],
-   "verdict": "Moderate evidence for no difference",
+   "verdict": "Anecdotal evidence for no difference",
    "supportsNull": true,
    "page": "Chapter 3, Study 4"
   },
@@ -1348,24 +1473,27 @@
     "d": -0.09,
     "nEff": 507
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 0.452,
-   "bf01": 2.21,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 0.75,
+   "bf01": 1.33,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 0.627,
-     "bf01": 1.6
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 1.32,
+     "bf01": 0.758
     },
     {
-     "scale": 0.707,
-     "bf10": 0.452,
-     "bf01": 2.21
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 0.75,
+     "bf01": 1.33
     },
     {
-     "scale": 1.0,
-     "bf10": 0.323,
-     "bf01": 3.1
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.505,
+     "bf01": 1.98
     }
    ],
    "verdict": "Anecdotal evidence for no difference",
@@ -1385,24 +1513,27 @@
     "d": -0.07,
     "nEff": 506
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 0.148,
-   "bf01": 6.75,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 0.25,
+   "bf01": 4.01,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 0.207,
-     "bf01": 4.83
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 0.466,
+     "bf01": 2.15
     },
     {
-     "scale": 0.707,
-     "bf10": 0.148,
-     "bf01": 6.75
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 0.25,
+     "bf01": 4.01
     },
     {
-     "scale": 1.0,
-     "bf10": 0.105,
-     "bf01": 9.49
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.166,
+     "bf01": 6.03
     }
    ],
    "verdict": "Moderate evidence for no difference",
@@ -1422,24 +1553,27 @@
     "d": -0.08,
     "nEff": 182.2
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 0.146,
-   "bf01": 6.83,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 0.243,
+   "bf01": 4.12,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 0.203,
-     "bf01": 4.93
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 0.431,
+     "bf01": 2.32
     },
     {
-     "scale": 0.707,
-     "bf10": 0.146,
-     "bf01": 6.83
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 0.243,
+     "bf01": 4.12
     },
     {
-     "scale": 1.0,
-     "bf10": 0.105,
-     "bf01": 9.55
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.163,
+     "bf01": 6.12
     }
    ],
    "verdict": "Moderate evidence for no difference",
@@ -1459,24 +1593,27 @@
     "d": -0.19,
     "nEff": 156.9
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 1.4,
-   "bf01": 0.713,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 2.13,
+   "bf01": 0.469,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 1.85,
-     "bf01": 0.539
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 2.96,
+     "bf01": 0.338
     },
     {
-     "scale": 0.707,
-     "bf10": 1.4,
-     "bf01": 0.713
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 2.13,
+     "bf01": 0.469
     },
     {
-     "scale": 1.0,
-     "bf10": 1.03,
-     "bf01": 0.971
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 1.55,
+     "bf01": 0.647
     }
    ],
    "verdict": "Anecdotal evidence for a difference",
@@ -1496,28 +1633,31 @@
     "d": 0.16,
     "nEff": 172.3
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 0.732,
-   "bf01": 1.37,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 1.15,
+   "bf01": 0.873,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 0.983,
-     "bf01": 1.02
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 1.72,
+     "bf01": 0.583
     },
     {
-     "scale": 0.707,
-     "bf10": 0.732,
-     "bf01": 1.37
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 1.15,
+     "bf01": 0.873
     },
     {
-     "scale": 1.0,
-     "bf10": 0.533,
-     "bf01": 1.88
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.81,
+     "bf01": 1.23
     }
    ],
-   "verdict": "Anecdotal evidence for no difference",
-   "supportsNull": true,
+   "verdict": "Anecdotal evidence for a difference",
+   "supportsNull": false,
    "page": "Chapter 3, Study 5"
   },
   {
@@ -1533,24 +1673,27 @@
     "d": -0.13,
     "nEff": 789
    },
-   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
-   "bf10": 46.4,
-   "bf01": 0.0216,
+   "priorNote": "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect",
+   "bf10": 74.7,
+   "bf01": 0.0134,
    "sensitivity": [
     {
-     "scale": 0.5,
-     "bf10": 63.3,
-     "bf01": 0.0158
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 118.0,
+     "bf01": 0.0085
     },
     {
-     "scale": 0.707,
-     "bf10": 46.4,
-     "bf01": 0.0216
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 74.7,
+     "bf01": 0.0134
     },
     {
-     "scale": 1.0,
-     "bf10": 33.4,
-     "bf01": 0.0299
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 51.6,
+     "bf01": 0.0194
     }
    ],
    "verdict": "Very strong evidence for a difference",
@@ -1569,24 +1712,27 @@
     "se": 0.079,
     "note": "Table 22"
    },
-   "priorNote": "Cauchy prior on the standardized effect, scale 0.7071067811865476",
-   "bf10": 0.127,
-   "bf01": 7.88,
+   "priorNote": "Cauchy prior on the standardized effect, width set to a small, medium and large effect (d: 0.20, 0.41, 0.63)",
+   "bf10": 0.211,
+   "bf01": 4.74,
    "sensitivity": [
     {
-     "scale": 0.354,
-     "bf10": 0.24,
-     "bf01": 4.16
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 0.38,
+     "bf01": 2.63
     },
     {
-     "scale": 0.707,
-     "bf10": 0.127,
-     "bf01": 7.88
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 0.211,
+     "bf01": 4.74
     },
     {
-     "scale": 0.997,
-     "bf10": 0.0909,
-     "bf01": 11.0
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.142,
+     "bf01": 7.06
     }
    ],
    "verdict": "Moderate evidence for no difference",
@@ -1605,24 +1751,27 @@
     "se": 0.092,
     "note": "Table 22"
    },
-   "priorNote": "Cauchy prior on the standardized effect, scale 0.7071067811865476",
-   "bf10": 0.145,
-   "bf01": 6.92,
+   "priorNote": "Cauchy prior on the standardized effect, width set to a small, medium and large effect (d: 0.20, 0.41, 0.63)",
+   "bf10": 0.238,
+   "bf01": 4.2,
    "sensitivity": [
     {
-     "scale": 0.354,
-     "bf10": 0.27,
-     "bf01": 3.7
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 0.417,
+     "bf01": 2.4
     },
     {
-     "scale": 0.707,
-     "bf10": 0.145,
-     "bf01": 6.92
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 0.238,
+     "bf01": 4.2
     },
     {
-     "scale": 0.997,
-     "bf10": 0.104,
-     "bf01": 9.63
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.161,
+     "bf01": 6.2
     }
    ],
    "verdict": "Moderate evidence for no difference",
@@ -1641,24 +1790,27 @@
     "se": 0.089,
     "note": "Table 22"
    },
-   "priorNote": "Cauchy prior on the standardized effect, scale 0.7071067811865476",
-   "bf10": 0.144,
-   "bf01": 6.95,
+   "priorNote": "Cauchy prior on the standardized effect, width set to a small, medium and large effect (d: 0.20, 0.41, 0.63)",
+   "bf10": 0.237,
+   "bf01": 4.22,
    "sensitivity": [
     {
-     "scale": 0.354,
-     "bf10": 0.269,
-     "bf01": 3.72
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 0.417,
+     "bf01": 2.4
     },
     {
-     "scale": 0.707,
-     "bf10": 0.144,
-     "bf01": 6.95
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 0.237,
+     "bf01": 4.22
     },
     {
-     "scale": 0.997,
-     "bf10": 0.103,
-     "bf01": 9.68
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.16,
+     "bf01": 6.24
     }
    ],
    "verdict": "Moderate evidence for no difference",
@@ -1677,24 +1829,27 @@
     "se": 0.069,
     "note": "Table 22"
    },
-   "priorNote": "Cauchy prior on the standardized effect, scale 0.7071067811865476",
-   "bf10": 0.175,
-   "bf01": 5.72,
+   "priorNote": "Cauchy prior on the standardized effect, width set to a small, medium and large effect (d: 0.20, 0.41, 0.63)",
+   "bf10": 0.289,
+   "bf01": 3.46,
    "sensitivity": [
     {
-     "scale": 0.354,
-     "bf10": 0.328,
-     "bf01": 3.05
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 0.509,
+     "bf01": 1.97
     },
     {
-     "scale": 0.707,
-     "bf10": 0.175,
-     "bf01": 5.72
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 0.289,
+     "bf01": 3.46
     },
     {
-     "scale": 0.997,
-     "bf10": 0.125,
-     "bf01": 7.97
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.195,
+     "bf01": 5.13
     }
    ],
    "verdict": "Moderate evidence for no difference",
@@ -1713,27 +1868,30 @@
     "se": 0.057,
     "note": "Table 23"
    },
-   "priorNote": "Cauchy prior on the standardized effect, scale 0.7071067811865476",
-   "bf10": 0.0686,
-   "bf01": 14.6,
+   "priorNote": "Cauchy prior on the standardized effect, width set to a small, medium and large effect (d: 0.20, 0.41, 0.63)",
+   "bf10": 0.117,
+   "bf01": 8.57,
    "sensitivity": [
     {
-     "scale": 0.354,
-     "bf10": 0.134,
-     "bf01": 7.45
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 0.226,
+     "bf01": 4.42
     },
     {
-     "scale": 0.707,
-     "bf10": 0.0686,
-     "bf01": 14.6
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 0.117,
+     "bf01": 8.57
     },
     {
-     "scale": 0.997,
-     "bf10": 0.0488,
-     "bf01": 20.5
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.0769,
+     "bf01": 13.0
     }
    ],
-   "verdict": "Strong evidence for no difference",
+   "verdict": "Moderate evidence for no difference",
    "supportsNull": true,
    "page": "Chapter 4, Study 6"
   },
@@ -1749,24 +1907,27 @@
     "se": 0.041,
     "note": "Table 23"
    },
-   "priorNote": "Cauchy prior on the standardized effect, scale 0.7071067811865476",
-   "bf10": 0.0564,
-   "bf01": 17.7,
+   "priorNote": "Cauchy prior on the standardized effect, width set to a small, medium and large effect (d: 0.20, 0.41, 0.63)",
+   "bf10": 0.0965,
+   "bf01": 10.4,
    "sensitivity": [
     {
-     "scale": 0.354,
-     "bf10": 0.111,
-     "bf01": 8.99
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 0.19,
+     "bf01": 5.25
     },
     {
-     "scale": 0.707,
-     "bf10": 0.0564,
-     "bf01": 17.7
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 0.0965,
+     "bf01": 10.4
     },
     {
-     "scale": 0.997,
-     "bf10": 0.0401,
-     "bf01": 24.9
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.0633,
+     "bf01": 15.8
     }
    ],
    "verdict": "Strong evidence for no difference",
@@ -1785,24 +1946,27 @@
     "se": 0.052,
     "note": "Table 24"
    },
-   "priorNote": "Cauchy prior on the standardized effect, scale 0.7071067811865476",
-   "bf10": 0.138,
-   "bf01": 7.26,
+   "priorNote": "Cauchy prior on the standardized effect, width set to a small, medium and large effect (d: 0.20, 0.41, 0.63)",
+   "bf10": 0.232,
+   "bf01": 4.32,
    "sensitivity": [
     {
-     "scale": 0.354,
-     "bf10": 0.265,
-     "bf01": 3.78
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 0.429,
+     "bf01": 2.33
     },
     {
-     "scale": 0.707,
-     "bf10": 0.138,
-     "bf01": 7.26
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 0.232,
+     "bf01": 4.32
     },
     {
-     "scale": 0.997,
-     "bf10": 0.0984,
-     "bf01": 10.2
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.154,
+     "bf01": 6.49
     }
    ],
    "verdict": "Moderate evidence for no difference",
@@ -1821,27 +1985,30 @@
     "se": 0.05,
     "note": "Table 24"
    },
-   "priorNote": "Cauchy prior on the standardized effect, scale 0.7071067811865476",
-   "bf10": 0.0651,
-   "bf01": 15.4,
+   "priorNote": "Cauchy prior on the standardized effect, width set to a small, medium and large effect (d: 0.20, 0.41, 0.63)",
+   "bf10": 0.111,
+   "bf01": 9.01,
    "sensitivity": [
     {
-     "scale": 0.354,
-     "bf10": 0.128,
-     "bf01": 7.83
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 0.216,
+     "bf01": 4.62
     },
     {
-     "scale": 0.707,
-     "bf10": 0.0651,
-     "bf01": 15.4
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 0.111,
+     "bf01": 9.01
     },
     {
-     "scale": 0.997,
-     "bf10": 0.0463,
-     "bf01": 21.6
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.073,
+     "bf01": 13.7
     }
    ],
-   "verdict": "Strong evidence for no difference",
+   "verdict": "Moderate evidence for no difference",
    "supportsNull": true,
    "page": "Chapter 4, Study 6"
   },
@@ -1857,27 +2024,30 @@
     "se": 0.0127,
     "note": "indirect effect, from b and z"
    },
-   "priorNote": "Cauchy prior on the standardized effect, scale 0.707",
-   "bf10": 0.0211,
-   "bf01": 47.5,
+   "priorNote": "Cauchy prior on the standardized effect, width set to a small, medium and large effect (d: 0.20, 0.41, 0.63)",
+   "bf10": 0.0363,
+   "bf01": 27.6,
    "sensitivity": [
     {
-     "scale": 0.354,
-     "bf10": 0.042,
-     "bf01": 23.8
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 0.074,
+     "bf01": 13.5
     },
     {
-     "scale": 0.707,
-     "bf10": 0.0211,
-     "bf01": 47.5
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 0.0363,
+     "bf01": 27.6
     },
     {
-     "scale": 0.997,
-     "bf10": 0.0149,
-     "bf01": 66.9
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.0236,
+     "bf01": 42.3
     }
    ],
-   "verdict": "Very strong evidence for no difference",
+   "verdict": "Strong evidence for no difference",
    "supportsNull": true,
    "page": "Chapter 4, Study 6"
   },
@@ -1893,27 +2063,30 @@
     "se": 0.018,
     "note": "indirect effect, from b and z"
    },
-   "priorNote": "Cauchy prior on the standardized effect, scale 0.707",
-   "bf10": 0.0202,
-   "bf01": 49.5,
+   "priorNote": "Cauchy prior on the standardized effect, width set to a small, medium and large effect (d: 0.20, 0.41, 0.63)",
+   "bf10": 0.0348,
+   "bf01": 28.7,
    "sensitivity": [
     {
-     "scale": 0.354,
-     "bf10": 0.0403,
-     "bf01": 24.8
+     "scale": 0.2,
+     "size": "small",
+     "bf10": 0.0709,
+     "bf01": 14.1
     },
     {
-     "scale": 0.707,
-     "bf10": 0.0202,
-     "bf01": 49.5
+     "scale": 0.41,
+     "size": "medium",
+     "bf10": 0.0348,
+     "bf01": 28.7
     },
     {
-     "scale": 0.997,
-     "bf10": 0.0143,
-     "bf01": 69.8
+     "scale": 0.63,
+     "size": "large",
+     "bf10": 0.0227,
+     "bf01": 44.1
     }
    ],
-   "verdict": "Very strong evidence for no difference",
+   "verdict": "Strong evidence for no difference",
    "supportsNull": true,
    "page": "Chapter 4, Study 6"
   }

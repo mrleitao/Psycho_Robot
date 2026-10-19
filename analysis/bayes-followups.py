@@ -8,7 +8,7 @@ Three kinds of test, each with a Cauchy (JZS) prior centred on zero:
   t        Rouder et al. (2009) default Bayes factor for a t statistic. The prior is on the standardized
            effect size d with scale r = sqrt(2)/2 (the "medium" default); r = 0.5 and r = 1 are shown as a check.
   coef     A regression or mixed-model coefficient, from its estimate and standard error (normal likelihood,
-           Cauchy prior on the standardized effect). Binary predictors use scale 0.707 (d-like);
+# Bayes factors: JZS BF10 for t tests; Cauchy prior widths set to Funder and Ozer (2019) small, medium and large (d 0.20, 0.41, 0.63; r .10, .20, .30).
            continuous predictors use 0.354 per standard deviation.
   stat     Studies 3 to 6: the dissertation reports t, d, df, and coefficients with intervals but the raw data
            are not released yet, so these Bayes factors come from the reported statistics.
@@ -23,6 +23,10 @@ from scipy import integrate, stats
 
 OUT = "src/data/trust-in-medical-ai/"
 R_MAIN = math.sqrt(2) / 2
+# Funder and Ozer (2019) benchmarks. The prior is a Cauchy curve whose width is set to a small, a medium and a large effect.
+FO_NAMES = ["small", "medium", "large"]
+FO_R = [0.10, 0.20, 0.30]                                   # correlation benchmarks
+FO_D = [round(2 * r / math.sqrt(1 - r * r), 2) for r in FO_R]  # the same effects as Cohen's d: 0.20, 0.41, 0.63
 
 
 # ---------------------------------------------------------------- Bayes factors
@@ -74,17 +78,17 @@ def add(study, group, tid, text, source, kind, stat, bf_fn, scales, prior_note, 
         "study": study, "group": group, "id": tid, "text": text, "source": source, "kind": kind, "stat": stat,
         "priorNote": prior_note,
         "bf10": sig(main), "bf01": sig(1 / main),
-        "sensitivity": [{"scale": s, "bf10": sig(b), "bf01": sig(1 / b)} for s, b in zip(scales, bfs)],
+        "sensitivity": [{"scale": s, "size": FO_NAMES[i], "bf10": sig(b), "bf01": sig(1 / b)} for i, (s, b) in enumerate(zip(scales, bfs))],
         "verdict": label(main),
         "supportsNull": bool(main < 1),
     })
 
 
-T_SCALES = [0.5, R_MAIN, 1.0]
+T_SCALES = FO_D
 def t_rows(study, group, tid, text, source, t, n_eff, df, d, extra=""):
     stat = {"t": t, "df": df, "d": d, "nEff": round(n_eff, 1)}
-    add(study, group, tid, text, source, "t", stat, lambda s: jzs_bf10(t, n_eff, df, s), [round(x, 3) for x in T_SCALES],
-        "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)")
+    add(study, group, tid, text, source, "t", stat, lambda s: jzs_bf10(t, n_eff, df, s), list(T_SCALES),
+        "Cauchy prior on d, width set to a small (0.20), medium (0.41) and large (0.63) effect")
 
 
 # ---------------------------------------------------------------- Study 1 (raw data)
@@ -144,12 +148,11 @@ def term(m, name): return [t for t in m["terms"] if t["term"] == name][0]
 def coef_row(study, group, tid, text, est, se, unit_sd, binary, stat_note, source="raw data"):
     """est and se in raw units; unit_sd converts a one-unit change to standardized units (SD of outcome / SD of predictor)."""
     k = 1 / sd_trust * unit_sd  # raw -> standardized
-    r0 = R_MAIN if binary else 0.354
-    scales = [round(r0 * 0.5, 3), round(r0, 3), round(r0 * 1.41, 3)]
+    scales = FO_D if binary else FO_R
     est_s, se_s = est * k, se * k
     add(study, group, tid, text, source, "coef", {"b": est, "se": se, "note": stat_note},
-        lambda s: coef_bf10(est_s, se_s, s), scales,
-        "Cauchy prior on the standardized effect, scale %s (%s)" % (r0, "d-like binary predictor" if binary else "per standard deviation"))
+        lambda s: coef_bf10(est_s, se_s, s), list(scales),
+        "Cauchy prior on the standardized effect, width set to a small, medium and large effect (%s)" % ("d: 0.20, 0.41, 0.63" if binary else "per standard deviation, r: 0.10, 0.20, 0.30"))
 
 t_ = term(full, "IsDoc:Int_Quant")
 coef_row("Study 2", "Does the gap depend on the decision?", "H2-interaction",
@@ -174,7 +177,7 @@ for m in s2["mediation"]:
         se = w["indirect"] / w["z"]
         coef_row("Study 2", "What explains the gap?", "H5-warmth", "Warmth as a mediator of the doctor-AI gap",
                  w["indirect"], se, 1.0, True, "indirect effect, trust points", source="raw data")
-        ROWS[-1]["priorNote"] = "Cauchy prior on the indirect effect in standard-deviation units of trust, scale 0.707"
+        ROWS[-1]["priorNote"] = "Cauchy prior on the indirect effect in standard-deviation units of trust, width set to a small, medium and large effect (d: 0.20, 0.41, 0.63)"
 
 # ---------------------------------------------------------------- Studies 3 to 6 (reported statistics)
 # Every number below is copied from the dissertation text (Leitao, 2024). n_eff for two-sample tests comes from (t / d)^2.
@@ -202,11 +205,10 @@ rep_t("Study 5", "Side by side", "S5-hum-doc", "Humanlike AI versus doctor", -3.
 
 def rep_coef(study, group, tid, text, b, lo, hi, scale_unit, note, page, binary=True):
     se = (hi - lo) / (2 * 1.96)
-    r0 = R_MAIN if binary else 0.354
-    scales = [round(r0 * 0.5, 3), round(r0, 3), round(r0 * 1.41, 3)]
+    scales = FO_D if binary else FO_R
     k = 1 / scale_unit
     add(study, group, tid, text, "reported statistics", "coef", {"b": b, "se": round(se, 3), "note": note},
-        lambda s: coef_bf10(b * k, se * k, s), scales, "Cauchy prior on the standardized effect, scale %s" % r0)
+        lambda s: coef_bf10(b * k, se * k, s), list(scales), "Cauchy prior on the standardized effect, width set to a small, medium and large effect (d: 0.20, 0.41, 0.63)")
     ROWS[-1]["page"] = page
 
 # Study 5 voice and interaction terms (Table 22). Outcome SD about 1.02 from the model variances (0.66 + 0.38).
@@ -224,13 +226,14 @@ rep_coef("Study 6", "Did the recommender change what people did?", "S6-dib-cond"
 for tid, txt, b, z in [("S6-sleep-med", "Sleep: mind perception as a mediator", -0.012, -0.943), ("S6-dib-med", "Phone in bed: mind perception as a mediator", 0.006, 0.333)]:
     se = abs(b / z)
     add("Study 6", "Did the recommender change what people did?", tid, txt, "reported statistics", "coef", {"b": b, "se": round(se, 4), "note": "indirect effect, from b and z"},
-        lambda s, b=b, se=se: coef_bf10(b / math.sqrt(1.13), se / math.sqrt(1.13), s), [round(R_MAIN * 0.5, 3), round(R_MAIN, 3), round(R_MAIN * 1.41, 3)],
-        "Cauchy prior on the standardized effect, scale 0.707")
+        lambda s, b=b, se=se: coef_bf10(b / math.sqrt(1.13), se / math.sqrt(1.13), s), list(FO_D),
+        "Cauchy prior on the standardized effect, width set to a small, medium and large effect (d: 0.20, 0.41, 0.63)")
     ROWS[-1]["page"] = "Chapter 4, Study 6"
 
 out = {
-    "method": "Bayes factors with a Cauchy prior centred on no effect. t tests use the Rouder et al. (2009) default (scale 0.707 on Cohen's d). Coefficients use a normal likelihood from the estimate and its standard error. BF10 is evidence for a difference; BF01 is evidence for no difference.",
-    "scale": [
+    "method": "Bayes factors with a Cauchy prior centred on no effect. The width of the prior is set to a small, a medium and a large effect on the Funder and Ozer (2019) benchmarks (r = .10, .20, .30, which are d = 0.20, 0.41, 0.63); the medium prior is the headline. t tests use the Rouder et al. (2009) default Bayes factor. Coefficients use a normal likelihood from the estimate and its standard error. BF10 is how many times more likely the data are if there is a difference; BF01 is how many times more likely they are if there is none.",
+    "funderOzer": [{"r": r, "d": d, "size": n} for r, d, n in zip(FO_R, FO_D, FO_NAMES)],
+    "evidenceWords": [
         {"min": 100, "label": "Extreme"}, {"min": 30, "label": "Very strong"}, {"min": 10, "label": "Strong"}, {"min": 3, "label": "Moderate"}, {"min": 1, "label": "Anecdotal"},
     ],
     "rows": ROWS,

@@ -70,7 +70,7 @@ const filters = [
             <th scope="col">Difference</th>
             <th scope="col"><abbr title="Paired t test: compares two ratings given by the same people. Larger values mean a bigger difference relative to the noise.">t (df)</abbr></th>
             <th scope="col"><abbr title="Probability of a difference this large if there were no real difference. Below .05 is called significant.">p</abbr></th>
-            <th scope="col"><abbr title="Cohen's d for paired ratings: mean difference over the SD of the differences. About 0.2 is small, 0.5 medium, 0.8 large.">d</abbr></th>
+            <th scope="col"><abbr title="Cohen's d for paired ratings: mean difference over the SD of the differences. About 0.20 is small, 0.41 medium, 0.63 large (Funder and Ozer, 2019).">d</abbr></th>
           </tr>
         </thead>
         <tbody data-tests></tbody>
@@ -342,7 +342,7 @@ const filters = [
       const md = mean(diffs), s = sd(diffs);
       stats.innerHTML =
         `<div><dt>Mean difference</dt><dd>${md >= 0 ? '+' : ''}${md.toFixed(2)}</dd></div>` +
-        `<div><dt><abbr title="Cohen's d for paired ratings: the mean difference divided by the standard deviation of the differences. About 0.2 is small, 0.5 medium, 0.8 large.">Effect size (d)</abbr></dt><dd>${(s > 0 ? md / s : 0).toFixed(2)}</dd></div>` +
+        `<div><dt><abbr title="Cohen's d for paired ratings: the mean difference divided by the standard deviation of the differences. About 0.20 is small, 0.41 medium, 0.63 large (Funder and Ozer, 2019).">Effect size (d)</abbr></dt><dd>${(s > 0 ? md / s : 0).toFixed(2)}</dd></div>` +
         `<div><dt>People</dt><dd>${n}</dd></div>`;
     };
 

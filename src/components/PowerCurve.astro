@@ -43,7 +43,7 @@ const { presets, studyN } = Astro.props;
     <div class="tip" hidden data-tip></div>
     <ul class="key">
       <li><span class="line main"></span>Chosen effect</li>
-      <li><span class="line ref"></span>Small (0.2), medium (0.5), large (0.8)</li>
+      <li><span class="line ref"></span>Small (0.20), medium (0.41), large (0.63)</li>
       <li><span class="line study"></span>Study 1 sample size</li>
     </ul>
   </figure>
@@ -83,7 +83,7 @@ const { presets, studyN } = Astro.props;
     const grid = Array.from({ length: Math.floor(MAXN / 4) + 1 }, (_, i) => i * 4);
     const compute = () => {
       curve = grid.map((n) => powerPaired(state.d, n, state.alpha));
-      refs = [0.2, 0.5, 0.8].map((d) => ({ d, pts: grid.map((n) => powerPaired(d, n, state.alpha)) }));
+      refs = [0.2, 0.41, 0.63].map((d) => ({ d, pts: grid.map((n) => powerPaired(d, n, state.alpha)) }));
     };
     const path = (pts: number[]) => pts.map((p, i) => `${i ? 'L' : 'M'}${x(grid[i]).toFixed(1)},${y(p).toFixed(1)}`).join('');
 

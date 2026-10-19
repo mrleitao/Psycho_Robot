@@ -20,6 +20,7 @@ import pts from '../../../data/trust-in-medical-ai/study1-points.json';
 import hva from '../../../data/trust-in-medical-ai/study1-human-vs-ai.json';
 import { href } from '../../../utils/url';
 import BayesPlot from '../../../components/BayesPlot.astro';
+import { times } from '../../../utils/bayes';
 import BayesGuide from '../../../components/BayesGuide.astro';
 import FigureMap from '../../../components/FigureMap.astro';
 import bayes from '../../../data/trust-in-medical-ai/bayes.json';
@@ -349,7 +350,6 @@ const bayesRows = bayes.rows
   .filter((r) => r.study === 'Study 1')
   .map((r) => ({ ...r, text: /^(H\d|E)$/.test(r.id) ? `${r.id === 'E' ? 'Exploratory' : r.id}: ${r.text}` : r.text }));
 const bf = (id: string) => bayes.rows.find((r) => r.id === id)!;
-const fmtBF = (b: number) => (b >= 100 ? b.toFixed(0) : b >= 10 ? b.toFixed(0) : b.toFixed(1));
 const figureMap1 = [
   { diss: 'Table 1', what: 'The fifteen medical decisions and how they were grouped', here: 'Tables 2 and 3', href: '#table-decisions' },
   { diss: 'Table 2', what: 'The eleven medical recommenders', here: 'Table 8', href: '#table-makers' },
@@ -803,20 +803,20 @@ const figureMap1 = [
       <BayesPlot rows={bayesRows} />
       <div class="prose">
         <p>
-          <strong>Diagnostic and prescriptive decisions are rated alike.</strong> Hypothesis 1 found no difference (p = .68). The Bayes factor for no difference is {fmtBF(bf('H1').bf01)},
-          which is strong evidence that people see the two stages as needing the same amount of quantitative reasoning. That is a firmer conclusion than "not significant."
+          <strong>Diagnostic and prescriptive decisions are rated alike.</strong> Hypothesis 1 found no difference (p = .68). The data are {times(bf('H1').bf01)} if the two stages need the same amount of quantitative reasoning than if they differ by a medium-sized amount.
+          That is moderate evidence for no difference, a firmer conclusion than "not significant." It holds if you expect a small or a large difference instead.
         </p>
         <p>
-          <strong>Bodily injury versus acute sickness is unsettled.</strong> Hypothesis 5 missed the usual cutoff (p = .061). The Bayes factor for no difference is only {fmtBF(bf('H5').bf01)},
-          which is anecdotal. The data lean neither way, and a larger sample is the only way to settle it.
+          <strong>Bodily injury versus acute sickness is unsettled.</strong> Hypothesis 5 missed the usual cutoff (p = .061). The data are only {times(bf('H5').bf01)} under no difference than under a medium difference, which is the same as saying they lean neither way.
+          A larger sample is the only way to settle it.
         </p>
         <p>
-          <strong>One result is weaker than its p value suggests.</strong> Physical health versus mental health reached p = .010, yet the Bayes factor for a difference is
-          {fmtBF(bf('H4').bf10)}, also anecdotal. I would call that difference suggestive. The comparisons behind hypotheses 2, 3, 6 and 7 are another matter, with Bayes factors above 100,000.
+          <strong>One result is weaker than its p value suggests.</strong> Physical health versus mental health reached p = .010, yet the data are only {times(bf('H4').bf10)} under a medium difference than under none, which is anecdotal.
+          I would call that difference suggestive. The comparisons behind hypotheses 2, 3, 6 and 7 are another matter: the data are many thousands to many billions of times more likely under a difference.
         </p>
         <p>
-          <strong>A layperson and an AI are trusted about equally.</strong> People trusted a layperson (M = 4.3) about as much as a medical AI (M = 4.7). The Bayes factor for no difference is {fmtBF(bf('X1').bf01)}, moderate evidence.
-          The AI is trusted well below a doctor and no more than someone with no medical training.
+          <strong>A layperson and an AI are trusted about equally.</strong> People trusted a layperson (M = 4.3) about as much as a medical AI (M = 4.7). The data are {times(bf('X1').bf01)} under no difference, which is anecdotal, so I would not claim the two are the same, only that no gap showed up.
+          The AI is trusted well below a doctor.
         </p>
       </div>
     </section>

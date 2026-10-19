@@ -1,18 +1,25 @@
 /*
   Color tokens.
-  --doctor and --ai are the two entities my research compares. They keep the same
-  meaning in every chart on the site. Both pairs pass the dataviz palette validator
-  (light: #2b45d4 / #b86e00, dark: #6c80e6 / #bf7f1a).
+  The five palette colors are named for what they are: coral, peach, sand, steel and deep.
+  --doctor and --ai are the two entities my research compares. They keep the same meaning in every
+  chart on the site. Both pairs pass the dataviz palette validator (light: #3b92c2 / #e5686d,
+  dark: #4896c8 / #e06a70). The first is a slightly more saturated steel and the second a deeper coral
+  than the palette swatches, so marks stay visible on the page background.
 */
 :root {
-  --paper: #f3f6f7;
-  --ink: #141b2d;
-  --muted: #566074;
-  --rule: #d3d9e0;
-  --wash: #e6ecef;
-  --doctor: #2b45d4;
-  --ai: #b86e00;
-  --null: #0d7a6e;
+  --coral: #f18c8e;
+  --peach: #f0b7a4;
+  --sand: #f1d1b5;
+  --steel: #568ea6;
+  --deep: #305f72;
+  --paper: #fbf6f1;
+  --ink: #17313c;
+  --muted: #4f6b78;
+  --rule: #e6d5c5;
+  --wash: #f6e8da;
+  --doctor: #3b92c2;
+  --ai: #e5686d;
+  --null: #3f7f9a;
   --display: 'Bricolage Grotesque Variable', 'Helvetica Neue', Arial, sans-serif;
   --text: 'Source Serif 4 Variable', Georgia, 'Times New Roman', serif;
   color-scheme: light dark;
@@ -20,27 +27,27 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --paper: #0e131f;
-    --ink: #e9edf5;
-    --muted: #9ba5ba;
-    --rule: #242c3e;
-    --wash: #171e2d;
-    --doctor: #6c80e6;
-    --ai: #bf7f1a;
-    --null: #4fb8aa;
+    --paper: #0f232c;
+    --ink: #eef2f0;
+    --muted: #a3b8c1;
+    --rule: #264452;
+    --wash: #173440;
+    --doctor: #4896c8;
+    --ai: #e06a70;
+    --null: #7db3cb;
   }
 }
 
 /* An explicit theme choice (data-theme) wins over the system setting. */
 :root[data-theme='dark'] {
-    --paper: #0e131f;
-    --ink: #e9edf5;
-    --muted: #9ba5ba;
-    --rule: #242c3e;
-    --wash: #171e2d;
-    --doctor: #6c80e6;
-    --ai: #bf7f1a;
-    --null: #4fb8aa;
+  --paper: #0f232c;
+  --ink: #eef2f0;
+  --muted: #a3b8c1;
+  --rule: #264452;
+  --wash: #173440;
+  --doctor: #4896c8;
+  --ai: #e06a70;
+  --null: #7db3cb;
   color-scheme: dark;
 }
 
