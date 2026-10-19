@@ -1,0 +1,384 @@
+[
+ {
+  "id": "ai",
+  "title": "AI and human behavior",
+  "asks": "How do people trust, rely on and work with AI, and what should a product or policy do about it?",
+  "lead": "Medical-AI trust experiments, generative AI collaboration studies, the cloud-hosted AI task I built, and honest null results.",
+  "rows": [
+   {
+    "field": "Human-AI decision processes; calibrated trust; over-trust",
+    "mine": "Six preregistered experiments on trust in doctors versus medical AI, using Weight-on-Advice to measure reliance. More than 3,000 participants recruited."
+   },
+   {
+    "field": "Evaluating AI-assisted workflows",
+    "mine": "Two preregistered experiments (N = 1,299) on drafting versus editing with generative AI: quality, time, ownership and engagement."
+   },
+   {
+    "field": "Prototype research tools; interfacing with models",
+    "mine": "A participant-facing task on the ChatGPT API, hosted on AWS, with random assignment in Qualtrics."
+   },
+   {
+    "field": "Compliance with computerized instructions",
+    "mine": "Master's thesis (N = 305): people obeyed computer and human instructors about equally."
+   },
+   {
+    "field": "Communicating risk; AI second opinions",
+    "mine": "NIH protocol on how people read genomic risk when a geneticist or an AI reviews the result. I am the lead researcher under the principal investigator. It is in ethics review and has no data yet."
+   }
+  ],
+  "limits": "I study people's responses to AI. I have not done AI safety engineering, red-teaming, model evaluation building or machine-learning engineering."
+ },
+ {
+  "id": "xpr",
+  "title": "Experimentation and product research",
+  "asks": "What did the change do to behavior, and what should we build or measure next?",
+  "lead": "Randomized experiments, power planning, quasi-experimental causal inference, dashboards and mixed methods.",
+  "rows": [
+   {
+    "field": "Design and run experiments; rigorous, trustworthy experiments",
+    "mine": "Randomized, preregistered experiments in my thesis, dissertation and generative AI studies. I call them randomized controlled experiments, not platform A/B tests."
+   },
+   {
+    "field": "Power; minimum detectable effect; sample-size planning",
+    "mine": "Power planning and sensitivity analysis in the thesis, dissertation and mega-analysis."
+   },
+   {
+    "field": "Causal inference when randomization is unavailable",
+    "mine": "Difference-in-differences, regression discontinuity and propensity-score matching on more than 100,000 student records."
+   },
+   {
+    "field": "Heterogeneous effects; sensitivity checks",
+    "mine": "Multilevel, moderation and causal-mediation models, with a specification curve and multiple-comparison corrections."
+   },
+   {
+    "field": "Self-serve dashboards",
+    "mine": "Tableau dashboards used by department chairs and administrators."
+   },
+   {
+    "field": "Mixed-methods and diary research",
+    "mine": "Focus groups, surveys, interviews and daily diary studies."
+   }
+  ],
+  "limits": "I have no A/B platform, log-data or product-analytics experience. SQL is still developing."
+ },
+ {
+  "id": "ssp",
+  "title": "Survey science and measurement",
+  "asks": "Is the measure valid and reliable, and is the survey good enough to trust?",
+  "lead": "Instrument development, structural equation modeling, panel quality and longitudinal measurement.",
+  "rows": [
+   {
+    "field": "Psychometrically sound instruments; item analysis",
+    "mine": "Trust, reasoning and mind-perception measures built for the dissertation, and a smartphone self-inclusion scale (in preparation, first author)."
+   },
+   {
+    "field": "Structural validity; structural equation modeling",
+    "mine": "Factor and path models in graduate coursework and a data competition, and Mplus models in the dissertation."
+   },
+   {
+    "field": "Reliability and measurement error",
+    "mine": "Reliability and validity reporting for a published gaming-motivation scale and a VR symptom questionnaire, where I was a contributor."
+   },
+   {
+    "field": "Online survey panel vendors; fitness for use",
+    "mine": "Prolific, CloudResearch, MTurk and university pools, with attention checks and exclusions."
+   },
+   {
+    "field": "Intensive longitudinal measurement",
+    "mine": "Daily diary studies, a 15-day behavior study and an eight-week field study."
+   }
+  ],
+  "limits": "I have no item response theory, test equating, survey weighting or probability-panel experience."
+ },
+ {
+  "id": "bar",
+  "title": "Behavioral and applied research",
+  "asks": "Why do people think, decide, trust or act this way, and what should we test?",
+  "lead": "Experiments, theory, interventions, mixed methods and decision-ready findings.",
+  "rows": [
+   {
+    "field": "Behavioral diagnosis; theory-driven intervention design",
+    "mine": "Theory for Risk Creep, the parasocial identification paper, the smartphone wellbeing review and my dissertation."
+   },
+   {
+    "field": "Lead research end to end",
+    "mine": "The master's thesis and six-study dissertation, from question through design, recruitment, analysis and writing."
+   },
+   {
+    "field": "Intensive longitudinal research; adherence measurement",
+    "mine": "A 15-day digital-health study with daily diary reports and a seven-day adherence follow-up."
+   },
+   {
+    "field": "Multi-method research; triangulation",
+    "mine": "Experiments, surveys, focus groups and administrative data, used together."
+   },
+   {
+    "field": "Open science; reproducible workflows",
+    "mine": "Preregistration, public materials and Quarto reports."
+   }
+  ],
+  "limits": "My experience is academic and applied research. I have not held a long industry UX role or owned a product."
+ },
+ {
+  "id": "hlth",
+  "title": "Health and digital health research",
+  "asks": "What affects patient behavior, experience, adherence and trust?",
+  "lead": "NIH work, clinical-study administration, medical AI, health behavior and longitudinal measurement.",
+  "rows": [
+   {
+    "field": "Patient-centered research; health behavior",
+    "mine": "Health beliefs, genetic-risk interpretation and trust in medical AI, in the dissertation and NIH projects."
+   },
+   {
+    "field": "Digital-health intervention; adherence and engagement",
+    "mine": "The 15-day dissertation study, which found no reliable intervention effect."
+   },
+   {
+    "field": "Regulated study operations; clinical recruitment support",
+    "mine": "Recruitment administration for an NIH clinical trial."
+   },
+   {
+    "field": "Clinical outcomes analysis",
+    "mine": "First-author secondary analysis of a randomized crossover trial of a ghrelin-receptor blocker (published 2026)."
+   },
+   {
+    "field": "Risk communication",
+    "mine": "A virtual-patient project on how race and weight cues shape the reading of genetic risk (N = 200)."
+   }
+  ],
+  "limits": "I am not a clinician and have no payer, claims or electronic-health-record experience. I do not claim health-economics expertise."
+ },
+ {
+  "id": "rpm",
+  "title": "Research programs and operations",
+  "asks": "Can this person keep a complex research enterprise moving?",
+  "lead": "Portfolio ownership, people coordination, governance, timelines, recruitment and process.",
+  "rows": [
+   {
+    "field": "Manage a research portfolio; prioritize concurrent workstreams",
+    "mine": "Six to seven concurrent projects at Georgetown with a student team, and six NIH projects now."
+   },
+   {
+    "field": "Supervise and develop research staff",
+    "mine": "Research assistant supervision since 2017, with teams of up to 15."
+   },
+   {
+    "field": "Manage approvals, protocols and compliant operations",
+    "mine": "IRB protocols written and managed at two universities."
+   },
+   {
+    "field": "Standardize recurring work; improve yield",
+    "mine": "Redesigned the Georgetown participant pool; research yield reportedly rose 50% the next year."
+   },
+   {
+    "field": "Develop proposals, budgets and delivery plans",
+    "mine": "Three named grants and fellowships, plus budgets and timelines for the dissertation."
+   }
+  ],
+  "limits": "My evidence is small-team and portfolio leadership. I have not directed a large organization or served as principal investigator on major funding."
+ },
+ {
+  "id": "eval",
+  "title": "Evaluation and social impact",
+  "asks": "Did the program or policy work, for whom, and what should change?",
+  "lead": "Evaluation questions, mixed methods, outcomes, stakeholders and recommendations.",
+  "rows": [
+   {
+    "field": "Evaluation design; implementation and outcome evaluation",
+    "mine": "An evaluation of a university summer-skills program with focus groups, surveys and student outcomes."
+   },
+   {
+    "field": "Impact analysis; comparison strategies",
+    "mine": "Matching, regression discontinuity and difference-in-differences on administrative records."
+   },
+   {
+    "field": "Decision support",
+    "mine": "Recurring dashboards and reports for chairs and administrators."
+   },
+   {
+    "field": "Develop evidence-based recommendations",
+    "mine": "Evidence work behind the Georgetown GRE-optional decision, and a gender identity and pronoun data policy that was adopted."
+   }
+  ],
+  "limits": "I have not done community-based evaluation. I describe recommendations as delivered, and name the decision only when someone acted on it."
+ },
+ {
+  "id": "ins",
+  "title": "People and consumer insights",
+  "asks": "What do employees or consumers need, and how should the organization respond?",
+  "lead": "Behavioral evidence, surveys, focus groups and decision support.",
+  "rows": [
+   {
+    "field": "Behavioral insights; motivation and decision research",
+    "mine": "Studies of technology use, trust, gaming motivation and social contact."
+   },
+   {
+    "field": "Integrated insights; mixed methods",
+    "mine": "Surveys, focus groups, experiments and longitudinal data in one question."
+   },
+   {
+    "field": "Drivers, predictors, trends and segments",
+    "mine": "Regression, multilevel and moderation models."
+   },
+   {
+    "field": "Learning and organizational effectiveness",
+    "mine": "Learner outcomes work, a guest lecture on people analytics, and a university summer-skills program evaluation."
+   }
+  ],
+  "limits": "I have no years of industry people-analytics or consumer-insights work and no HR-system data experience."
+ },
+ {
+  "id": "lnd",
+  "title": "Learning and organizational programs",
+  "asks": "What capability must improve, and how will we know?",
+  "lead": "Learning design, facilitation, program delivery and evaluation.",
+  "rows": [
+   {
+    "field": "Instructional design; backward design; active learning",
+    "mine": "Psychology of Technology, which won Georgetown's 2023 Graduate Student Teaching Award."
+   },
+   {
+    "field": "Technical enablement; capability building",
+    "mine": "Workshops on power analysis, R and open science, and R and Quarto at NIH."
+   },
+   {
+    "field": "Formative and summative assessment",
+    "mine": "A 100-point course design with weekly writing, a self-evaluation and a staged final project."
+   },
+   {
+    "field": "Communities of practice",
+    "mine": "Co-founded a campus open-science group and a journal club."
+   }
+  ],
+  "limits": "I have not run enterprise-wide training, managed a learning platform or led organization-wide change."
+ },
+ {
+  "id": "pol",
+  "title": "Policy, public opinion and government research",
+  "asks": "What does the evidence say about a policy, and is the survey or evaluation sound?",
+  "lead": "Quasi-experimental evaluation, administrative data, online surveys and policy training.",
+  "rows": [
+   {
+    "field": "General-population surveys; question writing",
+    "mine": "Online-panel surveys, including a COVID-19 study with 569 completers."
+   },
+   {
+    "field": "Administrative data; large datasets",
+    "mine": "More than 100,000 student records with reports and dashboards."
+   },
+   {
+    "field": "Impact evaluations; matching; regression discontinuity",
+    "mine": "Applied in institutional research, and taught in a graduate evaluation course."
+   },
+   {
+    "field": "Policy recommendations; policy papers",
+    "mine": "Policy memos, a Congressional-testimony project and a policy poster in graduate work."
+   },
+   {
+    "field": "Data integrity, privacy and confidentiality",
+    "mine": "The gender identity and pronoun data task force."
+   }
+  ],
+  "limits": "I have not worked in government or as a policy analyst, and I have not run probability-panel surveys."
+ },
+ {
+  "id": "acad",
+  "title": "Academic research and faculty roles",
+  "asks": "Is there an independent research program, a publication record and evidence of teaching?",
+  "lead": "The six-study program, first-author papers, teaching with an award, and open science.",
+  "rows": [
+   {
+    "field": "Independent research program",
+    "mine": "Trust in medical AI, the generative AI collaboration experiments, and current NIH work on AI-generated health information."
+   },
+   {
+    "field": "First and co-first authorship",
+    "mine": "First author of the eight-experiment mega-analysis and of the published crossover-trial analysis. Co-first author of the generative AI paper (under review)."
+   },
+   {
+    "field": "Teaching experience; instructor of record",
+    "mine": "Psychology of Technology at Georgetown, plus recitation, lead teaching fellow and guest lecture roles."
+   },
+   {
+    "field": "Mentoring",
+    "mine": "An honors thesis, a conference graduate mentorship and a former student's accepted conference project."
+   },
+   {
+    "field": "Grants and fellowships",
+    "mine": "Three small and internal awards."
+   }
+  ],
+  "limits": "I have no independent extramural funding, no principal investigator role, and have taught as instructor of record in one term at one university."
+ },
+ {
+  "id": "tsi",
+  "title": "Trust, safety and integrity research",
+  "asks": "How do we measure and reduce harm on a platform or in an AI system?",
+  "lead": "Behavioral measurement, data quality, over-reliance research and research operations.",
+  "rows": [
+   {
+    "field": "Build measurement strategies; assess impact of interventions",
+    "mine": "An eight-week field study (1,962 observations) and a 15-day study of actual behavior."
+   },
+   {
+    "field": "Over-trust; susceptibility to automated instructions",
+    "mine": "The obedience thesis and the dissertation on trust in medical AI."
+   },
+   {
+    "field": "Human data campaigns; data quality",
+    "mine": "Recruited more than 3,000 participants with attention-check and exclusion screening."
+   },
+   {
+    "field": "Content coding; labeling",
+    "mine": "Video and media coding and transcription in earlier lab roles."
+   }
+  ],
+  "limits": "I have no moderation, enforcement, red-teaming, classifier or large-scale SQL experience."
+ },
+ {
+  "id": "dsa",
+  "title": "Data science and decision science",
+  "asks": "How do we turn data into decisions?",
+  "lead": "Statistical modeling in R, quasi-experimental inference, data quality, dashboards and clear communication.",
+  "rows": [
+   {
+    "field": "Statistical analysis; multilevel and longitudinal models",
+    "mine": "R and Mplus models across the dissertation and mega-analysis."
+   },
+   {
+    "field": "Data wrangling and quality control",
+    "mine": "More than 100,000 student records, and a mega-analysis where I removed 173 placeholder rows."
+   },
+   {
+    "field": "Dashboards; decision-ready deliverables",
+    "mine": "Tableau dashboards for administrators, and Quarto reports."
+   },
+   {
+    "field": "Frame questions and outcomes for stakeholders",
+    "mine": "The dissertation and graduate project work, framed from question to recommendation."
+   }
+  ],
+  "limits": "SQL is early-stage and Python is developing, so I do not apply as a SQL-first analyst. I have no pipeline, warehouse, model-deployment or product-telemetry experience."
+ },
+ {
+  "id": "game",
+  "title": "Games and entertainment research",
+  "asks": "What do players and audiences want, and how do they respond?",
+  "lead": "Player motivation, fan research and technology-use behavior.",
+  "rows": [
+   {
+    "field": "Player psychology; motivations",
+    "mine": "Survey development and ideas for a published gaming-motivation scale."
+   },
+   {
+    "field": "Audience research; fandom",
+    "mine": "A study of 829 fans, where I did the theory, cleaning, analysis and writing."
+   },
+   {
+    "field": "Usability studies; player feedback",
+    "mine": "A VR questionnaire and a published analysis of a virtual-reality buffet."
+   }
+  ],
+  "limits": "I have not led playtests, worked with game telemetry or shipped a title."
+ }
+]

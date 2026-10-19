@@ -2,7 +2,7 @@
 interface Skill {
   group: string;
   name: string;
-  level: 'direct' | 'project' | 'coursework' | 'developing';
+  level: 'have' | 'developing';
   proof: string;
 }
 
@@ -13,9 +13,7 @@ interface Props {
 const { skills } = Astro.props;
 
 const levels = [
-  { id: 'direct', label: 'Direct', note: 'I did this work myself.' },
-  { id: 'project', label: 'Project-supported', note: 'The method appears in a published project I contributed to.' },
-  { id: 'coursework', label: 'Applied coursework', note: 'I used it in graduate course projects.' },
+  { id: 'have', label: 'Have', note: 'I have done this work, on my own or as part of a published project.' },
   { id: 'developing', label: 'Developing', note: 'Real practice, and I am still building depth.' },
 ] as const;
 
@@ -53,14 +51,7 @@ for (const s of skills) {
         <div>
           <dt>
             <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
-              {l.id === 'direct' && <circle cx="8" cy="8" r="6" class="fill" />}
-              {l.id === 'project' && (
-                <>
-                  <circle cx="8" cy="8" r="6" class="line" />
-                  <path d="M8 2a6 6 0 0 0 0 12z" class="fill" />
-                </>
-              )}
-              {l.id === 'coursework' && <rect x="3" y="3" width="10" height="10" class="line" transform="rotate(45 8 8)" />}
+              {l.id === 'have' && <circle cx="8" cy="8" r="6" class="fill" />}
               {l.id === 'developing' && <circle cx="8" cy="8" r="6" class="line" />}
             </svg>
             {l.label}
@@ -83,14 +74,7 @@ for (const s of skills) {
               <h3>{s.name}</h3>
               <p class="level">
                 <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
-                  {s.level === 'direct' && <circle cx="8" cy="8" r="6" class="fill" />}
-                  {s.level === 'project' && (
-                    <>
-                      <circle cx="8" cy="8" r="6" class="line" />
-                      <path d="M8 2a6 6 0 0 0 0 12z" class="fill" />
-                    </>
-                  )}
-                  {s.level === 'coursework' && <rect x="3" y="3" width="10" height="10" class="line" transform="rotate(45 8 8)" />}
+                  {s.level === 'have' && <circle cx="8" cy="8" r="6" class="fill" />}
                   {s.level === 'developing' && <circle cx="8" cy="8" r="6" class="line" />}
                 </svg>
                 {labelOf[s.level]}

@@ -1,0 +1,85 @@
+---
+import Base from '../layouts/Base.astro';
+import Contents from '../components/Contents.astro';
+import { href } from '../utils/url';
+import fams from '../data/translation.json';
+
+const contents = [
+  {
+    title: 'Fields',
+    href: '#fields',
+    items: fams.map((f) => ({ label: f.title, href: `#${f.id}`, kind: 'page' as const })),
+  },
+];
+---
+
+<Base
+  title="Translation guide"
+  description="How my research work reads in the language of fourteen fields, with the evidence and the limits for each."
+>
+  <div class="wrap">
+    <header class="page-head">
+      <h1>Translation guide</h1>
+      <p class="lede">
+        Academic work has academic names. Employers use other words for the same duties. This guide pairs the phrases each
+        field uses with what I did, and says plainly where my experience stops. The evidence behind each skill is on the
+        <a href={href('/skills/')}>skills page</a>.
+      </p>
+    </header>
+
+    <div class="body">
+      <Contents groups={contents} />
+
+      <div id="fields">
+        {
+          fams.map((f) => (
+            <section class="fam" id={f.id}>
+              <h2>{f.title}</h2>
+              <p class="asks">{f.asks}</p>
+              <p class="lead"><strong>What I lead with.</strong> {f.lead}</p>
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col">The field says</th>
+                    <th scope="col">What I did</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {f.rows.map((r) => (
+                    <tr>
+                      <th scope="row">{r.field}</th>
+                      <td>{r.mine}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <p class="limits"><strong>Where it stops.</strong> {f.limits}</p>
+            </section>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .body { margin-top: clamp(32px, 5vw, 56px); }
+  .fam { margin-top: 3rem; scroll-margin-top: 1rem; }
+  .fam h2 { border-top: 4px solid var(--coral); padding-top: 0.7rem; }
+  .fam:nth-of-type(4n + 2) h2 { border-color: var(--steel); }
+  .fam:nth-of-type(4n + 3) h2 { border-color: var(--peach); }
+  .fam:nth-of-type(4n) h2 { border-color: var(--deep); }
+  .asks { font-style: italic; color: var(--muted); margin: 0.3rem 0 0.8rem; }
+  .lead, .limits { margin: 0.6rem 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.97rem; line-height: 1.5; }
+  thead th { background: var(--thead); text-align: left; font-family: var(--display); font-size: 0.9rem; padding: 0.5rem 0.7rem; }
+  tbody th { text-align: left; font-weight: 600; font-family: var(--display); width: 36%; }
+  th, td { padding: 0.6rem 0.7rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  tbody tr:hover { background: var(--wash); }
+  @media (max-width: 640px) {
+    thead { display: none; }
+    table, tbody, tr, th, td { display: block; width: 100%; }
+    tbody th { padding-bottom: 0; border: 0; width: 100%; }
+    td { padding-top: 0.2rem; }
+  }
+</style>

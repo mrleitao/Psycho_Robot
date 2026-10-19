@@ -1,19 +1,20 @@
 ---
 import Base from '../layouts/Base.astro';
 import EvidenceMatrix from '../components/EvidenceMatrix.astro';
+import { href } from '../utils/url';
 import skills from '../data/skills.json';
 ---
 
 <Base
   title="Skills"
-  description="My research and data skills, each marked with how I know I have them: direct work, published projects, coursework or practice still in progress."
+  description="My research, data, teaching and leadership skills, each with the evidence behind it and a plain label: have, or developing."
 >
   <div class="wrap">
     <header class="page-head">
       <h1>Skills, with the evidence</h1>
       <p class="lede">
-        Every skill carries a level, so you can see what I did myself and what I am still building. Filter by level to
-        see just one kind.
+        Each skill is either something I have or something I am still developing, with the evidence beside it. The
+        <a href={href('/translation/')}>translation guide</a> shows how this work reads in the language of different fields.
       </p>
     </header>
 
