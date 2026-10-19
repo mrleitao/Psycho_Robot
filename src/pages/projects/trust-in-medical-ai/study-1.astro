@@ -19,6 +19,7 @@ import full from '../../../data/trust-in-medical-ai/study1-full.json';
 import pts from '../../../data/trust-in-medical-ai/study1-points.json';
 import hva from '../../../data/trust-in-medical-ai/study1-human-vs-ai.json';
 import { href } from '../../../utils/url';
+import Contents from '../../../components/Contents.astro';
 import DotRows from '../../../components/DotRows.astro';
 import CorrGrid from '../../../components/CorrGrid.astro';
 import BayesPlot from '../../../components/BayesPlot.astro';
@@ -228,6 +229,24 @@ const wbRows = full.withinBetween.flatMap((g) =>
   })),
 );
 const slopes = full.slopes.lines;
+const F = (label: string, href: string) => ({ label, href, kind: 'figure' as const });
+const Tb = (label: string, href: string) => ({ label, href, kind: 'table' as const });
+const contents = [
+  { title: 'Who took part', href: '#sample', items: [Tb('1. The people in the released file', '#table-sample')] },
+  { title: 'Fifteen medical decisions', href: '#decisions', items: [Tb('2. Quantitative reasoning needed, by decision', '#table-decisions'), F('1. Every decision, every person', '#fig-decisions'), Tb('3. The decision groups', '#table-composites'), F('2. By kind of health problem', '#fig-domain'), F('3. By stage of care', '#fig-stage')] },
+  { title: 'Do the decision ratings hang together?', href: '#structure', items: [Tb('4. Reliability of each group of decisions', '#table-reliability'), F('4. How many factors?', '#structure'), Tb('5. A three-factor solution', '#structure'), F('4b. The factor diagram', '#structure')] },
+  { title: 'The tests', href: '#tests', items: [Tb('6. Paired t tests', '#table-tests'), Tb('7. Follow-up comparisons', '#table-extra'), F('5. Person as effect size', '#fig-direction')] },
+  { title: 'Eleven recommenders', href: '#makers', items: [Tb('8. Ratings of each recommender', '#table-makers'), F('6. Trust in each recommender', '#fig-trust'), F('7. Where each recommender sits', '#fig-map')] },
+  { title: 'What goes with trust', href: '#trust', items: [Tb('9. Trust predicted by two ratings', '#table-regression'), Tb('10. How well each model fits', '#table-fit'), Tb('11. Correlations among the ratings', '#table-correlations'), Tb('12. The models side by side', '#table-models'), Tb('13. Does adding a term improve the fit?', '#table-lrt'), F('8. What lifts trust, AI and humans', '#fig-slopes'), Tb('14. Between and within people', '#table-wb')] },
+  { title: 'More', href: '#implications', items: [{ label: 'What this means', href: '#implications', kind: 'page' as const }, { label: 'Dig deeper: figure map and Bayes factors', href: '#dig-deeper', kind: 'page' as const }, { label: 'Files and methods', href: '#files', kind: 'page' as const }] },
+];
+const contentsAi = [
+  { title: 'The gap', href: '#hva-gap', items: [Tb('15. Humans versus AI, paired by person', '#table-hva'), F('9. Every person, humans against AI', '#fig-hva-clouds'), F('10. How many people show the gap?', '#fig-hva-dir'), Tb('16. Other ways to draw the line', '#table-hva-alt')] },
+  { title: 'Recommender by recommender', href: '#hva-each', items: [F('11. Each recommender on all three ratings', '#fig-hva-profile')] },
+  { title: 'Do people who trust humans also trust AI?', href: '#hva-link', items: [F('12. Trust in humans and in AI', '#fig-hva-link'), Tb('17. How closely the two go together', '#table-hva-link'), Tb('18. Consistency within each group', '#table-hva-cons')] },
+  { title: 'Who shows the gap?', href: '#hva-who', items: [F('13. The gap, group by group', '#fig-hva-who'), Tb('19. Does the gap differ between groups?', '#table-hva-who')] },
+  { title: 'What goes with trust, for humans and for AI', href: '#hva-model', items: [Tb('20. Trust predicted from the other ratings', '#table-hva-coef'), F('14. Predicted trust', '#fig-hva-slopes')] },
+];
 // ---- companion figures
 const betaRefs = [{ v: 0.1, label: 'small' }, { v: 0.2, label: 'medium' }, { v: 0.3, label: 'large' }];
 const sampleFig = full.sample.variables.flatMap((v: any) => [{ head: v.variable }, ...v.rows.map((r: any) => ({ label: `${r.group} (n = ${r.n})`, v: r.pct, tip: `${r.n} of ${full.sample.n} people (${r.pct}%)` }))]);
@@ -413,11 +432,7 @@ const figureMap1 = [
     </div>
 
     <div role="tabpanel" id="panel-full" aria-labelledby="tab-full" class="panel">
-    <nav class="toc" aria-label="On this page">
-      <ul>
-        {toc.map(([id, label]) => <li><a href={`#${id}`}>{label}</a></li>)}
-      </ul>
-    </nav>
+    <Contents groups={contents} />
 
     <div class="prose">
       <p class="how small muted">
@@ -437,6 +452,7 @@ const figureMap1 = [
       </p>
       <StatTable
         id="table-sample"
+        look="The share in each group. Ages are spread fairly evenly across the four bands, and women are the larger group."
         title="Table 1. The people in the released file"
         columns={[
           { key: 'label', label: 'Group' },
@@ -461,6 +477,7 @@ const figureMap1 = [
       </p>
       <StatTable
         id="table-decisions"
+        look="Every decision sits above the middle of the 0 to 100 scale except general wellbeing advice, which sits just below it."
         title="Table 2. Quantitative reasoning needed, by decision (0 to 100)"
         columns={descCols}
         rows={decisionRows}
@@ -480,6 +497,7 @@ const figureMap1 = [
 
       <StatTable
         id="table-composites"
+        look="The same ratings averaged into the groups used later. Compare the means across rows; preventative decisions need the least quantitative reasoning."
         title="Table 3. The decision groups used in the tests (0 to 100)"
         columns={descCols}
         rows={compositeRows}
@@ -524,6 +542,7 @@ const figureMap1 = [
       </p>
       <StatTable
         id="table-reliability"
+        look="Alpha near or above .80 means the items in a group can safely be averaged. The bodily injury group is the weakest, so lean on it less."
         title="Table 4. Reliability of each group of decisions"
         columns={[
           { key: 'label', label: 'Group' },
@@ -593,6 +612,7 @@ const figureMap1 = [
       </p>
       <StatTable
         id="table-tests"
+        look="The difference column and p. H1 shows no gap, H2 and H3 show a clear gap, and H6, H7 and E show the doctor rated well above the AI."
         title="Table 6. Paired t tests"
         columns={testCols}
         rows={testRows}
@@ -609,6 +629,7 @@ const figureMap1 = [
 
       <StatTable
         id="table-extra"
+        look="Which comparisons show a clear gap and which do not: look at whether the interval for the difference stays away from zero."
         title="Table 7. Follow-up comparisons from the notebook"
         columns={testCols}
         rows={extraRows}
@@ -626,6 +647,7 @@ const figureMap1 = [
       </p>
       <StatTable
         id="table-makers"
+        look="Read down the trust column. Doctors and nurses sit near the top, the AI recommenders sit below the human experts, and a doctor using AI sits in between."
         title="Table 8. Ratings of each recommender, mean (SD)"
         columns={[
           { key: 'label', label: 'Recommender' },
@@ -673,6 +695,7 @@ const figureMap1 = [
       </p>
       <StatTable
         id="table-regression"
+        look="The β column. Both intuition and quantitative reasoning go with trust for all three recommenders; for the doctor quantitative reasoning is stronger, and for the AI intuition is."
         title="Table 9. Trust predicted by intuition and quantitative reasoning, for three recommenders"
         columns={[
           { key: 'label', label: 'Recommender and predictor' },
@@ -689,6 +712,7 @@ const figureMap1 = [
       <DotRows rows={regFig} domain={[0, 0.8]} tickStep={0.1} zero axisLabel="Standardized effect on trust (β)" refs={betaRefs} ariaLabel="Standardized effects of intuition and quantitative reasoning on trust, for three recommenders" />
       <StatTable
         id="table-fit"
+        look="R² is the share of the variation in trust the two ratings explain. About half, so the ratings matter but are not the whole story."
         title="Table 10. How well each model fits"
         columns={[
           { key: 'label', label: 'Recommender' },
@@ -705,6 +729,7 @@ const figureMap1 = [
       <DotRows rows={fitFig.map((r: any) => ({ ...r, v: r.v * 100 }))} domain={[0, 100]} tickStep={20} bars unit="%" digits={0} axisLabel="Variation in trust explained (R², %)" ariaLabel="Variation in trust explained by the model, for three recommenders" />
       <StatTable
         id="table-correlations"
+        look="Every correlation is positive: people who rate a recommender high on one thing tend to rate it high on the others."
         title="Table 11. Correlations among the three ratings"
         columns={[
           { key: 'label', label: 'Recommender and pair' },
@@ -727,6 +752,7 @@ const figureMap1 = [
       </p>
       <StatTable
         id="table-models"
+        look="Marginal R² jumps from .05 to about .52 once the two ratings enter. A lower AIC means a better balance of fit and simplicity."
         title="Table 12. The models side by side"
         columns={[
           { key: 'label', label: 'Model' },
@@ -771,6 +797,7 @@ const figureMap1 = [
       </details>
       <StatTable
         id="table-lrt"
+        look="Every p is below .001, so each added term improved the model."
         title="Table 13. Does adding a term improve the fit?"
         columns={[
           { key: 'label', label: 'Comparison' },
@@ -795,6 +822,7 @@ const figureMap1 = [
 
       <StatTable
         id="table-wb"
+        look="Compare the two columns. Between-people values reflect who the person is; within-people values reflect which recommender is being rated."
         title="Table 14. Correlations between people and within people"
         columns={[
           { key: 'label', label: 'Recommenders and pair' },
@@ -903,6 +931,8 @@ const figureMap1 = [
         </p>
       </div>
 
+      <Contents groups={contentsAi} />
+
       <section class="section" id="hva-gap" aria-labelledby="hva-gap-title">
         <h2 id="hva-gap-title">The gap</h2>
         <p class="intro">
@@ -912,6 +942,7 @@ const figureMap1 = [
         </p>
         <StatTable
           id="table-hva"
+        look="The difference and d columns. Humans were rated higher than AI on trust, intuition and quantitative reasoning."
           title="Table 15. Humans versus AI, paired by person"
           columns={hvCols}
           rows={hvRows}
@@ -944,6 +975,7 @@ const figureMap1 = [
           <summary>If a doctor using AI is counted differently</summary>
           <StatTable
             id="table-hva-alt"
+        look="Humans stay above AI however the doctor using AI is counted. Humans against a doctor using AI differ little on trust and not at all on quantitative reasoning."
             title="Table 16. Other ways to draw the line"
             columns={hvAltCols}
             rows={hvAltRows}
@@ -982,6 +1014,7 @@ const figureMap1 = [
         <LinkScatter points={hva.trustLink.points} slope={hva.trustLink.slope} intercept={hva.trustLink.intercept} r={hva.trustLink.r} />
         <StatTable
           id="table-hva-link"
+        look="The correlation. A positive value means people who trust humans also tend to trust AI."
           title="Table 17. How closely the two go together"
           columns={[
             { key: 'label', label: 'Rating' },
@@ -994,6 +1027,7 @@ const figureMap1 = [
         />
         <StatTable
           id="table-hva-cons"
+        look="Alpha shows how consistently each person rated the recommenders inside a group. Higher means the group average is a fair summary."
           title="Table 18. How consistent people are within each group"
           columns={[
             { key: 'label', label: 'Rating and group' },
@@ -1024,6 +1058,7 @@ const figureMap1 = [
         <p class="small muted note">{hva.subgroupNote}</p>
         <StatTable
           id="table-hva-who"
+        look="For trust, age, race and experience with AI show p values below .05; gender, education and political views do not. Treat single small p values as leads, since 18 tests were run."
           title="Table 19. Does the gap differ between groups?"
           columns={[
             { key: 'label', label: 'Compared by' },
@@ -1046,6 +1081,7 @@ const figureMap1 = [
         </p>
         <StatTable
           id="table-hva-coef"
+        look="The coefficients for humans and for AI. Compare which rating carries more weight in each group."
           title="Table 20. Trust predicted from the other two ratings, humans and AI"
           columns={[
             { key: 'label', label: 'Predictor' },

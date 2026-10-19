@@ -15,12 +15,14 @@ interface Props {
   rows: Record<string, string | number | null>[];
   note?: string;
   stripe?: boolean;
+  look?: string; // one line on what to look for
 }
-const { title, id, columns, rows, note } = Astro.props;
+const { title, id, columns, rows, note, look } = Astro.props;
 ---
 
 <figure class="stat" id={id}>
   <figcaption>{title}</figcaption>
+  {look && <p class="look"><strong>What to look for.</strong> {look}</p>}
   <div class="table-wrap" tabindex="0" role="region" aria-label={`${title}. Scrolls sideways on narrow screens.`}>
     <table>
       <thead>
@@ -56,6 +58,8 @@ const { title, id, columns, rows, note } = Astro.props;
 
 <style>
   .stat { margin: 2rem 0 0; }
+  .look { margin: -0.2rem 0 0.7rem; max-width: 66ch; font-family: var(--display); font-size: 0.95rem; color: var(--muted); line-height: 1.45; }
+  .look strong { color: var(--ink); font-weight: 650; }
   figcaption { font-family: var(--display); font-weight: 650; font-size: 1.02rem; margin-bottom: 0.6rem; }
   .table-wrap { overflow-x: auto; border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); }
   table { width: 100%; border-collapse: collapse; font-family: var(--display); font-size: 0.92rem; font-variant-numeric: tabular-nums; }
