@@ -1,7 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
 import EvidenceMatrix from '../components/EvidenceMatrix.astro';
-import { href } from '../utils/url';
 import skills from '../data/skills.json';
 ---
 
@@ -13,8 +12,7 @@ import skills from '../data/skills.json';
     <header class="page-head">
       <h1>Skills, with the evidence</h1>
       <p class="lede">
-        Each skill is either something I have or something I am still developing, with the evidence beside it. The
-        <a href={href('/translation/')}>translation guide</a> shows how this work reads in the language of different fields.
+        Each skill is something I have or something I am still developing, with the evidence beside it. Hover over a skill name to see the words employers use for the same work.
       </p>
     </header>
 

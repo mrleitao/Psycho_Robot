@@ -3,270 +3,488 @@
   "group": "Study design",
   "name": "Experimental design",
   "level": "have",
-  "proof": "Six preregistered studies in my dissertation, with more than 3,000 participants recruited. A preregistered experiment with 305 participants for my master's thesis."
+  "also": [
+   "Randomized controlled experiments",
+   "Experiment design and measurement",
+   "Causal tests"
+  ],
+  "proof": "I designed and ran six studies for my dissertation, with plans registered in advance, and recruited more than 3,000 people. My master's thesis was an experiment with 305 participants, also registered in advance."
  },
  {
   "group": "Study design",
   "name": "Longitudinal and repeated-measures design",
   "level": "have",
-  "proof": "A 15-day behavior-change study (560 recruited, 455 retained) and an eight-week field study. I also collected and managed seven-day student diary studies."
+  "also": [
+   "Intensive longitudinal research",
+   "Diary and experience-sampling studies",
+   "Real-world behavioral measurement"
+  ],
+  "proof": "I ran a 15-day behavior-change study (560 recruited, 455 retained) and managed seven-day student diary studies, with about four surveys a day."
  },
  {
   "group": "Study design",
   "name": "Causal and quasi-experimental methods",
   "level": "have",
-  "proof": "Propensity-score matching, regression discontinuity and difference-in-differences on institutional records for more than 100,000 students."
+  "also": [
+   "Impact evaluation",
+   "Difference-in-differences",
+   "Propensity-score matching",
+   "Regression discontinuity"
+  ],
+  "proof": "I used matching, regression discontinuity and difference-in-differences on records for more than 100,000 students."
  },
  {
   "group": "Study design",
-  "name": "Crossover trial secondary analysis",
+  "name": "Crossover trial analysis",
   "level": "have",
-  "proof": "First-author analysis, published in 2026, of a randomized, double-blind crossover trial of a ghrelin-receptor blocker in people with alcohol use disorder (29 completers). The trial design belongs to the NIH team."
+  "also": [
+   "Clinical outcomes analysis",
+   "Secondary analysis of a randomized trial"
+  ],
+  "proof": "I am first author on a 2026 analysis of a randomized, double-blind crossover trial of a ghrelin-receptor blocker in 29 people with alcohol use disorder. The NIH team designed the trial. I ran the analysis."
  },
  {
   "group": "Study design",
-  "name": "Mixed-methods and program evaluation",
+  "name": "Mixed-methods program evaluation",
   "level": "have",
-  "proof": "Evaluated a university summer-skills program with focus groups, surveys and student outcome data, and presented the findings to department stakeholders."
+  "also": [
+   "Program evaluation",
+   "Evaluation design",
+   "Mixed-methods research"
+  ],
+  "proof": "I evaluated a university summer-skills program with focus groups, surveys and student outcome data, then presented what worked to department leaders."
  },
  {
   "group": "Study design",
   "name": "Research synthesis",
   "level": "have",
-  "proof": "Literature syntheses on smartphone use and on COVID-19 social contact, and a pooled analysis of eight experiments."
+  "also": [
+   "Evidence synthesis",
+   "Literature review",
+   "Research agenda development"
+  ],
+  "proof": "I wrote literature reviews on smartphone use and on COVID-19 social contact, and pooled the raw data from eight experiments."
  },
  {
   "group": "Study design",
   "name": "Open and reproducible research",
   "level": "have",
-  "proof": "Preregistered my thesis, dissertation and generative AI studies, disclosed deviations from plans, and shared code and materials. Co-founded a campus open-science group."
+  "also": [
+   "Transparent methods",
+   "Reproducible workflows",
+   "Open science"
+  ],
+  "proof": "I write my analysis plan down and register it publicly before I look at results. I share code and materials, and I co-founded a campus open-science group."
  },
  {
   "group": "Measurement and participants",
   "name": "Survey and questionnaire development",
   "level": "have",
-  "proof": "Programmed surveys in Qualtrics for every study I have run, and built institutional surveys. Developed parts of a published gaming-motivation scale."
+  "also": [
+   "Survey design",
+   "Questionnaire programming",
+   "Qualtrics"
+  ],
+  "proof": "I built the surveys for every study I have run, programmed them in Qualtrics, and wrote items for a published gaming-motivation scale."
  },
  {
   "group": "Measurement and participants",
   "name": "Scale development and psychometrics",
   "level": "have",
-  "proof": "Built the trust constructs in my dissertation and a smartphone self-inclusion scale (in preparation). Contributed to a gaming-motivation scale and a VR symptom questionnaire."
+  "also": [
+   "Measurement and validation",
+   "Instrument development",
+   "Factor analysis"
+  ],
+  "proof": "I built the trust measures for my dissertation and a smartphone self-inclusion scale (in preparation, first author). I also contributed to a published gaming scale and a VR symptom questionnaire."
  },
  {
   "group": "Measurement and participants",
   "name": "Participant recruitment",
   "level": "have",
-  "proof": "In-person, university research pools, MTurk, CloudResearch and Prolific. I also support recruitment administration for an NIH clinical trial."
+  "also": [
+   "Participant pipeline management",
+   "Panel research",
+   "Clinical recruitment support"
+  ],
+  "proof": "I recruit in person, through university pools, and on MTurk, CloudResearch and Prolific. I also handle recruitment administration for an NIH clinical trial."
  },
  {
   "group": "Measurement and participants",
   "name": "Online-panel data quality",
   "level": "have",
-  "proof": "Attention checks, exclusions and duplicate screening in the dissertation and in a COVID-19 survey (674 consented, 569 completed)."
+  "also": [
+   "Data quality screening",
+   "Fitness for use",
+   "Attention checks"
+  ],
+  "proof": "I screen out inattentive and duplicate respondents. In a COVID-19 survey, 674 people consented and 569 passed."
  },
  {
   "group": "Measurement and participants",
-  "name": "Behavioral intervention and adherence measurement",
+  "name": "Behavioral intervention measurement",
   "level": "have",
-  "proof": "Designed dissertation Study 6, which tracked trust, adherence and behavior over 15 days and reported its null result as a null."
+  "also": [
+   "Digital-health intervention",
+   "Adherence measurement",
+   "Behavior-change outcomes"
+  ],
+  "proof": "I designed dissertation Study 6, which tracked trust, adherence and behavior for 15 days. It found no reliable effect, and I reported it that way."
  },
  {
   "group": "Measurement and participants",
   "name": "Content and media coding",
   "level": "have",
-  "proof": "Coded video for prejudice in media, transcribed focus groups, and analyzed emotional speech in earlier lab roles."
+  "also": [
+   "Qualitative coding",
+   "Content analysis",
+   "Transcription"
+  ],
+  "proof": "I coded video for prejudice in media, transcribed focus groups, and analyzed emotional speech in earlier lab roles."
  },
  {
   "group": "Analysis",
   "name": "Regression and multilevel modeling",
   "level": "have",
-  "proof": "Linear, logistic, ordinal, negative-binomial and mixed-effects models, including multilevel models on 1,778 participants pooled from eight experiments."
+  "also": [
+   "Driver analysis",
+   "Predictor modeling",
+   "Nested-data analysis"
+  ],
+  "proof": "I fit linear, logistic, ordinal, negative-binomial and mixed-effects models. I pooled eight experiments (1,778 people) into one multilevel model."
  },
  {
   "group": "Analysis",
   "name": "Mediation and moderation",
   "level": "have",
-  "proof": "A multilevel mediated-moderation model in my dissertation, and causal mediation analysis in the generative AI experiments."
+  "also": [
+   "Mechanism analysis",
+   "Subgroup and conditional effects",
+   "Pathway testing"
+  ],
+  "proof": "I tested who is affected and why: a multilevel mediated-moderation model in my dissertation, and causal mediation in the generative AI experiments."
  },
  {
   "group": "Analysis",
   "name": "Structural equation modeling",
   "level": "have",
-  "proof": "Latent-variable path models for an award-winning data competition entry, a graduate course in which I replicated a published model in R, and Mplus run through R for the dissertation."
+  "also": [
+   "Latent-variable modeling",
+   "Path analysis",
+   "Structural validity"
+  ],
+  "proof": "I built latent-variable path models for an award-winning data competition entry, replicated a published model in R for a graduate course, and ran Mplus models for my dissertation."
  },
  {
   "group": "Analysis",
   "name": "Power and sensitivity analysis",
   "level": "have",
-  "proof": "Power planning for my thesis and dissertation, sensitivity analyses in two papers, and a power-analysis workshop I taught in 2023."
+  "also": [
+   "Sample-size planning",
+   "Minimum detectable effect",
+   "Power analysis"
+  ],
+  "proof": "I plan sample sizes before each study and check what each one can detect. I taught a power-analysis workshop in 2023."
  },
  {
   "group": "Analysis",
   "name": "Robustness checks",
   "level": "have",
-  "proof": "Specification-curve analysis (13 decision dimensions, 69 alternatives) in a generative AI study, plus intent-to-treat analysis and multiple-comparison corrections."
+  "also": [
+   "Sensitivity checks",
+   "Specification-curve analysis",
+   "Trustworthy results"
+  ],
+  "proof": "In the generative AI study I tested the main result 69 ways, so the conclusion does not rest on one analysis choice."
  },
  {
   "group": "Analysis",
   "name": "Cross-study data integration",
   "level": "have",
-  "proof": "Pooled eight experiments for a published mega-analysis, and found and removed 173 placeholder rows along the way."
+  "also": [
+   "Data harmonization",
+   "Dataset standardization",
+   "Pooled analysis"
+  ],
+  "proof": "I pooled eight experiments for a published analysis. Along the way I found and removed 173 placeholder rows."
  },
  {
   "group": "Analysis",
   "name": "Data cleaning and quality control",
   "level": "have",
-  "proof": "Prepared analysis-ready data for parasocial research, the mega-analysis and more than 100,000 institutional student records."
+  "also": [
+   "Data wrangling",
+   "Data integrity",
+   "Analysis-ready data"
+  ],
+  "proof": "I prepared the data for the parasocial study, the pooled analysis, and more than 100,000 student records."
  },
  {
   "group": "Analysis",
   "name": "Data visualization and dashboards",
   "level": "have",
-  "proof": "Tableau dashboards that department chairs and administrators used each semester, and ggplot figures for the generative AI study."
+  "also": [
+   "Self-serve dashboards",
+   "Decision-support reporting",
+   "Tableau"
+  ],
+  "proof": "I built Tableau dashboards that department chairs and administrators used each semester, and the figures for the generative AI study."
  },
  {
   "group": "Analysis",
   "name": "Bayesian inference",
   "level": "developing",
-  "proof": "I use Bayes factors to quantify evidence for null results, including on the Studies 1 and 2 pages of this site. I have not built full Bayesian models."
+  "also": [
+   "Bayes factors",
+   "Evidence for null effects"
+  ],
+  "proof": "I use Bayes factors to show how strongly the data support a null result, including on the Studies 1 and 2 pages of this site. I have not built full Bayesian models."
  },
  {
   "group": "Analysis",
   "name": "Latent profile analysis",
   "level": "developing",
-  "proof": "Trained in a 2023 methods workshop. I have not yet completed an applied project with it."
+  "also": [
+   "Person-centered analysis",
+   "Segmentation"
+  ],
+  "proof": "I completed a 2023 methods workshop. My first applied project is still ahead."
  },
  {
   "group": "Analysis",
   "name": "Machine learning and prediction",
   "level": "developing",
-  "proof": "Cross-validation, classifiers and ROC curves in an end-to-end Python project for a graduate data science course, and an app-usage prediction poster. No production models."
+  "also": [
+   "Predictive modeling",
+   "Classifiers",
+   "Model evaluation"
+  ],
+  "proof": "I built and tested classifiers in an end-to-end Python project for a graduate course, and presented a poster predicting app use. I have not deployed a model."
  },
  {
   "group": "Code and tools",
   "name": "R, Stata and SPSS",
   "level": "have",
-  "proof": "R for modeling, figures and teaching. Stata across a graduate sequence in regression and program evaluation. SPSS, Jamovi and JASP when a project calls for them."
+  "also": [
+   "Statistical computing",
+   "Reproducible analytics",
+   "Research automation"
+  ],
+  "proof": "R is my main language for modeling, figures and teaching. I used Stata across a graduate sequence in regression and program evaluation."
  },
  {
   "group": "Code and tools",
   "name": "Cloud and API experiment engineering",
   "level": "have",
-  "proof": "Built a participant-facing generative AI task on the ChatGPT API running on AWS, with random assignment handled in Qualtrics. This is research engineering, not production engineering."
+  "also": [
+   "Prototype research tools",
+   "Model and API integration",
+   "Cloud-hosted data collection"
+  ],
+  "proof": "I built a participant-facing task on the ChatGPT API, hosted on AWS, with random assignment in Qualtrics. It is a research tool, not production software."
  },
  {
   "group": "Code and tools",
   "name": "Text analysis with dictionaries",
   "level": "have",
-  "proof": "LIWC psychological text analysis at a university lab in 2018 and 2019, and text-similarity metrics (cosine, Jaccard, Sørensen-Dice) in the generative AI study."
+  "also": [
+   "Psychological text analysis",
+   "LIWC",
+   "Text-similarity metrics"
+  ],
+  "proof": "I ran LIWC text analysis at a university lab in 2018 and 2019, and compared human and AI writing with similarity scores in the generative AI study."
  },
  {
   "group": "Code and tools",
   "name": "Modern text analysis",
   "level": "developing",
-  "proof": "A 2023 text-analytics workshop and coursework on bag of words, TF-IDF and introductory language processing. No applied project yet."
+  "also": [
+   "Natural language processing",
+   "Embeddings",
+   "Topic models"
+  ],
+  "proof": "I took a 2023 text-analytics workshop and a graduate course on TF-IDF and language processing. My first applied project is still ahead."
  },
  {
   "group": "Code and tools",
   "name": "Python",
   "level": "developing",
-  "proof": "Pandas, Jupyter, web scraping and scikit-learn in graduate coursework. I use R as my main language."
+  "also": [
+   "Applied research computing",
+   "pandas and scikit-learn"
+  ],
+  "proof": "I used pandas, Jupyter, web scraping and scikit-learn in graduate coursework. R is the language I use daily."
  },
  {
   "group": "Code and tools",
   "name": "SQL",
   "level": "developing",
-  "proof": "Self-directed practice. I have not yet used it in a project."
+  "also": [
+   "Data access",
+   "Querying data warehouses"
+  ],
+  "proof": "I am building SQL skills through self-directed practice and have not used it in a project yet."
  },
  {
   "group": "Code and tools",
   "name": "Geospatial analysis",
   "level": "developing",
-  "proof": "ArcGIS with open Los Angeles County data for a 2018 data competition entry."
+  "also": [
+   "ArcGIS",
+   "Open government data"
+  ],
+  "proof": "I mapped open Los Angeles County data in ArcGIS for a 2018 data competition entry."
  },
  {
   "group": "AI and human behavior",
   "name": "Human-AI trust and reliance research",
   "level": "have",
-  "proof": "My six-study dissertation compares trust in doctors and medical AI, using Weight-on-Advice as a behavioral measure of reliance."
+  "also": [
+   "Human-AI decision processes",
+   "Calibrated trust",
+   "Over-trust"
+  ],
+  "proof": "My six-study dissertation compares trust in doctors and medical AI. It measures reliance by how far people move their own answer toward the advice."
  },
  {
   "group": "AI and human behavior",
   "name": "Human-AI collaboration experiments",
   "level": "have",
-  "proof": "Co-first author on two preregistered experiments (N = 1,299) on whether people draft or edit with generative AI, with blind judging of the work."
+  "also": [
+   "Evaluating AI-assisted workflows",
+   "Human-AI collaboration",
+   "Worker experience"
+  ],
+  "proof": "I am co-first author on two experiments (N = 1,299) on drafting with generative AI versus editing its output. Judges who did not know the condition rated the work."
  },
  {
   "group": "AI and human behavior",
   "name": "Obedience to computer authority",
   "level": "have",
-  "proof": "Independent master's thesis (N = 305) on obedience to human and computer instructors. People followed both about equally, and I reported it as a null."
+  "also": [
+   "Socio-technical research",
+   "Compliance with automated instructions"
+  ],
+  "proof": "My master's thesis (N = 305) tested whether people obey computer instructors as readily as human ones. They did, about equally, and I reported that as a null."
  },
  {
   "group": "AI and human behavior",
   "name": "Health and risk communication research",
   "level": "have",
-  "proof": "Studies of how people read genetic-risk information, including a virtual-patient project (N = 200) where I handled data collection, cleaning and analysis."
+  "also": [
+   "Risk communication",
+   "Patient-centered research",
+   "Health beliefs"
+  ],
+  "proof": "I study how people read genetic-risk information. On a virtual-patient project (N = 200) I collected, cleaned and analyzed the data."
  },
  {
   "group": "Leading and operating",
   "name": "Research program management",
   "level": "have",
-  "proof": "Managed six to seven concurrent projects at Georgetown with a student team, and now support six NIH projects."
+  "also": [
+   "Portfolio management",
+   "Prioritizing concurrent workstreams",
+   "Study coordination"
+  ],
+  "proof": "I managed six to seven projects at once at Georgetown with a student team, and I now support six NIH projects."
  },
  {
   "group": "Leading and operating",
   "name": "Supervising and mentoring",
   "level": "have",
-  "proof": "Supervised research assistants since 2017, including teams of up to 15. Guided an honors thesis and served as a conference graduate mentor."
+  "also": [
+   "People management",
+   "Delegation",
+   "Mentoring and coaching"
+  ],
+  "proof": "I have supervised research assistants since 2017, on teams of up to 15. I guided an honors thesis and served as a conference graduate mentor."
  },
  {
   "group": "Leading and operating",
   "name": "Research governance",
   "level": "have",
-  "proof": "Prepared and managed IRB protocols at two universities and supported regulated clinical-study administration at NIH."
+  "also": [
+   "Compliance",
+   "Protocol development",
+   "IRB management"
+  ],
+  "proof": "I wrote and managed ethics-board protocols at two universities and support regulated clinical-study administration at NIH."
  },
  {
   "group": "Leading and operating",
   "name": "Workflow and process improvement",
   "level": "have",
-  "proof": "Redesigned the Georgetown research participant pool, followed by a reported 50% rise in research yield, and built reusable lab templates and materials."
+  "also": [
+   "Standardizing recurring work",
+   "Process improvement",
+   "Operational documentation"
+  ],
+  "proof": "I redesigned the Georgetown participant pool, and research yield reportedly rose 50% the next year. I also built reusable lab templates."
  },
  {
   "group": "Leading and operating",
   "name": "Grants and budgets",
   "level": "have",
-  "proof": "Won three named grants and fellowships, and built budgets and timelines for funded and independent research."
+  "also": [
+   "Proposal development",
+   "Budget development",
+   "Grantsmanship"
+  ],
+  "proof": "I won three named grants and fellowships, and I wrote the budgets and timelines for my funded and independent research."
  },
  {
   "group": "Leading and operating",
   "name": "Policy work",
   "level": "have",
-  "proof": "Served on a task force whose recommendation on storing and showing gender identity and pronouns was adopted as policy, and on the committee behind making the GRE optional at Georgetown. Wrote policy memos in graduate coursework."
+  "also": [
+   "Policy recommendations",
+   "Data governance",
+   "Stakeholder engagement"
+  ],
+  "proof": "I served on the task force whose recommendation on storing and showing gender identity and pronouns became policy. I also sat on the committee behind making the GRE optional at Georgetown."
  },
  {
   "group": "Teaching and communicating",
   "name": "Curriculum and course design",
   "level": "have",
-  "proof": "Designed and taught Psychology of Technology as instructor of record, which won Georgetown's 2023 Graduate Student Teaching Award."
+  "also": [
+   "Instructional design",
+   "Backward design",
+   "Active learning"
+  ],
+  "proof": "I designed and taught Psychology of Technology as instructor of record. It won Georgetown's 2023 Graduate Student Teaching Award."
  },
  {
   "group": "Teaching and communicating",
   "name": "Workshop design and facilitation",
   "level": "have",
-  "proof": "Power Analysis, R From Scratch and Open Science workshops, then Introduction to R and Quarto at NIH."
+  "also": [
+   "Technical enablement",
+   "Capability building",
+   "Training delivery"
+  ],
+  "proof": "I taught workshops on power analysis, R and open science, then Introduction to R and Quarto at NIH."
  },
  {
   "group": "Teaching and communicating",
   "name": "Scientific writing",
   "level": "have",
-  "proof": "All writing for my thesis and dissertation, and writing contributions to several papers."
+  "also": [
+   "Research writing",
+   "Authoring for publication"
+  ],
+  "proof": "I wrote all of my thesis and dissertation, and I contributed writing to several papers."
  },
  {
   "group": "Teaching and communicating",
   "name": "Talks and public communication",
   "level": "have",
-  "proof": "Chaired an SPSP 2024 session on AI and invited talks at the University of Virginia and a film festival."
+  "also": [
+   "Presenting to leadership",
+   "Research storytelling",
+   "Public science communication"
+  ],
+  "proof": "I chaired a 2024 conference session on AI, and gave invited talks at the University of Virginia and a film festival."
  }
 ]

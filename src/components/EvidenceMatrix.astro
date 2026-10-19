@@ -4,6 +4,7 @@ interface Skill {
   name: string;
   level: 'have' | 'developing';
   proof: string;
+  also?: string[];
 }
 
 interface Props {
@@ -62,6 +63,8 @@ for (const s of skills) {
     }
   </dl>
 
+  <p class="hint">Hover over or tap a skill name to see how employers describe it.</p>
+
   <p class="count" aria-live="polite" data-count>Showing all {skills.length} skills.</p>
 
   {
@@ -71,7 +74,19 @@ for (const s of skills) {
         <ul class="rows">
           {g.items.map((s) => (
             <li class="skill" data-level={s.level}>
-              <h3>{s.name}</h3>
+              <h3>
+                {s.also?.length ? (
+                  <span class="has-tip" tabindex="0" aria-describedby={`tip-${s.name.replace(/\W+/g, '-')}`}>
+                    {s.name}
+                    <span class="tip" role="tooltip" id={`tip-${s.name.replace(/\W+/g, '-')}`}>
+                      <span class="tip-h">In job postings</span>
+                      {s.also.join(', ')}
+                    </span>
+                  </span>
+                ) : (
+                  s.name
+                )}
+              </h3>
               <p class="level">
                 <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
                   {s.level === 'have' && <circle cx="8" cy="8" r="6" class="fill" />}
@@ -115,6 +130,13 @@ for (const s of skills) {
 </script>
 
 <style>
+  .hint { margin: 1.25rem 0 0; font-family: var(--display); font-size: 0.9rem; color: var(--muted); }
+  .has-tip { position: relative; display: inline-block; cursor: help; text-decoration: underline dotted var(--muted); text-underline-offset: 0.25em; text-decoration-thickness: 1.5px; }
+  .has-tip:focus-visible { outline: 3px solid var(--steel); outline-offset: 3px; border-radius: 2px; }
+  .tip { position: absolute; left: 0; top: calc(100% + 0.5rem); z-index: 5; width: max-content; max-width: min(19rem, 80vw); padding: 0.6rem 0.8rem; background: var(--ink); color: var(--paper); border-radius: 6px; font-family: var(--display); font-weight: 400; font-size: 0.88rem; line-height: 1.4; text-decoration: none; opacity: 0; visibility: hidden; transition: opacity 0.12s; pointer-events: none; }
+  .tip-h { display: block; font-weight: 600; margin-bottom: 0.15rem; }
+  .has-tip:hover .tip, .has-tip:focus .tip { opacity: 1; visibility: visible; }
+  @media (prefers-reduced-motion: reduce) { .tip { transition: none; } }
   .filters {
     display: flex;
     flex-wrap: wrap;
