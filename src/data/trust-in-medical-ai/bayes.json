@@ -1,0 +1,1921 @@
+{
+ "method": "Bayes factors with a Cauchy prior centred on no effect. t tests use the Rouder et al. (2009) default (scale 0.707 on Cohen's d). Coefficients use a normal likelihood from the estimate and its standard error. BF10 is evidence for a difference; BF01 is evidence for no difference.",
+ "scale": [
+  {
+   "min": 100,
+   "label": "Extreme"
+  },
+  {
+   "min": 30,
+   "label": "Very strong"
+  },
+  {
+   "min": 10,
+   "label": "Strong"
+  },
+  {
+   "min": 3,
+   "label": "Moderate"
+  },
+  {
+   "min": 1,
+   "label": "Anecdotal"
+  }
+ ],
+ "rows": [
+  {
+   "study": "Study 1",
+   "group": "Hypothesis tests",
+   "id": "H1",
+   "text": "Diagnostic decisions need more quantitative reasoning than prescriptive ones",
+   "source": "raw data",
+   "kind": "t",
+   "stat": {
+    "t": -0.41,
+    "df": 184,
+    "d": -0.03,
+    "nEff": 185
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 0.0892,
+   "bf01": 11.2,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 0.125,
+     "bf01": 8.02
+    },
+    {
+     "scale": 0.707,
+     "bf10": 0.0892,
+     "bf01": 11.2
+    },
+    {
+     "scale": 1.0,
+     "bf10": 0.0634,
+     "bf01": 15.8
+    }
+   ],
+   "verdict": "Strong evidence for no difference",
+   "supportsNull": true
+  },
+  {
+   "study": "Study 1",
+   "group": "Hypothesis tests",
+   "id": "H2",
+   "text": "Diagnostic decisions need more quantitative reasoning than preventative ones",
+   "source": "raw data",
+   "kind": "t",
+   "stat": {
+    "t": 5.58,
+    "df": 184,
+    "d": 0.41,
+    "nEff": 185
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 118000.0,
+   "bf01": 8.45e-06,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 135000.0,
+     "bf01": 7.43e-06
+    },
+    {
+     "scale": 0.707,
+     "bf10": 118000.0,
+     "bf01": 8.45e-06
+    },
+    {
+     "scale": 1.0,
+     "bf10": 95500.0,
+     "bf01": 1.05e-05
+    }
+   ],
+   "verdict": "Extreme evidence for a difference",
+   "supportsNull": false
+  },
+  {
+   "study": "Study 1",
+   "group": "Hypothesis tests",
+   "id": "H3",
+   "text": "Prescriptive decisions need more quantitative reasoning than preventative ones",
+   "source": "raw data",
+   "kind": "t",
+   "stat": {
+    "t": 5.66,
+    "df": 185,
+    "d": 0.42,
+    "nEff": 186
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 173000.0,
+   "bf01": 5.76e-06,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 197000.0,
+     "bf01": 5.08e-06
+    },
+    {
+     "scale": 0.707,
+     "bf10": 173000.0,
+     "bf01": 5.76e-06
+    },
+    {
+     "scale": 1.0,
+     "bf10": 140000.0,
+     "bf01": 7.12e-06
+    }
+   ],
+   "verdict": "Extreme evidence for a difference",
+   "supportsNull": false
+  },
+  {
+   "study": "Study 1",
+   "group": "Hypothesis tests",
+   "id": "H4",
+   "text": "Physical health decisions need more quantitative reasoning than mental health ones",
+   "source": "raw data",
+   "kind": "t",
+   "stat": {
+    "t": 2.59,
+    "df": 184,
+    "d": 0.19,
+    "nEff": 185
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 2.11,
+   "bf01": 0.475,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 2.78,
+     "bf01": 0.359
+    },
+    {
+     "scale": 0.707,
+     "bf10": 2.11,
+     "bf01": 0.475
+    },
+    {
+     "scale": 1.0,
+     "bf10": 1.55,
+     "bf01": 0.647
+    }
+   ],
+   "verdict": "Anecdotal evidence for a difference",
+   "supportsNull": false
+  },
+  {
+   "study": "Study 1",
+   "group": "Hypothesis tests",
+   "id": "H5",
+   "text": "Bodily injury decisions need more quantitative reasoning than acute sickness ones",
+   "source": "raw data",
+   "kind": "t",
+   "stat": {
+    "t": 1.89,
+    "df": 185,
+    "d": 0.14,
+    "nEff": 186
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 0.468,
+   "bf01": 2.14,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 0.634,
+     "bf01": 1.58
+    },
+    {
+     "scale": 0.707,
+     "bf10": 0.468,
+     "bf01": 2.14
+    },
+    {
+     "scale": 1.0,
+     "bf10": 0.338,
+     "bf01": 2.96
+    }
+   ],
+   "verdict": "Anecdotal evidence for no difference",
+   "supportsNull": true
+  },
+  {
+   "study": "Study 1",
+   "group": "Hypothesis tests",
+   "id": "H6",
+   "text": "A doctor is seen as more capable of intuition than an AI",
+   "source": "raw data",
+   "kind": "t",
+   "stat": {
+    "t": 7.92,
+    "df": 187,
+    "d": 0.58,
+    "nEff": 188
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 31900000000.0,
+   "bf01": 3.14e-11,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 32500000000.0,
+     "bf01": 3.08e-11
+    },
+    {
+     "scale": 0.707,
+     "bf10": 31900000000.0,
+     "bf01": 3.14e-11
+    },
+    {
+     "scale": 1.0,
+     "bf10": 28100000000.0,
+     "bf01": 3.56e-11
+    }
+   ],
+   "verdict": "Extreme evidence for a difference",
+   "supportsNull": false
+  },
+  {
+   "study": "Study 1",
+   "group": "Hypothesis tests",
+   "id": "H7",
+   "text": "Doctors are judged more trustworthy than medical AI",
+   "source": "raw data",
+   "kind": "t",
+   "stat": {
+    "t": 10.73,
+    "df": 184,
+    "d": 0.79,
+    "nEff": 185
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 1.24e+18,
+   "bf01": 8.09e-19,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 1.13e+18,
+     "bf01": 8.83e-19
+    },
+    {
+     "scale": 0.707,
+     "bf10": 1.24e+18,
+     "bf01": 8.09e-19
+    },
+    {
+     "scale": 1.0,
+     "bf10": 1.2e+18,
+     "bf01": 8.31e-19
+    }
+   ],
+   "verdict": "Extreme evidence for a difference",
+   "supportsNull": false
+  },
+  {
+   "study": "Study 1",
+   "group": "Further comparisons",
+   "id": "E",
+   "text": "A doctor is seen as more capable of quantitative reasoning than an AI (exploratory)",
+   "source": "raw data",
+   "kind": "t",
+   "stat": {
+    "t": 7.63,
+    "df": 187,
+    "d": 0.56,
+    "nEff": 188
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 5910000000.0,
+   "bf01": 1.69e-10,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 6100000000.0,
+     "bf01": 1.64e-10
+    },
+    {
+     "scale": 0.707,
+     "bf10": 5910000000.0,
+     "bf01": 1.69e-10
+    },
+    {
+     "scale": 1.0,
+     "bf10": 5150000000.0,
+     "bf01": 1.94e-10
+    }
+   ],
+   "verdict": "Extreme evidence for a difference",
+   "supportsNull": false
+  },
+  {
+   "study": "Study 1",
+   "group": "Further comparisons",
+   "id": "X1",
+   "text": "Trust: layperson versus AI",
+   "source": "raw data",
+   "kind": "t",
+   "stat": {
+    "t": -1.51,
+    "df": 183,
+    "d": -0.11,
+    "nEff": 184
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 0.251,
+   "bf01": 3.98,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 0.344,
+     "bf01": 2.9
+    },
+    {
+     "scale": 0.707,
+     "bf10": 0.251,
+     "bf01": 3.98
+    },
+    {
+     "scale": 1.0,
+     "bf10": 0.181,
+     "bf01": 5.54
+    }
+   ],
+   "verdict": "Moderate evidence for no difference",
+   "supportsNull": true
+  },
+  {
+   "study": "Study 1",
+   "group": "Further comparisons",
+   "id": "X2",
+   "text": "Intuition: layperson versus AI",
+   "source": "raw data",
+   "kind": "t",
+   "stat": {
+    "t": 1.93,
+    "df": 187,
+    "d": 0.14,
+    "nEff": 188
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 0.501,
+   "bf01": 2.0,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 0.679,
+     "bf01": 1.47
+    },
+    {
+     "scale": 0.707,
+     "bf10": 0.501,
+     "bf01": 2.0
+    },
+    {
+     "scale": 1.0,
+     "bf10": 0.363,
+     "bf01": 2.76
+    }
+   ],
+   "verdict": "Anecdotal evidence for no difference",
+   "supportsNull": true
+  },
+  {
+   "study": "Study 1",
+   "group": "Further comparisons",
+   "id": "X3",
+   "text": "AI: quantitative reasoning versus intuition",
+   "source": "raw data",
+   "kind": "t",
+   "stat": {
+    "t": 3.05,
+    "df": 187,
+    "d": 0.22,
+    "nEff": 188
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 7.14,
+   "bf01": 0.14,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 9.25,
+     "bf01": 0.108
+    },
+    {
+     "scale": 0.707,
+     "bf10": 7.14,
+     "bf01": 0.14
+    },
+    {
+     "scale": 1.0,
+     "bf10": 5.3,
+     "bf01": 0.189
+    }
+   ],
+   "verdict": "Moderate evidence for a difference",
+   "supportsNull": false
+  },
+  {
+   "study": "Study 1",
+   "group": "Further comparisons",
+   "id": "X4",
+   "text": "Trust: doctor versus doctor using AI",
+   "source": "raw data",
+   "kind": "t",
+   "stat": {
+    "t": 7.2,
+    "df": 186,
+    "d": 0.53,
+    "nEff": 187
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 512000000.0,
+   "bf01": 1.95e-09,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 538000000.0,
+     "bf01": 1.86e-09
+    },
+    {
+     "scale": 0.707,
+     "bf10": 512000000.0,
+     "bf01": 1.95e-09
+    },
+    {
+     "scale": 1.0,
+     "bf10": 439000000.0,
+     "bf01": 2.28e-09
+    }
+   ],
+   "verdict": "Extreme evidence for a difference",
+   "supportsNull": false
+  },
+  {
+   "study": "Study 1",
+   "group": "Humans versus AI",
+   "id": "HvA-trust",
+   "text": "Trust: humans versus AI",
+   "source": "raw data",
+   "kind": "t",
+   "stat": {
+    "t": 9.43,
+    "df": 180,
+    "d": 0.7,
+    "nEff": 181
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 256000000000000.0,
+   "bf01": 3.91e-15,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 244000000000000.0,
+     "bf01": 4.1e-15
+    },
+    {
+     "scale": 0.707,
+     "bf10": 256000000000000.0,
+     "bf01": 3.91e-15
+    },
+    {
+     "scale": 1.0,
+     "bf10": 239000000000000.0,
+     "bf01": 4.18e-15
+    }
+   ],
+   "verdict": "Extreme evidence for a difference",
+   "supportsNull": false
+  },
+  {
+   "study": "Study 1",
+   "group": "Humans versus AI",
+   "id": "HvA-capability",
+   "text": "Quantitative reasoning: humans versus AI",
+   "source": "raw data",
+   "kind": "t",
+   "stat": {
+    "t": 4.79,
+    "df": 186,
+    "d": 0.35,
+    "nEff": 187
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 3500.0,
+   "bf01": 0.000286,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 4150.0,
+     "bf01": 0.000241
+    },
+    {
+     "scale": 0.707,
+     "bf10": 3500.0,
+     "bf01": 0.000286
+    },
+    {
+     "scale": 1.0,
+     "bf10": 2740.0,
+     "bf01": 0.000365
+    }
+   ],
+   "verdict": "Extreme evidence for a difference",
+   "supportsNull": false
+  },
+  {
+   "study": "Study 1",
+   "group": "Humans versus AI",
+   "id": "HvA-intuition",
+   "text": "Intuition: humans versus AI",
+   "source": "raw data",
+   "kind": "t",
+   "stat": {
+    "t": 9.15,
+    "df": 185,
+    "d": 0.67,
+    "nEff": 186
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 52400000000000.0,
+   "bf01": 1.91e-14,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 50700000000000.0,
+     "bf01": 1.97e-14
+    },
+    {
+     "scale": 0.707,
+     "bf10": 52400000000000.0,
+     "bf01": 1.91e-14
+    },
+    {
+     "scale": 1.0,
+     "bf10": 48300000000000.0,
+     "bf01": 2.07e-14
+    }
+   ],
+   "verdict": "Extreme evidence for a difference",
+   "supportsNull": false
+  },
+  {
+   "study": "Study 2",
+   "group": "Does the gap change with the kind of decision?",
+   "id": "gap-Diagnostic-Prescriptive",
+   "text": "Doctor-minus-AI gap: diagnostic versus prescriptive",
+   "source": "raw data",
+   "kind": "t",
+   "stat": {
+    "t": 0.5767971995776605,
+    "df": 102,
+    "d": 0.05683351683070419,
+    "nEff": 103,
+    "diff": 0.07,
+    "p": 0.5653472560577228
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 0.128,
+   "bf01": 7.79,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 0.177,
+     "bf01": 5.63
+    },
+    {
+     "scale": 0.707,
+     "bf10": 0.128,
+     "bf01": 7.79
+    },
+    {
+     "scale": 1.0,
+     "bf10": 0.0918,
+     "bf01": 10.9
+    }
+   ],
+   "verdict": "Moderate evidence for no difference",
+   "supportsNull": true
+  },
+  {
+   "study": "Study 2",
+   "group": "Does the gap change with the kind of decision?",
+   "id": "gap-Diagnostic-Preventative",
+   "text": "Doctor-minus-AI gap: diagnostic versus preventative",
+   "source": "raw data",
+   "kind": "t",
+   "stat": {
+    "t": 6.380197663549934,
+    "df": 103,
+    "d": 0.6256298535965424,
+    "nEff": 104,
+    "diff": 1.16,
+    "p": 5.122455244407786e-09
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 2080000.0,
+   "bf01": 4.82e-07,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 2070000.0,
+     "bf01": 4.83e-07
+    },
+    {
+     "scale": 0.707,
+     "bf10": 2080000.0,
+     "bf01": 4.82e-07
+    },
+    {
+     "scale": 1.0,
+     "bf10": 1870000.0,
+     "bf01": 5.36e-07
+    }
+   ],
+   "verdict": "Extreme evidence for a difference",
+   "supportsNull": false
+  },
+  {
+   "study": "Study 2",
+   "group": "Does the gap change with the kind of decision?",
+   "id": "gap-Prescriptive-Preventative",
+   "text": "Doctor-minus-AI gap: prescriptive versus preventative",
+   "source": "raw data",
+   "kind": "t",
+   "stat": {
+    "t": 7.238388525963368,
+    "df": 103,
+    "d": 0.7097823911702563,
+    "nEff": 104,
+    "diff": 1.09,
+    "p": 8.413357020241088e-11
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 108000000.0,
+   "bf01": 9.28e-09,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 103000000.0,
+     "bf01": 9.72e-09
+    },
+    {
+     "scale": 0.707,
+     "bf10": 108000000.0,
+     "bf01": 9.28e-09
+    },
+    {
+     "scale": 1.0,
+     "bf10": 101000000.0,
+     "bf01": 9.91e-09
+    }
+   ],
+   "verdict": "Extreme evidence for a difference",
+   "supportsNull": false
+  },
+  {
+   "study": "Study 2",
+   "group": "Does the gap change with the kind of decision?",
+   "id": "gap-Physical health-Mental health",
+   "text": "Doctor-minus-AI gap: physical health versus mental health",
+   "source": "raw data",
+   "kind": "t",
+   "stat": {
+    "t": 0.5536334065151424,
+    "df": 102,
+    "d": 0.0545511204809204,
+    "nEff": 103,
+    "diff": 0.08,
+    "p": 0.5810413565574819
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 0.127,
+   "bf01": 7.89,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 0.175,
+     "bf01": 5.7
+    },
+    {
+     "scale": 0.707,
+     "bf10": 0.127,
+     "bf01": 7.89
+    },
+    {
+     "scale": 1.0,
+     "bf10": 0.0906,
+     "bf01": 11.0
+    }
+   ],
+   "verdict": "Moderate evidence for no difference",
+   "supportsNull": true
+  },
+  {
+   "study": "Study 2",
+   "group": "Does the gap change with the kind of decision?",
+   "id": "gap-Bodily injury-Acute sickness",
+   "text": "Doctor-minus-AI gap: bodily injury versus acute sickness",
+   "source": "raw data",
+   "kind": "t",
+   "stat": {
+    "t": 0.07999468445647297,
+    "df": 103,
+    "d": 0.00784412417360102,
+    "nEff": 104,
+    "diff": 0.01,
+    "p": 0.936396703963773
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 0.109,
+   "bf01": 9.18,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 0.152,
+     "bf01": 6.6
+    },
+    {
+     "scale": 0.707,
+     "bf10": 0.109,
+     "bf01": 9.18
+    },
+    {
+     "scale": 1.0,
+     "bf10": 0.0778,
+     "bf01": 12.9
+    }
+   ],
+   "verdict": "Moderate evidence for no difference",
+   "supportsNull": true
+  },
+  {
+   "study": "Study 2",
+   "group": "Does the gap change with the kind of decision?",
+   "id": "gap-Bodily injury-Chronic sickness",
+   "text": "Doctor-minus-AI gap: bodily injury versus chronic sickness",
+   "source": "raw data",
+   "kind": "t",
+   "stat": {
+    "t": -0.36475981627174087,
+    "df": 103,
+    "d": -0.035767642710463954,
+    "nEff": 104,
+    "diff": -0.05,
+    "p": 0.7160385539503206
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 0.116,
+   "bf01": 8.63,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 0.161,
+     "bf01": 6.22
+    },
+    {
+     "scale": 0.707,
+     "bf10": 0.116,
+     "bf01": 8.63
+    },
+    {
+     "scale": 1.0,
+     "bf10": 0.0828,
+     "bf01": 12.1
+    }
+   ],
+   "verdict": "Moderate evidence for no difference",
+   "supportsNull": true
+  },
+  {
+   "study": "Study 2",
+   "group": "Does the gap change with the kind of decision?",
+   "id": "gap-Acute sickness-Chronic sickness",
+   "text": "Doctor-minus-AI gap: acute sickness versus chronic sickness",
+   "source": "raw data",
+   "kind": "t",
+   "stat": {
+    "t": -0.46083481652469993,
+    "df": 104,
+    "d": -0.044972873106367856,
+    "nEff": 105,
+    "diff": -0.07,
+    "p": 0.6458793565650363
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 0.12,
+   "bf01": 8.34,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 0.166,
+     "bf01": 6.02
+    },
+    {
+     "scale": 0.707,
+     "bf10": 0.12,
+     "bf01": 8.34
+    },
+    {
+     "scale": 1.0,
+     "bf10": 0.0857,
+     "bf01": 11.7
+    }
+   ],
+   "verdict": "Moderate evidence for no difference",
+   "supportsNull": true
+  },
+  {
+   "study": "Study 2",
+   "group": "Does the gap depend on the decision?",
+   "id": "H2-interaction",
+   "text": "Doctor-minus-AI gap by how much quantitative reasoning the decision needs",
+   "source": "raw data",
+   "kind": "coef",
+   "stat": {
+    "b": -0.002,
+    "se": 0.003,
+    "note": "full model, per point on the 0 to 100 scale"
+   },
+   "priorNote": "Cauchy prior on the standardized effect, scale 0.354 (per standard deviation)",
+   "bf10": 0.0675,
+   "bf01": 14.8,
+   "sensitivity": [
+    {
+     "scale": 0.177,
+     "bf10": 0.133,
+     "bf01": 7.55
+    },
+    {
+     "scale": 0.354,
+     "bf10": 0.0675,
+     "bf01": 14.8
+    },
+    {
+     "scale": 0.499,
+     "bf10": 0.0481,
+     "bf01": 20.8
+    }
+   ],
+   "verdict": "Strong evidence for no difference",
+   "supportsNull": true
+  },
+  {
+   "study": "Study 2",
+   "group": "Does the gap depend on the decision?",
+   "id": "H2-main",
+   "text": "Trust by how much quantitative reasoning the decision needs",
+   "source": "raw data",
+   "kind": "coef",
+   "stat": {
+    "b": 0.003,
+    "se": 0.003,
+    "note": "full model"
+   },
+   "priorNote": "Cauchy prior on the standardized effect, scale 0.354 (per standard deviation)",
+   "bf10": 0.0889,
+   "bf01": 11.2,
+   "sensitivity": [
+    {
+     "scale": 0.177,
+     "bf10": 0.173,
+     "bf01": 5.77
+    },
+    {
+     "scale": 0.354,
+     "bf10": 0.0889,
+     "bf01": 11.2
+    },
+    {
+     "scale": 0.499,
+     "bf10": 0.0634,
+     "bf01": 15.8
+    }
+   ],
+   "verdict": "Strong evidence for no difference",
+   "supportsNull": true
+  },
+  {
+   "study": "Study 2",
+   "group": "Do people differ?",
+   "id": "gender",
+   "text": "Trust by gender (man versus not)",
+   "source": "raw data",
+   "kind": "coef",
+   "stat": {
+    "b": -0.029,
+    "se": 0.286,
+    "note": "full model"
+   },
+   "priorNote": "Cauchy prior on the standardized effect, scale 0.7071067811865476 (d-like binary predictor)",
+   "bf10": 0.0914,
+   "bf01": 10.9,
+   "sensitivity": [
+    {
+     "scale": 0.354,
+     "bf10": 0.176,
+     "bf01": 5.67
+    },
+    {
+     "scale": 0.707,
+     "bf10": 0.0914,
+     "bf01": 10.9
+    },
+    {
+     "scale": 0.997,
+     "bf10": 0.0652,
+     "bf01": 15.3
+    }
+   ],
+   "verdict": "Strong evidence for no difference",
+   "supportsNull": true
+  },
+  {
+   "study": "Study 2",
+   "group": "Do people differ?",
+   "id": "age",
+   "text": "Trust by age group (four bands)",
+   "source": "raw data",
+   "kind": "coef",
+   "stat": {
+    "b": 0.129,
+    "se": 0.124,
+    "note": "full model, per age band"
+   },
+   "priorNote": "Cauchy prior on the standardized effect, scale 0.354 (per standard deviation)",
+   "bf10": 0.15,
+   "bf01": 6.69,
+   "sensitivity": [
+    {
+     "scale": 0.177,
+     "bf10": 0.281,
+     "bf01": 3.56
+    },
+    {
+     "scale": 0.354,
+     "bf10": 0.15,
+     "bf01": 6.69
+    },
+    {
+     "scale": 0.499,
+     "bf10": 0.107,
+     "bf01": 9.32
+    }
+   ],
+   "verdict": "Moderate evidence for no difference",
+   "supportsNull": true
+  },
+  {
+   "study": "Study 2",
+   "group": "Do people differ?",
+   "id": "age-by-doctor",
+   "text": "Does the gap grow with age? (age band by doctor)",
+   "source": "raw data",
+   "kind": "coef",
+   "stat": {
+    "b": 0.16,
+    "se": 0.064,
+    "note": "age model, per age band; the interaction is the change in the gap"
+   },
+   "priorNote": "Cauchy prior on the standardized effect, scale 0.354 (per standard deviation)",
+   "bf10": 1.02,
+   "bf01": 0.977,
+   "sensitivity": [
+    {
+     "scale": 0.177,
+     "bf10": 1.92,
+     "bf01": 0.521
+    },
+    {
+     "scale": 0.354,
+     "bf10": 1.02,
+     "bf01": 0.977
+    },
+    {
+     "scale": 0.499,
+     "bf10": 0.735,
+     "bf01": 1.36
+    }
+   ],
+   "verdict": "Anecdotal evidence for a difference",
+   "supportsNull": false
+  },
+  {
+   "study": "Study 2",
+   "group": "What explains the gap?",
+   "id": "H5-warmth",
+   "text": "Warmth as a mediator of the doctor-AI gap",
+   "source": "raw data",
+   "kind": "coef",
+   "stat": {
+    "b": 0.629,
+    "se": 0.5032,
+    "note": "indirect effect, trust points"
+   },
+   "priorNote": "Cauchy prior on the indirect effect in standard-deviation units of trust, scale 0.707",
+   "bf10": 0.323,
+   "bf01": 3.09,
+   "sensitivity": [
+    {
+     "scale": 0.354,
+     "bf10": 0.539,
+     "bf01": 1.86
+    },
+    {
+     "scale": 0.707,
+     "bf10": 0.323,
+     "bf01": 3.09
+    },
+    {
+     "scale": 0.997,
+     "bf10": 0.239,
+     "bf01": 4.18
+    }
+   ],
+   "verdict": "Moderate evidence for no difference",
+   "supportsNull": true
+  },
+  {
+   "study": "Study 3",
+   "group": "Humanizing the AI (between people)",
+   "id": "S3-trust-hum-std",
+   "text": "Trust: humanlike AI versus standard AI",
+   "source": "reported statistics",
+   "kind": "t",
+   "stat": {
+    "t": -0.76,
+    "df": 477.11,
+    "d": -0.07,
+    "nEff": 117.9
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 0.135,
+   "bf01": 7.39,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 0.187,
+     "bf01": 5.35
+    },
+    {
+     "scale": 0.707,
+     "bf10": 0.135,
+     "bf01": 7.39
+    },
+    {
+     "scale": 1.0,
+     "bf10": 0.0969,
+     "bf01": 10.3
+    }
+   ],
+   "verdict": "Moderate evidence for no difference",
+   "supportsNull": true,
+   "page": "Chapter 3, Study 3"
+  },
+  {
+   "study": "Study 3",
+   "group": "Humanizing the AI (between people)",
+   "id": "S3-belief-hum-std",
+   "text": "Belief: humanlike AI versus standard AI",
+   "source": "reported statistics",
+   "kind": "t",
+   "stat": {
+    "t": -0.3,
+    "df": 477.91,
+    "d": -0.03,
+    "nEff": 100.0
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 0.116,
+   "bf01": 8.65,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 0.16,
+     "bf01": 6.23
+    },
+    {
+     "scale": 0.707,
+     "bf10": 0.116,
+     "bf01": 8.65
+    },
+    {
+     "scale": 1.0,
+     "bf10": 0.0826,
+     "bf01": 12.1
+    }
+   ],
+   "verdict": "Moderate evidence for no difference",
+   "supportsNull": true,
+   "page": "Chapter 3, Study 3"
+  },
+  {
+   "study": "Study 3",
+   "group": "Humanlike AI versus doctor (between people)",
+   "id": "S3-trust-hum-doc",
+   "text": "Trust: humanlike AI versus doctor",
+   "source": "reported statistics",
+   "kind": "t",
+   "stat": {
+    "t": -2.04,
+    "df": 244.06,
+    "d": -0.26,
+    "nEff": 61.6
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 0.99,
+   "bf01": 1.01,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 1.25,
+     "bf01": 0.797
+    },
+    {
+     "scale": 0.707,
+     "bf10": 0.99,
+     "bf01": 1.01
+    },
+    {
+     "scale": 1.0,
+     "bf10": 0.748,
+     "bf01": 1.34
+    }
+   ],
+   "verdict": "Anecdotal evidence for no difference",
+   "supportsNull": true,
+   "page": "Chapter 3, Study 3"
+  },
+  {
+   "study": "Study 3",
+   "group": "Humanlike AI versus doctor (between people)",
+   "id": "S3-belief-hum-doc",
+   "text": "Belief: humanlike AI versus doctor",
+   "source": "reported statistics",
+   "kind": "t",
+   "stat": {
+    "t": -2.1,
+    "df": 273.56,
+    "d": -0.25,
+    "nEff": 70.6
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 1.06,
+   "bf01": 0.946,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 1.35,
+     "bf01": 0.742
+    },
+    {
+     "scale": 0.707,
+     "bf10": 1.06,
+     "bf01": 0.946
+    },
+    {
+     "scale": 1.0,
+     "bf10": 0.795,
+     "bf01": 1.26
+    }
+   ],
+   "verdict": "Anecdotal evidence for a difference",
+   "supportsNull": false,
+   "page": "Chapter 3, Study 3"
+  },
+  {
+   "study": "Study 4",
+   "group": "Humanizing the AI (between people)",
+   "id": "S4-trust-hum-std",
+   "text": "Trust: humanlike AI versus standard AI",
+   "source": "reported statistics",
+   "kind": "t",
+   "stat": {
+    "t": -1.32,
+    "df": 425.02,
+    "d": -0.13,
+    "nEff": 103.1
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 0.253,
+   "bf01": 3.95,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 0.343,
+     "bf01": 2.92
+    },
+    {
+     "scale": 0.707,
+     "bf10": 0.253,
+     "bf01": 3.95
+    },
+    {
+     "scale": 1.0,
+     "bf10": 0.183,
+     "bf01": 5.46
+    }
+   ],
+   "verdict": "Moderate evidence for no difference",
+   "supportsNull": true,
+   "page": "Chapter 3, Study 4"
+  },
+  {
+   "study": "Study 4",
+   "group": "Humanizing the AI (between people)",
+   "id": "S4-belief-hum-std",
+   "text": "Belief: humanlike AI versus standard AI",
+   "source": "reported statistics",
+   "kind": "t",
+   "stat": {
+    "t": -1.6,
+    "df": 427.99,
+    "d": -0.15,
+    "nEff": 113.8
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 0.359,
+   "bf01": 2.79,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 0.483,
+     "bf01": 2.07
+    },
+    {
+     "scale": 0.707,
+     "bf10": 0.359,
+     "bf01": 2.79
+    },
+    {
+     "scale": 1.0,
+     "bf10": 0.261,
+     "bf01": 3.83
+    }
+   ],
+   "verdict": "Anecdotal evidence for no difference",
+   "supportsNull": true,
+   "page": "Chapter 3, Study 4"
+  },
+  {
+   "study": "Study 4",
+   "group": "Humanlike AI versus doctor (between people)",
+   "id": "S4-trust-hum-doc",
+   "text": "Trust: humanlike AI versus doctor",
+   "source": "reported statistics",
+   "kind": "t",
+   "stat": {
+    "t": -1.67,
+    "df": 250.94,
+    "d": -0.21,
+    "nEff": 63.2
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 0.515,
+   "bf01": 1.94,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 0.67,
+     "bf01": 1.49
+    },
+    {
+     "scale": 0.707,
+     "bf10": 0.515,
+     "bf01": 1.94
+    },
+    {
+     "scale": 1.0,
+     "bf10": 0.382,
+     "bf01": 2.62
+    }
+   ],
+   "verdict": "Anecdotal evidence for no difference",
+   "supportsNull": true,
+   "page": "Chapter 3, Study 4"
+  },
+  {
+   "study": "Study 4",
+   "group": "Humanlike AI versus doctor (between people)",
+   "id": "S4-belief-hum-doc",
+   "text": "Belief: humanlike AI versus doctor",
+   "source": "reported statistics",
+   "kind": "t",
+   "stat": {
+    "t": -1.18,
+    "df": 258.19,
+    "d": -0.15,
+    "nEff": 61.9
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 0.269,
+   "bf01": 3.72,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 0.359,
+     "bf01": 2.78
+    },
+    {
+     "scale": 0.707,
+     "bf10": 0.269,
+     "bf01": 3.72
+    },
+    {
+     "scale": 1.0,
+     "bf10": 0.196,
+     "bf01": 5.09
+    }
+   ],
+   "verdict": "Moderate evidence for no difference",
+   "supportsNull": true,
+   "page": "Chapter 3, Study 4"
+  },
+  {
+   "study": "Study 4",
+   "group": "Humanlike AI versus doctor (side by side)",
+   "id": "S4w-trust-hum-doc",
+   "text": "Trust: humanlike AI versus doctor",
+   "source": "reported statistics",
+   "kind": "t",
+   "stat": {
+    "t": -2.11,
+    "df": 506,
+    "d": -0.09,
+    "nEff": 507
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 0.452,
+   "bf01": 2.21,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 0.627,
+     "bf01": 1.6
+    },
+    {
+     "scale": 0.707,
+     "bf10": 0.452,
+     "bf01": 2.21
+    },
+    {
+     "scale": 1.0,
+     "bf10": 0.323,
+     "bf01": 3.1
+    }
+   ],
+   "verdict": "Anecdotal evidence for no difference",
+   "supportsNull": true,
+   "page": "Chapter 3, Study 4"
+  },
+  {
+   "study": "Study 4",
+   "group": "Humanlike AI versus doctor (side by side)",
+   "id": "S4w-belief-hum-doc",
+   "text": "Belief: humanlike AI versus doctor",
+   "source": "reported statistics",
+   "kind": "t",
+   "stat": {
+    "t": -1.48,
+    "df": 505,
+    "d": -0.07,
+    "nEff": 506
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 0.148,
+   "bf01": 6.75,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 0.207,
+     "bf01": 4.83
+    },
+    {
+     "scale": 0.707,
+     "bf10": 0.148,
+     "bf01": 6.75
+    },
+    {
+     "scale": 1.0,
+     "bf10": 0.105,
+     "bf01": 9.49
+    }
+   ],
+   "verdict": "Moderate evidence for no difference",
+   "supportsNull": true,
+   "page": "Chapter 3, Study 4"
+  },
+  {
+   "study": "Study 5",
+   "group": "Does a voice help? (between people)",
+   "id": "S5-doc-voice",
+   "text": "Doctor: voiced versus written",
+   "source": "reported statistics",
+   "kind": "t",
+   "stat": {
+    "t": -1.08,
+    "df": 747.81,
+    "d": -0.08,
+    "nEff": 182.2
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 0.146,
+   "bf01": 6.83,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 0.203,
+     "bf01": 4.93
+    },
+    {
+     "scale": 0.707,
+     "bf10": 0.146,
+     "bf01": 6.83
+    },
+    {
+     "scale": 1.0,
+     "bf10": 0.105,
+     "bf01": 9.55
+    }
+   ],
+   "verdict": "Moderate evidence for no difference",
+   "supportsNull": true,
+   "page": "Chapter 3, Study 5"
+  },
+  {
+   "study": "Study 5",
+   "group": "Does a voice help? (between people)",
+   "id": "S5-hum-voice",
+   "text": "Humanlike AI: voiced versus written",
+   "source": "reported statistics",
+   "kind": "t",
+   "stat": {
+    "t": -2.38,
+    "df": 646.74,
+    "d": -0.19,
+    "nEff": 156.9
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 1.4,
+   "bf01": 0.713,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 1.85,
+     "bf01": 0.539
+    },
+    {
+     "scale": 0.707,
+     "bf10": 1.4,
+     "bf01": 0.713
+    },
+    {
+     "scale": 1.0,
+     "bf10": 1.03,
+     "bf01": 0.971
+    }
+   ],
+   "verdict": "Anecdotal evidence for a difference",
+   "supportsNull": false,
+   "page": "Chapter 3, Study 5"
+  },
+  {
+   "study": "Study 5",
+   "group": "Does a voice help? (between people)",
+   "id": "S5-std-voice",
+   "text": "Standard AI: voiced versus written",
+   "source": "reported statistics",
+   "kind": "t",
+   "stat": {
+    "t": 2.1,
+    "df": 655.74,
+    "d": 0.16,
+    "nEff": 172.3
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 0.732,
+   "bf01": 1.37,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 0.983,
+     "bf01": 1.02
+    },
+    {
+     "scale": 0.707,
+     "bf10": 0.732,
+     "bf01": 1.37
+    },
+    {
+     "scale": 1.0,
+     "bf10": 0.533,
+     "bf01": 1.88
+    }
+   ],
+   "verdict": "Anecdotal evidence for no difference",
+   "supportsNull": true,
+   "page": "Chapter 3, Study 5"
+  },
+  {
+   "study": "Study 5",
+   "group": "Side by side",
+   "id": "S5-hum-doc",
+   "text": "Humanlike AI versus doctor",
+   "source": "reported statistics",
+   "kind": "t",
+   "stat": {
+    "t": -3.78,
+    "df": 788,
+    "d": -0.13,
+    "nEff": 789
+   },
+   "priorNote": "Cauchy prior on d, scale 0.707 (0.5 and 1 shown as a check)",
+   "bf10": 46.4,
+   "bf01": 0.0216,
+   "sensitivity": [
+    {
+     "scale": 0.5,
+     "bf10": 63.3,
+     "bf01": 0.0158
+    },
+    {
+     "scale": 0.707,
+     "bf10": 46.4,
+     "bf01": 0.0216
+    },
+    {
+     "scale": 1.0,
+     "bf10": 33.4,
+     "bf01": 0.0299
+    }
+   ],
+   "verdict": "Very strong evidence for a difference",
+   "supportsNull": false,
+   "page": "Chapter 3, Study 5"
+  },
+  {
+   "study": "Study 5",
+   "group": "Does a voice help? (between people)",
+   "id": "S5-voice-main",
+   "text": "Voice, across all recommenders",
+   "source": "reported statistics",
+   "kind": "coef",
+   "stat": {
+    "b": 0.07,
+    "se": 0.079,
+    "note": "Table 22"
+   },
+   "priorNote": "Cauchy prior on the standardized effect, scale 0.7071067811865476",
+   "bf10": 0.127,
+   "bf01": 7.88,
+   "sensitivity": [
+    {
+     "scale": 0.354,
+     "bf10": 0.24,
+     "bf01": 4.16
+    },
+    {
+     "scale": 0.707,
+     "bf10": 0.127,
+     "bf01": 7.88
+    },
+    {
+     "scale": 0.997,
+     "bf10": 0.0909,
+     "bf01": 11.0
+    }
+   ],
+   "verdict": "Moderate evidence for no difference",
+   "supportsNull": true,
+   "page": "Chapter 3, Study 5"
+  },
+  {
+   "study": "Study 5",
+   "group": "Does a voice help? (between people)",
+   "id": "S5-voice-std-int",
+   "text": "Voice effect for the standard AI versus the humanlike AI",
+   "source": "reported statistics",
+   "kind": "coef",
+   "stat": {
+    "b": -0.08,
+    "se": 0.092,
+    "note": "Table 22"
+   },
+   "priorNote": "Cauchy prior on the standardized effect, scale 0.7071067811865476",
+   "bf10": 0.145,
+   "bf01": 6.92,
+   "sensitivity": [
+    {
+     "scale": 0.354,
+     "bf10": 0.27,
+     "bf01": 3.7
+    },
+    {
+     "scale": 0.707,
+     "bf10": 0.145,
+     "bf01": 6.92
+    },
+    {
+     "scale": 0.997,
+     "bf10": 0.104,
+     "bf01": 9.63
+    }
+   ],
+   "verdict": "Moderate evidence for no difference",
+   "supportsNull": true,
+   "page": "Chapter 3, Study 5"
+  },
+  {
+   "study": "Study 5",
+   "group": "Does a voice help? (between people)",
+   "id": "S5-voice-doc-int",
+   "text": "Voice effect for the doctor versus the humanlike AI",
+   "source": "reported statistics",
+   "kind": "coef",
+   "stat": {
+    "b": -0.08,
+    "se": 0.089,
+    "note": "Table 22"
+   },
+   "priorNote": "Cauchy prior on the standardized effect, scale 0.7071067811865476",
+   "bf10": 0.144,
+   "bf01": 6.95,
+   "sensitivity": [
+    {
+     "scale": 0.354,
+     "bf10": 0.269,
+     "bf01": 3.72
+    },
+    {
+     "scale": 0.707,
+     "bf10": 0.144,
+     "bf01": 6.95
+    },
+    {
+     "scale": 0.997,
+     "bf10": 0.103,
+     "bf01": 9.68
+    }
+   ],
+   "verdict": "Moderate evidence for no difference",
+   "supportsNull": true,
+   "page": "Chapter 3, Study 5"
+  },
+  {
+   "study": "Study 5",
+   "group": "Side by side",
+   "id": "S5-doc-adj",
+   "text": "Doctor versus humanlike AI after adjusting for mind, warmth, competence",
+   "source": "reported statistics",
+   "kind": "coef",
+   "stat": {
+    "b": 0.09,
+    "se": 0.069,
+    "note": "Table 22"
+   },
+   "priorNote": "Cauchy prior on the standardized effect, scale 0.7071067811865476",
+   "bf10": 0.175,
+   "bf01": 5.72,
+   "sensitivity": [
+    {
+     "scale": 0.354,
+     "bf10": 0.328,
+     "bf01": 3.05
+    },
+    {
+     "scale": 0.707,
+     "bf10": 0.175,
+     "bf01": 5.72
+    },
+    {
+     "scale": 0.997,
+     "bf10": 0.125,
+     "bf01": 7.97
+    }
+   ],
+   "verdict": "Moderate evidence for no difference",
+   "supportsNull": true,
+   "page": "Chapter 3, Study 5"
+  },
+  {
+   "study": "Study 6",
+   "group": "Did the recommender change what people did?",
+   "id": "S6-sleep-int",
+   "text": "Sleep: change after the advice, AI versus doctor",
+   "source": "reported statistics",
+   "kind": "coef",
+   "stat": {
+    "b": -0.03,
+    "se": 0.057,
+    "note": "Table 23"
+   },
+   "priorNote": "Cauchy prior on the standardized effect, scale 0.7071067811865476",
+   "bf10": 0.0686,
+   "bf01": 14.6,
+   "sensitivity": [
+    {
+     "scale": 0.354,
+     "bf10": 0.134,
+     "bf01": 7.45
+    },
+    {
+     "scale": 0.707,
+     "bf10": 0.0686,
+     "bf01": 14.6
+    },
+    {
+     "scale": 0.997,
+     "bf10": 0.0488,
+     "bf01": 20.5
+    }
+   ],
+   "verdict": "Strong evidence for no difference",
+   "supportsNull": true,
+   "page": "Chapter 4, Study 6"
+  },
+  {
+   "study": "Study 6",
+   "group": "Did the recommender change what people did?",
+   "id": "S6-sleep-cond",
+   "text": "Sleep: AI versus doctor, overall",
+   "source": "reported statistics",
+   "kind": "coef",
+   "stat": {
+    "b": 0.03,
+    "se": 0.041,
+    "note": "Table 23"
+   },
+   "priorNote": "Cauchy prior on the standardized effect, scale 0.7071067811865476",
+   "bf10": 0.0564,
+   "bf01": 17.7,
+   "sensitivity": [
+    {
+     "scale": 0.354,
+     "bf10": 0.111,
+     "bf01": 8.99
+    },
+    {
+     "scale": 0.707,
+     "bf10": 0.0564,
+     "bf01": 17.7
+    },
+    {
+     "scale": 0.997,
+     "bf10": 0.0401,
+     "bf01": 24.9
+    }
+   ],
+   "verdict": "Strong evidence for no difference",
+   "supportsNull": true,
+   "page": "Chapter 4, Study 6"
+  },
+  {
+   "study": "Study 6",
+   "group": "Did the recommender change what people did?",
+   "id": "S6-dib-int",
+   "text": "Phone in bed: change after the advice, AI versus doctor",
+   "source": "reported statistics",
+   "kind": "coef",
+   "stat": {
+    "b": 0.07,
+    "se": 0.052,
+    "note": "Table 24"
+   },
+   "priorNote": "Cauchy prior on the standardized effect, scale 0.7071067811865476",
+   "bf10": 0.138,
+   "bf01": 7.26,
+   "sensitivity": [
+    {
+     "scale": 0.354,
+     "bf10": 0.265,
+     "bf01": 3.78
+    },
+    {
+     "scale": 0.707,
+     "bf10": 0.138,
+     "bf01": 7.26
+    },
+    {
+     "scale": 0.997,
+     "bf10": 0.0984,
+     "bf01": 10.2
+    }
+   ],
+   "verdict": "Moderate evidence for no difference",
+   "supportsNull": true,
+   "page": "Chapter 4, Study 6"
+  },
+  {
+   "study": "Study 6",
+   "group": "Did the recommender change what people did?",
+   "id": "S6-dib-cond",
+   "text": "Phone in bed: AI versus doctor, overall",
+   "source": "reported statistics",
+   "kind": "coef",
+   "stat": {
+    "b": 0.03,
+    "se": 0.05,
+    "note": "Table 24"
+   },
+   "priorNote": "Cauchy prior on the standardized effect, scale 0.7071067811865476",
+   "bf10": 0.0651,
+   "bf01": 15.4,
+   "sensitivity": [
+    {
+     "scale": 0.354,
+     "bf10": 0.128,
+     "bf01": 7.83
+    },
+    {
+     "scale": 0.707,
+     "bf10": 0.0651,
+     "bf01": 15.4
+    },
+    {
+     "scale": 0.997,
+     "bf10": 0.0463,
+     "bf01": 21.6
+    }
+   ],
+   "verdict": "Strong evidence for no difference",
+   "supportsNull": true,
+   "page": "Chapter 4, Study 6"
+  },
+  {
+   "study": "Study 6",
+   "group": "Did the recommender change what people did?",
+   "id": "S6-sleep-med",
+   "text": "Sleep: mind perception as a mediator",
+   "source": "reported statistics",
+   "kind": "coef",
+   "stat": {
+    "b": -0.012,
+    "se": 0.0127,
+    "note": "indirect effect, from b and z"
+   },
+   "priorNote": "Cauchy prior on the standardized effect, scale 0.707",
+   "bf10": 0.0211,
+   "bf01": 47.5,
+   "sensitivity": [
+    {
+     "scale": 0.354,
+     "bf10": 0.042,
+     "bf01": 23.8
+    },
+    {
+     "scale": 0.707,
+     "bf10": 0.0211,
+     "bf01": 47.5
+    },
+    {
+     "scale": 0.997,
+     "bf10": 0.0149,
+     "bf01": 66.9
+    }
+   ],
+   "verdict": "Very strong evidence for no difference",
+   "supportsNull": true,
+   "page": "Chapter 4, Study 6"
+  },
+  {
+   "study": "Study 6",
+   "group": "Did the recommender change what people did?",
+   "id": "S6-dib-med",
+   "text": "Phone in bed: mind perception as a mediator",
+   "source": "reported statistics",
+   "kind": "coef",
+   "stat": {
+    "b": 0.006,
+    "se": 0.018,
+    "note": "indirect effect, from b and z"
+   },
+   "priorNote": "Cauchy prior on the standardized effect, scale 0.707",
+   "bf10": 0.0202,
+   "bf01": 49.5,
+   "sensitivity": [
+    {
+     "scale": 0.354,
+     "bf10": 0.0403,
+     "bf01": 24.8
+    },
+    {
+     "scale": 0.707,
+     "bf10": 0.0202,
+     "bf01": 49.5
+    },
+    {
+     "scale": 0.997,
+     "bf10": 0.0143,
+     "bf01": 69.8
+    }
+   ],
+   "verdict": "Very strong evidence for no difference",
+   "supportsNull": true,
+   "page": "Chapter 4, Study 6"
+  }
+ ]
+}

@@ -1,0 +1,124 @@
+---
+// Bayes factors on a log scale. Right of the middle line is evidence for no difference (BF01), left is evidence for a difference (BF10).
+// Each row is one test. The dot is the Bayes factor with the default Cauchy prior; the thin line shows how far it moves under a narrower and a wider prior.
+interface Sens { scale: number; bf10: number; bf01: number }
+interface Row { id: string; text: string; group: string; bf10: number; bf01: number; verdict: string; source: string; stat: any; sensitivity: Sens[]; priorNote: string; kind: string }
+interface Props { rows: Row[]; showGroups?: boolean }
+const { rows, showGroups = true } = Astro.props;
+
+const W = 780, labelW = 330, padR = 20, rowH = 38, top = 44;
+const plotW = W - labelW - padR;
+const LIM = 2.2; // log10 units either side; 10^2.2 is about 160
+const xOf = (l: number) => labelW + ((Math.max(-LIM, Math.min(LIM, l)) + LIM) / (2 * LIM)) * plotW;
+const x0 = xOf(0);
+const lg = (bf10: number) => -Math.log10(bf10); // log10 BF01
+
+// Insert a small group heading before the first row of each group.
+const items: any[] = [];
+let y = top, lastGroup = '';
+for (const r of rows) {
+  if (showGroups && r.group !== lastGroup) { items.push({ head: r.group, y: y + 8 }); y += 26; lastGroup = r.group; }
+  items.push({ r, y });
+  y += rowH;
+}
+const H = y + 14;
+
+const fmt = (b: number) => {
+  if (b >= 1000) { const e = Math.floor(Math.log10(b)); return `${(b / 10 ** e).toFixed(1)}×10^${e}`.replace('^', ' ^'); }
+  if (b >= 100) return b.toFixed(0);
+  if (b >= 10) return b.toFixed(0);
+  if (b >= 1) return b.toFixed(1);
+  return b.toFixed(2);
+};
+const fmtShort = (b: number) => {
+  if (b >= 1e4) return `10^${Math.floor(Math.log10(b))}`.replace('^', ' ^');
+  return fmt(b);
+};
+const wrap = (s: string, n = 46) => {
+  if (s.length <= n) return [s];
+  const words = s.split(' '); let a = '', b = '';
+  for (const w of words) { if ((a + ' ' + w).trim().length <= n && !b) a = (a + ' ' + w).trim(); else b = (b + ' ' + w).trim(); }
+  return [a, b];
+};
+const ticks = [-2, -1.477, -1, -0.477, 0, 0.477, 1, 1.477, 2];
+const tickLab = (t: number) => (t === 0 ? '1' : t > 0 ? String(Math.round(10 ** t)) : `1/${Math.round(10 ** -t)}`);
+const bands = [[0.477, 'Anecdotal'], [1, 'Moderate'], [1.477, 'Strong'], [2, 'Very strong']];
+---
+
+<figure class="bayes" data-fig>
+  <div class="scroll" tabindex="0" role="region" aria-label="Chart. Scrolls sideways on narrow screens.">
+    <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-label="Bayes factor for each test, on a log scale">
+      <rect class="side no" x={x0} y={top - 10} width={xOf(LIM) - x0} height={H - top - 4} />
+      <rect class="side yes" x={xOf(-LIM)} y={top - 10} width={x0 - xOf(-LIM)} height={H - top - 4} />
+      <text class="axlab" x={xOf(-LIM) + 4} y="16">← evidence for a difference</text>
+      <text class="axlab" x={xOf(LIM) - 4} y="16" text-anchor="end">evidence for no difference →</text>
+      {ticks.map((t) => (
+        <g>
+          <line class={t === 0 ? 'mid' : 'grid'} x1={xOf(t)} x2={xOf(t)} y1={top - 10} y2={H - 12} />
+          <text class="tick" x={xOf(t)} y="34" text-anchor="middle">{tickLab(t)}</text>
+        </g>
+      ))}
+      {
+        items.map((it) => {
+          if (it.head) return <text class="group" x="8" y={it.y + 10}>{it.head}</text>;
+          const r: Row = it.r;
+          const l = lg(r.bf10);
+          const xs = r.sensitivity.map((s) => xOf(lg(s.bf10)));
+          const lo = Math.min(...xs), hi = Math.max(...xs);
+          const nul = r.bf10 < 1;
+          const bf = nul ? r.bf01 : r.bf10;
+          const lines = wrap(r.text);
+          const cy = it.y + rowH / 2 - 2;
+          const sensLines = r.sensitivity.map((s) => `Prior scale ${s.scale}: BF01 = ${fmt(s.bf01)}, BF10 = ${fmt(s.bf10)}`);
+          return (
+            <g class="row" data-tip tabindex="0" role="group"
+               aria-label={`${r.text}. ${r.verdict}. BF01 = ${fmt(r.bf01)}.`}
+               data-label={r.text}
+               data-lines={[`${r.verdict}`, `BF01 (no difference) = ${fmt(r.bf01)}`, `BF10 (a difference) = ${fmt(r.bf10)}`, ...sensLines, r.priorNote, r.source === 'raw data' ? 'From the released data' : 'From the statistics reported in the dissertation'].join('|')}>
+              <rect class="hit" x="0" y={it.y} width={W} height={rowH} />
+              {lines.map((ln, k) => <text class="name" x="8" y={cy + (lines.length === 1 ? 5 : k * 15 - 2)}>{ln}</text>)}
+              <line class={`bar ${nul ? 'no' : 'yes'}`} x1={x0} x2={xOf(l)} y1={cy} y2={cy} />
+              <line class="sens" x1={lo} x2={hi} y1={cy} y2={cy} />
+              <circle class={`dot ${nul ? 'no' : 'yes'}`} cx={xOf(l)} cy={cy} r="6" />
+              <text class="val" x={nul || xOf(l) - labelW < 120 ? xOf(l) + 11 : xOf(l) - 11} y={!nul && xOf(l) - labelW < 120 ? cy - 9 : cy + 4.5} text-anchor={nul || xOf(l) - labelW < 120 ? 'start' : 'end'}>{nul ? 'BF01' : 'BF10'} {fmtShort(bf)}</text>
+            </g>
+          );
+        })
+      }
+    </svg>
+  </div>
+  <ul class="key">
+    <li><span class="sw no"></span>Evidence the effect is absent or negligible</li>
+    <li><span class="sw yes"></span>Evidence of a real difference</li>
+    <li class="muted">Thin line: the range of the Bayes factor under a narrower and a wider prior</li>
+  </ul>
+  <div class="tip" hidden></div>
+</figure>
+
+<script>
+  import { attachTips } from '../utils/figtip';
+  document.querySelectorAll<HTMLElement>('[data-fig]').forEach(attachTips);
+</script>
+
+<style>
+  .bayes { margin: 1.25rem 0 0; position: relative; max-width: 800px; }
+  .scroll { overflow-x: auto; }
+  svg { display: block; width: 100%; min-width: 700px; height: auto; overflow: visible; }
+  .side.no { fill: var(--null); opacity: 0.07; } .side.yes { fill: var(--ink); opacity: 0.04; }
+  .grid { stroke: var(--rule); stroke-width: 1; stroke-dasharray: 2 4; } .mid { stroke: var(--ink); stroke-width: 1.5; }
+  .tick { font-family: var(--display); font-size: 11px; fill: var(--muted); }
+  .axlab { font-family: var(--display); font-size: 12px; fill: var(--muted); }
+  .group { font-family: var(--display); font-size: 12.5px; font-weight: 700; fill: var(--ink); }
+  .name { font-family: var(--display); font-size: 13px; fill: var(--ink); }
+  .hit { fill: transparent; } .row:hover .hit, .row:focus .hit { fill: var(--wash); opacity: 0.7; }
+  .row:focus { outline: none; } .row:focus-visible .hit { stroke: var(--doctor); stroke-width: 2; }
+  .bar { stroke-width: 5; stroke-linecap: round; } .bar.no { stroke: var(--null); } .bar.yes { stroke: var(--ink); opacity: 0.8; }
+  .sens { stroke: var(--ink); stroke-width: 1; opacity: 0.55; }
+  .dot { stroke: var(--paper); stroke-width: 2; } .dot.no { fill: var(--null); } .dot.yes { fill: var(--ink); }
+  .val { font-family: var(--display); font-size: 12px; font-weight: 600; fill: var(--ink); font-variant-numeric: tabular-nums; }
+  .key { list-style: none; margin: 0.6rem 0 1.8rem; padding: 0; display: flex; flex-wrap: wrap; gap: 0.35rem 1.25rem; font-family: var(--display); font-size: 0.92rem; }
+  .key li { display: inline-flex; align-items: center; gap: 0.5rem; } .key .muted { color: var(--muted); }
+  .sw { width: 1.4rem; height: 0.8rem; border-radius: 2px; flex: none; } .sw.no { background: var(--null); } .sw.yes { background: var(--ink); opacity: 0.8; }
+  .tip { position: absolute; transform: translate(-50%, -100%); display: grid; gap: 0.1rem; padding: 0.55rem 0.8rem; background: var(--ink); color: var(--paper); border-radius: 6px; font-family: var(--display); font-size: 0.85rem; line-height: 1.35; white-space: nowrap; pointer-events: none; z-index: 2; }
+  .tip[hidden] { display: none; }
+</style>

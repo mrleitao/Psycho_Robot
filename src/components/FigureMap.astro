@@ -1,0 +1,31 @@
+---
+// Which figure or table in the dissertation is where on this site.
+interface Row { diss: string; what: string; here?: string; href?: string; status?: 'rebuilt' | 'reported' | 'needs-data'; note?: string }
+interface Props { rows: Row[] }
+const { rows } = Astro.props;
+const words = { rebuilt: 'Rebuilt from the data', reported: 'Shown from the reported statistics', 'needs-data': 'Waiting on the data' };
+---
+<div class="fm" role="region" aria-label="Table. Scrolls sideways on narrow screens." tabindex="0">
+  <table>
+    <thead><tr><th>In the dissertation</th><th>What it shows</th><th>On this site</th><th>Notes</th></tr></thead>
+    <tbody>
+      {rows.map((r) => (
+        <tr>
+          <th scope="row">{r.diss}</th>
+          <td>{r.what}</td>
+          <td>{r.href ? <a href={r.href}>{r.here}</a> : <span class="wait">{r.here ?? words[r.status ?? 'needs-data']}</span>}</td>
+          <td class="note">{r.note ?? ''}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+<style>
+  .fm { overflow-x: auto; margin: 1rem 0; max-width: 900px; }
+  table { border-collapse: collapse; width: 100%; min-width: 640px; font-family: var(--display); font-size: 0.93rem; }
+  th, td { text-align: left; padding: 0.45rem 0.9rem 0.45rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  thead th { color: var(--muted); font-weight: 600; font-size: 0.85rem; }
+  tbody th { font-weight: 650; white-space: nowrap; }
+  .note { color: var(--muted); }
+  .wait { color: var(--muted); font-style: italic; }
+</style>

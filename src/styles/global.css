@@ -12,6 +12,7 @@
   --wash: #e6ecef;
   --doctor: #2b45d4;
   --ai: #b86e00;
+  --null: #0d7a6e;
   --display: 'Bricolage Grotesque Variable', 'Helvetica Neue', Arial, sans-serif;
   --text: 'Source Serif 4 Variable', Georgia, 'Times New Roman', serif;
   color-scheme: light dark;
@@ -26,6 +27,7 @@
     --wash: #171e2d;
     --doctor: #6c80e6;
     --ai: #bf7f1a;
+    --null: #4fb8aa;
   }
 }
 
@@ -38,6 +40,7 @@
     --wash: #171e2d;
     --doctor: #6c80e6;
     --ai: #bf7f1a;
+    --null: #4fb8aa;
   color-scheme: dark;
 }
 

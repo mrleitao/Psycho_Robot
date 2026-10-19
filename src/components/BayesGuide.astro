@@ -1,0 +1,37 @@
+---
+// A plain-language explanation of Bayes factors and the Cauchy prior, shown above the Bayes charts.
+---
+<div class="bg">
+  <p>
+    A p value can only say whether a difference was detected. When it was not, it cannot tell you whether the difference is truly absent or whether the study was too small to see it.
+    A <strong>Bayes factor</strong> can. It compares two stories about the same data: there is no difference, or there is a difference of a plausible size.
+    A Bayes factor of 10 for no difference (written BF01 = 10) means the data are ten times more likely under the no-difference story.
+  </p>
+  <p>
+    The second story needs a guess about what "a plausible size" means. I used a <strong>Cauchy prior</strong>, the standard default for this kind of test. It is a bell-shaped curve centered on zero with
+    long tails: small differences are most likely, and large ones are not ruled out. Its width is set to 0.707 on the scale of Cohen's d. Each chart also shows what happens
+    with a narrower and a wider curve, so you can see whether a conclusion depends on that choice.
+  </p>
+  <table class="scale">
+    <thead><tr><th>Bayes factor</th><th>How to describe the evidence</th></tr></thead>
+    <tbody>
+      <tr><td>1 to 3</td><td>Anecdotal: barely worth mentioning</td></tr>
+      <tr><td>3 to 10</td><td>Moderate</td></tr>
+      <tr><td>10 to 30</td><td>Strong</td></tr>
+      <tr><td>30 to 100</td><td>Very strong</td></tr>
+      <tr><td>Over 100</td><td>Extreme</td></tr>
+    </tbody>
+  </table>
+  <p class="small">
+    The same words apply in both directions: BF01 = 12 is strong evidence for no difference, and BF10 = 12 is strong evidence for a difference.
+    Bayes factors near 1 mean the data cannot tell the two stories apart.
+  </p>
+</div>
+<style>
+  .bg { max-width: 66ch; font-family: var(--display); }
+  .bg p { margin: 0.7rem 0; color: var(--ink); }
+  .bg .small { color: var(--muted); font-size: 0.92rem; }
+  .scale { border-collapse: collapse; margin: 0.8rem 0; font-size: 0.95rem; }
+  .scale th, .scale td { text-align: left; padding: 0.3rem 1.2rem 0.3rem 0; border-bottom: 1px solid var(--rule); }
+  .scale th { color: var(--muted); font-weight: 600; }
+</style>

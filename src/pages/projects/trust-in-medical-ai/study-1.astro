@@ -19,6 +19,10 @@ import full from '../../../data/trust-in-medical-ai/study1-full.json';
 import pts from '../../../data/trust-in-medical-ai/study1-points.json';
 import hva from '../../../data/trust-in-medical-ai/study1-human-vs-ai.json';
 import { href } from '../../../utils/url';
+import BayesPlot from '../../../components/BayesPlot.astro';
+import BayesGuide from '../../../components/BayesGuide.astro';
+import FigureMap from '../../../components/FigureMap.astro';
+import bayes from '../../../data/trust-in-medical-ai/bayes.json';
 
 const repo = 'https://github.com/mrleitao/Psycho_Robot';
 const f1 = (n: number | null) => (n == null ? '' : n.toFixed(1));
@@ -337,7 +341,25 @@ const toc = [
   ['makers', 'Eleven recommenders'],
   ['trust', 'What goes with trust'],
   ['implications', 'What this means'],
+  ['dig-deeper', 'Dig deeper'],
   ['files', 'Files and methods'],
+];
+
+const bayesRows = bayes.rows
+  .filter((r) => r.study === 'Study 1')
+  .map((r) => ({ ...r, text: /^(H\d|E)$/.test(r.id) ? `${r.id === 'E' ? 'Exploratory' : r.id}: ${r.text}` : r.text }));
+const bf = (id: string) => bayes.rows.find((r) => r.id === id)!;
+const fmtBF = (b: number) => (b >= 100 ? b.toFixed(0) : b >= 10 ? b.toFixed(0) : b.toFixed(1));
+const figureMap1 = [
+  { diss: 'Table 1', what: 'The fifteen medical decisions and how they were grouped', here: 'Tables 2 and 3', href: '#table-decisions' },
+  { diss: 'Table 2', what: 'The eleven medical recommenders', here: 'Table 8', href: '#table-makers' },
+  { diss: 'Figure 3', what: 'Quantitative reasoning needed, decision by decision', here: 'Figure 1', href: '#fig-decisions', note: 'Every person is plotted, not only the mean and interval' },
+  { diss: 'Figure 4', what: 'The same, by stage of care', here: 'Figure 3', href: '#fig-stage' },
+  { diss: 'Figure 5', what: 'The same, by kind of health problem', here: 'Figure 2', href: '#fig-domain' },
+  { diss: 'Figure 6', what: 'Quantitative reasoning and intuition for each recommender', here: 'Figures 6 and 7', href: '#fig-map', note: 'Plus Figure 11 for the human-versus-AI split' },
+  { diss: 'Figure 7', what: 'Trust in each recommender', here: 'Figure 6', href: '#fig-trust' },
+  { diss: 'Hypotheses 1 to 7, exploratory test', what: 'Paired t tests', here: 'Tables 6 and 7, Figure 5', href: '#table-tests' },
+  { diss: 'Table 3', what: 'Mixed model of trust, with within-person and between-person terms', here: 'Tables 9 to 14, Figure 8', href: '#table-models', note: 'The released file groups age, so some terms differ in the third decimal' },
 ];
 ---
 
@@ -763,6 +785,38 @@ const toc = [
           <strong>Medical decisions are not one thing.</strong> Preventative decisions and mental health decisions were seen as needing relatively more intuition, and less quantitative reasoning, than the other
           decisions. That variation suggests the character of a decision may also shape how much a recommender is trusted, which Study 2
           put to the test.
+        </p>
+      </div>
+    </section>
+
+    <!-- ============================ dig deeper ============================ -->
+    <section class="section" id="dig-deeper" aria-labelledby="dig-title">
+      <div class="deep">
+        <h2 id="dig-title">Dig deeper</h2>
+        <p>Two more things for readers who want them: where each figure and table of the dissertation sits on this page, and a Bayesian check on every comparison, with extra attention to the ones that found no difference.</p>
+      </div>
+      <h3 class="fig-title">Where each dissertation figure and table lives</h3>
+      <FigureMap rows={figureMap1} />
+
+      <h3 class="fig-title" id="bayes">When the test found no difference</h3>
+      <BayesGuide />
+      <BayesPlot rows={bayesRows} />
+      <div class="prose">
+        <p>
+          <strong>Diagnostic and prescriptive decisions are rated alike.</strong> Hypothesis 1 found no difference (p = .68). The Bayes factor for no difference is {fmtBF(bf('H1').bf01)},
+          which is strong evidence that people see the two stages as needing the same amount of quantitative reasoning. That is a firmer conclusion than "not significant."
+        </p>
+        <p>
+          <strong>Bodily injury versus acute sickness is unsettled.</strong> Hypothesis 5 missed the usual cutoff (p = .061). The Bayes factor for no difference is only {fmtBF(bf('H5').bf01)},
+          which is anecdotal. The data lean neither way, and a larger sample is the only way to settle it.
+        </p>
+        <p>
+          <strong>One result is weaker than its p value suggests.</strong> Physical health versus mental health reached p = .010, yet the Bayes factor for a difference is
+          {fmtBF(bf('H4').bf10)}, also anecdotal. I would call that difference suggestive. The comparisons behind hypotheses 2, 3, 6 and 7 are another matter, with Bayes factors above 100,000.
+        </p>
+        <p>
+          <strong>A layperson and an AI are trusted about equally.</strong> People trusted a layperson (M = 4.3) about as much as a medical AI (M = 4.7). The Bayes factor for no difference is {fmtBF(bf('X1').bf01)}, moderate evidence.
+          The AI is trusted well below a doctor and no more than someone with no medical training.
         </p>
       </div>
     </section>

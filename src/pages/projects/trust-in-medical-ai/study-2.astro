@@ -11,6 +11,10 @@ import MediationDiagram from '../../../components/MediationDiagram.astro';
 import full from '../../../data/trust-in-medical-ai/study2-full.json';
 import pts from '../../../data/trust-in-medical-ai/study2-points.json';
 import { href } from '../../../utils/url';
+import BayesPlot from '../../../components/BayesPlot.astro';
+import BayesGuide from '../../../components/BayesGuide.astro';
+import FigureMap from '../../../components/FigureMap.astro';
+import bayes from '../../../data/trust-in-medical-ai/bayes.json';
 
 const repo = 'https://github.com/mrleitao/Psycho_Robot';
 const f1 = (n: number | null) => (n == null ? '' : n.toFixed(1));
@@ -245,7 +249,26 @@ const toc = [
   ['mediation', 'What explains the gap'],
   ['who', 'Does the gap differ between people?'],
   ['implications', 'What this means'],
+  ['dig-deeper', 'Dig deeper'],
   ['files', 'Files and methods'],
+];
+
+const bayesRows = bayes.rows
+  .filter((r) => r.study === 'Study 2')
+  .map((r) => ({ ...r, text: r.id === 'H2-interaction' ? 'H2: Does the gap depend on the need for quantitative reasoning?' : r.id === 'H5-warmth' ? 'H5: Does warmth explain the gap? (indirect effect)' : r.text }));
+const bf = (id: string) => bayes.rows.find((r) => r.id === id)!;
+const fmtBF = (b: number) => (b >= 100 ? b.toFixed(0) : b >= 10 ? b.toFixed(0) : b.toFixed(1));
+const figureMap2 = [
+  { diss: 'Table 4', what: 'The twelve medical decisions and how they were grouped', here: 'Tables 2 and 3', href: '#table-decisions' },
+  { diss: 'Figure 9', what: 'Quantitative reasoning needed, decision by decision', here: 'Figure 1', href: '#fig-decisions' },
+  { diss: 'Figure 10', what: 'Trust in the doctor and the AI, decision by decision', here: 'Figures 5 and 6', href: '#fig-trust-dots', note: 'Figure 4 shows each person' },
+  { diss: 'Table 5 and Hypothesis 1', what: 'Paired t tests of trust, decision by decision', here: 'Table 5', href: '#table-tests', note: 'The dissertation text and its Table 5 differ slightly in a few means; this page reports the data' },
+  { diss: 'Tables 6 and 7', what: 'The same test for the stage and domain composites', here: 'Table 6', href: '#table-comp-tests' },
+  { diss: 'Table 8 and Hypothesis 2', what: 'Mixed model with the doctor-by-need interaction', here: 'Table 8, Figure 11', href: '#table-h2', note: 'Full model, with warmth and competence, is in the mixed models below' },
+  { diss: 'Tables 9 and 10', what: 'Correlations among quantitative reasoning, intuition, warmth, competence, for each recommender', here: 'Table 9', href: '#table-corr' },
+  { diss: 'Tables 11 and 12', what: 'Within-person and between-person correlations', here: 'Table 10', href: '#table-wb' },
+  { diss: 'Figure 11', what: 'Mediation through warmth and competence', here: 'Figure 12', href: '#fig-med-0' },
+  { diss: 'Figure 12 and Additional Mediation Models', what: 'Mediation through intuition and quantitative reasoning', here: 'Figure 13 and Table 15', href: '#fig-med-1' },
 ];
 ---
 
@@ -546,6 +569,40 @@ const toc = [
           positive impression of the recommender; each still carries a unique share in the model, which argues against that being the whole story. The decisions
           were abstract, so people supplied their own picture of the situation. The sample is 106 online-panel adults with an older average age (63 in the dissertation), and
           the results are about stated trust, not behavior. Chapters 3 and 4 take up the first and last of these.
+        </p>
+      </div>
+    </section>
+
+    <!-- ============================ dig deeper ============================ -->
+    <section class="section" id="dig-deeper" aria-labelledby="dig-title">
+      <div class="deep">
+        <h2 id="dig-title">Dig deeper</h2>
+        <p>Two more things for readers who want them: where each figure and table of the dissertation sits on this page, and a Bayesian check on every comparison that found no difference.</p>
+      </div>
+      <h3 class="fig-title">Where each dissertation figure and table lives</h3>
+      <FigureMap rows={figureMap2} />
+
+      <h3 class="fig-title" id="bayes">When the test found no difference</h3>
+      <BayesGuide />
+      <BayesPlot rows={bayesRows} />
+      <div class="prose">
+        <p>
+          <strong>The gap does not depend on how much quantitative reasoning a decision needs.</strong> The doctor-by-need interaction (hypothesis 2) was not significant. The Bayes factor for no
+          moderation is {fmtBF(bf('H2-interaction').bf01)}, strong evidence that the doctor-minus-AI gap is the same whether a decision leans on numbers or on judgment.
+          The dissertation reached the same conclusion from the p value, and this makes it firmer.
+        </p>
+        <p>
+          <strong>The gap is the same size across kinds of health problem.</strong> Physical against mental health, and bodily injury, acute sickness and chronic sickness against each other,
+          all give Bayes factors for no difference between {fmtBF(Math.min(...['gap-Physical health-Mental health','gap-Bodily injury-Acute sickness','gap-Bodily injury-Chronic sickness','gap-Acute sickness-Chronic sickness'].map((i) => bf(i).bf01)))} and {fmtBF(Math.max(...['gap-Physical health-Mental health','gap-Bodily injury-Acute sickness','gap-Bodily injury-Chronic sickness','gap-Acute sickness-Chronic sickness'].map((i) => bf(i).bf01)))}, moderate evidence.
+          Stage of care is different: the gap for preventative decisions is clearly smaller than for diagnostic or prescriptive ones, with Bayes factors above 1,000,000. Diagnostic and prescriptive gaps match (BF01 = {fmtBF(bf('gap-Diagnostic-Prescriptive').bf01)}).
+        </p>
+        <p>
+          <strong>Gender made no difference to trust; age is unclear.</strong> The Bayes factor for no gender difference is {fmtBF(bf('gender').bf01)}, strong. Age by itself is moderate ({fmtBF(bf('age').bf01)}),
+          but whether the gap grows with age is inconclusive ({fmtBF(bf('age-by-doctor').bf10)} for a difference, despite p = .013), so I would not lean on that finding.
+        </p>
+        <p>
+          <strong>Warmth did not explain the gap, but the evidence is moderate.</strong> The warmth pathway was not significant in the model that also included competence. The Bayes factor for no
+          indirect effect is {fmtBF(bf('H5-warmth').bf01)}. This one assumes the indirect effect is roughly bell-shaped, which indirect effects often are not, so treat it as a guide.
         </p>
       </div>
     </section>
