@@ -721,7 +721,7 @@
    "bar",
    "acad"
   ],
-  "proof": "In my generative AI preprint, I tested the main result 69 ways, so the conclusion does not rest on one analysis choice.",
+  "proof": "In my generative AI research, I tested the main result across 69 alternative analyses, so the conclusion does not rest on one analysis choice.",
   "icon": "shield",
   "evidence": [
    "genai",
@@ -1848,7 +1848,7 @@
    "acad",
    "ins"
   ],
-  "proof": "I used generative AI to run 69 alternative analyses of the main result in my preprint. I also use it to build code and figures, including this website, and I check its output against the data.",
+  "proof": "I used generative AI to run 69 alternative analyses of the main result in my generative AI research. I also use it to build code and figures, including this website, and I check its output against the data.",
   "icon": "terminal",
   "evidence": [
    "genai",
