@@ -1,0 +1,472 @@
+---
+// Study 1 as a story in five chapters. The reader rates six advice-givers, guesses how many adults trusted humans more,
+// then follows the question that opens at each step. Every number comes from the released Study 1 data
+// (participant IDs are shuffled and anonymous). Nothing the reader enters leaves their browser.
+import pts from '../data/trust-in-medical-ai/study1-points.json';
+import outcomes from '../data/trust-in-medical-ai/study1-outcomes.json';
+import hva from '../data/trust-in-medical-ai/study1-human-vs-ai.json';
+import { href } from '../utils/url';
+
+const kindOf = (id: string, ai: number) => (id === 'doctor_using_ai' ? 'hybrid' : ai ? 'ai' : 'human');
+const recs = [...pts.trust].sort((a: any, b: any) => b.mean - a.mean).map((r: any) => ({ id: r.id, label: r.label, kind: kindOf(r.id, r.ai), n: r.n, mean: r.mean, lo: r.lo, hi: r.hi, values: r.values }));
+const play = [
+  { id: 'doctor', label: 'Doctor' }, { id: 'nurse', label: 'Nurse' }, { id: 'layperson', label: 'Layperson' },
+  { id: 'doctor_using_ai', label: 'Doctor using AI' }, { id: 'ai_diagnostic', label: 'AI diagnostic tool' }, { id: 'ai_chatbot', label: 'AI chatbot' },
+].map((p) => ({ ...p, kind: recs.find((r) => r.id === p.id)!.kind }));
+const t = hva.tests[0].human_vs_ai;
+const total = t.n, higher = t.higher, same = t.same, lower = t.lower;
+const pctHigher = Math.round((100 * higher) / total);
+const out = outcomes.outcomes;
+const decisions = pts.decisions.filter((d: any) => d.id !== 'medical_general');
+const domainOf = (id: string) => (id.startsWith('diagnose') ? 'Diagnose' : id.startsWith('prescribe') ? 'Prescribe' : 'Prevent');
+const bands = ['Diagnose', 'Prescribe', 'Prevent'].map((name) => ({ name, rows: decisions.filter((d: any) => domainOf(d.id) === name).sort((a: any, b: any) => b.mean - a.mean) }));
+const sub = (v: string) => hva.subgroups.find((x: any) => x.variable === v)!;
+const subRows = (v: string) => sub(v).groups.map((g: any) => ({ variable: v, label: g.label, n: g.n, ...g.cells[0] }));
+const subTest = (v: string) => sub(v).tests[0];
+const pct = (v: number, max: number) => `${(v / max) * 100}%`;
+const fm = (n: number) => n.toFixed(1);
+const f2 = (n: number) => n.toFixed(2);
+const data = { recs: recs.map(({ id, label, kind, n, mean, lo, hi, values }) => ({ id, label, kind, n, mean, lo, hi, values })), play, total, higher, same, lower };
+const GAP_MAX = 4;
+const main = ['Experience with AI', 'Age'];
+const more = ['Gender', 'Race', 'Education', 'Political views'];
+---
+<div class="story">
+  <div class="prog" id="prog" aria-hidden="true"></div>
+  <section class="hero" aria-labelledby="h-title">
+    <p class="kick">Study 1 of my dissertation on trust in medical AI</p>
+    <h1 id="h-title">Would you trust an AI with your health?</h1>
+    <p class="lede">I asked 188 adults how much they would trust eleven advice-givers on medical decisions, from a doctor to a chatbot. Rate six of them yourself, make one guess, and then follow the question as it opens up.</p>
+  </section>
+
+  <section class="play" id="play" aria-labelledby="play-title">
+    <div class="head">
+      <h2 id="play-title">Your turn</h2>
+      <a class="skip" id="skip" href="#results">Skip to the story</a>
+    </div>
+    <p class="how">For a medical decision, how much would you trust each one? 0 is not at all. 10 is completely.</p>
+    <div class="sliders">
+      {play.map((p) => (
+        <div class="sl">
+          <label for={`s-${p.id}`}><span class={`sw k-${p.kind}`} aria-hidden="true"></span>{p.label}</label>
+          <input id={`s-${p.id}`} data-id={p.id} type="range" min="0" max="10" step="1" value="5" />
+          <output for={`s-${p.id}`}>5</output>
+        </div>
+      ))}
+    </div>
+    <div class="guessbox">
+      <div class="sl wide">
+        <label for="guess">Now a guess. Of every 100 adults, how many trusted humans more than AI?</label>
+        <input id="guess" type="range" min="0" max="100" step="1" value="50" />
+        <output for="guess" id="guess-out">50</output>
+      </div>
+    </div>
+    <div class="who">
+      <p class="how">Two optional questions help the story show where you fit. Nothing leaves your browser.</p>
+      <label class="sel">Your age
+        <select id="age"><option value="">Prefer not to say</option><option>18-29</option><option>30-44</option><option>45-59</option><option>60+</option></select>
+      </label>
+      <label class="sel">Your experience with AI
+        <select id="aiexp"><option value="">Prefer not to say</option><option>None or a little</option><option>Moderate or more</option></select>
+      </label>
+    </div>
+    <button type="button" class="go" id="go">See how 188 adults answered</button>
+    <p class="key" aria-label="Color key"><span class="sw k-human"></span>Human <span class="sw k-ai"></span>AI <span class="sw k-hybrid"></span>Doctor using AI</p>
+  </section>
+
+  <div class="after" id="after">
+  <section class="res" id="results" aria-labelledby="res-title">
+    <p class="ch">1 of 5</p>
+    <h2 id="res-title">Adults trusted a doctor far more than an AI</h2>
+    <p class="you-line" id="you-line" aria-live="polite"></p>
+    <figure data-fig class="fig">
+      <figcaption class="cap">How much each of 188 adults trusted each advice-giver</figcaption>
+      <p class="look">What to look for. Each small dot is one person. Blue dots (humans) sit to the right of coral dots (AI). The white bar is the average with its 95% interval.</p>
+      <div class="strip" id="strip" role="img" aria-label="Trust ratings from 0 to 10 for eleven advice-givers, one dot per person, with averages."></div>
+      <div class="axis"><span>0 not at all</span><span>5</span><span>10 completely</span></div>
+      <div class="tip" hidden></div>
+    </figure>
+    <p class="next">But an average hides people. How many of them trusted the AI more?</p>
+  </section>
+
+  <section class="gap" aria-labelledby="gap-title">
+    <p class="ch">2 of 5</p>
+    <h2 id="gap-title">About one in four trusted the AI more</h2>
+    <p id="guess-line" aria-live="polite"></p>
+    <p>I averaged each person’s trust in six human advice-givers and in four AI ones. {higher} of {total} people trusted the humans more. {lower} trusted the AI more, and {same} rated the two the same.</p>
+    <figure data-fig class="fig">
+      <figcaption class="cap">{pctHigher} of every 100 people trusted humans more than AI</figcaption>
+      <p class="look">What to look for. A big blue block, a clear block of coral, and a few grey dots between them. Each dot is one person.</p>
+      <div class="people" id="people" role="img" aria-label={`${higher} people trusted humans more, ${same} rated them the same, ${lower} trusted AI more`}>
+        {Array.from({ length: higher }, (_, i) => <span class="p human" data-tip data-label="Trusted humans more" data-lines={`Person ${i + 1} of ${total}`}></span>)}
+        {Array.from({ length: same }, (_, i) => <span class="p same" data-tip data-label="Rated them the same" data-lines={`Person ${higher + i + 1} of ${total}`}></span>)}
+        {Array.from({ length: lower }, (_, i) => <span class="p ai" data-tip data-label="Trusted AI more" data-lines={`Person ${higher + same + i + 1} of ${total}`}></span>)}
+      </div>
+      <p class="legend2"><span class="sw k-human"></span>Humans more ({higher}) <span class="sw k-same"></span>The same ({same}) <span class="sw k-ai"></span>AI more ({lower}) <span class="guess-key" id="guess-key"><span class="sw ring"></span>Your guess</span></p>
+      <div class="tip" hidden></div>
+    </figure>
+    <p class="next">Who are those {lower} people?</p>
+  </section>
+
+  <section class="whoc" aria-labelledby="who-title">
+    <p class="ch">3 of 5</p>
+    <h2 id="who-title">The gap was smallest for people with AI experience and largest for adults 60 and older</h2>
+    <p>For each group I took the gap between human and AI trust, in points on the 0 to 10 scale. A bigger gap means a bigger preference for humans.</p>
+    <figure data-fig class="fig">
+      <figcaption class="cap">Gap in trust, humans minus AI, by group</figcaption>
+      <p class="look">What to look for. The line marks the gap for all adults (1.6 points). People with moderate or more experience of AI sit closer to zero. Adults 60 and older sit furthest right. Your own groups, if you chose them, are ringed.</p>
+      <div class="subs">
+        {main.map((v) => (
+          <div class="band">
+            <p class="bname">{v}</p>
+            {subRows(v).map((r: any) => (
+              <div class="drow" data-grp={`${v}|${r.label}`}>
+                <p class="dlab">{r.label} <span class="you-tag">You</span></p>
+                <div class="dtrack ref">
+                  <span class="ci n" style={`left:${pct(r.lo, GAP_MAX)};width:calc(${pct(r.hi, GAP_MAX)} - ${pct(r.lo, GAP_MAX)})`}></span>
+                  <span class="dot n" style={`left:${pct(r.mean, GAP_MAX)}`} data-tip data-label={`${v}: ${r.label}`} data-lines={`Gap ${f2(r.mean)} points|95% interval ${f2(r.lo)} to ${f2(r.hi)}|${r.n} people`}></span>
+                </div>
+                <p class="dnote">{fm(r.mean)} points, {r.n} people</p>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+      <div class="axis subaxis"><span>0 no gap</span><span>2</span><span>4</span></div>
+      <p class="axtitle">Points by which humans were trusted more than AI</p>
+      <div class="tip" hidden></div>
+    </figure>
+    <p class="small note">These comparisons were exploratory. I made 18 of them and did not correct for that, so read them as leads, not settled findings. The trust gap differed by experience with AI (p &lt; .001) and by age (p = .007).</p>
+    <details class="more">
+      <summary>Four more groups</summary>
+      <div class="subs">
+        {more.map((v) => (
+          <div class="band">
+            <p class="bname">{v} <span class="small muted">(p = {subTest(v).p < 0.001 ? '< .001' : subTest(v).p.toFixed(3).replace('0.', '.')})</span></p>
+            {subRows(v).map((r: any) => (
+              <div class="drow" data-grp={`${v}|${r.label}`}>
+                <p class="dlab">{r.label}</p>
+                <div class="dtrack ref">
+                  <span class="ci n" style={`left:${pct(r.lo, GAP_MAX)};width:calc(${pct(r.hi, GAP_MAX)} - ${pct(r.lo, GAP_MAX)})`}></span>
+                  <span class="dot n" style={`left:${pct(r.mean, GAP_MAX)}`} data-tip data-label={`${v}: ${r.label}`} data-lines={`Gap ${f2(r.mean)} points|95% interval ${f2(r.lo)} to ${f2(r.hi)}|${r.n} people`}></span>
+                </div>
+                <p class="dnote">{fm(r.mean)} points, {r.n} people</p>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </details>
+    <p class="next">In every group, people trusted humans more. What do they think a doctor can do that an AI cannot?</p>
+  </section>
+
+  <section class="why" aria-labelledby="why-title">
+    <p class="ch">4 of 5</p>
+    <h2 id="why-title">The doctor also looked better at both kinds of thinking</h2>
+    <p>Good doctors combine numbers with judgment. They read the lab result, and they also sense when something does not add up. People rated a doctor higher than an AI on both, and the trust gap was the largest of the three. In Study 2, these ratings explained about half of the doctor’s edge. The other half is still unexplained.</p>
+    <figure data-fig class="fig">
+      <figcaption class="cap">Doctor against AI, average rating from 0 to 10</figcaption>
+      <p class="look">What to look for. In every row the blue dot sits to the right of the coral dot. The line behind each dot is its 95% interval.</p>
+      <div class="dumb">
+        {out.map((o: any) => (
+          <div class="drow">
+            <p class="dlab">{o.label}</p>
+            <div class="dtrack">
+              <span class="ci h" style={`left:${pct(o.doctor.lo, 10)};width:calc(${pct(o.doctor.hi, 10)} - ${pct(o.doctor.lo, 10)})`}></span>
+              <span class="ci a" style={`left:${pct(o.ai.lo, 10)};width:calc(${pct(o.ai.hi, 10)} - ${pct(o.ai.lo, 10)})`}></span>
+              <span class="link" style={`left:${pct(Math.min(o.doctor.mean, o.ai.mean), 10)};width:calc(${pct(Math.abs(o.doctor.mean - o.ai.mean), 10)})`}></span>
+              <span class="dot h" style={`left:${pct(o.doctor.mean, 10)}`} data-tip data-label={`Doctor: ${o.label}`} data-lines={`Average ${fm(o.doctor.mean)}|95% interval ${fm(o.doctor.lo)} to ${fm(o.doctor.hi)}`}></span>
+              <span class="dot a" style={`left:${pct(o.ai.mean, 10)}`} data-tip data-label={`AI: ${o.label}`} data-lines={`Average ${fm(o.ai.mean)}|95% interval ${fm(o.ai.lo)} to ${fm(o.ai.hi)}`}></span>
+            </div>
+            <p class="dnote">{fm(o.diff)} points apart, d = {o.d.toFixed(2).replace('0.', '.')}</p>
+          </div>
+        ))}
+      </div>
+      <div class="axis dumbaxis"><span>0</span><span>5</span><span>10</span></div>
+      <p class="legend2"><span class="sw k-human"></span>Doctor <span class="sw k-ai"></span>General medical AI</p>
+      <div class="tip" hidden></div>
+    </figure>
+    <p class="small note">d is Cohen’s d for paired ratings: the average gap divided by how much the gaps varied. Around .5 is a medium difference and .8 is large.</p>
+    <p class="next">Does the kind of decision change any of this?</p>
+  </section>
+
+  <section class="dec" aria-labelledby="dec-title">
+    <p class="ch">5 of 5</p>
+    <h2 id="dec-title">Study 1 raised a question, and the later studies answered it</h2>
+    <p>For each decision I asked how much a professional would need numbers and how much intuition. Zero means only intuition and 100 means only numbers. Diagnosing and prescribing sit highest, at about 58 to 65. Prevention sits lowest, at about 49 to 54.</p>
+    <figure data-fig class="fig">
+      <figcaption class="cap">How much each decision needs numbers, 0 to 100</figcaption>
+      <p class="look">What to look for. Prevention dots sit nearer the middle of the scale. Diagnosis and prescribing sit further right.</p>
+      <div class="bands">
+        {bands.map((b) => (
+          <div class="band">
+            <p class="bname">{b.name}</p>
+            {b.rows.map((d: any) => (
+              <div class="drow">
+                <p class="dlab">{d.label}</p>
+                <div class="dtrack">
+                  <span class="ci n" style={`left:${pct(d.lo, 100)};width:calc(${pct(d.hi, 100)} - ${pct(d.lo, 100)})`}></span>
+                  <span class="dot n" style={`left:${pct(d.mean, 100)}`} data-tip data-label={d.label} data-lines={`Average ${fm(d.mean)}|95% interval ${fm(d.lo)} to ${fm(d.hi)}|${d.n} people`}></span>
+                </div>
+                <p class="dnote">{fm(d.mean)}</p>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+      <div class="axis bandaxis"><span>0 only intuition</span><span>50</span><span>100 only numbers</span></div>
+      <div class="tip" hidden></div>
+    </figure>
+    <p>In Study 2, 106 adults rated trust in a doctor and in an AI for twelve decisions, from diagnosing strep throat to prescribing insulin. The doctor won on every one. In the last study, 560 people were recruited for 15 days of sleep logging, and 455 completed it. They followed a doctor’s advice and an AI’s advice about equally. So stated trust did not turn into different behavior, at least for low-stakes advice.</p>
+  </section>
+
+  <section class="end" aria-labelledby="end-title">
+    <h2 id="end-title">Where you stand, and where to go next</h2>
+    <p id="callback" aria-live="polite"></p>
+    <p>Study 1 gives stated ratings from one sample of 188 adults at one point in time. They do not show what people do, which is why the later studies matter.</p>
+    <ul class="links">
+      <li><a href={href('/projects/trust-in-medical-ai/study-1/')}>Every table and figure for Study 1</a></li>
+      <li><a href={href('/projects/trust-in-medical-ai/study-2/')}>Study 2: does the kind of decision matter?</a></li>
+      <li><a href={href('/data/study1-ratings.csv')}>De-identified Study 1 data (CSV)</a> and <a href={href('/data/study1-codebook.csv')}>codebook</a></li>
+      <li><a href="https://github.com/mrleitao/Psycho_Robot">Code on GitHub</a></li>
+    </ul>
+    <button type="button" class="again" id="again">Rate them again</button>
+  </section>
+  </div>
+  <script type="application/json" id="trust-data" set:html={JSON.stringify(data)} />
+</div>
+
+<style>
+  .story {
+    --bg: #0e2530; --fg: #eef2f0; --dim: #a7bcc5; --line: #28485a; --card: #153341;
+    --human: #6bb6e0; --aic: #f4898c; --hyb: #f1d1b5; --same: #8aa0aa;
+    background: var(--bg); color: var(--fg); box-shadow: 0 0 0 100vmax var(--bg); clip-path: inset(0 -100vmax);
+    font-family: var(--text); padding-block: clamp(2.2rem, 6vw, 4.5rem) clamp(3rem, 8vw, 6rem); margin-top: -1px;
+  }
+  .story > section { max-width: 46rem; margin: 0 auto clamp(3rem, 7vw, 5rem); }
+  .story > section.res, .story > section.gap, .story > section.why, .story > section.dec { max-width: 50rem; }
+  h1, h2, .kick, .cap, .look, .axis, .legend2, .sl label, .go, .again, .skip, .key, .dlab, .dnote, .bname { font-family: var(--display); }
+  .kick { margin: 0 0 1rem; color: var(--hyb); font-weight: 600; font-size: 1rem; }
+  h1 { margin: 0; font-size: clamp(2.6rem, 9vw, 5.4rem); line-height: 0.98; letter-spacing: -0.03em; font-weight: 800; max-width: 12ch; }
+  .lede { margin: 1.4rem 0 0; font-size: clamp(1.15rem, 2.6vw, 1.4rem); line-height: 1.5; max-width: 34rem; color: #d8e3e6; }
+  h2 { margin: 0 0 0.8rem; font-size: clamp(1.5rem, 4.2vw, 2.1rem); line-height: 1.12; letter-spacing: -0.015em; font-weight: 750; max-width: 24ch; }
+  .res h2 { max-width: 26ch; }
+  p { line-height: 1.6; max-width: 40rem; font-size: 1.08rem; }
+  .head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.5rem 1.5rem; }
+  .skip { color: var(--hyb); font-size: 0.95rem; }
+  .skip:focus-visible, .go:focus-visible, .again:focus-visible, input:focus-visible { outline: 3px solid var(--hyb); outline-offset: 3px; }
+  .play { background: var(--card); border-radius: 22px; padding: clamp(1.2rem, 4vw, 2.2rem); }
+  .how { margin-top: 0; }
+  .sliders { display: grid; gap: 0.5rem 2rem; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); margin: 1.2rem 0; }
+  .sl { display: grid; grid-template-columns: 1fr auto; gap: 0.15rem 0.6rem; align-items: center; }
+  .sl label { font-weight: 650; display: flex; align-items: center; gap: 0.5rem; }
+  .sl output { font: 750 1.15rem var(--display); font-variant-numeric: tabular-nums; min-width: 1.6rem; text-align: right; }
+  .sl input { grid-column: 1 / -1; }
+  input[type=range] { -webkit-appearance: none; appearance: none; background: transparent; width: 100%; height: 2.2rem; }
+  input[type=range]::-webkit-slider-runnable-track { height: 6px; border-radius: 3px; background: var(--line); }
+  input[type=range]::-moz-range-track { height: 6px; border-radius: 3px; background: var(--line); }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; margin-top: -9px; border-radius: 50%; background: var(--hyb); border: 3px solid var(--bg); box-shadow: 0 0 0 1.5px var(--hyb); }
+  input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: var(--hyb); border: 3px solid var(--bg); box-shadow: 0 0 0 1.5px var(--hyb); }
+  .go, .again { font-weight: 750; font-size: 1.05rem; padding: 0.75rem 1.4rem; border-radius: 999px; border: 0; background: var(--hyb); color: #102a35; cursor: pointer; }
+  .again { background: transparent; color: var(--fg); border: 1.5px solid var(--dim); margin-top: 1rem; }
+  .go:hover { background: #fff; }
+  .key { margin: 1.1rem 0 0; font-size: 0.9rem; color: var(--dim); display: flex; flex-wrap: wrap; gap: 0.4rem 1.1rem; align-items: center; }
+  .sw { display: inline-block; width: 0.8rem; height: 0.8rem; border-radius: 50%; margin-right: 0.3rem; vertical-align: -0.05rem; }
+  .k-human { background: var(--human); } .k-ai { background: var(--aic); } .k-hybrid { background: var(--hyb); } .k-same { background: var(--same); }
+  .you-line { font-weight: 600; font-size: 1.12rem; }
+  .you-line:empty { display: none; }
+  .fig { margin: 1.4rem 0 0; position: relative; }
+  .cap { font-weight: 700; font-size: 1.05rem; margin: 0 0 0.3rem; }
+  .look { margin: 0 0 1rem; font-size: 0.92rem; color: var(--dim); max-width: 40rem; }
+  .axis { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--dim); margin: 0.4rem 0 0 var(--lab, 0); }
+  .legend2 { margin: 0.8rem 0 0; font-size: 0.9rem; color: var(--dim); display: flex; flex-wrap: wrap; gap: 0.3rem 1.2rem; align-items: center; }
+  .tip { position: absolute; z-index: 5; transform: translate(-50%, -100%); background: #fff; color: #102a35; padding: 0.45rem 0.7rem; border-radius: 10px; font: 500 0.85rem/1.35 var(--display); pointer-events: none; box-shadow: 0 6px 20px rgba(0,0,0,0.35); white-space: nowrap; }
+  .tip :global(strong) { display: block; } .tip :global(span) { display: block; }
+  .note { color: var(--dim); font-size: 0.9rem; }
+  /* strip chart */
+  :global(.story .srow) { display: grid; grid-template-columns: var(--lab) minmax(0, 1fr); align-items: center; gap: 0 0.8rem; min-height: 2.5rem; }
+  .strip { --lab: 8.6rem; }
+  .axis { --lab: 9.4rem; }
+  @media (max-width: 560px) { .strip { --lab: 5.6rem; } .axis { --lab: 6.4rem; } }
+  :global(.story .slab) { font: 600 0.88rem/1.15 var(--display); display: flex; align-items: center; gap: 0.35rem; }
+  :global(.story .trk) { position: relative; margin-inline: 5px; height: 2.5rem; border-left: 1px solid var(--line); border-right: 1px solid var(--line); background: linear-gradient(var(--line), var(--line)) center / 100% 1px no-repeat; }
+  :global(.story .d) { position: absolute; width: 5px; height: 5px; border-radius: 50%; opacity: 0.55; transform: translate(-50%, -50%); }
+  :global(.story .d.human) { background: var(--human); } :global(.story .d.ai) { background: var(--aic); } :global(.story .d.hybrid) { background: var(--hyb); }
+  :global(.story .mci) { position: absolute; top: 50%; height: 5px; margin-top: -2.5px; background: #fff; border-radius: 3px; }
+  :global(.story .mm) { position: absolute; top: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px; background: #fff; border: 3px solid var(--bg); border-radius: 3px; transform: rotate(45deg); }
+  :global(.story .yo) { position: absolute; top: 50%; width: 20px; height: 20px; margin: -10px 0 0 -10px; border-radius: 50%; border: 3px solid var(--hyb); background: transparent; box-shadow: 0 0 0 2px var(--bg); }
+  :global(.story .yl) { position: absolute; top: -0.1rem; transform: translateX(-50%); font: 700 0.7rem var(--display); color: var(--hyb); }
+  :global(.story .srow.in) { opacity: 0; }
+  :global(.story .srow.in.on) { opacity: 1; transition: opacity 0.4s ease; transition-delay: calc(var(--i) * 70ms); }
+  /* people grid */
+  .people { display: flex; flex-wrap: wrap; gap: 5px; max-width: 34rem; }
+  .p { width: 14px; height: 14px; border-radius: 50%; }
+  .p.human { background: var(--human); } .p.same { background: var(--same); } .p.ai { background: var(--aic); }
+  /* dumbbell and bands */
+  .dumb { --lab: 11rem; } .bands { --lab: 13.5rem; }
+  .drow { display: grid; grid-template-columns: var(--lab) minmax(0, 1fr) 10rem; align-items: center; gap: 0 0.8rem; min-height: 2.3rem; }
+  .dlab { margin: 0; font-size: 0.9rem; line-height: 1.2; font-weight: 600; }
+  .dnote { margin: 0; font-size: 0.82rem; color: var(--dim); }
+  .dtrack { position: relative; height: 2.3rem; border-left: 1px solid var(--line); border-right: 1px solid var(--line); background: linear-gradient(var(--line), var(--line)) center / 100% 1px no-repeat; }
+  .dot { position: absolute; top: 50%; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; border: 2px solid var(--bg); }
+  .dot.h { background: var(--human); } .dot.a { background: var(--aic); } .dot.n { background: var(--hyb); }
+  .ci { position: absolute; top: 50%; height: 4px; margin-top: -2px; border-radius: 2px; opacity: 0.45; }
+  .ci.h { background: var(--human); } .ci.a { background: var(--aic); } .ci.n { background: var(--hyb); }
+  .link { position: absolute; top: 50%; height: 2px; margin-top: -1px; background: var(--dim); opacity: 0.6; }
+  .band { margin: 0 0 1rem; }
+  .bname { margin: 0.8rem 0 0.2rem; font-weight: 750; color: var(--hyb); }
+  .dumb ~ .axis { margin-left: calc(11rem + 0.8rem); margin-right: calc(10rem + 0.8rem); }
+  .bands ~ .axis { margin-left: calc(13.5rem + 0.8rem); margin-right: calc(10rem + 0.8rem); }
+  @media (max-width: 640px) {
+    .dumb, .bands { --lab: 6.8rem; }
+    .drow { grid-template-columns: var(--lab) 1fr; grid-template-rows: auto auto; }
+    .dnote { grid-column: 2; margin-top: -0.2rem; }
+    .dumb ~ .axis, .bands ~ .axis { margin-left: calc(6.8rem + 0.8rem); margin-right: 0; }
+  }
+  .links { padding-left: 1.2rem; line-height: 1.8; font-family: var(--display); }
+  .links a, .story :global(a) { color: var(--hyb); }
+  @media (prefers-reduced-motion: reduce) { :global(.story .srow.in.on) { transition: none; } }
+</style>
+<style is:global>
+  .story .prog { position: fixed; top: 0; left: 0; height: 3px; width: 0; background: #f1d1b5; z-index: 50; transition: width 0.1s linear; }
+  .story .after[hidden] { display: none; }
+  .story .ch { margin: 0 0 0.5rem; font: 600 0.85rem var(--display); color: #f1d1b5; }
+  .story .next { margin-top: 1.6rem; font: 650 1.2rem/1.35 var(--display); color: #f1d1b5; max-width: 32rem; }
+  .story .guessbox, .story .who { margin: 1.2rem 0; }
+  .story .sl.wide { grid-template-columns: 1fr auto; }
+  .story .sel { display: grid; gap: 0.3rem; margin: 0.6rem 1.2rem 0.6rem 0; font: 600 0.92rem var(--display); max-width: 16rem; }
+  .story .who { display: flex; flex-wrap: wrap; align-items: flex-end; }
+  .story .who .how { flex-basis: 100%; margin: 0 0 0.2rem; font-size: 0.95rem; color: #a7bcc5; }
+  .story select { font: 500 1rem var(--display); padding: 0.55rem 0.7rem; border-radius: 10px; border: 1.5px solid #28485a; background: #0e2530; color: #eef2f0; }
+  .story .you-tag { display: none; font: 700 0.7rem var(--display); color: #102a35; background: #f1d1b5; border-radius: 999px; padding: 0.05rem 0.45rem; margin-left: 0.3rem; }
+  .story .drow.mine .you-tag { display: inline-block; }
+  .story .drow.mine .dot { box-shadow: 0 0 0 3px #f1d1b5; }
+  .story .dtrack.ref::after { content: ''; position: absolute; top: 0; bottom: 0; left: 40%; width: 0; border-left: 2px dashed #a7bcc5; }
+  .story .subs { --lab: 11rem; }
+  .story .subaxis { margin-left: calc(11rem + 0.8rem); margin-right: calc(10rem + 0.8rem); }
+  .story .dumbaxis { margin-left: calc(11rem + 0.8rem); margin-right: calc(10rem + 0.8rem); }
+  .story .bandaxis { margin-left: calc(13.5rem + 0.8rem); margin-right: calc(10rem + 0.8rem); }
+  .story .axtitle { margin: 0.2rem 0 0; font: 500 0.85rem var(--display); color: #a7bcc5; }
+  .story .more { margin-top: 1rem; font-family: var(--display); }
+  .story .more summary { cursor: pointer; font-weight: 650; color: #f1d1b5; }
+  .story .sw.ring { background: transparent; box-shadow: 0 0 0 2px #f1d1b5; }
+  .story .p.guess { box-shadow: 0 0 0 3px #f1d1b5; position: relative; }
+  .story .guess-key { display: none; }
+  .story .guess-key.on { display: inline; }
+  .story .fig + p, .story .fig ~ p.small { margin-top: 1.2rem; }
+  .story .dnote { position: relative; z-index: 1; width: fit-content; background: #0e2530; padding-right: 0.3rem; }
+  @media (max-width: 640px) {
+    .story .subs { --lab: 6.8rem; }
+    .story .subaxis, .story .dumbaxis, .story .bandaxis { margin-left: calc(6.8rem + 0.8rem); margin-right: 0; }
+  }
+</style>
+
+<script>
+  const data = JSON.parse(document.getElementById('trust-data')!.textContent!);
+  type Rec = { id: string; label: string; kind: string; n: number; mean: number; lo: number; hi: number; values: (number | null)[] };
+  const recs: Rec[] = data.recs;
+  const byId = Object.fromEntries(recs.map((r) => [r.id, r]));
+  const sliders = Array.from(document.querySelectorAll<HTMLInputElement>('.sl input'));
+  sliders.forEach((s) => s.addEventListener('input', () => { (s.parentElement!.querySelector('output') as HTMLOutputElement).textContent = s.value; }));
+  const strip = document.getElementById('strip')!, youLine = document.getElementById('you-line')!, guessLine = document.getElementById('guess-line')!, callback = document.getElementById('callback')!;
+  const after = document.getElementById('after')!, go = document.getElementById('go')!, again = document.getElementById('again')!, skip = document.getElementById('skip')!;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const f1 = (v: number) => v.toFixed(1);
+  after.hidden = true; // the story opens once the reader has played, or skipped
+  const mean = (xs: number[]) => xs.reduce((a, b) => a + b, 0) / xs.length;
+  const HUM = ['doctor', 'nurse', 'layperson'], AI = ['ai_diagnostic', 'ai_chatbot'];
+  const gapFor = (get: (id: string) => number | null) => {
+    const h = HUM.map(get).filter((v): v is number => v != null), a = AI.map(get).filter((v): v is number => v != null);
+    return h.length && a.length ? mean(h) - mean(a) : null;
+  };
+
+  function render(mine: Record<string, number> | null) {
+    strip.replaceChildren();
+    recs.forEach((r, i) => {
+      const row = document.createElement('div');
+      row.className = 'srow' + (reduce ? '' : ' in'); row.style.setProperty('--i', String(i));
+      const lab = document.createElement('div'); lab.className = 'slab'; lab.innerHTML = `<span class="sw k-${r.kind}"></span>${r.label}`;
+      const trk = document.createElement('div'); trk.className = 'trk';
+      r.values.forEach((v, k) => {
+        if (v == null) return;
+        const d = document.createElement('span'); d.className = `d ${r.kind}`;
+        const jx = (((k * 37) % 100) / 100 - 0.5) * 0.5, jy = (((k * 61) % 100) / 100) * 36 + 2;
+        d.style.left = `${Math.min(100, Math.max(0, ((v + jx) / 10) * 100))}%`; d.style.top = `${jy}px`; trk.append(d);
+      });
+      const ci = document.createElement('span'); ci.className = 'mci'; ci.style.left = `${(r.lo / 10) * 100}%`; ci.style.width = `${((r.hi - r.lo) / 10) * 100}%`; trk.append(ci);
+      const mm = document.createElement('span'); mm.className = 'mm'; mm.style.left = `${(r.mean / 10) * 100}%`;
+      mm.dataset.tip = ''; mm.dataset.label = r.label; mm.dataset.lines = `Average ${f1(r.mean)}|95% interval ${f1(r.lo)} to ${f1(r.hi)}|${r.n} people`; mm.tabIndex = 0; trk.append(mm);
+      if (mine && mine[r.id] != null) {
+        const yo = document.createElement('span'); yo.className = 'yo'; yo.style.left = `${(mine[r.id] / 10) * 100}%`;
+        yo.dataset.tip = ''; yo.dataset.label = 'You'; yo.dataset.lines = `You rated ${r.label} ${mine[r.id]}|Average ${f1(r.mean)}`; yo.tabIndex = 0;
+        const yl = document.createElement('span'); yl.className = 'yl'; yl.style.left = `${(mine[r.id] / 10) * 100}%`; yl.textContent = 'You'; trk.append(yo, yl);
+      }
+      row.append(lab, trk); strip.append(row);
+    });
+    if (!reduce) requestAnimationFrame(() => requestAnimationFrame(() => strip.querySelectorAll('.srow').forEach((r) => r.classList.add('on'))));
+  }
+
+  function personal(mine: Record<string, number> | null, guess: number | null, age: string, aiexp: string) {
+    document.querySelectorAll('.drow.mine').forEach((e) => e.classList.remove('mine'));
+    document.querySelectorAll('.p.guess').forEach((e) => e.classList.remove('guess')); document.getElementById('guess-key')?.classList.remove('on');
+    youLine.textContent = ''; guessLine.textContent = ''; callback.textContent = '';
+    if (age) document.querySelector(`.drow[data-grp="Age|${age}"]`)?.classList.add('mine');
+    if (aiexp) document.querySelector(`.drow[data-grp="Experience with AI|${aiexp}"]`)?.classList.add('mine');
+    if (!mine) return;
+    const you = gapFor((id) => mine[id] ?? null) as number;
+    const n = recs[0].values.length, gaps: number[] = [];
+    for (let k = 0; k < n; k++) { const g = gapFor((id) => byId[id].values[k]); if (g != null) gaps.push(g); }
+    const below = gaps.filter((g) => g < you).length + gaps.filter((g) => g === you).length / 2;
+    const med = [...gaps].sort((a, b) => a - b)[Math.floor(gaps.length / 2)];
+    const hum = mean(HUM.map((id) => mine[id])), ai = mean(AI.map((id) => mine[id]));
+    const rel = you > 0 ? 'You trusted the humans more.' : you < 0 ? 'You trusted the AIs more.' : 'You rated humans and AIs the same.';
+    youLine.textContent = `You rated the doctor, nurse and layperson ${f1(hum)} on average and the two AIs ${f1(ai)}. ${rel} Your gap of ${f1(you)} points is larger than ${Math.round((below / gaps.length) * 100)}% of the ${gaps.length} adults who rated the same five. The middle adult’s gap was ${f1(med)}. I left out the doctor using AI, because it is both.`;
+    if (guess != null) {
+      const actual = Math.round((100 * data.higher) / data.total);
+      guessLine.textContent = `You guessed ${guess} of every 100 adults. In these data it was ${actual}. ${guess < actual - 5 ? 'More people trusted humans than you expected.' : guess > actual + 5 ? 'Fewer people trusted humans more than you expected.' : 'You were close.'}`;
+      const dots = document.querySelectorAll('#people .p');
+      const idx = Math.min(dots.length - 1, Math.max(0, Math.round((guess / 100) * dots.length) - 1));
+      dots[idx]?.classList.add('guess'); document.getElementById('guess-key')?.classList.add('on');
+    }
+    const d = byId['doctor'], c = byId['ai_chatbot'];
+    callback.textContent = `You trusted the doctor ${mine['doctor']} and the AI chatbot ${mine['ai_chatbot']}. The average adult said ${f1(d.mean)} and ${f1(c.mean)}.${guess != null ? ` You guessed ${guess} of 100 would trust humans more, and ${Math.round((100 * data.higher) / data.total)} did.` : ''}`;
+  }
+
+  const open = (withPlay: boolean) => {
+    const mine: Record<string, number> | null = withPlay ? {} : null;
+    if (mine) sliders.filter((s) => s.dataset.id).forEach((s) => { mine[s.dataset.id!] = Number(s.value); });
+    const guess = withPlay ? Number((document.getElementById('guess') as HTMLInputElement).value) : null;
+    const age = withPlay ? (document.getElementById('age') as HTMLSelectElement).value : '';
+    const aiexp = withPlay ? (document.getElementById('aiexp') as HTMLSelectElement).value : '';
+    after.hidden = false; render(mine); personal(mine, guess, age, aiexp);
+    document.getElementById('results')!.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+  };
+  document.getElementById('guess')!.addEventListener('input', (e) => { document.getElementById('guess-out')!.textContent = (e.target as HTMLInputElement).value; });
+  go.addEventListener('click', () => open(true));
+  skip.addEventListener('click', (e) => { e.preventDefault(); open(false); });
+  again.addEventListener('click', () => document.getElementById('play')!.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }));
+  render(null);
+
+  const prog = document.getElementById('prog')!;
+  const onScroll = () => { const h = document.documentElement.scrollHeight - innerHeight; prog.style.width = h > 0 ? `${(scrollY / h) * 100}%` : '0'; };
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  // Tooltips for every figure, by delegation so they survive re-rendering.
+  document.querySelectorAll<HTMLElement>('figure[data-fig]').forEach((fig) => {
+    const tip = fig.querySelector<HTMLElement>('.tip')!;
+    const esc = (s: string) => s.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c] as string));
+    const show = (el: HTMLElement) => {
+      const lines = (el.dataset.lines ?? '').split('|').filter(Boolean);
+      tip.innerHTML = `<strong>${esc(el.dataset.label ?? '')}</strong>${lines.map((l) => `<span>${esc(l)}</span>`).join('')}`;
+      tip.hidden = false;
+      const fr = fig.getBoundingClientRect(), r = el.getBoundingClientRect(), half = tip.offsetWidth / 2;
+      tip.style.left = `${Math.max(half, Math.min(fr.width - half, r.left - fr.left + r.width / 2))}px`;
+      tip.style.top = `${Math.max(tip.offsetHeight + 4, r.top - fr.top - 4)}px`;
+    };
+    const target = (e: Event) => (e.target as HTMLElement).closest<HTMLElement>('[data-tip]');
+    fig.addEventListener('pointerover', (e) => { const t = target(e); if (t) show(t); });
+    fig.addEventListener('pointerout', (e) => { if (target(e)) tip.hidden = true; });
+    fig.addEventListener('focusin', (e) => { const t = target(e); if (t) show(t); });
+    fig.addEventListener('focusout', () => (tip.hidden = true));
+  });
+</script>
