@@ -1,0 +1,347 @@
+---
+// Study 1 as a short story: rate six advice-givers yourself, then see how 188 adults rated them.
+// Every number comes from the released Study 1 data (participant IDs are shuffled and anonymous).
+import pts from '../data/trust-in-medical-ai/study1-points.json';
+import outcomes from '../data/trust-in-medical-ai/study1-outcomes.json';
+import hva from '../data/trust-in-medical-ai/study1-human-vs-ai.json';
+import { href } from '../utils/url';
+
+const kindOf = (id: string, ai: number) => (id === 'doctor_using_ai' ? 'hybrid' : ai ? 'ai' : 'human');
+const recs = [...pts.trust]
+  .sort((a: any, b: any) => b.mean - a.mean)
+  .map((r: any) => ({ id: r.id, label: r.label, kind: kindOf(r.id, r.ai), n: r.n, mean: r.mean, lo: r.lo, hi: r.hi, values: r.values }));
+const play = [
+  { id: 'doctor', label: 'Doctor' },
+  { id: 'nurse', label: 'Nurse' },
+  { id: 'layperson', label: 'Layperson' },
+  { id: 'doctor_using_ai', label: 'Doctor using AI' },
+  { id: 'ai_diagnostic', label: 'AI diagnostic tool' },
+  { id: 'ai_chatbot', label: 'AI chatbot' },
+].map((p) => ({ ...p, kind: recs.find((r) => r.id === p.id)!.kind }));
+const t = hva.tests[0].human_vs_ai;
+const total = t.n, higher = t.higher, same = t.same, lower = t.lower;
+const out = outcomes.outcomes;
+const decisions = pts.decisions.filter((d: any) => d.id !== 'medical_general');
+const domainOf = (id: string) => (id.startsWith('diagnose') ? 'Diagnose' : id.startsWith('prescribe') ? 'Prescribe' : 'Prevent');
+const bands = ['Diagnose', 'Prescribe', 'Prevent'].map((name) => ({
+  name,
+  rows: decisions.filter((d: any) => domainOf(d.id) === name).sort((a: any, b: any) => b.mean - a.mean),
+}));
+const pct = (v: number, max: number) => `${(v / max) * 100}%`;
+const data = { recs: recs.map(({ id, label, kind, n, mean, lo, hi, values }) => ({ id, label, kind, n, mean, lo, hi, values })), play, total };
+const fm = (n: number) => n.toFixed(1);
+---
+<div class="story">
+  <section class="hero" aria-labelledby="h-title">
+    <p class="kick">Study 1 of my dissertation on trust in medical AI</p>
+    <h1 id="h-title">Would you trust an AI with your health?</h1>
+    <p class="lede">I asked 188 adults how much they would trust eleven advice-givers on medical decisions, from a doctor to a chatbot. Before you see what they said, rate six of them yourself.</p>
+  </section>
+
+  <section class="play" id="play" aria-labelledby="play-title">
+    <div class="head">
+      <h2 id="play-title">Your turn</h2>
+      <a class="skip" href="#results">Skip to the results</a>
+    </div>
+    <p class="how">For a medical decision, how much would you trust each one? 0 is not at all. 10 is completely.</p>
+    <div class="sliders">
+      {play.map((p) => (
+        <div class="sl">
+          <label for={`s-${p.id}`}><span class={`sw k-${p.kind}`} aria-hidden="true"></span>{p.label}</label>
+          <input id={`s-${p.id}`} data-id={p.id} type="range" min="0" max="10" step="1" value="5" />
+          <output for={`s-${p.id}`}>5</output>
+        </div>
+      ))}
+    </div>
+    <button type="button" class="go" id="go">Compare me with 188 adults</button>
+    <p class="key" aria-label="Color key"><span class="sw k-human"></span>Human <span class="sw k-ai"></span>AI <span class="sw k-hybrid"></span>Doctor using AI</p>
+  </section>
+
+  <section class="res" id="results" aria-labelledby="res-title">
+    <h2 id="res-title">Adults trusted a doctor far more than an AI, though about one in four trusted the AI more</h2>
+    <p class="you-line" id="you-line" aria-live="polite"></p>
+    <figure data-fig class="fig">
+      <figcaption class="cap">How much each of 188 adults trusted each advice-giver</figcaption>
+      <p class="look">What to look for. Each small dot is one person. Blue dots (humans) cluster to the right of coral dots (AI). The bar is the average with its 95% interval.</p>
+      <div class="strip" id="strip" role="img" aria-label="Trust ratings from 0 to 10 for eleven advice-givers, one dot per person, with averages."></div>
+      <div class="axis"><span>0 not at all</span><span>5</span><span>10 completely</span></div>
+      <div class="tip" hidden></div>
+    </figure>
+    <button type="button" class="again" id="again" hidden>Rate them again</button>
+  </section>
+
+  <section class="gap" aria-labelledby="gap-title">
+    <h2 id="gap-title">Most people trusted humans more, but not everyone</h2>
+    <p>I averaged each person’s trust in six human advice-givers and in four AI ones. {higher} of {total} people trusted the humans more. {lower} trusted the AI more, and {same} rated the two the same.</p>
+    <figure data-fig class="fig">
+      <figcaption class="cap">{higher} of {total} trusted humans more than AI</figcaption>
+      <p class="look">What to look for. Mostly blue, a clear block of coral, a few grey in between. Each dot is one person.</p>
+      <div class="people" role="img" aria-label={`${higher} people trusted humans more, ${same} rated them the same, ${lower} trusted AI more`}>
+        {Array.from({ length: higher }, (_, i) => <span class="p human" data-tip data-label="Trusted humans more" data-lines={`Person ${i + 1} of ${total}`}></span>)}
+        {Array.from({ length: same }, (_, i) => <span class="p same" data-tip data-label="Rated them the same" data-lines={`Person ${higher + i + 1} of ${total}`}></span>)}
+        {Array.from({ length: lower }, (_, i) => <span class="p ai" data-tip data-label="Trusted AI more" data-lines={`Person ${higher + same + i + 1} of ${total}`}></span>)}
+      </div>
+      <p class="legend2"><span class="sw k-human"></span>Humans more ({higher}) <span class="sw k-same"></span>The same ({same}) <span class="sw k-ai"></span>AI more ({lower})</p>
+      <div class="tip" hidden></div>
+    </figure>
+  </section>
+
+  <section class="why" aria-labelledby="why-title">
+    <h2 id="why-title">The doctor also looked better at both kinds of thinking</h2>
+    <p>Good doctors combine numbers with judgment. They read the lab result, and they also sense when something does not add up. People rated a doctor higher than an AI on both. The trust gap was the largest of the three.</p>
+    <figure data-fig class="fig">
+      <figcaption class="cap">Doctor against AI, average rating from 0 to 10</figcaption>
+      <p class="look">What to look for. In every row the blue dot sits to the right of the coral dot. The line behind each dot is its 95% interval.</p>
+      <div class="dumb">
+        {out.map((o: any) => (
+          <div class="drow">
+            <p class="dlab">{o.label}</p>
+            <div class="dtrack">
+              <span class="ci h" style={`left:${pct(o.doctor.lo, 10)};width:calc(${pct(o.doctor.hi, 10)} - ${pct(o.doctor.lo, 10)})`}></span>
+              <span class="ci a" style={`left:${pct(o.ai.lo, 10)};width:calc(${pct(o.ai.hi, 10)} - ${pct(o.ai.lo, 10)})`}></span>
+              <span class="link" style={`left:${pct(Math.min(o.doctor.mean, o.ai.mean), 10)};width:calc(${pct(Math.abs(o.doctor.mean - o.ai.mean), 10)})`}></span>
+              <span class="dot h" style={`left:${pct(o.doctor.mean, 10)}`} data-tip data-label={`Doctor: ${o.label}`} data-lines={`Average ${fm(o.doctor.mean)}|95% interval ${fm(o.doctor.lo)} to ${fm(o.doctor.hi)}`}></span>
+              <span class="dot a" style={`left:${pct(o.ai.mean, 10)}`} data-tip data-label={`AI: ${o.label}`} data-lines={`Average ${fm(o.ai.mean)}|95% interval ${fm(o.ai.lo)} to ${fm(o.ai.hi)}`}></span>
+            </div>
+            <p class="dnote">{fm(o.diff)} points apart, d = {o.d.toFixed(2).replace('0.', '.')}</p>
+          </div>
+        ))}
+      </div>
+      <div class="axis"><span>0</span><span>5</span><span>10</span></div>
+      <p class="legend2"><span class="sw k-human"></span>Doctor <span class="sw k-ai"></span>General medical AI</p>
+      <div class="tip" hidden></div>
+    </figure>
+    <p class="small note">d is Cohen’s d for paired ratings: the average gap divided by how much the gaps varied. Around .5 is a medium difference and .8 is large.</p>
+  </section>
+
+  <section class="dec" aria-labelledby="dec-title">
+    <h2 id="dec-title">Not every decision calls for the same kind of thinking</h2>
+    <p>For each decision I asked how much a professional would need numbers and how much intuition. Zero means only intuition and 100 means only numbers. Diagnosing and prescribing sit highest, at about 58 to 65. Prevention sits lowest, at about 49 to 54. That raised a question for Study 2: would the kind of decision change how people judge an AI?</p>
+    <figure data-fig class="fig">
+      <figcaption class="cap">How much each decision needs numbers, 0 to 100</figcaption>
+      <p class="look">What to look for. Prevention dots sit nearer the middle of the scale. Diagnosis and prescribing sit further right.</p>
+      <div class="bands">
+        {bands.map((b) => (
+          <div class="band">
+            <p class="bname">{b.name}</p>
+            {b.rows.map((d: any) => (
+              <div class="drow">
+                <p class="dlab">{d.label}</p>
+                <div class="dtrack">
+                  <span class="ci n" style={`left:${pct(d.lo, 100)};width:calc(${pct(d.hi, 100)} - ${pct(d.lo, 100)})`}></span>
+                  <span class="dot n" style={`left:${pct(d.mean, 100)}`} data-tip data-label={d.label} data-lines={`Average ${fm(d.mean)}|95% interval ${fm(d.lo)} to ${fm(d.hi)}|${d.n} people`}></span>
+                </div>
+                <p class="dnote">{fm(d.mean)}</p>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+      <div class="axis"><span>0 only intuition</span><span>50</span><span>100 only numbers</span></div>
+      <div class="tip" hidden></div>
+    </figure>
+  </section>
+
+  <section class="end" aria-labelledby="end-title">
+    <h2 id="end-title">What this told me, and what comes next</h2>
+    <p>People gave the doctor the most trust and the AI chatbot close to the least. A doctor using AI landed in the middle, which fits the idea that AI in a doctor’s hands is trusted more than AI alone.</p>
+    <p>These are stated ratings from one sample of 188 adults at one point in time. They do not show what people do. In my last study, people followed a doctor’s advice and an AI’s advice about equally.</p>
+    <ul class="links">
+      <li><a href={href('/projects/trust-in-medical-ai/study-1/')}>Every table and figure for Study 1</a></li>
+      <li><a href={href('/projects/trust-in-medical-ai/study-2/')}>Study 2: does the kind of decision matter?</a></li>
+      <li><a href={href('/data/study1-ratings.csv')}>De-identified Study 1 data (CSV)</a> and <a href={href('/data/study1-codebook.csv')}>codebook</a></li>
+      <li><a href="https://github.com/mrleitao/Psycho_Robot">Code on GitHub</a></li>
+    </ul>
+  </section>
+  <script type="application/json" id="trust-data" set:html={JSON.stringify(data)} />
+</div>
+
+<style>
+  .story {
+    --bg: #0e2530; --fg: #eef2f0; --dim: #a7bcc5; --line: #28485a; --card: #153341;
+    --human: #6bb6e0; --aic: #f4898c; --hyb: #f1d1b5; --same: #8aa0aa;
+    background: var(--bg); color: var(--fg); box-shadow: 0 0 0 100vmax var(--bg); clip-path: inset(0 -100vmax);
+    font-family: var(--text); padding-block: clamp(2.2rem, 6vw, 4.5rem) clamp(3rem, 8vw, 6rem); margin-top: -1px;
+  }
+  .story > section { max-width: 46rem; margin: 0 auto clamp(3rem, 7vw, 5rem); }
+  .story > section.res, .story > section.gap, .story > section.why, .story > section.dec { max-width: 50rem; }
+  h1, h2, .kick, .cap, .look, .axis, .legend2, .sl label, .go, .again, .skip, .key, .dlab, .dnote, .bname { font-family: var(--display); }
+  .kick { margin: 0 0 1rem; color: var(--hyb); font-weight: 600; font-size: 1rem; }
+  h1 { margin: 0; font-size: clamp(2.6rem, 9vw, 5.4rem); line-height: 0.98; letter-spacing: -0.03em; font-weight: 800; max-width: 12ch; }
+  .lede { margin: 1.4rem 0 0; font-size: clamp(1.15rem, 2.6vw, 1.4rem); line-height: 1.5; max-width: 34rem; color: #d8e3e6; }
+  h2 { margin: 0 0 0.8rem; font-size: clamp(1.5rem, 4.2vw, 2.1rem); line-height: 1.12; letter-spacing: -0.015em; font-weight: 750; max-width: 24ch; }
+  .res h2 { max-width: 26ch; }
+  p { line-height: 1.6; max-width: 40rem; font-size: 1.08rem; }
+  .head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.5rem 1.5rem; }
+  .skip { color: var(--hyb); font-size: 0.95rem; }
+  .skip:focus-visible, .go:focus-visible, .again:focus-visible, input:focus-visible { outline: 3px solid var(--hyb); outline-offset: 3px; }
+  .play { background: var(--card); border-radius: 22px; padding: clamp(1.2rem, 4vw, 2.2rem); }
+  .how { margin-top: 0; }
+  .sliders { display: grid; gap: 0.5rem 2rem; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); margin: 1.2rem 0; }
+  .sl { display: grid; grid-template-columns: 1fr auto; gap: 0.15rem 0.6rem; align-items: center; }
+  .sl label { font-weight: 650; display: flex; align-items: center; gap: 0.5rem; }
+  .sl output { font: 750 1.15rem var(--display); font-variant-numeric: tabular-nums; min-width: 1.6rem; text-align: right; }
+  .sl input { grid-column: 1 / -1; }
+  input[type=range] { -webkit-appearance: none; appearance: none; background: transparent; width: 100%; height: 2.2rem; }
+  input[type=range]::-webkit-slider-runnable-track { height: 6px; border-radius: 3px; background: var(--line); }
+  input[type=range]::-moz-range-track { height: 6px; border-radius: 3px; background: var(--line); }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; margin-top: -9px; border-radius: 50%; background: var(--hyb); border: 3px solid var(--bg); box-shadow: 0 0 0 1.5px var(--hyb); }
+  input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: var(--hyb); border: 3px solid var(--bg); box-shadow: 0 0 0 1.5px var(--hyb); }
+  .go, .again { font-weight: 750; font-size: 1.05rem; padding: 0.75rem 1.4rem; border-radius: 999px; border: 0; background: var(--hyb); color: #102a35; cursor: pointer; }
+  .again { background: transparent; color: var(--fg); border: 1.5px solid var(--dim); margin-top: 1rem; }
+  .go:hover { background: #fff; }
+  .key { margin: 1.1rem 0 0; font-size: 0.9rem; color: var(--dim); display: flex; flex-wrap: wrap; gap: 0.4rem 1.1rem; align-items: center; }
+  .sw { display: inline-block; width: 0.8rem; height: 0.8rem; border-radius: 50%; margin-right: 0.3rem; vertical-align: -0.05rem; }
+  .k-human { background: var(--human); } .k-ai { background: var(--aic); } .k-hybrid { background: var(--hyb); } .k-same { background: var(--same); }
+  .you-line { font-weight: 600; font-size: 1.12rem; }
+  .you-line:empty { display: none; }
+  .fig { margin: 1.4rem 0 0; position: relative; }
+  .cap { font-weight: 700; font-size: 1.05rem; margin: 0 0 0.3rem; }
+  .look { margin: 0 0 1rem; font-size: 0.92rem; color: var(--dim); max-width: 40rem; }
+  .axis { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--dim); margin: 0.4rem 0 0 var(--lab, 0); }
+  .legend2 { margin: 0.8rem 0 0; font-size: 0.9rem; color: var(--dim); display: flex; flex-wrap: wrap; gap: 0.3rem 1.2rem; align-items: center; }
+  .tip { position: absolute; z-index: 5; transform: translate(-50%, -100%); background: #fff; color: #102a35; padding: 0.45rem 0.7rem; border-radius: 10px; font: 500 0.85rem/1.35 var(--display); pointer-events: none; box-shadow: 0 6px 20px rgba(0,0,0,0.35); white-space: nowrap; }
+  .tip :global(strong) { display: block; } .tip :global(span) { display: block; }
+  .note { color: var(--dim); font-size: 0.9rem; }
+  /* strip chart */
+  :global(.story .srow) { display: grid; grid-template-columns: var(--lab) minmax(0, 1fr); align-items: center; gap: 0 0.8rem; min-height: 2.5rem; }
+  .strip { --lab: 8.6rem; }
+  .axis { --lab: 9.4rem; }
+  @media (max-width: 560px) { .strip { --lab: 5.6rem; } .axis { --lab: 6.4rem; } }
+  :global(.story .slab) { font: 600 0.88rem/1.15 var(--display); display: flex; align-items: center; gap: 0.35rem; }
+  :global(.story .trk) { position: relative; margin-inline: 5px; height: 2.5rem; border-left: 1px solid var(--line); border-right: 1px solid var(--line); background: linear-gradient(var(--line), var(--line)) center / 100% 1px no-repeat; }
+  :global(.story .d) { position: absolute; width: 5px; height: 5px; border-radius: 50%; opacity: 0.55; transform: translate(-50%, -50%); }
+  :global(.story .d.human) { background: var(--human); } :global(.story .d.ai) { background: var(--aic); } :global(.story .d.hybrid) { background: var(--hyb); }
+  :global(.story .mci) { position: absolute; top: 50%; height: 5px; margin-top: -2.5px; background: #fff; border-radius: 3px; }
+  :global(.story .mm) { position: absolute; top: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px; background: #fff; border: 3px solid var(--bg); border-radius: 3px; transform: rotate(45deg); }
+  :global(.story .yo) { position: absolute; top: 50%; width: 20px; height: 20px; margin: -10px 0 0 -10px; border-radius: 50%; border: 3px solid var(--hyb); background: transparent; box-shadow: 0 0 0 2px var(--bg); }
+  :global(.story .yl) { position: absolute; top: -0.1rem; transform: translateX(-50%); font: 700 0.7rem var(--display); color: var(--hyb); }
+  :global(.story .srow.in) { opacity: 0; }
+  :global(.story .srow.in.on) { opacity: 1; transition: opacity 0.4s ease; transition-delay: calc(var(--i) * 70ms); }
+  /* people grid */
+  .people { display: flex; flex-wrap: wrap; gap: 5px; max-width: 34rem; }
+  .p { width: 14px; height: 14px; border-radius: 50%; }
+  .p.human { background: var(--human); } .p.same { background: var(--same); } .p.ai { background: var(--aic); }
+  /* dumbbell and bands */
+  .dumb { --lab: 11rem; } .bands { --lab: 13.5rem; }
+  .drow { display: grid; grid-template-columns: var(--lab) minmax(0, 1fr) 10rem; align-items: center; gap: 0 0.8rem; min-height: 2.3rem; }
+  .dlab { margin: 0; font-size: 0.9rem; line-height: 1.2; font-weight: 600; }
+  .dnote { margin: 0; font-size: 0.82rem; color: var(--dim); }
+  .dtrack { position: relative; height: 2.3rem; border-left: 1px solid var(--line); border-right: 1px solid var(--line); background: linear-gradient(var(--line), var(--line)) center / 100% 1px no-repeat; }
+  .dot { position: absolute; top: 50%; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; border: 2px solid var(--bg); }
+  .dot.h { background: var(--human); } .dot.a { background: var(--aic); } .dot.n { background: var(--hyb); }
+  .ci { position: absolute; top: 50%; height: 4px; margin-top: -2px; border-radius: 2px; opacity: 0.45; }
+  .ci.h { background: var(--human); } .ci.a { background: var(--aic); } .ci.n { background: var(--hyb); }
+  .link { position: absolute; top: 50%; height: 2px; margin-top: -1px; background: var(--dim); opacity: 0.6; }
+  .band { margin: 0 0 1rem; }
+  .bname { margin: 0.8rem 0 0.2rem; font-weight: 750; color: var(--hyb); }
+  .dumb ~ .axis { margin-left: calc(11rem + 0.8rem); margin-right: calc(10rem + 0.8rem); }
+  .bands ~ .axis { margin-left: calc(13.5rem + 0.8rem); margin-right: calc(10rem + 0.8rem); }
+  @media (max-width: 640px) {
+    .dumb, .bands { --lab: 6.8rem; }
+    .drow { grid-template-columns: var(--lab) 1fr; grid-template-rows: auto auto; }
+    .dnote { grid-column: 2; margin-top: -0.2rem; }
+    .dumb ~ .axis, .bands ~ .axis { margin-left: calc(6.8rem + 0.8rem); margin-right: 0; }
+  }
+  .links { padding-left: 1.2rem; line-height: 1.8; font-family: var(--display); }
+  .links a, .story :global(a) { color: var(--hyb); }
+  @media (prefers-reduced-motion: reduce) { :global(.story .srow.in.on) { transition: none; } }
+</style>
+
+<script>
+  const data = JSON.parse(document.getElementById('trust-data')!.textContent!);
+  type Rec = { id: string; label: string; kind: string; n: number; mean: number; lo: number; hi: number; values: (number | null)[] };
+  const recs: Rec[] = data.recs;
+  const byId = Object.fromEntries(recs.map((r) => [r.id, r]));
+  const sliders = Array.from(document.querySelectorAll<HTMLInputElement>('.sl input'));
+  sliders.forEach((s) => s.addEventListener('input', () => { (s.parentElement!.querySelector('output') as HTMLOutputElement).textContent = s.value; }));
+  const strip = document.getElementById('strip')!;
+  const youLine = document.getElementById('you-line')!;
+  const go = document.getElementById('go')!;
+  const again = document.getElementById('again')!;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const f1 = (v: number) => v.toFixed(1);
+
+  const mean = (xs: number[]) => xs.reduce((a, b) => a + b, 0) / xs.length;
+  const HUM = ['doctor', 'nurse', 'layperson'], AI = ['ai_diagnostic', 'ai_chatbot'];
+  const gapFor = (get: (id: string) => number | null) => {
+    const h = HUM.map(get).filter((v): v is number => v != null), a = AI.map(get).filter((v): v is number => v != null);
+    return h.length && a.length ? mean(h) - mean(a) : null;
+  };
+
+  function render(mine: Record<string, number> | null) {
+    strip.replaceChildren();
+    recs.forEach((r, i) => {
+      const row = document.createElement('div');
+      row.className = 'srow' + (reduce ? '' : ' in');
+      row.style.setProperty('--i', String(i));
+      const lab = document.createElement('div'); lab.className = 'slab';
+      lab.innerHTML = `<span class="sw k-${r.kind}"></span>${r.label}`;
+      const trk = document.createElement('div'); trk.className = 'trk';
+      r.values.forEach((v, k) => {
+        if (v == null) return;
+        const d = document.createElement('span'); d.className = `d ${r.kind}`;
+        const jx = (((k * 37) % 100) / 100 - 0.5) * 0.5, jy = (((k * 61) % 100) / 100) * 36 + 2;
+        d.style.left = `${((v + jx) / 10) * 100}%`; d.style.top = `${jy}px`;
+        d.style.left = `${Math.min(100, Math.max(0, ((v + jx) / 10) * 100))}%`;
+        trk.append(d);
+      });
+      const ci = document.createElement('span'); ci.className = 'mci';
+      ci.style.left = `${(r.lo / 10) * 100}%`; ci.style.width = `${((r.hi - r.lo) / 10) * 100}%`; trk.append(ci);
+      const mm = document.createElement('span'); mm.className = 'mm'; mm.style.left = `${(r.mean / 10) * 100}%`;
+      mm.dataset.tip = ''; mm.dataset.label = r.label; mm.dataset.lines = `Average ${f1(r.mean)}|95% interval ${f1(r.lo)} to ${f1(r.hi)}|${r.n} people`; mm.tabIndex = 0;
+      trk.append(mm);
+      if (mine && mine[r.id] != null) {
+        const yo = document.createElement('span'); yo.className = 'yo'; yo.style.left = `${(mine[r.id] / 10) * 100}%`;
+        yo.dataset.tip = ''; yo.dataset.label = 'You'; yo.dataset.lines = `You rated ${r.label} ${mine[r.id]}|Average ${f1(r.mean)}`; yo.tabIndex = 0;
+        const yl = document.createElement('span'); yl.className = 'yl'; yl.style.left = `${(mine[r.id] / 10) * 100}%`; yl.textContent = 'You';
+        trk.append(yo, yl);
+      }
+      row.append(lab, trk); strip.append(row);
+    });
+    if (!reduce) requestAnimationFrame(() => requestAnimationFrame(() => strip.querySelectorAll('.srow').forEach((r) => r.classList.add('on'))));
+  }
+
+  function summary(mine: Record<string, number>) {
+    const you = gapFor((id) => mine[id] ?? null);
+    const n = data.recs[0].values.length;
+    const gaps: number[] = [];
+    for (let k = 0; k < n; k++) { const g = gapFor((id) => byId[id].values[k]); if (g != null) gaps.push(g); }
+    const below = gaps.filter((g) => g < (you as number)).length + gaps.filter((g) => g === you).length / 2;
+    const med = [...gaps].sort((a, b) => a - b)[Math.floor(gaps.length / 2)];
+    const hum = mean(HUM.map((id) => mine[id])), ai = mean(AI.map((id) => mine[id]));
+    const rel = (you as number) > 0 ? 'You trusted the humans more.' : (you as number) < 0 ? 'You trusted the AIs more.' : 'You rated humans and AIs the same.';
+    youLine.textContent = `You rated the doctor, nurse and layperson ${f1(hum)} on average and the two AIs ${f1(ai)}. ${rel} Your gap of ${f1(you as number)} points is larger than ${Math.round((below / gaps.length) * 100)}% of the ${gaps.length} adults who rated the same five. I left out the doctor using AI, because it is both. The middle adult’s gap was ${f1(med)}.`;
+  }
+
+  go.addEventListener('click', () => {
+    const mine: Record<string, number> = {};
+    sliders.forEach((s) => { mine[s.dataset.id!] = Number(s.value); });
+    render(mine); summary(mine); again.hidden = false;
+    document.getElementById('results')!.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+  });
+  again.addEventListener('click', () => {
+    again.hidden = true; youLine.textContent = ''; render(null);
+    document.getElementById('play')!.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+  });
+  render(null);
+
+  // Tooltips for every figure, by delegation so they survive re-rendering.
+  document.querySelectorAll<HTMLElement>('figure[data-fig]').forEach((fig) => {
+    const tip = fig.querySelector<HTMLElement>('.tip')!;
+    const esc = (s: string) => s.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c] as string));
+    const show = (el: HTMLElement) => {
+      const lines = (el.dataset.lines ?? '').split('|').filter(Boolean);
+      tip.innerHTML = `<strong>${esc(el.dataset.label ?? '')}</strong>${lines.map((l) => `<span>${esc(l)}</span>`).join('')}`;
+      tip.hidden = false;
+      const fr = fig.getBoundingClientRect(), r = el.getBoundingClientRect(), half = tip.offsetWidth / 2;
+      tip.style.left = `${Math.max(half, Math.min(fr.width - half, r.left - fr.left + r.width / 2))}px`;
+      tip.style.top = `${Math.max(tip.offsetHeight + 4, r.top - fr.top - 4)}px`;
+    };
+    const target = (e: Event) => (e.target as HTMLElement).closest<HTMLElement>('[data-tip]');
+    fig.addEventListener('pointerover', (e) => { const t = target(e); if (t) show(t); });
+    fig.addEventListener('pointerout', (e) => { if (target(e)) tip.hidden = true; });
+    fig.addEventListener('focusin', (e) => { const t = target(e); if (t) show(t); });
+    fig.addEventListener('focusout', () => (tip.hidden = true));
+  });
+</script>
