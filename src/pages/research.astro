@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import pubs from '../data/cv/publications.json';
 import { href } from '../utils/url';
+import { cards, topicLabels } from '../data/research_cards';
 
 // Papers live in src/data/cv/publications.json, shared with the CV page.
 const groups = pubs.groups.filter((g) => !g.cvOnly);
@@ -20,6 +21,43 @@ const groups = pubs.groups.filter((g) => !g.cvOnly);
       </p>
     </header>
 
+
+    <section class="gallery" aria-labelledby="gal-title">
+      <h2 id="gal-title" class="gal-h">Results and figures, paper by paper</h2>
+      <p class="muted small gal-note">Each card opens a page with the methods, every table and a figure for each. Cards marked “try it” include a short interactive.</p>
+      <div class="chips" role="group" aria-label="Filter by topic">
+        <button type="button" class="chip on" data-topic="all" aria-pressed="true">All</button>
+        {(Object.keys(topicLabels) as (keyof typeof topicLabels)[]).map((t) => (
+          <button type="button" class="chip" data-topic={t} aria-pressed="false">{topicLabels[t]}</button>
+        ))}
+      </div>
+      <ul class="cards">
+        {cards.map((c) => (
+          <li class={`card tone-${c.tone}`} data-topics={c.topics.join(' ')}>
+            <a href={href(c.slug)} class="tile">
+              <span class="glyph" aria-hidden="true">
+                {c.glyph === 'pair' && <svg viewBox="0 0 80 40"><rect x="4" y="6" width="64" height="12" rx="6" /><rect x="4" y="24" width="30" height="12" rx="6" /></svg>}
+                {c.glyph === 'dots' && <svg viewBox="0 0 80 40"><line x1="8" y1="20" x2="72" y2="20" /><circle cx="26" cy="20" r="7" /><circle cx="54" cy="20" r="7" /></svg>}
+                {c.glyph === 'scatter' && <svg viewBox="0 0 80 40"><circle cx="12" cy="32" r="4" /><circle cx="26" cy="26" r="4" /><circle cx="38" cy="22" r="4" /><circle cx="52" cy="14" r="4" /><circle cx="68" cy="8" r="4" /></svg>}
+                {c.glyph === 'bars' && <svg viewBox="0 0 80 40"><rect x="6" y="18" width="12" height="18" rx="3" /><rect x="26" y="8" width="12" height="28" rx="3" /><rect x="46" y="22" width="12" height="14" rx="3" /><rect x="66" y="12" width="8" height="24" rx="3" /></svg>}
+                {c.glyph === 'slope' && <svg viewBox="0 0 80 40"><line x1="14" y1="10" x2="66" y2="30" /><line x1="14" y1="28" x2="66" y2="14" /><circle cx="14" cy="10" r="4" /><circle cx="66" cy="30" r="4" /><circle cx="14" cy="28" r="4" /><circle cx="66" cy="14" r="4" /></svg>}
+              </span>
+              <span class="stat">{c.stat}</span>
+              <span class="statlab">{c.statLabel}</span>
+              {c.live && <span class="try">try it</span>}
+            </a>
+            <div class="body">
+              <h3><a href={href(c.slug)}>{c.title}</a></h3>
+              <p class="hook">{c.hook}</p>
+              <p class="meta small muted">{c.status} · {c.role}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+      <p class="empty muted" hidden>No papers on this topic yet.</p>
+    </section>
+
+    <h2 class="refs-h">Full reference list</h2>
     {
       groups.map((g) => (
         <section class="section group">
@@ -54,6 +92,19 @@ const groups = pubs.groups.filter((g) => !g.cvOnly);
   </div>
 </Base>
 
+<script>
+  const chips = document.querySelectorAll<HTMLButtonElement>('.chip');
+  const cardEls = document.querySelectorAll<HTMLElement>('.card');
+  const empty = document.querySelector<HTMLElement>('.empty');
+  chips.forEach((chip) => chip.addEventListener('click', () => {
+    const t = chip.dataset.topic;
+    chips.forEach((c) => { c.classList.toggle('on', c === chip); c.setAttribute('aria-pressed', String(c === chip)); });
+    let shown = 0;
+    cardEls.forEach((el) => { const ok = t === 'all' || (el.dataset.topics ?? '').split(' ').includes(t as string); el.hidden = !ok; if (ok) shown++; });
+    if (empty) empty.hidden = shown > 0;
+  }));
+</script>
+
 <style>
   .group {
     margin-top: clamp(40px, 6vw, 72px);
@@ -76,4 +127,36 @@ const groups = pubs.groups.filter((g) => !g.cvOnly);
     margin: 0;
     font-family: var(--display);
   }
+
+  .gal-h { margin: 0.5rem 0 0.4rem; }
+  .gal-note { margin: 0 0 1rem; max-width: 62ch; }
+  .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0 0 1.4rem; }
+  .chip { font: 600 0.9rem var(--display); padding: 0.45rem 0.9rem; border-radius: 999px; border: 1.5px solid var(--deep); background: transparent; color: var(--ink); cursor: pointer; }
+  .chip:hover { background: var(--wash); }
+  .chip.on { background: var(--deep); color: #fff; }
+  .chip:focus-visible, .tile:focus-visible { outline: 3px solid var(--coral); outline-offset: 3px; }
+  .cards { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.6rem 1.4rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 17.5rem), 1fr)); }
+  .card[hidden] { display: none; }
+  .card { display: flex; flex-direction: column; }
+  .tile { position: relative; display: flex; flex-direction: column; justify-content: flex-end; min-height: 13rem; padding: 1.1rem 1.2rem 1.2rem; border-radius: 18px; text-decoration: none; color: var(--tile-ink); background: var(--tile); transition: transform 0.18s ease; overflow: hidden; }
+  .tile:hover { transform: rotate(-0.8deg) translateY(-3px); }
+  .glyph { position: absolute; top: 0.9rem; right: 1rem; width: 5.4rem; opacity: 0.85; }
+  .glyph svg { width: 100%; fill: currentColor; stroke: currentColor; stroke-width: 2.5; }
+  .glyph line { stroke-linecap: round; }
+  .stat { font: 750 clamp(1.7rem, 4.2vw, 2.2rem) / 1.05 var(--display); letter-spacing: -0.01em; max-width: 12ch; }
+  .statlab { margin-top: 0.35rem; font: 500 0.88rem/1.35 var(--display); max-width: 22ch; }
+  .try { position: absolute; top: 0.9rem; left: 1rem; font: 700 0.78rem var(--display); padding: 0.2rem 0.6rem; border-radius: 999px; background: var(--tile-ink); color: var(--tile); }
+  .tone-coral { --tile: #f18c8e; --tile-ink: #17313c; }
+  .tone-peach { --tile: #f0b7a4; --tile-ink: #17313c; }
+  .tone-sand { --tile: #f1d1b5; --tile-ink: #17313c; }
+  .tone-mist { --tile: #a9cbda; --tile-ink: #102a35; }
+  .tone-deep { --tile: #305f72; --tile-ink: #ffffff; }
+  .body { padding: 0.8rem 0.2rem 0; }
+  .body h3 { margin: 0 0 0.3rem; font: 650 1.12rem/1.25 var(--display); }
+  .body h3 a { color: inherit; text-decoration: none; }
+  .body h3 a:hover { text-decoration: underline; }
+  .hook { margin: 0 0 0.35rem; line-height: 1.45; }
+  .meta { margin: 0; font-family: var(--display); }
+  .refs-h { margin: clamp(48px, 7vw, 88px) 0 0; }
+  @media (prefers-reduced-motion: reduce) { .tile { transition: none; } .tile:hover { transform: none; } }
 </style>

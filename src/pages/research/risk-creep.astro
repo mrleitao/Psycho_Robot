@@ -4,6 +4,7 @@ import MainFindings from '../../components/MainFindings.astro';
 import StatTable from '../../components/StatTable.astro';
 import DotRows from '../../components/DotRows.astro';
 import SigGrid from '../../components/SigGrid.astro';
+import RiskTry from '../../components/RiskTry.astro';
 import { ci, pctPer } from '../../utils/papers';
 
 const cite = 'Logg, J. M., Tinsley, C. H., &amp; <strong>Leitao, M. R.</strong> (2026). Risk creep: A COVID-19 longitudinal field study. Working paper, July 3, 2026.';
@@ -56,6 +57,8 @@ const findings = [
     <div><dt>Design</dt><dd>A baseline survey plus seven weekly pulses, eight weeks in all. Counts of outings in each category.</dd></div>
     <div><dt>Data</dt><dd>Not public. Figures are rebuilt from the printed tables, and a derived percentage is labeled.</dd></div>
   </dl>
+
+  <RiskTry acts={ests.map((e, i) => ({ name: e.n, b: e.b, se: e.se, level: grid[0].cells[i].level }))} />
 
   <section class="section" id="main-findings" aria-labelledby="mf-title">
     <h2 id="mf-title">Main findings</h2>

@@ -5,6 +5,7 @@ import StatTable from '../../components/StatTable.astro';
 import DotRows from '../../components/DotRows.astro';
 import GroupDots from '../../components/GroupDots.astro';
 import Terms from '../../components/Terms.astro';
+import PhoneTry from '../../components/PhoneTry.astro';
 import Contents from '../../components/Contents.astro';
 import { dInterval, sg, ci } from '../../utils/papers';
 import { href } from '../../utils/url';
@@ -165,6 +166,8 @@ const terms = [
     <div><dt>Design</dt><dd>Eight experiments in six situations. Each randomly gave some people their phones and took them from others.</dd></div>
     <div><dt>Data</dt><dd>Public on OSF. These figures are rebuilt from the printed paper, with intervals derived as noted below.</dd></div>
   </dl>
+
+  <PhoneTry />
 
   <section class="section" id="main-findings" aria-labelledby="mf-title">
     <h2 id="mf-title">Main findings</h2>

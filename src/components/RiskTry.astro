@@ -1,0 +1,91 @@
+---
+// "Try it" for risk creep: dial perceived risk, see the change in outings the model implies.
+// Percent change = 100 x (exp(step x b) - 1), with the interval from b +/- 1.96 SE. Derived from printed coefficients.
+interface Act { name: string; b: number; se: number; level: 'strong' | 'some' | 'none' }
+interface Props { acts: Act[]; skipHref?: string }
+const { acts, skipHref = '#main-findings' } = Astro.props;
+---
+<section class="try" aria-labelledby="rt-title" id="try-it" data-acts={JSON.stringify(acts)}>
+  <div class="top">
+    <h2 id="rt-title">Try it: dial the risk</h2>
+    <a class="skip" href={skipHref}>Skip to the results</a>
+  </div>
+  <p class="intro">If students felt more at risk from the virus, you might expect fewer outings. Pick an activity, turn up how risky people feel, and see what the paper’s model implies. Guess first, then drag.</p>
+  <div class="row">
+    <fieldset class="acts"><legend>Activity</legend>
+      {acts.map((a, i) => (<label class="radio"><input type="radio" name="act" value={i} checked={i === 2} /> <span>{a.name}</span></label>))}
+    </fieldset>
+    <div class="ctl">
+      <div class="sl"><label for="rk">Perceived risk goes up by <output id="rk-out">10</output> points</label>
+      <input id="rk" type="range" min="0" max="50" step="1" value="10" /></div>
+      <p class="big" id="rt-big" aria-live="polite"></p>
+      <svg id="rt-svg" viewBox="0 0 520 100" role="img" aria-label="Percent change in outings with its interval"></svg>
+      <p class="small muted" id="rt-note"></p>
+    </div>
+  </div>
+  <p class="small muted">The paper reports the coefficient b on the log scale. I turn it into a percent change for a chosen step. The interval uses b ± 1.96 standard errors. Both are derived, not printed. The reliable/not reliable call is the paper’s own. Perceived risk is measured in points on the survey’s scale.</p>
+</section>
+
+<style>
+  .try { margin: 1.8rem 0 2.4rem; padding: clamp(1.1rem, 3vw, 1.8rem); border-radius: 20px; background: var(--wash); border: 1.5px solid var(--rule); font-family: var(--display); }
+  .top { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.5rem 1.5rem; }
+  h2 { margin: 0; font-size: clamp(1.4rem, 3.5vw, 1.8rem); }
+  .skip { font-size: 0.95rem; color: var(--deep); }
+  .intro { max-width: 62ch; line-height: 1.5; margin: 0.7rem 0 1rem; font-family: var(--text); }
+  .row { display: grid; gap: 1.4rem 2rem; grid-template-columns: minmax(10rem, 14rem) 1fr; }
+  @media (max-width: 640px) { .row { grid-template-columns: 1fr; } }
+  fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 0.35rem; }
+  legend { font-weight: 700; margin-bottom: 0.4rem; }
+  .radio { display: flex; gap: 0.5rem; align-items: center; cursor: pointer; font-weight: 500; }
+  .radio input { accent-color: var(--ai); width: 1.1rem; height: 1.1rem; }
+  .sl { display: grid; gap: 0.3rem; max-width: 28rem; }
+  label { font-weight: 600; }
+  output { font-variant-numeric: tabular-nums; font-weight: 750; }
+  input[type=range] { -webkit-appearance: none; appearance: none; background: transparent; width: 100%; height: 2rem; }
+  input[type=range]::-webkit-slider-runnable-track { height: 6px; border-radius: 3px; background: var(--rule); }
+  input[type=range]::-moz-range-track { height: 6px; border-radius: 3px; background: var(--rule); }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; margin-top: -8px; border-radius: 50%; background: var(--ai); border: 3px solid var(--paper); box-shadow: 0 0 0 1.5px var(--ai); }
+  input[type=range]::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: var(--ai); border: 3px solid var(--paper); box-shadow: 0 0 0 1.5px var(--ai); }
+  input:focus-visible, .skip:focus-visible { outline: 3px solid var(--coral); outline-offset: 3px; }
+  .big { font: 750 clamp(1.5rem, 4vw, 2rem)/1.15 var(--display); margin: 0.6rem 0 0.2rem; }
+  svg { width: 100%; max-width: 40rem; height: auto; display: block; }
+  :global(.try .ax) { stroke: var(--muted); stroke-width: 1; }
+  :global(.try .zero) { stroke: var(--ink); stroke-width: 1.5; }
+  :global(.try text) { fill: var(--ink); font: 500 15px var(--display); }
+  :global(.try .ci) { stroke: var(--deep); stroke-width: 4; stroke-linecap: round; }
+  :global(.try .ci.cross) { stroke: var(--coral); }
+  :global(.try .act) { fill: var(--deep); }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('#try-it[data-acts]')!;
+  const acts: { name: string; b: number; se: number; level: string }[] = JSON.parse(root.dataset.acts!);
+  const NS = 'http://www.w3.org/2000/svg';
+  const mk = (n: string, a: Record<string, string | number>, t?: string) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, String(a[k])); if (t) e.textContent = t; return e; };
+  const sl = document.querySelector<HTMLInputElement>('#rk')!;
+  const pct = (b: number, k: number) => (Math.exp(k * b) - 1) * 100;
+  const f = (v: number) => (v < 0 ? '−' : '+') + Math.abs(v).toFixed(0) + '%';
+  const draw = () => {
+    const k = Number(sl.value);
+    const i = Number(document.querySelector<HTMLInputElement>('input[name=act]:checked')!.value);
+    const a = acts[i];
+    document.querySelector('#rk-out')!.textContent = String(k);
+    const v = pct(a.b, k), lo = pct(a.b - 1.96 * a.se, k), hi = pct(a.b + 1.96 * a.se, k);
+    document.querySelector('#rt-big')!.textContent = `${a.name}: ${f(v)} outings`;
+    const lim = Math.max(30, Math.ceil(Math.max(Math.abs(lo), Math.abs(hi)) / 10) * 10);
+    const svg = document.querySelector<SVGSVGElement>('#rt-svg')!; svg.replaceChildren();
+    const x = (p: number) => 260 + (p / lim) * 220;
+    [-lim, -lim / 2, 0, lim / 2, lim].forEach((t) => { svg.append(mk('line', { class: t === 0 ? 'zero' : 'ax', x1: x(t), x2: x(t), y1: 12, y2: 58 })); svg.append(mk('text', { x: x(t), y: 76, 'text-anchor': 'middle' }, (t > 0 ? '+' : t < 0 ? '−' : '') + Math.abs(t).toFixed(0) + '%')); });
+    const cross = a.level === 'none';
+    svg.append(mk('line', { class: cross ? 'ci cross' : 'ci', x1: x(lo), x2: x(hi), y1: 35, y2: 35 }));
+    svg.append(mk('circle', { class: 'act', cx: x(v), cy: 35, r: 7 }));
+    svg.append(mk('text', { x: 260, y: 96, 'text-anchor': 'middle' }, 'Change in reported outings (percent)'));
+    const rel = a.level === 'none'
+      ? 'The paper does not find a reliable link for this activity.'
+      : 'The paper marks this link as reliable' + (a.level === 'strong' ? ' (p < .01).' : ' (p < .05).');
+    document.querySelector('#rt-note')!.textContent = `Interval about ${f(lo)} to ${f(hi)}. ${rel} Higher perceived risk did not go with fewer outings in any of the six activities. The interval is approximate, because the printed coefficients are rounded.`;
+  };
+  sl.addEventListener('input', draw);
+  document.querySelectorAll('input[name=act]').forEach((r) => r.addEventListener('change', draw));
+  draw();
+</script>
