@@ -5,6 +5,7 @@ import data from '../data/trust-in-medical-ai/trust-by-domain.json';
 import s1 from '../data/trust-in-medical-ai/study1-points.json';
 import { cards } from '../data/research_cards';
 import skills from '../data/skills.json';
+import evidence from '../data/evidence.json';
 import { href } from '../utils/url';
 
 // Hero strip: each dot is one of the 188 adults in Study 1, rating trust from 0 to 10.
@@ -17,12 +18,41 @@ const rows = [pick('doctor'), pick('ai_chatbot')].map((t) => ({
     .filter((d): d is { x: number; y: number; i: number } => d !== null),
 }));
 
+const ev = evidence as { id: string; name: string; kind: string; from: number; to: number }[];
+const countKind = (k: string) => ev.filter((e) => e.kind === k).length;
 const stats = [
-  { n: '13+', l: 'years in behavioral science' },
-  { n: '10', l: 'papers published, accepted, or under review' },
-  { n: '1,778', l: 'people in my largest pooled analysis' },
-  { n: '188', l: 'adults rated trust in the dissertation’s first study' },
+  { n: '13+', l: 'years of research and teaching' },
+  { n: String(countKind('project')), l: 'research projects and studies' },
+  { n: String(cards.length), l: 'papers published, accepted, or under review' },
+  { n: String(countKind('role')), l: 'roles and positions' },
+  { n: String(skills.length), l: 'skills, each tied to the work that shows it' },
 ];
+
+// Career map: every project, role, teaching item and course, placed on a year axis.
+const Y0 = 2013;
+const Y1 = 2026;
+const SPAN = Y1 - Y0 + 1;
+const lanes = [
+  { label: 'Research projects', kinds: ['project'], c: 'var(--coral)' },
+  { label: 'Roles and positions', kinds: ['role'], c: 'var(--steel)' },
+  { label: 'Teaching', kinds: ['teaching'], c: 'var(--peach)' },
+  { label: 'Workshops and training', kinds: ['workshop', 'training'], c: 'var(--deep)' },
+  { label: 'Courses', kinds: ['course'], c: 'var(--sand)' },
+].map((l) => {
+  const items = ev.filter((e) => l.kinds.includes(e.kind)).sort((x, y) => x.from - y.from || x.to - y.to);
+  const ends: number[] = [];
+  const bars = items.map((e) => {
+    let row = ends.findIndex((end) => end < e.from);
+    if (row < 0) row = ends.length;
+    ends[row] = e.to;
+    const left = (e.from - Y0) * 100 * (1 / SPAN);
+    const width = (e.to - e.from + 1) * 100 * (1 / SPAN);
+    return { name: e.name, yrs: e.from === e.to ? String(e.from) : `${e.from} to ${e.to}`, row, left, width };
+  });
+  return { ...l, bars, rows: ends.length, n: items.length };
+});
+const axisYears = [2013, 2016, 2019, 2022, 2025];
+
 
 const flagship = [
   ...cards.filter((c) => ['/projects/trust-in-medical-ai/', '/research/phones-social-connection/', '/research/risk-creep/'].includes(c.slug)),
@@ -64,11 +94,29 @@ const asks = [
           <a class="btn" href={href('/contact/')}>Get in touch</a>
         </p>
       </div>
-      <ul class="stats" aria-label="At a glance">
-        {stats.map((x) => <li><strong>{x.n}</strong><span>{x.l}</span></li>)}
-      </ul>
+      <figure class="career" id="career" aria-label={`Career map: ${ev.length} projects, roles, courses and workshops from ${Y0} to ${Y1}`}>
+        <figcaption class="c-title">Everything I have worked on, by year</figcaption>
+        {lanes.map((l) => (
+          <div class="c-lane" style={`--c:${l.c}`}>
+            <div class="c-label">{l.label} <span>{l.n}</span></div>
+            <div class="c-track" style={`--rows:${l.rows}`}>
+              {l.bars.map((b) => (
+                <span class="c-bar" tabindex="0" data-name={b.name} data-yrs={b.yrs} style={`--l:${b.left.toFixed(2)};--w:${b.width.toFixed(2)};--r:${b.row}`}></span>
+              ))}
+            </div>
+          </div>
+        ))}
+        <div class="c-axis">{axisYears.map((y) => <span style={`--l:${((y - Y0) * 100 * (1 / SPAN)).toFixed(2)}`}>{y}</span>)}</div>
+        <p class="c-read" id="c-read" aria-live="polite">Hover or tap a bar to see what it is.</p>
+      </figure>
     </div>
   </section>
+
+  <div class="wrap">
+    <ul class="stats" aria-label="At a glance">
+      {stats.map((x) => <li><strong>{x.n}</strong><span>{x.l}</span></li>)}
+    </ul>
+  </div>
 
   <div class="wrap">
     <section class="section about" aria-labelledby="about-h">
@@ -214,6 +262,15 @@ const asks = [
     strip.classList.add('pre');
     requestAnimationFrame(() => requestAnimationFrame(() => strip.classList.add('go')));
   }
+  const read = document.getElementById('c-read');
+  document.getElementById('career')?.addEventListener('pointerover', (e) => {
+    const b = (e.target as HTMLElement).closest('.c-bar') as HTMLElement | null;
+    if (b && read) read.textContent = `${b.dataset.name}, ${b.dataset.yrs}`;
+  });
+  document.getElementById('career')?.addEventListener('focusin', (e) => {
+    const b = (e.target as HTMLElement).closest('.c-bar') as HTMLElement | null;
+    if (b && read) read.textContent = `${b.dataset.name}, ${b.dataset.yrs}`;
+  });
 </script>
 
 <style>
@@ -243,12 +300,24 @@ const asks = [
   .strip.pre .d { left: 50%; opacity: 0; }
   .strip.pre.go .d { left: calc(var(--x) * 1%); opacity: 0.5; transition: left 0.9s cubic-bezier(.2,.7,.2,1), opacity 0.4s; transition-delay: calc(var(--i) * 4ms); }
 
-  .stats { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; max-width: 40rem; width: 100%; justify-self: center; }
+  .stats { list-style: none; margin: clamp(24px, 4vw, 44px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: 0.75rem; }
   .stats li { display: grid; gap: 0.2rem; padding: 1rem 1.1rem; background: var(--wash); border-radius: 10px; border-top: 5px solid var(--coral); font-family: var(--display); }
   .stats li:nth-child(2) { border-color: var(--peach); } .stats li:nth-child(3) { border-color: var(--steel); } .stats li:nth-child(4) { border-color: var(--deep); }
   .stats strong { font-size: clamp(2rem, 4vw, 2.8rem); line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
   .stats span { font-size: 0.95rem; color: var(--muted); line-height: 1.3; }
 
+  .career { margin: 0; width: 100%; max-width: 44rem; justify-self: center; font-family: var(--display); }
+  .c-title { font-weight: 700; font-size: 1.15rem; margin-bottom: 0.8rem; }
+  .c-lane { margin-bottom: 0.7rem; }
+  .c-label { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.2rem; }
+  .c-label span { color: var(--muted); font-weight: 500; }
+  .c-track { position: relative; height: calc(var(--rows) * 9px + 2px); border-bottom: 1.5px solid var(--rule); }
+  .c-bar { position: absolute; left: calc(var(--l) * 1%); width: calc(var(--w) * 1%); top: calc(var(--r) * 9px); height: 6px; border-radius: 3px; background: var(--c); }
+  .c-bar:hover, .c-bar:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; z-index: 1; }
+  .c-axis { position: relative; height: 1.2rem; font-size: 0.8rem; color: var(--muted); margin-top: 0.2rem; }
+  .c-axis span { position: absolute; left: calc(var(--l) * 1%); transform: translateX(0); }
+  .c-read { margin: 0.5rem 0 0; font-size: 0.9rem; color: var(--muted); min-height: 1.4em; }
+  .strip.lead { margin-top: 0; }
   .band { --bg: var(--wash); background: var(--bg); box-shadow: 0 0 0 100vmax var(--bg); clip-path: inset(0 -100vmax); padding: clamp(32px, 5vw, 56px) 0; margin-top: clamp(32px, 5vw, 56px); }
   .band.gapband { --bg: var(--sand-wash, var(--wash)); margin-top: 0; }
   .band.contact { margin-bottom: 0; }
