@@ -2,51 +2,71 @@
 import Base from '../layouts/Base.astro';
 import ForestPlot from '../components/ForestPlot.astro';
 import data from '../data/trust-in-medical-ai/trust-by-domain.json';
+import s1 from '../data/trust-in-medical-ai/study1-points.json';
+import { cards } from '../data/research_cards';
 import { href } from '../utils/url';
-import topics from '../data/topics.json';
-import evidence from '../data/evidence.json';
-const kindOf = (id: string) => evidence.find((e) => e.id === id)!.kind;
-const expertise = topics.filter((t) => t.evidence.some((id) => kindOf(id) !== 'course')).map((t) => t.name);
+
+// Hero strip: each dot is one of the 188 adults in Study 1, rating trust from 0 to 10.
+const pick = (id: string) => s1.trust.find((t) => t.id === id)!;
+const rows = [pick('doctor'), pick('ai_chatbot')].map((t) => ({
+  label: t.label === 'Doctor' ? 'A doctor' : 'An AI chatbot',
+  mean: t.mean,
+  dots: (t.values as (number | null)[])
+    .map((v, i) => (v === null || v === undefined ? null : { x: v, y: ((i * 37) % 100) * 0.01, i }))
+    .filter((d): d is { x: number; y: number; i: number } => d !== null),
+}));
+
 const stats = [
   { n: '13+', l: 'years in behavioral science' },
-  { n: '6', l: 'experiments in my dissertation' },
-  { n: '3,000+', l: 'participants studied' },
   { n: '10', l: 'papers published, accepted, or under review' },
+  { n: '1,778', l: 'people in my largest pooled analysis' },
+  { n: '188', l: 'adults rated trust in the dissertation’s first study' },
 ];
-const doors = [
-  { t: 'Projects', d: 'Case studies built from the data, with every figure rebuilt so you can check it.', p: '/projects/', c: 'var(--coral)' },
-  { t: 'Skills', d: '87 skills, each tied to the work that shows it.', p: '/skills/', c: 'var(--steel)' },
-  { t: 'Research', d: 'Ten papers on trust in AI, smartphones, and clinical research.', p: '/research/', c: 'var(--peach)' },
-  { t: 'CV', d: 'The short version of my training and roles.', p: '/cv/', c: 'var(--deep)' },
+
+const flagship = [
+  ...cards.filter((c) => ['/projects/trust-in-medical-ai/', '/research/phones-social-connection/', '/research/risk-creep/'].includes(c.slug)),
+  { slug: '/projects/phone-sleep/', title: 'Does screen time in bed change how people sleep?', stat: '91', statLabel: 'college students followed for seven days', status: 'Project', role: '', tone: 'sand' as const },
+];
+const toneVar: Record<string, string> = { coral: 'var(--coral)', peach: 'var(--peach)', sand: 'var(--sand)', mist: 'var(--steel)', deep: 'var(--deep)' };
+
+const asks = [
+  { q: 'What do you do?', a: 'Design experiments, model messy human data, lead research teams, and build with AI.' },
+  { q: 'Show me.', a: 'Four flagship projects, each with its own numbers and figures you can check.' },
+  { q: 'How do you work?', a: 'Register the question, show every data point, report what the data support, nulls included.' },
+  { q: 'How do I reach you?', a: 'Write to me. I answer.' },
 ];
 ---
 
-<Base description="Matthew Leitao is a behavioral scientist who studies how people decide whether to trust AI. Interactive evidence from his own research.">
+<Base description="Matthew Leitao is a behavioral scientist who runs experiments on how people decide whether to trust AI. Real data, with every figure shown.">
   <section class="hero">
     <div class="wrap hero-grid">
       <div class="hero-copy">
         <p class="kicker">Matthew Leitao, behavioral scientist</p>
-        <h1>People trust AI less than doctors, even when the advice is identical.</h1>
+        <h1>I run experiments that show how people decide whether to trust AI.</h1>
         <p class="lede">
-          I design experiments on how people decide whether to trust AI, then report what the data support, including
-          the null results. I am a postdoctoral researcher at the National Institutes of Health.
+          PhD in psychology, Georgetown. I recently finished a postdoc at the National Institutes of Health. I report what
+          the data support, including the null results.
         </p>
         <p class="cta">
           <a class="btn primary" href={href('/projects/trust-in-medical-ai/')}>See the evidence</a>
-          <a class="btn" href={href('/skills/')}>Browse my skills</a>
+          <a class="btn" href={href('/contact/')}>Get in touch</a>
         </p>
       </div>
-      <figure class="art" aria-label="Two circles, one for a doctor and one for an AI, drawn apart by the size of the trust gap">
-        <svg viewBox="0 0 520 380" role="img" aria-hidden="true">
-          <line class="axis" x1="30" y1="215" x2="490" y2="215" />
-          <g class="dot d"><circle cx="150" cy="215" r="84" /><text x="150" y="222" text-anchor="middle">Doctor</text></g>
-          <g class="dot a"><circle cx="370" cy="215" r="84" /><text x="370" y="222" text-anchor="middle">AI</text></g>
-          <g class="gap">
-            <path d="M150 92 V74 H370 V92" />
-            <text x="260" y="58" text-anchor="middle">Same advice. A gap of 1.3 standard deviations.</text>
-          </g>
-          <text class="foot" x="260" y="352" text-anchor="middle">Trust ratings, dissertation Study 2, 106 adults</text>
-        </svg>
+      <figure class="strip" id="strip" aria-label="Trust ratings from 188 adults: a doctor was trusted more than an AI chatbot">
+        <figcaption class="s-title">Would you trust them with your health?</figcaption>
+        {rows.map((r, ri) => (
+          <div class={`s-row r${ri}`}>
+            <div class="s-label">{r.label}</div>
+            <div class="s-track" aria-hidden="true">
+              {r.dots.map((d) => (
+                <span class="d" style={`--x:${d.x * 10};--y:${(d.y * 100).toFixed(0)};--i:${d.i}`}></span>
+              ))}
+              <span class="mean" style={`--x:${r.mean * 10}`}><b>{r.mean.toFixed(1)}</b></span>
+            </div>
+          </div>
+        ))}
+        <div class="s-axis"><span>0 no trust</span><span>10 complete trust</span></div>
+        <p class="s-note">Each dot is one adult, Study 1 of my dissertation. The line marks the average.</p>
       </figure>
     </div>
   </section>
@@ -55,47 +75,48 @@ const doors = [
     <ul class="stats" aria-label="At a glance">
       {stats.map((x) => <li><strong>{x.n}</strong><span>{x.l}</span></li>)}
     </ul>
+  </div>
 
-    <section class="section about" aria-labelledby="about-h">
-      <h2 id="about-h">I turn questions about people and AI into evidence</h2>
-      <div class="about-grid">
-        <p>
-          I am a behavioral scientist with a PhD in psychology from Georgetown and a master's in public policy. I study
-          how people trust, interpret, and make decisions with AI, especially in health. At the National Human Genome
-          Research Institute, I study how people read AI-generated health information, how uncertainty changes trust, and
-          how virtual reality can fit into clinical research.
-        </p>
-        <p>
-          My dissertation ran six experiments with more than 3,000 people. I build the study, analyze the data in R, and
-          explain the result in plain words. I have also led teams of up to 15 and managed six concurrent projects.
-        </p>
-      </div>
-    </section>
+  <section class="band flag" aria-labelledby="flag-h">
+    <div class="wrap">
+      <h2 id="flag-h">Four projects to start with</h2>
+      <p class="band-sub">Each opens to the full analysis, with the numbers behind every figure.</p>
+      <ul class="flag-list">
+        {flagship.map((c) => (
+          <li style={`--c:${toneVar[c.tone]}`}>
+            <a href={href(c.slug)}>
+              <span class="big">{c.stat}</span>
+              <span class="lab">{c.statLabel}</span>
+              <strong class="t">{c.title}</strong>
+              <span class="meta">{c.status}{c.role ? ' · ' + c.role : ''}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <p class="next"><a href={href('/research/')}>All ten papers</a> · <a href={href('/projects/')}>All projects</a></p>
+    </div>
+  </section>
 
+  <div class="wrap">
     <section class="section" aria-labelledby="do-title">
       <h2 id="do-title">What I do</h2>
       <ul class="cards">
         <li><span class="bar b1"></span><h3>Design experiments</h3><p>Randomized studies, registered in advance, from the first hypothesis through recruitment, analysis, and write-up.</p></li>
         <li><span class="bar b2"></span><h3>Model messy human data</h3><p>Multilevel, longitudinal, and causal models in R, applied to surveys, daily diaries, and clinical-trial data.</p></li>
-        <li><span class="bar b3"></span><h3>Lead research teams</h3><p>I managed five research assistants across six or seven projects at Georgetown. I now manage six projects at NIH.</p></li>
+        <li><span class="bar b3"></span><h3>Lead research teams</h3><p>I managed five research assistants across six or seven projects at Georgetown, and six projects at NIH.</p></li>
         <li><span class="bar b4"></span><h3>Build with AI</h3><p>I build research tools on LLM APIs, test AI output with blind ratings, and use AI to speed up analysis and code.</p></li>
       </ul>
+      <p class="next"><a href={href('/skills/')}>See the work behind each skill</a></p>
     </section>
+  </div>
 
-    <section class="section" aria-labelledby="exp-h">
-      <h2 id="exp-h">Where I have expertise</h2>
-      <ul class="chips">
-        {expertise.map((t) => <li>{t}</li>)}
-      </ul>
-      <p class="next"><a href={href('/skills/topics/')}>See the work behind each topic</a></p>
-    </section>
-
-    <section class="section gap" aria-labelledby="gap-title">
+  <section class="band gapband" aria-labelledby="gap-title">
+    <div class="wrap">
       <h2 id="gap-title">The gap shows up in every kind of medical decision</h2>
-      <p class="sub">
+      <p class="band-sub">
         In Study 2 of my dissertation, 106 adults rated how much they trusted a doctor and an AI making the same
         medical judgment. Each dot is the average difference, and the line is its 95% confidence interval. Hover over
-        a row or tab to it for the exact statistics.
+        a row for the exact statistics.
       </p>
       <div class="gap-grid">
         <ForestPlot rows={data.rows} xMin={-1} xMax={5} xLabel="Doctor minus AI, in trust rating points" leftLabel="AI trusted more" rightLabel="Doctor trusted more" animate />
@@ -103,7 +124,10 @@ const doors = [
           <p class="takeaway">
             The gap is large in all five domains, with effect sizes from d = 1.24 to 1.33. It barely moves with the type
             of decision, so the cause is more likely in how people see the decision-maker than in the medical content.
-            The rest of the dissertation tests that idea.
+          </p>
+          <p class="takeaway">
+            Then I checked behavior. Trust did not change what people did: they followed advice from a doctor and an AI
+            about equally.
           </p>
           <p class="small muted">
             Source: Leitao (2024), Georgetown University dissertation, Study 2, Table 7.
@@ -111,17 +135,36 @@ const doors = [
           </p>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="section" aria-labelledby="go-h">
-      <h2 id="go-h">Keep exploring</h2>
-      <ul class="doors">
-        {doors.map((d) => <li style={`--c:${d.c}`}><a href={href(d.p)}><strong>{d.t}</strong><span>{d.d}</span></a></li>)}
-      </ul>
-      <p class="next">Looking to talk? <a href={href('/contact/')}>Get in touch</a>.</p>
+  <div class="wrap">
+    <section class="section how" aria-labelledby="how-h">
+      <h2 id="how-h">How I work</h2>
+      <ol class="steps">
+        <li><h3>Register the question</h3><p>I write the hypotheses and the analysis plan before I see the data.</p></li>
+        <li><h3>Show every data point</h3><p>Charts show the people, not only the averages, with an interval on every estimate.</p></li>
+        <li><h3>Report what the data support</h3><p>Nulls and limits go in the main text. If a result is exploratory, I say so.</p></li>
+      </ol>
     </section>
   </div>
+
+  <section class="band contact" aria-labelledby="c-h">
+    <div class="wrap">
+      <h2 id="c-h">Looking for someone who can show their work?</h2>
+      <p class="band-sub">I am open to roles in behavioral science, research, and AI evaluation.</p>
+      <p class="cta"><a class="btn primary" href={href('/contact/')}>Get in touch</a><a class="btn" href={href('/cv/')}>Read my CV</a></p>
+    </div>
+  </section>
 </Base>
+
+<script>
+  const strip = document.getElementById('strip');
+  if (strip && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    strip.classList.add('pre');
+    requestAnimationFrame(() => requestAnimationFrame(() => strip.classList.add('go')));
+  }
+</script>
 
 <style>
   .hero { padding: clamp(32px, 6vw, 72px) 0 clamp(8px, 2vw, 24px); }
@@ -136,24 +179,19 @@ const doors = [
   .btn:hover { color: var(--ink); background: var(--wash); }
   .btn.primary { background: var(--ink); color: var(--paper); }
   .btn.primary:hover { background: var(--deep); border-color: var(--deep); color: #fff; }
-
-  .art { margin: 0; max-width: 40rem; justify-self: center; width: 100%; }
-  .art svg { width: 100%; height: auto; display: block; overflow: visible; }
-  .axis { stroke: var(--rule); stroke-width: 2; }
-  .dot circle { stroke: none; }
-  .dot.d circle { fill: var(--doctor); }
-  .dot.a circle { fill: var(--ai); }
-  .dot text { font-family: var(--display); font-weight: 700; font-size: 26px; fill: #fff; }
-  .gap path { fill: none; stroke: var(--ink); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
-  .gap text { font-family: var(--display); font-weight: 600; font-size: 17px; fill: var(--ink); }
-  .foot { font-family: var(--display); font-size: 14px; fill: var(--muted); }
-  .dot.d { transform: translateX(110px); animation: apartL 1.1s 0.35s cubic-bezier(.2,.7,.2,1) forwards; }
-  .dot.a { transform: translateX(-110px); animation: apartR 1.1s 0.35s cubic-bezier(.2,.7,.2,1) forwards; mix-blend-mode: normal; }
-  .gap { opacity: 0; animation: fade 0.6s 1.25s ease forwards; }
-  @keyframes apartL { to { transform: translateX(0); } }
-  @keyframes apartR { to { transform: translateX(0); } }
-  @keyframes fade { to { opacity: 1; } }
-  @media (prefers-reduced-motion: reduce) { .dot.d, .dot.a { transform: none; animation: none; } .gap { opacity: 1; animation: none; } }
+  .strip { margin: 0; width: 100%; max-width: 40rem; justify-self: center; font-family: var(--display); }
+  .s-title { font-weight: 700; font-size: 1.15rem; margin-bottom: 1rem; }
+  .s-row { margin-bottom: 1.1rem; }
+  .s-label { font-weight: 600; font-size: 1rem; margin-bottom: 0.3rem; }
+  .s-track { position: relative; height: 6.5rem; margin-inline: 7px; border-bottom: 2px solid var(--rule); }
+  .d { position: absolute; left: calc(var(--x) * 1%); top: calc(var(--y) * 0.88%); width: 11px; height: 11px; margin: 0 0 0 -5.5px; border-radius: 50%; opacity: 0.5; }
+  .r0 .d { background: var(--doctor); } .r1 .d { background: var(--ai); }
+  .mean { position: absolute; left: calc(var(--x) * 1%); top: -4px; bottom: -2px; width: 3px; margin-left: -1.5px; background: var(--ink); border-radius: 2px; }
+  .mean b { position: absolute; top: -1.3rem; left: 50%; transform: translateX(-50%); font-size: 0.95rem; background: var(--paper); padding: 0 0.3rem; white-space: nowrap; }
+  .s-axis { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--muted); margin: 0.2rem 7px 0; }
+  .s-note { margin: 0.8rem 0 0; font-size: 0.9rem; color: var(--muted); }
+  .strip.pre .d { left: 50%; opacity: 0; }
+  .strip.pre.go .d { left: calc(var(--x) * 1%); opacity: 0.5; transition: left 0.9s cubic-bezier(.2,.7,.2,1), opacity 0.4s; transition-delay: calc(var(--i) * 4ms); }
 
   .stats { list-style: none; margin: clamp(28px, 5vw, 56px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: 0.75rem; }
   .stats li { display: grid; gap: 0.2rem; padding: 1rem 1.1rem; background: var(--wash); border-radius: 10px; border-top: 5px solid var(--coral); font-family: var(--display); }
@@ -161,10 +199,18 @@ const doors = [
   .stats strong { font-size: clamp(2rem, 4vw, 2.8rem); line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
   .stats span { font-size: 0.95rem; color: var(--muted); line-height: 1.3; }
 
-  .about h2 { max-width: 28ch; }
-  .about-grid { display: grid; gap: 1rem 3rem; margin-top: 1rem; }
-  .about-grid p { margin: 0; max-width: 60ch; }
-  @media (min-width: 900px) { .about-grid { grid-template-columns: 1fr 1fr; } }
+  .band { --bg: var(--wash); background: var(--bg); box-shadow: 0 0 0 100vmax var(--bg); clip-path: inset(0 -100vmax); padding: clamp(32px, 5vw, 56px) 0; margin-top: clamp(32px, 5vw, 56px); }
+  .band.gapband { --bg: var(--sand-wash, var(--wash)); margin-top: 0; }
+  .band.contact { margin-bottom: 0; }
+  .band-sub { color: var(--muted); max-width: 60ch; margin: 0.6rem 0 1.4rem; }
+
+  .flag-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1rem; }
+  .flag-list a { display: grid; gap: 0.3rem; align-content: start; height: 100%; padding: 1.1rem 1.2rem 1.2rem; border-radius: 10px; background: var(--paper); border-top: 6px solid var(--c); color: var(--ink); text-decoration: none; font-family: var(--display); transition: transform 0.15s; }
+  .flag-list a:hover { transform: translateY(-3px); color: var(--ink); }
+  .big { font-size: clamp(1.7rem, 3vw, 2.3rem); font-weight: 700; line-height: 1.05; letter-spacing: -0.02em; }
+  .lab { font-size: 0.9rem; color: var(--muted); line-height: 1.3; margin-bottom: 0.6rem; }
+  .t { font-size: 1.05rem; line-height: 1.3; }
+  .meta { font-size: 0.85rem; color: var(--muted); margin-top: 0.3rem; }
 
   .cards { list-style: none; margin: 1.2rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(12.5rem, 1fr)); gap: 1.25rem; }
   .cards li { padding: 0 0 0.3rem; }
@@ -173,20 +219,15 @@ const doors = [
   .cards h3 { margin-bottom: 0.4rem; }
   .cards p { margin: 0; font-size: 1rem; line-height: 1.55; color: var(--muted); }
 
-  .chips { list-style: none; margin: 1.2rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
-  .chips li { font-family: var(--display); font-weight: 500; font-size: 0.95rem; padding: 0.4rem 0.85rem; border-radius: 999px; background: var(--wash); border: 1.5px solid var(--rule); }
-  .chips li:nth-child(5n + 1) { border-color: var(--coral); } .chips li:nth-child(5n + 2) { border-color: var(--peach); } .chips li:nth-child(5n + 3) { border-color: var(--steel); } .chips li:nth-child(5n + 4) { border-color: var(--deep); }
-
   .gap-grid { display: grid; gap: 2rem 4rem; align-items: start; }
   @media (min-width: 1000px) { .gap-grid { grid-template-columns: minmax(0, 480px) minmax(0, 1fr); } }
-  .sub { color: var(--muted); font-size: 1rem; margin: 0.75rem 0 1.75rem; }
   .takeaway { margin-top: 0; }
 
-  .doors { list-style: none; margin: 1.2rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 0.9rem; }
-  .doors a { display: grid; gap: 0.35rem; height: 100%; padding: 1.1rem 1.2rem; border-radius: 10px; background: var(--wash); border-top: 6px solid var(--c); text-decoration: none; color: var(--ink); font-family: var(--display); transition: transform 0.15s; }
-  .doors a:hover { transform: translateY(-3px); color: var(--ink); }
-  .doors strong { font-size: 1.25rem; }
-  .doors span { font-size: 0.95rem; color: var(--muted); line-height: 1.4; }
+  .steps { list-style: none; counter-reset: s; margin: 1.2rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1.25rem; }
+  .steps li { counter-increment: s; padding-left: 0; }
+  .steps h3::before { content: counter(s); display: inline-grid; place-items: center; width: 1.7rem; height: 1.7rem; margin-right: 0.55rem; border-radius: 50%; background: var(--ink); color: var(--paper); font-size: 0.95rem; }
+  .steps p { margin: 0.3rem 0 0; color: var(--muted); }
+
   .next { margin-top: 1.5rem; }
-  @media (prefers-reduced-motion: reduce) { .doors a { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { .flag-list a { transition: none; } .strip.pre.go .d { transition: none; } }
 </style>
