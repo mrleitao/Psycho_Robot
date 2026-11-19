@@ -6,6 +6,7 @@ import s1 from '../data/trust-in-medical-ai/study1-points.json';
 import { cards } from '../data/research_cards';
 import skills from '../data/skills.json';
 import evidence from '../data/evidence.json';
+import { counts, total, own } from '../data/participants';
 import { href } from '../utils/url';
 
 // Hero strip: each dot is one of the 188 adults in Study 1, rating trust from 0 to 10.
@@ -23,6 +24,7 @@ const countKind = (k: string) => ev.filter((e) => e.kind === k).length;
 const stats = [
   { n: '13+', l: 'years of research and teaching' },
   { n: String(countKind('project')), l: 'research projects and studies' },
+  { n: `${(Math.floor(total * 0.01) * 100).toLocaleString('en-US')}+`, l: 'participants across the studies I worked on' },
   { n: String(cards.length), l: 'papers published, accepted, or under review' },
   { n: String(countKind('role')), l: 'roles and positions' },
   { n: String(skills.length), l: 'skills, each tied to the work that shows it' },
@@ -116,6 +118,21 @@ const asks = [
     <ul class="stats" aria-label="At a glance">
       {stats.map((x) => <li><strong>{x.n}</strong><span>{x.l}</span></li>)}
     </ul>
+    <details class="count">
+      <summary>How I counted participants</summary>
+      <p>
+        About {(Math.floor(total * 0.01) * 100).toLocaleString('en-US')} people across the studies below. I ran the data
+        collection myself for about {(Math.floor(own * 0.01) * 100).toLocaleString('en-US')} of them. The dissertation count
+        is people recruited, including pilots and excluded participants. The rest are completed or analyzed samples, so
+        the total is approximate.
+      </p>
+      <table>
+        <thead><tr><th scope="col">Study</th><th scope="col">People</th><th scope="col">Counted as</th><th scope="col">I ran data collection</th></tr></thead>
+        <tbody>
+          {counts.map((c) => <tr><th scope="row">{c.name}</th><td>{c.n.toLocaleString('en-US')}{c.n === 3000 ? '+' : ''}</td><td>{c.basis}</td><td>{c.own ? 'Yes' : 'Part of a team'}</td></tr>)}
+        </tbody>
+      </table>
+    </details>
   </div>
 
   <div class="wrap">
@@ -300,7 +317,7 @@ const asks = [
   .strip.pre .d { left: 50%; opacity: 0; }
   .strip.pre.go .d { left: calc(var(--x) * 1%); opacity: 0.5; transition: left 0.9s cubic-bezier(.2,.7,.2,1), opacity 0.4s; transition-delay: calc(var(--i) * 4ms); }
 
-  .stats { list-style: none; margin: clamp(24px, 4vw, 44px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: 0.75rem; }
+  .stats { list-style: none; margin: clamp(24px, 4vw, 44px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
   .stats li { display: grid; gap: 0.2rem; padding: 1rem 1.1rem; background: var(--wash); border-radius: 10px; border-top: 5px solid var(--coral); font-family: var(--display); }
   .stats li:nth-child(2) { border-color: var(--peach); } .stats li:nth-child(3) { border-color: var(--steel); } .stats li:nth-child(4) { border-color: var(--deep); }
   .stats strong { font-size: clamp(2rem, 4vw, 2.8rem); line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
@@ -318,6 +335,15 @@ const asks = [
   .c-axis span { position: absolute; left: calc(var(--l) * 1%); transform: translateX(0); }
   .c-read { margin: 0.5rem 0 0; font-size: 0.9rem; color: var(--muted); min-height: 1.4em; }
   .strip.lead { margin-top: 0; }
+  @media (min-width: 720px) { .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .count { margin-top: 1rem; font-family: var(--display); }
+  .count summary { cursor: pointer; font-weight: 600; }
+  .count p { max-width: 62ch; margin: 0.8rem 0; font-family: var(--text); }
+  .count table { border-collapse: collapse; width: 100%; max-width: 54rem; font-size: 0.95rem; }
+  .count th, .count td { text-align: left; padding: 0.4rem 0.8rem 0.4rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  .count thead th { font-size: 0.85rem; color: var(--muted); }
+  .count tbody th { font-weight: 500; }
+  .count td:nth-child(2) { font-variant-numeric: tabular-nums; }
   .band { --bg: var(--wash); background: var(--bg); box-shadow: 0 0 0 100vmax var(--bg); clip-path: inset(0 -100vmax); padding: clamp(32px, 5vw, 56px) 0; margin-top: clamp(32px, 5vw, 56px); }
   .band.gapband { --bg: var(--sand-wash, var(--wash)); margin-top: 0; }
   .band.contact { margin-bottom: 0; }
