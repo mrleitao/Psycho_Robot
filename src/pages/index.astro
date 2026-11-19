@@ -4,6 +4,7 @@ import ForestPlot from '../components/ForestPlot.astro';
 import data from '../data/trust-in-medical-ai/trust-by-domain.json';
 import s1 from '../data/trust-in-medical-ai/study1-points.json';
 import { cards } from '../data/research_cards';
+import skills from '../data/skills.json';
 import { href } from '../utils/url';
 
 // Hero strip: each dot is one of the 188 adults in Study 1, rating trust from 0 to 10.
@@ -28,6 +29,15 @@ const flagship = [
   { slug: '/projects/phone-sleep/', title: 'Does screen time in bed change how people sleep?', stat: '91', statLabel: 'college students followed for seven days', status: 'Project', role: '', tone: 'sand' as const },
 ];
 const toneVar: Record<string, string> = { coral: 'var(--coral)', peach: 'var(--peach)', sand: 'var(--sand)', mist: 'var(--steel)', deep: 'var(--deep)' };
+
+const skillAll = skills as { group: string; type: string; name: string; level: string }[];
+const skillCount = skillAll.length;
+const hardGroups = [...new Set(skillAll.filter((x) => x.type === 'hard').map((x) => x.group))];
+const skillGroups = hardGroups.map((g) => {
+  const items = skillAll.filter((x) => x.group === g);
+  return { name: g, n: items.length, q: g.replace(/ /g, '+'), eg: items.filter((x) => x.level === 'have').slice(0, 3).map((x) => x.name) };
+});
+const softNames = [...new Set(skillAll.filter((x) => x.type === 'soft').map((x) => x.group))].map((n) => n.toLowerCase());
 
 const asks = [
   { q: 'What do you do?', a: 'Design experiments, model messy human data, lead research teams, and build with AI.' },
@@ -54,7 +64,81 @@ const asks = [
           <a class="btn" href={href('/contact/')}>Get in touch</a>
         </p>
       </div>
-      <figure class="strip" id="strip" aria-label="Trust ratings from 188 adults: a doctor was trusted more than an AI chatbot">
+      <ul class="stats" aria-label="At a glance">
+        {stats.map((x) => <li><strong>{x.n}</strong><span>{x.l}</span></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <section class="section about" aria-labelledby="about-h">
+      <h2 id="about-h">About me</h2>
+      <div class="about-grid">
+        <p>
+          I have a PhD in psychology from Georgetown and a master's in public policy. I study how people trust,
+          interpret, and make decisions with AI, especially in health. At the National Human Genome Research Institute,
+          I studied how people read AI-generated health information, how uncertainty changes trust, and how virtual
+          reality can fit into clinical research.
+        </p>
+        <p>
+          I build the study, analyze the data in R, and explain the result in plain words. I have led teams of up to 15
+          and managed six concurrent projects. Below are my skills, then the work, and what I did on each piece.
+        </p>
+      </div>
+    </section>
+  </div>
+
+  <div class="wrap">
+    <section class="section" aria-labelledby="do-title">
+      <h2 id="do-title">What I do</h2>
+      <ul class="cards">
+        <li><span class="bar b1"></span><h3>Design experiments</h3><p>Randomized studies, registered in advance, from the first hypothesis through recruitment, analysis, and write-up.</p></li>
+        <li><span class="bar b2"></span><h3>Model messy human data</h3><p>Multilevel, longitudinal, and causal models in R, applied to surveys, daily diaries, and clinical-trial data.</p></li>
+        <li><span class="bar b3"></span><h3>Lead research teams</h3><p>I managed five research assistants across six or seven projects at Georgetown, and six projects at NIH.</p></li>
+        <li><span class="bar b4"></span><h3>Build with AI</h3><p>I build research tools on LLM APIs, test AI output with blind ratings, and use AI to speed up analysis and code.</p></li>
+      </ul>
+      <p class="next"><a href={href('/skills/')}>See the work behind each skill</a></p>
+    </section>
+  </div>
+
+  <section class="band skills" aria-labelledby="sk-h">
+    <div class="wrap">
+      <h2 id="sk-h">Skills, backed by the work</h2>
+      <p class="band-sub">{skillCount} skills in all. Each one links to the studies, roles, and courses that show it.</p>
+      <ul class="sk-list">
+        {skillGroups.map((g) => (
+          <li>
+            <a href={href(`/skills/full/?area=${g.q}`)}>
+              <strong>{g.name}</strong>
+              <span class="sk-n">{g.n} skills</span>
+              <span class="sk-eg">{g.eg.join(', ')}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <p class="next">
+        Working style: {softNames.join(', ')}. <a href={href('/skills/full/?type=soft')}>See how each shows up in the work</a> ·
+        <a href={href('/skills/')}>Skills overview</a>
+      </p>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <section class="section how" aria-labelledby="how-h">
+      <h2 id="how-h">How I work</h2>
+      <ol class="steps">
+        <li><h3>Register the question</h3><p>I write the hypotheses and the analysis plan before I see the data.</p></li>
+        <li><h3>Show every data point</h3><p>Charts show the people, not only the averages, with an interval on every estimate.</p></li>
+        <li><h3>Report what the data support</h3><p>Nulls and limits go in the main text. If a result is exploratory, I say so.</p></li>
+      </ol>
+    </section>
+  </div>
+
+  <section class="band flag" aria-labelledby="flag-h">
+    <div class="wrap">
+      <h2 id="flag-h">Selected work, and my part in each</h2>
+      <p class="band-sub">Each opens to the full analysis, with the numbers behind every figure.</p>
+      <figure class="strip lead" id="strip" aria-label="Trust ratings from 188 adults: a doctor was trusted more than an AI chatbot">
         <figcaption class="s-title">Would you trust them with your health?</figcaption>
         {rows.map((r, ri) => (
           <div class={`s-row r${ri}`}>
@@ -70,37 +154,6 @@ const asks = [
         <div class="s-axis"><span>0 no trust</span><span>10 complete trust</span></div>
         <p class="s-note">From my dissertation: each dot is one adult in Study 1, and the line marks the average.</p>
       </figure>
-    </div>
-  </section>
-
-  <div class="wrap">
-    <ul class="stats" aria-label="At a glance">
-      {stats.map((x) => <li><strong>{x.n}</strong><span>{x.l}</span></li>)}
-    </ul>
-  </div>
-
-  <div class="wrap">
-    <section class="section about" aria-labelledby="about-h">
-      <h2 id="about-h">About me</h2>
-      <div class="about-grid">
-        <p>
-          I have a PhD in psychology from Georgetown and a master's in public policy. I study how people trust,
-          interpret, and make decisions with AI, especially in health. At the National Human Genome Research Institute,
-          I studied how people read AI-generated health information, how uncertainty changes trust, and how virtual
-          reality can fit into clinical research.
-        </p>
-        <p>
-          I build the study, analyze the data in R, and explain the result in plain words. I have led teams of up to 15
-          and managed six concurrent projects. Below is the work, and what I did on each piece.
-        </p>
-      </div>
-    </section>
-  </div>
-
-  <section class="band flag" aria-labelledby="flag-h">
-    <div class="wrap">
-      <h2 id="flag-h">Four projects, and my part in each</h2>
-      <p class="band-sub">Each opens to the full analysis, with the numbers behind every figure.</p>
       <ul class="flag-list">
         {flagship.map((c) => (
           <li style={`--c:${toneVar[c.tone]}`}>
@@ -117,19 +170,6 @@ const asks = [
       <p class="next"><a href={href('/research/')}>All ten papers</a> · <a href={href('/projects/')}>All projects</a></p>
     </div>
   </section>
-
-  <div class="wrap">
-    <section class="section" aria-labelledby="do-title">
-      <h2 id="do-title">What I do</h2>
-      <ul class="cards">
-        <li><span class="bar b1"></span><h3>Design experiments</h3><p>Randomized studies, registered in advance, from the first hypothesis through recruitment, analysis, and write-up.</p></li>
-        <li><span class="bar b2"></span><h3>Model messy human data</h3><p>Multilevel, longitudinal, and causal models in R, applied to surveys, daily diaries, and clinical-trial data.</p></li>
-        <li><span class="bar b3"></span><h3>Lead research teams</h3><p>I managed five research assistants across six or seven projects at Georgetown, and six projects at NIH.</p></li>
-        <li><span class="bar b4"></span><h3>Build with AI</h3><p>I build research tools on LLM APIs, test AI output with blind ratings, and use AI to speed up analysis and code.</p></li>
-      </ul>
-      <p class="next"><a href={href('/skills/')}>See the work behind each skill</a></p>
-    </section>
-  </div>
 
   <section class="band gapband" aria-labelledby="gap-title">
     <div class="wrap">
@@ -158,17 +198,6 @@ const asks = [
       </div>
     </div>
   </section>
-
-  <div class="wrap">
-    <section class="section how" aria-labelledby="how-h">
-      <h2 id="how-h">How I work</h2>
-      <ol class="steps">
-        <li><h3>Register the question</h3><p>I write the hypotheses and the analysis plan before I see the data.</p></li>
-        <li><h3>Show every data point</h3><p>Charts show the people, not only the averages, with an interval on every estimate.</p></li>
-        <li><h3>Report what the data support</h3><p>Nulls and limits go in the main text. If a result is exploratory, I say so.</p></li>
-      </ol>
-    </section>
-  </div>
 
   <section class="band contact" aria-labelledby="c-h">
     <div class="wrap">
@@ -214,7 +243,7 @@ const asks = [
   .strip.pre .d { left: 50%; opacity: 0; }
   .strip.pre.go .d { left: calc(var(--x) * 1%); opacity: 0.5; transition: left 0.9s cubic-bezier(.2,.7,.2,1), opacity 0.4s; transition-delay: calc(var(--i) * 4ms); }
 
-  .stats { list-style: none; margin: clamp(28px, 5vw, 56px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: 0.75rem; }
+  .stats { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; max-width: 40rem; width: 100%; justify-self: center; }
   .stats li { display: grid; gap: 0.2rem; padding: 1rem 1.1rem; background: var(--wash); border-radius: 10px; border-top: 5px solid var(--coral); font-family: var(--display); }
   .stats li:nth-child(2) { border-color: var(--peach); } .stats li:nth-child(3) { border-color: var(--steel); } .stats li:nth-child(4) { border-color: var(--deep); }
   .stats strong { font-size: clamp(2rem, 4vw, 2.8rem); line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
@@ -236,6 +265,14 @@ const asks = [
   .about-grid { display: grid; gap: 1rem 3rem; margin-top: 1rem; }
   .about-grid p { margin: 0; max-width: 60ch; }
   @media (min-width: 900px) { .about-grid { grid-template-columns: 1fr 1fr; } }
+  .band.skills { --bg: var(--wash); margin-top: 0; }
+  .sk-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 0.9rem; }
+  .sk-list a { display: grid; gap: 0.25rem; align-content: start; height: 100%; padding: 1rem 1.1rem; border-radius: 10px; background: var(--paper); border-left: 6px solid var(--coral); color: var(--ink); text-decoration: none; font-family: var(--display); }
+  .sk-list li:nth-child(4n+2) a { border-color: var(--peach); } .sk-list li:nth-child(4n+3) a { border-color: var(--steel); } .sk-list li:nth-child(4n) a { border-color: var(--deep); }
+  .sk-list a:hover { background: var(--wash); color: var(--ink); }
+  .sk-n { font-size: 0.85rem; color: var(--muted); }
+  .sk-eg { font-size: 0.95rem; line-height: 1.35; margin-top: 0.2rem; }
+  .strip.lead { margin: 0 0 1.8rem; max-width: 44rem; justify-self: start; }
   .meta { font-size: 0.85rem; color: var(--muted); margin-top: 0.3rem; }
 
   .cards { list-style: none; margin: 1.2rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(12.5rem, 1fr)); gap: 1.25rem; }
