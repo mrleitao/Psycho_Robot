@@ -58,7 +58,7 @@ const axisYears = [2013, 2016, 2019, 2022, 2025];
 
 const flagship = [
   ...cards.filter((c) => ['/projects/trust-in-medical-ai/', '/research/phones-social-connection/', '/research/risk-creep/'].includes(c.slug)),
-  { slug: '/projects/phone-sleep/', title: 'Does screen time in bed change how people sleep?', stat: '91', statLabel: 'college students followed for seven days', status: 'Project', role: '', tone: 'sand' as const },
+  { slug: '/projects/phone-sleep/', title: 'Does screen time in bed change how people sleep?', stat: '91', statLabel: 'college students followed for seven days', status: 'Project', role: 'Lead researcher', tone: 'sand' as const },
 ];
 const toneVar: Record<string, string> = { coral: 'var(--coral)', peach: 'var(--peach)', sand: 'var(--sand)', mist: 'var(--steel)', deep: 'var(--deep)' };
 
@@ -139,6 +139,7 @@ const asks = [
     <section class="section about" aria-labelledby="about-h">
       <h2 id="about-h">About me</h2>
       <div class="about-grid">
+        <div class="about-text">
         <p>
           I have a PhD in psychology from Georgetown and a master's in public policy. I study how people trust,
           interpret, and make decisions with AI, especially in health. At the National Human Genome Research Institute,
@@ -149,6 +150,10 @@ const asks = [
           I build the study, analyze the data in R, and explain the result in plain words. I have led teams of up to 15
           and managed six concurrent projects. Below are my skills, then the work, and what I did on each piece.
         </p>
+        </div>
+        <figure class="portrait">
+          <img src={href('/images/matthew-desk.webp')} width="1200" height="800" alt="Illustration of Matthew Leitao at his desk, smiling, with a computer, a coffee mug, and a stack of books" loading="lazy" decoding="async" />
+        </figure>
       </div>
     </section>
   </div>
@@ -357,9 +362,13 @@ const asks = [
   .t { font-size: 1.05rem; line-height: 1.3; }
   .role { font-size: 0.95rem; font-weight: 600; margin-top: 0.4rem; }
   .about h2 { max-width: 28ch; }
-  .about-grid { display: grid; gap: 1rem 3rem; margin-top: 1rem; }
-  .about-grid p { margin: 0; max-width: 60ch; }
-  @media (min-width: 900px) { .about-grid { grid-template-columns: 1fr 1fr; } }
+  .about-grid { display: grid; gap: 1.5rem 3rem; margin-top: 1rem; align-items: center; }
+  .about-text p { margin: 0 0 1rem; max-width: 60ch; }
+  .portrait { margin: 0; }
+  .portrait img { display: block; width: 100%; height: auto; max-width: 34rem; margin-inline: auto; }
+  :global([data-theme='dark']) .portrait img { background: #f7efe6; border-radius: 14px; padding: 0.5rem; }
+  @media (prefers-color-scheme: dark) { :global(:root:not([data-theme='light'])) .portrait img { background: #f7efe6; border-radius: 14px; padding: 0.5rem; } }
+  @media (min-width: 900px) { .about-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
   .band.skills { --bg: var(--wash); margin-top: 0; }
   .sk-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 0.9rem; }
   .sk-list a { display: grid; gap: 0.25rem; align-content: start; height: 100%; padding: 1rem 1.1rem; border-radius: 10px; background: var(--paper); border-left: 6px solid var(--coral); color: var(--ink); text-decoration: none; font-family: var(--display); }

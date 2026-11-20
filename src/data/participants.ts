@@ -12,7 +12,7 @@ export const counts: Count[] = [
   { name: 'Risk creep, eight-week study', n: 304, basis: 'enrolled', own: false },
   { name: 'Virtual reality symptom questionnaire validation', n: 100, basis: 'participants', own: true },
   { name: 'Virtual reality buffet in a drug trial', n: 29, basis: 'completers in the analysis, 42 enrolled', own: false },
-  { name: 'Phone use and sleep', n: 91, basis: 'students', own: false },
+  { name: 'Phone use and sleep', n: 91, basis: 'students', own: true },
 ];
 export const total = counts.reduce((a, c) => a + c.n, 0);
 export const own = counts.filter((c) => c.own).reduce((a, c) => a + c.n, 0);
