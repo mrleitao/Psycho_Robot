@@ -293,39 +293,38 @@ const diffCols = [
     <section class="section" id="mediation" aria-labelledby="med-title">
       <h2 id="med-title">Did perceived mind carry the effect?</h2>
       <p class="sub">
-        The doctor was seen as having more mind, so the question is whether that difference changed what people did. It did not. Each arrow carries its coefficient, and the indirect effect (a × b) is the part of the recommender's effect that runs through mind perception.
-        The recommender is coded 0 = doctor, 1 = AI, so a negative a means less mind in the AI.
+        The doctor was seen as having more mind, so the question is whether that difference changed what people did. It did not. The two diagrams below are the dissertation's, with its printed values. Each arrow carries its coefficient; c is the total effect, c′ the direct effect, and M the indirect effect through mind perception. The recommender is coded 0 = doctor, 1 = AI, so a negative a means less mind in the AI.
       </p>
       <MediationTriangle
         id="fig-4"
         title="Figure 4. Multilevel mediation between doctor and AI on sleep (dissertation Figure 31)"
         outcome="sleep advice"
-        a={`${sg(medS.a)} ***`}
-        b={sg4(medS.b)}
-        direct={sg(medS.cp)}
-        total={sg(medS.c)}
-        indirect={`${sg4(medS.ind)} [${sg4(medS.bootLo)}, ${sg4(medS.bootHi)}]`}
-        caption={`Days after the advice, ${medS.n} people. Indirect effect z = ${minus(medS.z.toFixed(3))}, p = ${noZero(medS.p.toFixed(3))}. The dissertation's figure labels the indirect effect as b and swaps c and c′; see the table at the bottom.`}
+        a="−1.019 ***"
+        b="−.012"
+        direct=""
+        indirect=""
+        lines={['c  = .026', 'c′ = .015', 'M = −.012']}
+        caption={`Values as printed in the dissertation, from the two-level Mplus model: indirect effect z(412) = −.943, p = .346. Re-estimated from the released file (random-intercept models on the days after the advice): a = ${sg(medS.a)}, b = ${sg4(medS.b)}, indirect = ${sg4(medS.ind)} [${sg4(medS.bootLo)}, ${sg4(medS.bootHi)}], total ${sg(medS.c)}, direct ${sg(medS.cp)}, Sobel z = ${minus(medS.z.toFixed(3))}. Same conclusion; the printed b and M match the re-estimated indirect effect.`}
       />
       <MediationTriangle
         id="fig-5"
         title="Figure 5. Multilevel mediation between doctor and AI on phone in bed (dissertation Figure 33)"
         outcome="device advice"
-        a={`${sg(medD.a)} ***`}
-        b={sg4(medD.b)}
-        direct={sg(medD.cp)}
-        total={sg(medD.c)}
-        indirect={`${sg4(medD.ind)} [${sg4(medD.bootLo)}, ${sg4(medD.bootHi)}]`}
-        caption={`Days after the advice, ${medD.n} people. Indirect effect z = ${medD.z.toFixed(3).replace(/^0/, '')}, p = ${noZero(medD.p.toFixed(3))}.`}
+        a="−1.019 ***"
+        b="−.006"
+        direct=""
+        indirect=""
+        lines={['c  = .127', 'c′ = .121', 'M = .006']}
+        caption={`Values as printed in the dissertation: indirect effect z(412) = .333, p = .736. Re-estimated from the released file: a = ${sg(medD.a)}, b = ${sg4(medD.b)}, indirect = ${sg4(medD.ind)} [${sg4(medD.bootLo)}, ${sg4(medD.bootHi)}], total ${sg(medD.c)}, direct ${sg(medD.cp)}, Sobel z = ${medD.z.toFixed(3).replace(/^0/, '')}. These agree with the printed values.`}
       />
       <h3 class="sub-h">Mediated moderation</h3>
       <p class="sub">
-        The dissertation reports only the two diagrams above. My notebook also tried a mediated-moderation model on all 14 days: does the advice work differently for the AI than the doctor, and does mind perception explain any recommender effect?
-        This is the same idea with the advice and the advice × recommender interaction added. It was exploratory, so there is no dissertation figure to match.
+        The dissertation reports only the two diagrams above, and the Mplus code in my notebook is the same simple mediation. The notebook's lavaan section also sketched a mediated-moderation model, with no saved output, so I re-ran it on the released file (all 14 days): does the advice work differently for the AI than the doctor, and does mind perception explain any recommender effect?
+        It adds the advice and the advice × recommender interaction to the mediation above. It was exploratory, so there is no dissertation figure to match.
       </p>
       <MediationTriangle
         id="fig-6"
-        title="Figure 6. Mediated moderation on sleep (from my notebook)"
+        title="Figure 6. Mediated moderation on sleep (re-run from my notebook's lavaan model)"
         outcome="sleep advice"
         a={`${sg(mmS.a)} ***`}
         b={sg4(mmS.b)}
@@ -336,7 +335,7 @@ const diffCols = [
       />
       <MediationTriangle
         id="fig-7"
-        title="Figure 7. Mediated moderation on phone in bed (from my notebook)"
+        title="Figure 7. Mediated moderation on phone in bed (re-run from my notebook's lavaan model)"
         outcome="device advice"
         a={`${sg(mmD.a)} ***`}
         b={sg4(mmD.b)}

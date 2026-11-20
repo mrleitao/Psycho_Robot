@@ -9,11 +9,12 @@ interface Props {
   direct: string;
   indirect: string;
   total?: string;
+  lines?: string[]; // when given, these lines go under the bottom arrow exactly as printed, in place of c′, c and the indirect effect
   moderation?: { label: string; value: string; advice: string };
   caption?: string;
   id?: string;
 }
-const { title, outcome, a, b, direct, indirect, total, moderation, caption, id } = Astro.props;
+const { title, outcome, a, b, direct, indirect, total, lines, moderation, caption, id } = Astro.props;
 const W = 720;
 const H = moderation ? 370 : 300;
 ---
@@ -39,9 +40,15 @@ const H = moderation ? 370 : 300;
     <line class="ar" x1="206" y1="202" x2="514" y2="202" marker-end={`url(#ah-${id})`} />
     <text class="pl" x="156" y="104" text-anchor="end">a = {a}</text>
     <text class="pl" x="566" y="104">b = {b}</text>
-    <text class="pl" x="360" y="192" text-anchor="middle">c′ = {direct}</text>
-    <text class="sm" x="360" y="224" text-anchor="middle">{total ? `c = ${total} without mind perception` : ''}</text>
-    <text class="ind" x="360" y="252" text-anchor="middle">Indirect effect (a × b) = {indirect}</text>
+    {lines ? (
+      lines.map((l, i) => <text class="pl" x="360" y={226 + i * 19} text-anchor="middle">{l}</text>)
+    ) : (
+      <g>
+        <text class="pl" x="360" y="192" text-anchor="middle">c′ = {direct}</text>
+        <text class="sm" x="360" y="224" text-anchor="middle">{total ? `c = ${total} without mind perception` : ''}</text>
+        <text class="ind" x="360" y="252" text-anchor="middle">Indirect effect (a × b) = {indirect}</text>
+      </g>
+    )}
     {moderation && (
       <g>
         <rect class="box" x="250" y="292" width="220" height="56" rx="4" />
