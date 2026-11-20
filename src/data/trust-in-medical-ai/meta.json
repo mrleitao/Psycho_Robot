@@ -26,9 +26,11 @@
     "study5-full.json": "Study 5 (N = 854): every table and model on the Study 5 in full page. Computed by analysis/study5-full-results.py from public/data/study5-ratings.csv.",
     "study5-points.json": "Study 5: each person's value for the dot plots, with bootstrapped intervals and smoothed shapes.",
     "public/data/study{3,4,5}-ratings.csv": "Participant-level ratings with coarse demographic groups (age in four bands), de-identified (see analysis/study{3,4,5}-deidentify.py, seed 2024). Released by the author as open data.",
-    "bayes.json": "Bayes factors for Studies 2 to 5 computed from the raw data, and for Study 6 from reported statistics (analysis/bayes-followups.py)."
+    "study6-full.json": "Study 6 (455 people got the advice; 510 have daily data): the sample, models, mediation and day-by-day means on the Study 6 page. Computed by analysis/study6-full-results.py from public/data/study6-ratings.csv.",
+    "public/data/study6-ratings.csv": "Study 6 daily data, one row per person per day, with coarse demographic groups, de-identified (see analysis/study6-deidentify.py, seed 2026). Released by the author as open data.",
+    "bayes.json": "Bayes factors for Studies 2 to 5 computed from the raw data, and for Study 6 from reported statistics, which agree with the released file (analysis/bayes-followups.py)."
   },
-  "sharing": "Published summary statistics, plus the de-identified Study 1 to 5 files released by the author (public/data/, CC BY 4.0). No raw files, IDs, IP addresses, locations or timestamps, and no sensitive demographics. A demographic group is its own filter option only if at least 30 people are in it.",
+  "sharing": "Published summary statistics, plus the de-identified Study 1 to 6 files released by the author (public/data/, CC BY 4.0). No raw files, IDs, IP addresses, locations or timestamps, and no sensitive demographics. A demographic group is its own filter option only if at least 30 people are in it.",
   "publicLinks": {
     "study2Preregistration": "https://osf.io/k25g8",
     "study2DataAndAnalysis": "https://osf.io/7png8",

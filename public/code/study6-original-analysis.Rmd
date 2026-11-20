@@ -1,0 +1,2816 @@
+---
+title: "Study 6 - original analysis"
+author: "Matthew Leitao"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+<!-- Study 6 (Chapter 4 of the dissertation; the notebook calls it Chapter 3, Study 1), from the author's original notebook. The raw survey exports are not released; the de-identified daily file is study6-ratings.csv. Local file paths were removed. In this notebook IsAlg is 0 = doctor, 1 = AI and Intervention is 0 = before, 1 = after; in the SPSS file the same variables were saved as 1/2 with labels that are reversed for IsAlg, so the released CSV uses the words instead. -->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Loading Packages
+```{r}
+if(!require(haven)) {install.packages("haven")}
+if(!require(tidyverse))  {install.packages("tidyverse")}
+if(!require(psych))  {install.packages("psych")}
+if(!require(effectsize))  {install.packages("effectsize")}
+if(!require(lme4))  {install.packages("lme4")}
+if(!require(lavaan))  {install.packages("lavaan")}
+if(!require(semPlot))  {install.packages("semPlot")}
+if(!require(MuMIn))  {install.packages("MuMIn")}
+if(!require(sjPlot))  {install.packages("sjPlot")}
+if(!require(sjmisc))  {install.packages("sjmisc")}
+if(!require(EMAtools))  {install.packages("EMAtools")}
+if(!require(corrplot))  {install.packages("corrplot")}
+if(!require(papaja))  {install.packages("papaja")}
+if(!require(lm.beta))  {install.packages("lm.beta")}
+if(!require(report))  {install.packages("report")}
+if(!require(brms))  {install.packages("brms")}
+if(!require(MplusAutomation))  {install.packages("MplusAutomation")}
+```
+
+# Loading Data
+```{r}
+#Baseline
+Health_Algorithm_Behavior_Baseline <- read_sav("path/to/Health Algorithm - Behavior - Baseline.sav")
+
+#Daily Survey - Before Intervention
+Health_Algorithm_Behavior_Daily_1 <- read_sav("path/to/Health Algorithm - Behavior - Daily - 1.sav")
+Health_Algorithm_Behavior_Daily_2 <- read_sav("path/to/Health Algorithm - Behavior - Daily - 2.sav")
+Health_Algorithm_Behavior_Daily_3 <- read_sav("path/to/Health Algorithm - Behavior - Daily - 3.sav")
+Health_Algorithm_Behavior_Daily_4 <- read_sav("path/to/Health Algorithm - Behavior - Daily - 4.sav")
+Health_Algorithm_Behavior_Daily_5 <- read_sav("path/to/Health Algorithm - Behavior - Daily - 5.sav")
+Health_Algorithm_Behavior_Daily_6 <- read_sav("path/to/Health Algorithm - Behavior - Daily - 6.sav")
+
+#Daily Survey/Intervention
+Health_Algorithm_Behavior_Daily_7_Intervention <- read_sav("path/to/Health Algorithm - Behavior - Daily - 7 - Intervention.sav")
+
+# Daily Survey - After Intervention
+Health_Algorithm_Behavior_Daily_8_AI <- read_sav("path/to/Health Algorithm - Behavior - Daily - 8 - AI.sav")
+Health_Algorithm_Behavior_Daily_8_Doctor <- read_sav("path/to/Health Algorithm - Behavior - Daily - 8 - Doctor.sav")
+
+Health_Algorithm_Behavior_Daily_9_AI <- read_sav("path/to/Health Algorithm - Behavior - Daily - 9 - AI.sav")
+Health_Algorithm_Behavior_Daily_9_Doctor <- read_sav("path/to/Health Algorithm - Behavior - Daily - 9 - Doctor.sav")
+
+Health_Algorithm_Behavior_Daily_10_AI <- read_sav("path/to/Health Algorithm - Behavior - Daily - 10 - AI.sav")
+Health_Algorithm_Behavior_Daily_10_Doctor <- read_sav("path/to/Health Algorithm - Behavior - Daily - 10 - Doctor.sav")
+
+Health_Algorithm_Behavior_Daily_11_AI <- read_sav("path/to/Health Algorithm - Behavior - Daily - 11 - AI.sav")
+Health_Algorithm_Behavior_Daily_11_Doctor <- read_sav("path/to/Health Algorithm - Behavior - Daily - 11 - Doctor.sav")
+
+Health_Algorithm_Behavior_Daily_12_AI <- read_sav("path/to/Health Algorithm - Behavior - Daily - 12 - AI.sav")
+Health_Algorithm_Behavior_Daily_12_Doctor <- read_sav("path/to/Health Algorithm - Behavior - Daily - 12 - Doctor.sav")
+
+Health_Algorithm_Behavior_Daily_13_AI <- read_sav("path/to/Health Algorithm - Behavior - Daily - 13 - AI.sav")
+Health_Algorithm_Behavior_Daily_13_Doctor <- read_sav("path/to/Health Algorithm - Behavior - Daily - 13 - Doctor.sav")
+
+# Final Survey
+Health_Algorithm_Behavior_Daily_14_AI_Debrief <- read_sav("path/to/Health Algorithm - Behavior - Daily - 14 - AI - Debrief.sav")
+Health_Algorithm_Behavior_Daily_14_Doctor_Debrief <- read_sav("path/to/Health Algorithm - Behavior - Daily - 14 - Doctor - Debrief.sav")
+
+```
+
+
+# Data Cleaning
+Steps for Data Cleaning
+Baseline - Need to cut down on the variables
+Then to create a seperate dataframe for the daily surveys (except last day) - append
+Then seperate debrief survey into daily and follow up
+Add daily to daily dataframe
+Clean follow up and create composites
+Finish Merging - Baseline(repeates), Daily(One line only), Followup(Repeats)
+
+
+## Baseline Cleaning
+
+Dropping Non-consent
+```{r}
+Health_Algorithm_Behavior_Baseline_Clean <- Health_Algorithm_Behavior_Baseline %>%
+  filter(Consent.0 == 1)
+
+describe(Health_Algorithm_Behavior_Baseline_Clean)
+
+```
+
+
+```{r}
+hist(Health_Algorithm_Behavior_Baseline_Clean$Sleep_Ladder)
+```
+
+
+### Creating Dummies
+
+#### Ethnicity Dummy Variable
+```{r}
+#Ethnicity Dummy Variables
+
+Health_Algorithm_Behavior_Baseline_Clean <- Health_Algorithm_Behavior_Baseline_Clean %>%
+  mutate(
+    IsAsian = case_when(
+      Race_1 == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    IsBlack = case_when(
+      Race_2 == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    IsWhite = case_when(
+      Race_3 == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    IsNativeAmerican = case_when(
+      Race_5 == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    IsPacificIslander = case_when(
+      Race_6 == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    IsOther = case_when(
+      Race_8 == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    IsHispanic = case_when(
+      Ethn == 1 ~ 1,
+      Ethn == 2 ~ 0,
+      TRUE ~ NA_real_
+    )
+  )
+
+```
+
+
+#### Gender
+```{r}
+Health_Algorithm_Behavior_Baseline_Clean <- Health_Algorithm_Behavior_Baseline_Clean %>%
+  mutate(
+    IsMale = case_when(
+      Sex == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    IsNonBinary = case_when(
+      Sex == 4 ~ 1,
+      TRUE ~ 0
+    )
+  )
+```
+
+
+#### Other Demographics
+```{r}
+Health_Algorithm_Behavior_Baseline_Clean <- Health_Algorithm_Behavior_Baseline_Clean %>%
+  mutate(
+    
+    EnglishFirst = case_when(
+      Q8 == 1 ~ 1,
+      Q8 == 2 ~ 0,
+      TRUE ~ NA_real_
+    )
+  )
+```
+
+
+#### Employment & Income
+```{r}
+
+Health_Algorithm_Behavior_Baseline_Clean <- Health_Algorithm_Behavior_Baseline_Clean %>%
+  mutate(
+    EmpFull = case_when(
+      Empl == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EmpPart = case_when(
+      Empl == 2 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EmpSelf = case_when(
+      Empl == 3 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EmpUn = case_when(
+      Empl == 4 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EmpRet = case_when(
+      Empl == 5 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EmpStud = case_when(
+      Empl == 6 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EduAtt_LessHigh = case_when(
+      Educ == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EduAtt_LessHigh = case_when(
+      Educ== 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EduAtt_HighSchool = case_when(
+      Educ == 2 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EduAtt_LessColl = case_when(
+      Educ == 3 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EduAtt_College = case_when(
+      Educ == 4 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EduAtt_LessGrad = case_when(
+      Educ == 5 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    EduAtt_Graduate = case_when(
+      Educ == 6 ~ 1,
+      TRUE ~ 0
+    )
+  )
+
+
+```
+
+
+#### Marriage Status
+```{r}
+
+Health_Algorithm_Behavior_Baseline_Clean <- Health_Algorithm_Behavior_Baseline_Clean %>%
+  mutate(
+    Single = case_when(
+      MarStat == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    Marriage = case_when(
+      MarStat == 2 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    LivePartner = case_when(
+      MarStat == 3 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    Divorced = case_when(
+      MarStat == 4 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    Widowed = case_when(
+      MarStat == 5 ~ 1,
+      TRUE ~ 0
+    ),
+    
+    ID = row_number()
+  )
+
+```
+
+
+### Reducing Data Frame
+```{r}
+Health_Algorithm_Behavior_Baseline_Clean <- Health_Algorithm_Behavior_Baseline_Clean %>%
+  dplyr::select(
+  "PROLIFIC_PID", "Alt_PID", "ID", "STUDY_ID","SESSION_ID", "RecordedDate", "Consent.0", "Consent", "Progress", "Duration__in_seconds_",
+# PSQI
+    "PSQI_1", "PSQI_2", "PSQI_3","PSQI_4","PSQI_5_1", "PSQI_5_10_TEXT", "PSQI_5_10", "PSQI_5_2", "PSQI_5_3", "PSQI_5_4", "PSQI_5_5", "PSQI_5_6", "PSQI_5_7", "PSQI_5_8", "PSQI_5_9", "PSQI_6", "PSQI_7", "PSQI_8", "PSQI_9", "PSQI_10", "PSQI_11_1", "PSQI_11_2", "PSQI_11_3", "PSQI_11_4", "PSQI_11_5_TEXT", "PSQI_11_5",
+
+  #Other Sleep Questions
+  "Current_Sleep_Open", "Ideal_Sleep_Open", "Sleep_Ladder",
+  # Demographic
+    "Age","Conserv1", "Conserv2", "Divorced", "LivePartner", "Marriage", "Single", "Widowed",
+
+"EduAtt_College", "EduAtt_Graduate", "EduAtt_HighSchool", "EduAtt_LessColl", "EduAtt_LessGrad", "EduAtt_LessHigh",
+"EmpFull", "EmpPart", "EmpRet", "EmpSelf", "EmpStud", "EmpUn", 
+
+"EnglishFirst", "Relig",
+
+"IsAsian", "IsBlack", "IsHispanic","IsNativeAmerican", "IsOther", "IsPacificIslander", "IsWhite",
+
+
+"IsMale", "IsNonBinary",
+
+# Mood
+
+"Mood_Baseline_1", "Mood_Baseline_2", "Mood_Baseline_3", "Mood_Baseline_4", "Mood_Baseline_5", "Mood_Baseline_6", "Mood_Baseline_7", "Mood_Baseline_8", "Mood_Baseline_9", "Mood_Baseline_10", "Mood_Baseline_11", "Mood_Baseline_12"
+
+
+  )
+```
+
+### Renaming variables
+```{r}
+Health_Algorithm_Behavior_Baseline_Clean <- Health_Algorithm_Behavior_Baseline_Clean %>%
+  rename(
+    Mood_Positive   = Mood_Baseline_1, 
+    Mood_Negative   = Mood_Baseline_2,
+    Mood_Good       = Mood_Baseline_3,
+    Mood_Bad        = Mood_Baseline_4,
+    Mood_Pleasant   = Mood_Baseline_5,
+    Mood_Unpleasant = Mood_Baseline_6,
+    Mood_Happy      = Mood_Baseline_7,
+    Mood_Sad        = Mood_Baseline_8,
+    Mood_Afraid     = Mood_Baseline_9,
+    Mood_Joyful     = Mood_Baseline_10, 
+    Mood_Angry      = Mood_Baseline_11, 
+    Mood_Content    = Mood_Baseline_12
+    )
+
+```
+
+
+### Merging IDs
+```{r}
+Health_Algorithm_Behavior_Baseline_Clean$PROLIFIC_PID_NeedsFixing <- Health_Algorithm_Behavior_Baseline_Clean$PROLIFIC_PID
+
+Health_Algorithm_Behavior_Baseline_Clean <- Health_Algorithm_Behavior_Baseline_Clean %>%
+  mutate(
+    PROLIFIC_PID = case_when(
+      PROLIFIC_PID_NeedsFixing == "{{%PROLIFIC_PID%}" ~ Alt_PID,
+      TRUE ~ PROLIFIC_PID_NeedsFixing
+    )
+  )
+
+describe(as.numeric(Health_Algorithm_Behavior_Baseline_Clean$Age))
+
+```
+
+
+
+# Daily Survey Cleaning
+Need to create two new variables 
+Pre/Post = 0/1 = Intervention
+Doc/Alg  = 0/1 = IsAlg
+
+Need to create an array with all the PIDs in the intervention study, so that way I can match it to the array. Going to start cleaning with the intervention study that way I can extract the PIDs for the conditions.
+
+
+## Intervention - Day 7
+
+First thing is to verify the way the data went into the study.
+
+```{r}
+describe(Health_Algorithm_Behavior_Daily_7_Intervention)
+```
+
+### Creating the Dummy Code for the Two Conditions
+
+```{r}
+Health_Algorithm_Behavior_Daily_7_Intervention_Clean <- Health_Algorithm_Behavior_Daily_7_Intervention %>%
+  mutate(
+    IsAlg = case_when(
+      Agreement___AI == 1 ~ 1,
+      Agreement___Doctor == 1 ~ 0,
+      TRUE ~ NA_real_
+    ),
+    
+    Intervention = 0,
+    
+    Day = 7,
+    
+    Sleep_Difficulty_1 = Sleep_Difficulty_1 - 3,
+    
+    Sleep_Difficulty_2 = Sleep_Difficulty_2 - 3
+  )
+```
+
+### Creating Array
+```{r}
+IsAlgorithm_Array <- Health_Algorithm_Behavior_Daily_7_Intervention_Clean %>%
+  filter(IsAlg == 1) %>%
+  dplyr::select(PROLIFIC_PID)
+```
+
+```{r}
+IsDoctor_Array <- Health_Algorithm_Behavior_Daily_7_Intervention_Clean %>%
+  filter(IsAlg == 0) %>%
+  dplyr::select(PROLIFIC_PID)
+```
+
+### Reducing Data Frame
+```{r}
+Health_Algorithm_Behavior_Daily_7_Intervention_Clean <- Health_Algorithm_Behavior_Daily_7_Intervention_Clean %>%
+  dplyr::select(
+  # Study INfo
+  PROLIFIC_PID, SESSION_ID, STUDY_ID, Day,
+  
+  # Predictors
+  IsAlg, Intervention,
+  #Outcome Measures
+  DIB_Minutes_1, Sleep_Hours_4,
+  
+  #Auxilery Outcomes
+  Morning_Depletion_1, Morning_Depletion_2, Sleep_Difficulty_1, Sleep_Difficulty_2,  Mood_Daily_1 
+  )
+```
+
+```{r}
+describe(Health_Algorithm_Behavior_Daily_7_Intervention_Clean)
+```
+
+
+## After Intervention Days
+I need to confirm that the array work as intended. There should be no missing data when it comes to PIDs
+
+### Day 8
+#### AI
+
+Verifying the Data
+```{r}
+describe(Health_Algorithm_Behavior_Daily_8_AI)
+```
+
+
+
+```{r}
+match(Health_Algorithm_Behavior_Daily_8_AI$PROLIFIC_PID, IsAlgorithm_Array$PROLIFIC_PID)
+```
+```{r}
+match(Health_Algorithm_Behavior_Daily_8_AI$PROLIFIC_PID, IsDoctor_Array$PROLIFIC_PID)
+```
+This verifies that the match variable works and can be used as a way to create the dummy variable of interest.
+
+##### Creating Dummy Variables
+```{r}
+Health_Algorithm_Behavior_Daily_8_AI_Clean <- Health_Algorithm_Behavior_Daily_8_AI %>% 
+  mutate(
+    IsAlg = 1,
+    
+    Intervention = 1,
+    
+    Day = 8
+  )
+```
+
+
+##### Reducing Dataframe
+
+```{r}
+Health_Algorithm_Behavior_Daily_8_AI_Clean <- Health_Algorithm_Behavior_Daily_8_AI_Clean %>%
+  dplyr::select(
+  # Study INfo
+  PROLIFIC_PID, SESSION_ID, STUDY_ID, Day,
+  
+  # Predictors
+  IsAlg, Intervention,
+  #Outcome Measures
+  DIB_Minutes_1, Sleep_Hours_4,
+  
+  #Auxilery Outcomes
+  Morning_Depletion_1, Morning_Depletion_2, Sleep_Difficulty_1, Sleep_Difficulty_2,  Mood_Daily_1 
+  )
+```
+
+
+#### Doctor
+
+```{r}
+describe(Health_Algorithm_Behavior_Daily_8_Doctor)
+```
+
+Secondary Verification done
+
+```{r}
+match(Health_Algorithm_Behavior_Daily_8_Doctor$PROLIFIC_PID, IsAlgorithm_Array$PROLIFIC_PID)
+```
+
+```{r}
+match(Health_Algorithm_Behavior_Daily_8_Doctor$PROLIFIC_PID, IsDoctor_Array$PROLIFIC_PID)
+```
+##### Creating Dummy Variables
+```{r}
+Health_Algorithm_Behavior_Daily_8_Doctor_Clean <- Health_Algorithm_Behavior_Daily_8_Doctor %>% 
+  mutate(
+    IsAlg = 0,
+    
+    Intervention = 1,
+    
+    Day = 8
+  )
+```
+
+
+##### Reducing Dataframe
+
+```{r}
+Health_Algorithm_Behavior_Daily_8_Doctor_Clean <- Health_Algorithm_Behavior_Daily_8_Doctor_Clean %>%
+  dplyr::select(
+  # Study INfo
+  PROLIFIC_PID, SESSION_ID, STUDY_ID, Day,
+  
+  # Predictors
+  IsAlg, Intervention,
+  #Outcome Measures
+  DIB_Minutes_1, Sleep_Hours_4,
+  
+  #Auxilery Outcomes
+  Morning_Depletion_1, Morning_Depletion_2, Sleep_Difficulty_1, Sleep_Difficulty_2,  Mood_Daily_1 
+  )
+```
+
+
+
+### Day 9
+#### AI
+
+Verifying the Data
+```{r}
+describe(Health_Algorithm_Behavior_Daily_9_AI)
+```
+
+
+
+```{r}
+match(Health_Algorithm_Behavior_Daily_9_AI$PROLIFIC_PID, IsAlgorithm_Array$PROLIFIC_PID)
+```
+
+```{r}
+match(Health_Algorithm_Behavior_Daily_9_AI$PROLIFIC_PID, IsDoctor_Array$PROLIFIC_PID)
+```
+This verifies that the match variable works and can be used as a way to create the dummy variable of interest.
+
+##### Creating Dummy Variables
+```{r}
+Health_Algorithm_Behavior_Daily_9_AI_Clean <- Health_Algorithm_Behavior_Daily_9_AI %>% 
+  mutate(
+    IsAlg = 1,
+    
+    Intervention = 1,
+    
+    Day = 9
+  )
+```
+
+
+##### Reducing Dataframe
+
+```{r}
+Health_Algorithm_Behavior_Daily_9_AI_Clean <- Health_Algorithm_Behavior_Daily_9_AI_Clean %>%
+  dplyr::select(
+  # Study INfo
+  PROLIFIC_PID, SESSION_ID, STUDY_ID, Day,
+  
+  # Predictors
+  IsAlg, Intervention,
+  #Outcome Measures
+  DIB_Minutes_1, Sleep_Hours_4,
+  
+  #Auxilery Outcomes
+  Morning_Depletion_1, Morning_Depletion_2, Sleep_Difficulty_1, Sleep_Difficulty_2,  Mood_Daily_1 
+  )
+```
+
+
+#### Doctor
+
+```{r}
+describe(Health_Algorithm_Behavior_Daily_9_Doctor)
+```
+
+Secondary Verification done
+
+```{r}
+match(Health_Algorithm_Behavior_Daily_9_Doctor$PROLIFIC_PID, IsAlgorithm_Array$PROLIFIC_PID)
+```
+
+```{r}
+match(Health_Algorithm_Behavior_Daily_9_Doctor$PROLIFIC_PID, IsDoctor_Array$PROLIFIC_PID)
+```
+##### Creating Dummy Variables
+```{r}
+Health_Algorithm_Behavior_Daily_9_Doctor_Clean <- Health_Algorithm_Behavior_Daily_9_Doctor %>% 
+  mutate(
+    IsAlg = 0,
+    
+    Intervention = 1,
+    
+    Day = 9
+  )
+```
+
+
+##### Reducing Dataframe
+
+```{r}
+Health_Algorithm_Behavior_Daily_9_Doctor_Clean <- Health_Algorithm_Behavior_Daily_9_Doctor_Clean %>%
+  dplyr::select(
+  # Study Info
+  PROLIFIC_PID, SESSION_ID, STUDY_ID, Day,
+  
+  # Predictors
+  IsAlg, Intervention,
+  #Outcome Measures
+  DIB_Minutes_1, Sleep_Hours_4,
+  
+  #Auxilery Outcomes
+  Morning_Depletion_1, Morning_Depletion_2, Sleep_Difficulty_1, Sleep_Difficulty_2,  Mood_Daily_1 
+  )
+```
+
+
+
+
+### Day 10
+#### AI
+
+Verifying the Data
+```{r}
+describe(Health_Algorithm_Behavior_Daily_10_AI)
+```
+
+This verifies that the match variable works and can be used as a way to create the dummy variable of interest.
+
+##### Creating Dummy Variables
+```{r}
+Health_Algorithm_Behavior_Daily_10_AI_Clean <- Health_Algorithm_Behavior_Daily_10_AI %>% 
+  mutate(
+    IsAlg = 1,
+    
+    Intervention = 1,
+    
+    Day = 10
+  )
+```
+
+
+##### Reducing Dataframe
+
+```{r}
+Health_Algorithm_Behavior_Daily_10_AI_Clean <- Health_Algorithm_Behavior_Daily_10_AI_Clean %>%
+  dplyr::select(
+  # Study INfo
+  PROLIFIC_PID, SESSION_ID, STUDY_ID, Day,
+  
+  # Predictors
+  IsAlg, Intervention,
+  #Outcome Measures
+  DIB_Minutes_1, Sleep_Hours_4,
+  
+  #Auxilery Outcomes
+  Morning_Depletion_1, Morning_Depletion_2, Sleep_Difficulty_1, Sleep_Difficulty_2,  Mood_Daily_1 
+  )
+```
+
+
+#### Doctor
+
+```{r}
+describe(Health_Algorithm_Behavior_Daily_10_Doctor)
+```
+
+
+##### Creating Dummy Variables
+```{r}
+Health_Algorithm_Behavior_Daily_10_Doctor_Clean <- Health_Algorithm_Behavior_Daily_10_Doctor %>% 
+  mutate(
+    IsAlg = 0,
+    
+    Intervention = 1,
+    
+    Day = 10
+  )
+```
+
+
+##### Reducing Dataframe
+
+```{r}
+Health_Algorithm_Behavior_Daily_10_Doctor_Clean <- Health_Algorithm_Behavior_Daily_10_Doctor_Clean %>%
+  dplyr::select(
+  # Study Info
+  PROLIFIC_PID, SESSION_ID, STUDY_ID, Day,
+  
+  # Predictors
+  IsAlg, Intervention,
+  #Outcome Measures
+  DIB_Minutes_1, Sleep_Hours_4,
+  
+  #Auxilery Outcomes
+  Morning_Depletion_1, Morning_Depletion_2, Sleep_Difficulty_1, Sleep_Difficulty_2,  Mood_Daily_1 
+  )
+```
+
+
+
+### Day 11
+#### AI
+
+Verifying the Data
+```{r}
+describe(Health_Algorithm_Behavior_Daily_11_AI)
+```
+
+
+##### Creating Dummy Variables
+```{r}
+Health_Algorithm_Behavior_Daily_11_AI_Clean <- Health_Algorithm_Behavior_Daily_11_AI %>% 
+  mutate(
+    IsAlg = 1,
+    
+    Intervention = 1,
+    
+    Day = 11
+  )
+```
+
+
+##### Reducing Dataframe
+
+```{r}
+Health_Algorithm_Behavior_Daily_11_AI_Clean <- Health_Algorithm_Behavior_Daily_11_AI_Clean %>%
+  dplyr::select(
+  # Study INfo
+  PROLIFIC_PID, SESSION_ID, STUDY_ID, Day,
+  
+  # Predictors
+  IsAlg, Intervention,
+  #Outcome Measures
+  DIB_Minutes_1, Sleep_Hours_4,
+  
+  #Auxilery Outcomes
+  Morning_Depletion_1, Morning_Depletion_2, Sleep_Difficulty_1, Sleep_Difficulty_2,  Mood_Daily_1 
+  )
+```
+
+
+#### Doctor
+
+```{r}
+describe(Health_Algorithm_Behavior_Daily_11_Doctor)
+```
+
+##### Creating Dummy Variables
+```{r}
+Health_Algorithm_Behavior_Daily_11_Doctor_Clean <- Health_Algorithm_Behavior_Daily_11_Doctor %>% 
+  mutate(
+    IsAlg = 0,
+    
+    Intervention = 1,
+    
+    Day = 11
+  )
+```
+
+
+##### Reducing Dataframe
+
+```{r}
+Health_Algorithm_Behavior_Daily_11_Doctor_Clean <- Health_Algorithm_Behavior_Daily_11_Doctor_Clean %>%
+  dplyr::select(
+  # Study Info
+  PROLIFIC_PID, SESSION_ID, STUDY_ID, Day,
+  
+  # Predictors
+  IsAlg, Intervention,
+  #Outcome Measures
+  DIB_Minutes_1, Sleep_Hours_4,
+  
+  #Auxilery Outcomes
+  Morning_Depletion_1, Morning_Depletion_2, Sleep_Difficulty_1, Sleep_Difficulty_2,  Mood_Daily_1 
+  )
+```
+
+### Day 12
+#### AI
+
+Verifying the Data
+```{r}
+describe(Health_Algorithm_Behavior_Daily_12_AI)
+```
+
+
+##### Creating Dummy Variables
+```{r}
+Health_Algorithm_Behavior_Daily_12_AI_Clean <- Health_Algorithm_Behavior_Daily_12_AI %>% 
+  mutate(
+    IsAlg = 1,
+    
+    Intervention = 1,
+    
+    Day = 12
+  )
+```
+
+
+##### Reducing Dataframe
+
+```{r}
+Health_Algorithm_Behavior_Daily_12_AI_Clean <- Health_Algorithm_Behavior_Daily_12_AI_Clean %>%
+  dplyr::select(
+  # Study INfo
+  PROLIFIC_PID, SESSION_ID, STUDY_ID, Day,
+  
+  # Predictors
+  IsAlg, Intervention,
+  #Outcome Measures
+  DIB_Minutes_1, Sleep_Hours_4,
+  
+  #Auxilery Outcomes
+  Morning_Depletion_1, Morning_Depletion_2, Sleep_Difficulty_1, Sleep_Difficulty_2,  Mood_Daily_1 
+  )
+```
+
+
+#### Doctor
+
+```{r}
+describe(Health_Algorithm_Behavior_Daily_12_Doctor)
+```
+
+Secondary Verification done
+
+##### Creating Dummy Variables
+```{r}
+Health_Algorithm_Behavior_Daily_12_Doctor_Clean <- Health_Algorithm_Behavior_Daily_12_Doctor %>% 
+  mutate(
+    IsAlg = 0,
+    
+    Intervention = 1,
+    
+    Day = 12
+  )
+```
+
+
+##### Reducing Dataframe
+
+```{r}
+Health_Algorithm_Behavior_Daily_12_Doctor_Clean <- Health_Algorithm_Behavior_Daily_12_Doctor_Clean %>%
+  dplyr::select(
+  # Study Info
+  PROLIFIC_PID, SESSION_ID, STUDY_ID, Day,
+  
+  # Predictors
+  IsAlg, Intervention,
+  #Outcome Measures
+  DIB_Minutes_1, Sleep_Hours_4,
+  
+  #Auxilery Outcomes
+  Morning_Depletion_1, Morning_Depletion_2, Sleep_Difficulty_1, Sleep_Difficulty_2,  Mood_Daily_1 
+  )
+```
+
+
+### Day 13
+#### AI
+
+Verifying the Data
+```{r}
+describe(Health_Algorithm_Behavior_Daily_13_AI)
+```
+
+
+##### Creating Dummy Variables
+```{r}
+Health_Algorithm_Behavior_Daily_13_AI_Clean <- Health_Algorithm_Behavior_Daily_13_AI %>% 
+  mutate(
+    IsAlg = 1,
+    
+    Intervention = 1,
+    
+    Day = 13
+  )
+```
+
+
+##### Reducing Dataframe
+
+```{r}
+Health_Algorithm_Behavior_Daily_13_AI_Clean <- Health_Algorithm_Behavior_Daily_13_AI_Clean %>%
+  dplyr::select(
+  # Study INfo
+  PROLIFIC_PID, SESSION_ID, STUDY_ID, Day,
+  
+  # Predictors
+  IsAlg, Intervention,
+  #Outcome Measures
+  DIB_Minutes_1, Sleep_Hours_4,
+  
+  #Auxilery Outcomes
+  Morning_Depletion_1, Morning_Depletion_2, Sleep_Difficulty_1, Sleep_Difficulty_2,  Mood_Daily_1 
+  )
+```
+
+
+#### Doctor
+
+```{r}
+describe(Health_Algorithm_Behavior_Daily_13_Doctor)
+```
+
+Secondary Verification done
+
+##### Creating Dummy Variables
+```{r}
+Health_Algorithm_Behavior_Daily_13_Doctor_Clean <- Health_Algorithm_Behavior_Daily_13_Doctor %>% 
+  mutate(
+    IsAlg = 0,
+    
+    Intervention = 1,
+    
+    Day = 13
+  )
+```
+
+
+##### Reducing Dataframe
+
+```{r}
+Health_Algorithm_Behavior_Daily_13_Doctor_Clean <- Health_Algorithm_Behavior_Daily_13_Doctor_Clean %>%
+  dplyr::select(
+  # Study Info
+  PROLIFIC_PID, SESSION_ID, STUDY_ID, Day,
+  
+  # Predictors
+  IsAlg, Intervention,
+  #Outcome Measures
+  DIB_Minutes_1, Sleep_Hours_4,
+  
+  #Auxilery Outcomes
+  Morning_Depletion_1, Morning_Depletion_2, Sleep_Difficulty_1, Sleep_Difficulty_2,  Mood_Daily_1 
+  )
+```
+
+
+### Day 14 + Debrief
+#### AI
+
+Verifying the Data
+```{r}
+describe(Health_Algorithm_Behavior_Daily_14_AI_Debrief)
+```
+
+
+##### Creating Dummy Variables
+```{r}
+Health_Algorithm_Behavior_Daily_14_AI_Clean_Full <- Health_Algorithm_Behavior_Daily_14_AI_Debrief %>% 
+  mutate(
+    IsAlg = 1,
+    
+    Intervention = 1,
+    
+    Day = 14
+  )
+```
+
+
+##### Reducing Dataframe
+
+```{r}
+Health_Algorithm_Behavior_Daily_14_AI_Clean <- Health_Algorithm_Behavior_Daily_14_AI_Clean_Full %>%
+  dplyr::select(
+  # Study INfo
+  PROLIFIC_PID, SESSION_ID, STUDY_ID, Day,
+  
+  # Predictors
+  IsAlg, Intervention,
+  #Outcome Measures
+  DIB_Minutes_1, Sleep_Hours_4,
+  
+  #Auxiliary Outcomes
+  Morning_Depletion_1, Morning_Depletion_2, Sleep_Difficulty_1, Sleep_Difficulty_2,  Mood_Daily_1 
+  )
+```
+
+
+
+```{r}
+Health_Algorithm_Behavior_AI_Debrief <- Health_Algorithm_Behavior_Daily_14_AI_Clean_Full %>%
+    dplyr::select(
+  # Study INfo
+  PROLIFIC_PID, SESSION_ID, STUDY_ID,
+  
+  # Mind Perception
+  Decision_Maker.Acct, Decision_Maker.Antic, Decision_Maker.Fam, Decision_Maker.Gen, Decision_Maker.IN, Decision_Maker.PUnd, Decision_Maker.QR, Decision_Maker.Trans, Decision_Maker.Under,  
+  
+  # Warm/Comp
+  Competence, Warmth,
+  
+  # Experience  
+  Exp_AI_ChatGTP, Exp_AI_General, Exp_AI_Medical, Exp_ME_General, Exp_ME_Hospital,
+
+  
+  # Open Response
+  Open_Response_Study,
+  
+  
+  # Extra Analysis
+  Warmth_Intuit, Warmth_Quant,
+  Competent_Intuit, Competent_Quant,
+  Trust_Intuit_1, Trust_Quant_1,
+  #Order
+  FL_17_DO_ExtraBackUpAnalysis_Intuition, FL_17_DO_ExtraBackUpAnalysis_QuantitativeReasoning
+    )
+```
+
+
+```{r}
+Health_Algorithm_Behavior_AI_Debrief %>%
+  dplyr::select(Decision_Maker.Antic, Decision_Maker.Acct, Decision_Maker.Under) %>% 
+ psych::alpha()
+```
+
+```{r}
+Health_Algorithm_Behavior_AI_Debrief %>%
+  dplyr::select(Decision_Maker.Antic, Decision_Maker.Acct, Decision_Maker.Under, Decision_Maker.Gen, Decision_Maker.Fam, Decision_Maker.Trans,Decision_Maker.PUnd) %>% 
+ psych::alpha()
+```
+
+
+```{r}
+Health_Algorithm_Behavior_AI_Debrief <- Health_Algorithm_Behavior_AI_Debrief %>%
+  rowwise() %>%
+    mutate(Mind_Perception = mean(c(Decision_Maker.Antic, Decision_Maker.Acct, Decision_Maker.Under,
+                                           Decision_Maker.Gen, Decision_Maker.Fam, Decision_Maker.Trans, 
+                                           Decision_Maker.PUnd), na.rm = TRUE))
+```
+
+
+```{r}
+Health_Algorithm_Behavior_AI_Debrief <- Health_Algorithm_Behavior_AI_Debrief %>%
+  rowwise() %>%
+    mutate(Mind_Perception_Alt = mean(c(Decision_Maker.Antic, Decision_Maker.Acct, Decision_Maker.Under), na.rm = TRUE))
+```
+
+```{r}
+describe(Health_Algorithm_Behavior_AI_Debrief)
+```
+
+#### Doctor
+
+```{r}
+describe(Health_Algorithm_Behavior_Daily_14_Doctor_Debrief)
+```
+
+
+##### Creating Dummy Variables
+```{r}
+Health_Algorithm_Behavior_Daily_14_Doctor_Clean_Full <- Health_Algorithm_Behavior_Daily_14_Doctor_Debrief %>% 
+  mutate(
+    IsAlg = 0,
+    
+    Intervention = 1,
+    
+    Day = 14
+  )
+```
+
+
+##### Reducing Dataframe
+
+```{r}
+Health_Algorithm_Behavior_Daily_14_Doctor_Clean <- Health_Algorithm_Behavior_Daily_14_Doctor_Clean_Full %>%
+  dplyr::select(
+  # Study INfo
+  PROLIFIC_PID, SESSION_ID, STUDY_ID, Day,
+  
+  # Predictors
+  IsAlg, Intervention,
+  #Outcome Measures
+  DIB_Minutes_1, Sleep_Hours_4,
+  
+  #Auxiliary Outcomes
+  Morning_Depletion_1, Morning_Depletion_2, Sleep_Difficulty_1, Sleep_Difficulty_2,  Mood_Daily_1 
+  )
+```
+
+
+
+```{r}
+Health_Algorithm_Behavior_Doctor_Debrief <- Health_Algorithm_Behavior_Daily_14_Doctor_Clean_Full %>%
+    dplyr::select(
+  # Study INfo
+  PROLIFIC_PID, SESSION_ID, STUDY_ID,
+  
+  
+  # Mind Perception
+  Decision_Maker.Acct, Decision_Maker.Antic, Decision_Maker.Fam, Decision_Maker.Gen, Decision_Maker.IN, Decision_Maker.PUnd, Decision_Maker.QR, Decision_Maker.Trans, Decision_Maker.Under,  
+  
+  # Warm/Comp
+  Competence, Warmth,
+  
+  # Experience  
+  Exp_AI_ChatGTP, Exp_AI_General, Exp_AI_Medical, Exp_ME_General, Exp_ME_Hospital,
+
+  
+  # Open Response
+  Open_Response_Study,
+  
+  
+  # Extra Analysis
+  Warmth_Intuit, Warmth_Quant,
+  Competent_Intuit, Competent_Quant,
+  Trust_Intuit_1, Trust_Quant_1,
+  #Order
+  FL_17_DO_ExtraBackUpAnalysis_Intuition, FL_17_DO_ExtraBackUpAnalysis_QuantitativeReasoning
+    )
+```
+
+
+
+
+```{r}
+Health_Algorithm_Behavior_Doctor_Debrief %>%
+  dplyr::select(Decision_Maker.Antic, Decision_Maker.Acct, Decision_Maker.Under, Decision_Maker.Gen, Decision_Maker.Fam, Decision_Maker.Trans,Decision_Maker.PUnd) %>% 
+ psych::alpha()
+```
+
+
+```{r}
+Health_Algorithm_Behavior_Doctor_Debrief %>%
+  dplyr::select(Decision_Maker.Antic, Decision_Maker.Acct, Decision_Maker.Under) %>% 
+ psych::alpha()
+```
+
+```{r}
+Health_Algorithm_Behavior_Doctor_Debrief <- Health_Algorithm_Behavior_Doctor_Debrief %>%
+  rowwise() %>%
+    mutate(Mind_Perception = mean(c(Decision_Maker.Antic, Decision_Maker.Acct, Decision_Maker.Under,
+                                           Decision_Maker.Gen, Decision_Maker.Fam, Decision_Maker.Trans, 
+                                           Decision_Maker.PUnd), na.rm = TRUE))
+```
+
+
+```{r}
+Health_Algorithm_Behavior_Doctor_Debrief <- Health_Algorithm_Behavior_Doctor_Debrief %>%
+  rowwise() %>%
+    mutate(Mind_Perception_Alt = mean(c(Decision_Maker.Antic, Decision_Maker.Acct, Decision_Maker.Under), na.rm = TRUE))
+```
+
+
+```{r}
+describe(Health_Algorithm_Behavior_Doctor_Debrief)
+```
+
+
+
+## Before Intervention Days
+Need to add Intervention + IsAlg
+Need to verify IsAlg
+
+
+### Day 1
+Verifying the Data
+```{r}
+describe(Health_Algorithm_Behavior_Daily_1)
+```
+```{r}
+
+Health_Algorithm_Behavior_Daily_1_Clean <- Health_Algorithm_Behavior_Daily_1 %>%
+  mutate(
+    IsAlg = case_when(
+        !is.na(match(PROLIFIC_PID, IsAlgorithm_Array$PROLIFIC_PID)) ~ 1,
+        !is.na(match(PROLIFIC_PID, IsDoctor_Array$PROLIFIC_PID)) ~ 0,
+        TRUE ~ NA_real_
+      )
+  )
+match(Health_Algorithm_Behavior_Daily_1_Clean$PROLIFIC_PID, IsAlgorithm_Array$PROLIFIC_PID)
+match(Health_Algorithm_Behavior_Daily_1_Clean$PROLIFIC_PID, IsDoctor_Array$PROLIFIC_PID)
+Health_Algorithm_Behavior_Daily_1_Clean$IsAlg
+    
+```
+
+
+
+
+##### Creating Dummy Variables
+```{r}
+Health_Algorithm_Behavior_Daily_1_Clean <- Health_Algorithm_Behavior_Daily_1_Clean %>%
+  mutate(
+    Intervention = 0,
+    
+    Day = 1
+  )
+```
+
+
+##### Reducing Dataframe
+
+```{r}
+Health_Algorithm_Behavior_Daily_1_Clean <- Health_Algorithm_Behavior_Daily_1_Clean %>%
+  dplyr::select(
+  # Study INfo
+  PROLIFIC_PID, SESSION_ID, STUDY_ID, Day,
+  
+  # Predictors
+  IsAlg, Intervention,
+  #Outcome Measures
+  DIB_Minutes_1, Sleep_Hours_4,
+  
+  #Auxilery Outcomes
+  Morning_Depletion_1, Morning_Depletion_2, Sleep_Difficulty_1, Sleep_Difficulty_2,  Mood_Daily_1 
+  )
+```
+
+
+
+### Day 2
+Verifying the Data
+```{r}
+describe(Health_Algorithm_Behavior_Daily_2)
+```
+
+```{r}
+
+Health_Algorithm_Behavior_Daily_2_Clean <- Health_Algorithm_Behavior_Daily_2 %>%
+  mutate(
+    IsAlg = case_when(
+        !is.na(match(PROLIFIC_PID, IsAlgorithm_Array$PROLIFIC_PID)) ~ 1,
+        !is.na(match(PROLIFIC_PID, IsDoctor_Array$PROLIFIC_PID)) ~ 0,
+        TRUE ~ NA_real_
+      )
+  )
+match(Health_Algorithm_Behavior_Daily_2_Clean$PROLIFIC_PID, IsAlgorithm_Array$PROLIFIC_PID)
+match(Health_Algorithm_Behavior_Daily_2_Clean$PROLIFIC_PID, IsDoctor_Array$PROLIFIC_PID)
+Health_Algorithm_Behavior_Daily_2_Clean$IsAlg
+    
+```
+
+
+##### Creating Dummy Variables
+```{r}
+Health_Algorithm_Behavior_Daily_2_Clean <- Health_Algorithm_Behavior_Daily_2_Clean %>%
+  mutate(
+    Intervention = 0,
+    
+    Day = 2
+  )
+```
+
+
+##### Reducing Dataframe
+
+```{r}
+Health_Algorithm_Behavior_Daily_2_Clean <- Health_Algorithm_Behavior_Daily_2_Clean %>%
+  dplyr::select(
+  # Study INfo
+  PROLIFIC_PID, SESSION_ID, STUDY_ID, Day,
+  
+  # Predictors
+  IsAlg, Intervention,
+  #Outcome Measures
+  DIB_Minutes_1, Sleep_Hours_4,
+  
+  #Auxilery Outcomes
+  Morning_Depletion_1, Morning_Depletion_2, Sleep_Difficulty_1, Sleep_Difficulty_2,  Mood_Daily_1 
+  )
+```
+
+
+### Day 3
+Verifying the Data
+```{r}
+describe(Health_Algorithm_Behavior_Daily_3)
+```
+
+```{r}
+
+Health_Algorithm_Behavior_Daily_3_Clean <- Health_Algorithm_Behavior_Daily_3 %>%
+  mutate(
+    IsAlg = case_when(
+        !is.na(match(PROLIFIC_PID, IsAlgorithm_Array$PROLIFIC_PID)) ~ 1,
+        !is.na(match(PROLIFIC_PID, IsDoctor_Array$PROLIFIC_PID)) ~ 0,
+        TRUE ~ NA_real_
+      )
+  )
+match(Health_Algorithm_Behavior_Daily_3_Clean$PROLIFIC_PID, IsAlgorithm_Array$PROLIFIC_PID)
+match(Health_Algorithm_Behavior_Daily_3_Clean$PROLIFIC_PID, IsDoctor_Array$PROLIFIC_PID)
+Health_Algorithm_Behavior_Daily_3_Clean$IsAlg
+    
+```
+
+
+##### Creating Dummy Variables
+```{r}
+Health_Algorithm_Behavior_Daily_3_Clean <- Health_Algorithm_Behavior_Daily_3_Clean %>%
+  mutate(
+    Intervention = 0,
+    
+    Day = 3
+  )
+```
+
+
+##### Reducing Dataframe
+
+```{r}
+Health_Algorithm_Behavior_Daily_3_Clean <- Health_Algorithm_Behavior_Daily_3_Clean %>%
+  dplyr::select(
+  # Study INfo
+  PROLIFIC_PID, SESSION_ID, STUDY_ID, Day,
+  
+  # Predictors
+  IsAlg, Intervention,
+  #Outcome Measures
+  DIB_Minutes_1, Sleep_Hours_4,
+  
+  #Auxilery Outcomes
+  Morning_Depletion_1, Morning_Depletion_2, Sleep_Difficulty_1, Sleep_Difficulty_2,  Mood_Daily_1 
+  )
+```
+
+
+### Day 4
+Verifying the Data
+```{r}
+describe(Health_Algorithm_Behavior_Daily_4)
+```
+
+```{r}
+
+Health_Algorithm_Behavior_Daily_4_Clean <- Health_Algorithm_Behavior_Daily_4 %>%
+  mutate(
+    IsAlg = case_when(
+        !is.na(match(PROLIFIC_PID, IsAlgorithm_Array$PROLIFIC_PID)) ~ 1,
+        !is.na(match(PROLIFIC_PID, IsDoctor_Array$PROLIFIC_PID)) ~ 0,
+        TRUE ~ NA_real_
+      )
+  )
+match(Health_Algorithm_Behavior_Daily_4_Clean$PROLIFIC_PID, IsAlgorithm_Array$PROLIFIC_PID)
+match(Health_Algorithm_Behavior_Daily_4_Clean$PROLIFIC_PID, IsDoctor_Array$PROLIFIC_PID)
+Health_Algorithm_Behavior_Daily_4_Clean$IsAlg
+    
+```
+
+
+##### Creating Dummy Variables
+```{r}
+Health_Algorithm_Behavior_Daily_4_Clean <- Health_Algorithm_Behavior_Daily_4_Clean %>%
+  mutate(
+    Intervention = 0,
+    
+    Day = 4
+  )
+```
+
+
+##### Reducing Dataframe
+
+```{r}
+Health_Algorithm_Behavior_Daily_4_Clean <- Health_Algorithm_Behavior_Daily_4_Clean %>%
+  dplyr::select(
+  # Study INfo
+  PROLIFIC_PID, SESSION_ID, STUDY_ID, Day,
+  
+  # Predictors
+  IsAlg, Intervention,
+  #Outcome Measures
+  DIB_Minutes_1, Sleep_Hours_4,
+  
+  #Auxilery Outcomes
+  Morning_Depletion_1, Morning_Depletion_2, Sleep_Difficulty_1, Sleep_Difficulty_2,  Mood_Daily_1 
+  )
+```
+
+
+### Day 5
+Verifying the Data
+```{r}
+describe(Health_Algorithm_Behavior_Daily_5)
+```
+
+
+```{r}
+
+Health_Algorithm_Behavior_Daily_5_Clean <- Health_Algorithm_Behavior_Daily_5 %>%
+  mutate(
+    IsAlg = case_when(
+        !is.na(match(PROLIFIC_PID, IsAlgorithm_Array$PROLIFIC_PID)) ~ 1,
+        !is.na(match(PROLIFIC_PID, IsDoctor_Array$PROLIFIC_PID)) ~ 0,
+        TRUE ~ NA_real_
+      )
+  )
+match(Health_Algorithm_Behavior_Daily_5_Clean$PROLIFIC_PID, IsAlgorithm_Array$PROLIFIC_PID)
+match(Health_Algorithm_Behavior_Daily_5_Clean$PROLIFIC_PID, IsDoctor_Array$PROLIFIC_PID)
+Health_Algorithm_Behavior_Daily_5_Clean$IsAlg
+    
+```
+
+
+##### Creating Dummy Variables
+```{r}
+Health_Algorithm_Behavior_Daily_5_Clean <- Health_Algorithm_Behavior_Daily_5_Clean %>%
+  mutate(
+    Intervention = 0,
+    
+    Day = 5
+  )
+```
+
+
+##### Reducing Dataframe
+
+```{r}
+Health_Algorithm_Behavior_Daily_5_Clean <- Health_Algorithm_Behavior_Daily_5_Clean %>%
+  dplyr::select(
+  # Study INfo
+  PROLIFIC_PID, SESSION_ID, STUDY_ID, Day,
+  
+  # Predictors
+  IsAlg, Intervention,
+  #Outcome Measures
+  DIB_Minutes_1, Sleep_Hours_4,
+  
+  #Auxilery Outcomes
+  Morning_Depletion_1, Morning_Depletion_2, Sleep_Difficulty_1, Sleep_Difficulty_2,  Mood_Daily_1 
+  )
+```
+
+
+### Day 6
+Verifying the Data
+```{r}
+describe(Health_Algorithm_Behavior_Daily_6)
+```
+
+```{r}
+
+Health_Algorithm_Behavior_Daily_6_Clean <- Health_Algorithm_Behavior_Daily_6 %>%
+  mutate(
+    IsAlg = case_when(
+        !is.na(match(PROLIFIC_PID, IsAlgorithm_Array$PROLIFIC_PID)) ~ 1,
+        !is.na(match(PROLIFIC_PID, IsDoctor_Array$PROLIFIC_PID)) ~ 0,
+        TRUE ~ NA_real_
+      )
+  )
+match(Health_Algorithm_Behavior_Daily_6_Clean$PROLIFIC_PID, IsAlgorithm_Array$PROLIFIC_PID)
+match(Health_Algorithm_Behavior_Daily_6_Clean$PROLIFIC_PID, IsDoctor_Array$PROLIFIC_PID)
+Health_Algorithm_Behavior_Daily_6_Clean$IsAlg
+    
+```
+
+
+##### Creating Dummy Variables
+```{r}
+Health_Algorithm_Behavior_Daily_6_Clean <- Health_Algorithm_Behavior_Daily_6_Clean %>%
+  mutate(
+    Intervention = 0,
+    
+    Day = 6
+  )
+```
+
+
+##### Reducing Dataframe
+
+```{r}
+Health_Algorithm_Behavior_Daily_6_Clean <- Health_Algorithm_Behavior_Daily_6_Clean %>%
+  dplyr::select(
+  # Study INfo
+  PROLIFIC_PID, SESSION_ID, STUDY_ID, Day,
+  
+  # Predictors
+  IsAlg, Intervention,
+  #Outcome Measures
+  DIB_Minutes_1, Sleep_Hours_4,
+  
+  #Auxilery Outcomes
+  Morning_Depletion_1, Morning_Depletion_2, Sleep_Difficulty_1, Sleep_Difficulty_2,  Mood_Daily_1 
+  )
+```
+
+
+
+# Merging Data
+Okay, so the next thing to do is to append all the datasets to make it so the data is then ready to merge. What this will look like is Basline - All Daily Surveys - Both Debrief(1-21-2).
+
+## Daily Surveys
+Going to try to do this by binding using a list.
+```{r}
+Health_Algorithm_Behavior_Daily_Combined <-  bind_rows(list(Health_Algorithm_Behavior_Daily_1_Clean, Health_Algorithm_Behavior_Daily_2_Clean, Health_Algorithm_Behavior_Daily_3_Clean, Health_Algorithm_Behavior_Daily_4_Clean, Health_Algorithm_Behavior_Daily_5_Clean,Health_Algorithm_Behavior_Daily_6_Clean, Health_Algorithm_Behavior_Daily_7_Intervention_Clean, Health_Algorithm_Behavior_Daily_8_AI_Clean, Health_Algorithm_Behavior_Daily_8_Doctor_Clean, Health_Algorithm_Behavior_Daily_9_AI_Clean, Health_Algorithm_Behavior_Daily_9_Doctor_Clean, Health_Algorithm_Behavior_Daily_10_AI_Clean, Health_Algorithm_Behavior_Daily_10_Doctor_Clean, Health_Algorithm_Behavior_Daily_11_AI_Clean, Health_Algorithm_Behavior_Daily_11_Doctor_Clean, Health_Algorithm_Behavior_Daily_12_AI_Clean, Health_Algorithm_Behavior_Daily_12_Doctor_Clean, Health_Algorithm_Behavior_Daily_13_AI_Clean, Health_Algorithm_Behavior_Daily_13_Doctor_Clean, Health_Algorithm_Behavior_Daily_14_AI_Clean, Health_Algorithm_Behavior_Daily_14_Doctor_Clean))
+
+```
+
+
+## Debrief Surveys
+```{r}
+
+Health_Algorithm_Behavior_Debrief_Combined <- bind_rows(Health_Algorithm_Behavior_Doctor_Debrief, Health_Algorithm_Behavior_AI_Debrief)
+```
+
+
+
+## Left Join
+
+### Merge Baseline to Daily Survey
+Should expect a few more rows but a reduction of 1 column. 82+13-1= 94. There should me at max 109 additional rows (hopefully less) so between 5809-5918.
+```{r}
+Health_Algorithm_Behavior_Final <-  left_join(Health_Algorithm_Behavior_Baseline_Clean, Health_Algorithm_Behavior_Daily_Combined, by = "PROLIFIC_PID")
+```
+
+
+We got the 94 variables, which is to be expected. We ended with 5854 observations which within the expected threshold. Now to add the debrief survey. We should expect no extra rows with 30 addition variables (for a total of 124).
+
+```{r}
+Health_Algorithm_Behavior_Final <- left_join(Health_Algorithm_Behavior_Final, Health_Algorithm_Behavior_Debrief_Combined, by = "PROLIFIC_PID")
+```
+
+This is what we got. 
+
+
+### Creating Weight On Advice 
+
+```{r}
+Health_Algorithm_Behavior_Initial_Score <- Health_Algorithm_Behavior_Final %>% 
+  filter(Day <= 7)  %>%
+  group_by(PROLIFIC_PID) %>%
+  summarise(Initial_Sleep_Mean = mean(Sleep_Hours_4, na.rm= TRUE), Initial_DIB_Mean = mean(DIB_Minutes_1, na.rm= TRUE))
+
+
+
+```
+
+#### Merge with Data
+```{r}
+Health_Algorithm_Behavior_Final <- left_join(Health_Algorithm_Behavior_Final, Health_Algorithm_Behavior_Initial_Score, by = "PROLIFIC_PID")
+
+```
+
+```{r}
+describe(Health_Algorithm_Behavior_Final$Initial_Sleep_Mean)
+
+hist(Health_Algorithm_Behavior_Final$Initial_Sleep_Mean)
+```
+
+#### Calculating Weight on Advice
+
+WOA = (Final Estimate - Initial Estimate)/(Advice Given - Intial Estimate)
+
+y = (After Intervention - Average Before Intervention)/(Recommendation-Average Before Intervention)
+
+The values that should be expected are between 1 and 0, which would represent "full acceptance of advice"(1) and "no acceptance of advice" (0).
+This though may not represent the a number of true values that are represented in the data.
+Some examples of this would be:
+Over-compensation - Where the individual over corrects making the value of weighing advice to go above 1.
+    An exmaple of this would be on a scale from 1 to 100, with a recommendation of 50.
+      If a participants original answer was 25 and then went to 75, then the WOA value would be 2. This could be rectified by capping the value at 1, but leads to an interesting issue of value of magnitude we are looking for is no necessarily at the end of a scale but potentially in the middle. We can say that those who overcompensate are ultimately following too much of the advice but it may increase the variance of the sample as a consequence. Is this problematic? Perhaps not as the additional change above and beyond the value of 1 would not be detrimental. The problem though comes when the movement between the initial estimate and the final estimate is small, making any change becomes a much larger magnitude of change.  If a participants original answer was 49 and then when to 75, then the WOA value would be 26.  This would be problematic as this would create extreme number within my data and ultimately move away from the true purpose of this scale. The goal is to then curtail the degree in which the participant can answer by limiting the possible values. This top end would be best to be limited to 1 or 2 at most. 
+
+    
+Deniers of Advice - Ones who go in a different direction then the advice. This would represent then a departure from the advice given and make the advice go negative.
+      An example of this would be on a scale from 1 to 100, with a recommendation of 50.
+      If a participants original answer was 45 and then went to 40, then the WOA value would be -2. This would then fall into the same potential problem as above but conceptually is different. If anything goes negative, that means the participant has acted on the advice but the advice actually is creating a worse outcome. The degree in which that changes advice may prove to an important distinction from listening to advice. The question would be to determine whether that distinction adds value beyond zero. Mathamatically creating that extra space will increase the degree of variance available. So the values that move away from the original suggestion would pose a degree of deviation that might be of interest to our model. So the bounding shoudl either be zero or keep the bounding the inveserse of the possible positive results.
+      
+Disregarder of Advice - Ones who don't feel it is necessary to change as a consequence of 
+      
+
+So I want to do two models in advance. The traditional way of transforming the varible by caping the possible values between zero and one. The second would be to cap this information within a bounded possible values of -2 and 2. 
+
+
+Sleep Recommednation - 7.5-9 hours. To use the recommendation what we will use is the midpoint which is 8.25 hours of sleep. 
+Indicator Variable For Where they Started - 
+
+
+Device In Bed - 15 minutes or less. We will use 15 minutes as the measure.Need to make sure I am only calculating this metric post intervention.
+
+```{r}
+Health_Algorithm_Behavior_Final <- Health_Algorithm_Behavior_Final %>%
+  mutate(
+    Final_Initial_Difference_Sleep = Sleep_Hours_4 - Initial_Sleep_Mean,
+
+    Recommendation_Intitial_Difference_Sleep = 8.25 - Initial_Sleep_Mean,
+    
+    
+    Weight_On_Advice_Sleep = Final_Initial_Difference_Sleep/Recommendation_Intitial_Difference_Sleep,
+    
+    Weight_On_Advice_Sleep_Traditional = case_when(
+      Weight_On_Advice_Sleep < 0 ~ 0,
+      Weight_On_Advice_Sleep > 1 ~ 1,
+      TRUE ~ Weight_On_Advice_Sleep
+    ),
+    
+    Weight_On_Advice_Sleep_Alternative = case_when(
+      Weight_On_Advice_Sleep < -2 ~ -2,
+      Weight_On_Advice_Sleep > 2 ~ 2,
+      TRUE ~ Weight_On_Advice_Sleep
+    ),
+    
+    Final_Initial_Difference_DIB = DIB_Minutes_1 - Initial_DIB_Mean,
+    
+    Recommendation_Intitial_Difference_DIB = 15 - Initial_DIB_Mean,
+    Weight_On_Advice_DIB = Final_Initial_Difference_DIB/Recommendation_Intitial_Difference_DIB,
+    
+    Weight_On_Advice_DIB = case_when(
+      is.nan(Weight_On_Advice_DIB) ~ 0,
+      TRUE ~ Weight_On_Advice_DIB
+    ),
+    
+    Weight_On_Advice_DIB_Traditional = case_when(
+      Weight_On_Advice_DIB < 0 ~ 0,
+      Weight_On_Advice_DIB > 1 ~ 1,
+      TRUE ~ Weight_On_Advice_DIB
+    ),
+    
+    Weight_On_Advice_DIB_Alternative = case_when(
+      Weight_On_Advice_DIB < -2 ~ -2,
+      Weight_On_Advice_DIB > 2 ~ 2,
+      TRUE ~ Weight_On_Advice_DIB
+    ),
+    
+    Sleep_Start_Pos = case_when(
+      Initial_Sleep_Mean < 8.25 ~ 0,
+      Initial_Sleep_Mean > 8.25 ~ 1,
+      TRUE ~ NA_real_
+    ),
+    
+    DIB_Start_Pos = case_when(
+      Initial_DIB_Mean > 15 ~ 0,
+      Initial_DIB_Mean < 15 ~ 1,
+      TRUE ~ NA_real_
+    )
+  )
+
+Health_Algorithm_Behavior_Final %>%
+  filter(is.infinite(Weight_On_Advice_DIB))
+
+Health_Algorithm_Behavior_Final %>%
+  summarise(Sleep = mean(Weight_On_Advice_Sleep, na.rm = TRUE), DIB = mean(Weight_On_Advice_DIB, na.rm = TRUE))
+```
+
+
+```{r}
+
+Health_Algorithm_Behavior_Final %>%
+  filter(Intervention == 0) %>%
+  pull(Final_Initial_Difference_Sleep) %>%
+  describe()
+
+Health_Algorithm_Behavior_Final %>%
+  filter(Intervention == 0) %>%
+  pull(Recommendation_Intitial_Difference_Sleep) %>%
+  describe()
+
+
+Health_Algorithm_Behavior_Final %>%
+  filter(Intervention == 0) %>%
+  pull(Weight_On_Advice_Sleep_Alternative) %>%
+  describe()
+
+
+Health_Algorithm_Behavior_Final %>%
+  filter(Intervention == 0) %>%
+  pull(Weight_On_Advice_Sleep_Alternative) %>%
+  describe()
+
+```
+
+
+```{r}
+table(Health_Algorithm_Behavior_Final$Intervention)
+```
+
+
+```{r}
+
+table(Health_Algorithm_Behavior_Final$Sleep_Start_Pos)
+
+table(Health_Algorithm_Behavior_Final$DIB_Start_Pos)
+
+describe(Health_Algorithm_Behavior_Final$Initial_Sleep_Mean)
+
+describe(Health_Algorithm_Behavior_Final$Initial_DIB_Mean)
+
+```
+
+
+
+```{r}
+describe(Health_Algorithm_Behavior_Final$Weight_On_Advice_Sleep_Traditional)
+
+describe(Health_Algorithm_Behavior_Final$Weight_On_Advice_Sleep_Alternative)
+
+describe(Health_Algorithm_Behavior_Final$Weight_On_Advice_DIB_Traditional)
+
+describe(Health_Algorithm_Behavior_Final$Weight_On_Advice_DIB_Alternative)
+
+
+```
+
+
+
+
+```{r}
+summary(Health_Algorithm_Behavior_Final$Weight_On_Advice_Sleep_Traditional)
+
+summary(Health_Algorithm_Behavior_Final$Weight_On_Advice_DIB_Traditional)
+
+
+
+summary(Health_Algorithm_Behavior_Final$Weight_On_Advice_Sleep_Alternative)
+
+summary(Health_Algorithm_Behavior_Final$Weight_On_Advice_DIB_Alternative)
+```
+
+
+#### Creating AI Intervention Value
+I want to create a value that is only for the AI intervention as I feel like it woudl help me clearify the degree of difference I am actually aiming to capture. It will be a non-orthognal value that is the combination of IsAI and Intervention. Befor
+```{r}
+
+Health_Algorithm_Behavior_Final <- Health_Algorithm_Behavior_Final %>%
+  mutate(
+    Alg_Intervention = case_when(
+      IsAlg == 1 & Intervention == 1 ~ 1,
+      TRUE ~ 0
+    )
+  )
+
+    
+table(Health_Algorithm_Behavior_Final$Intervention, Health_Algorithm_Behavior_Final$Day)
+
+table(Health_Algorithm_Behavior_Final$Alg_Intervention, Health_Algorithm_Behavior_Final$Day)
+
+table(Health_Algorithm_Behavior_Final$IsAlg, Health_Algorithm_Behavior_Final$Day)
+
+```
+
+```{r}
+hist(Health_Algorithm_Behavior_Final$Weight_On_Advice_Sleep_Traditional)
+
+
+Health_Algorithm_Behavior_Final %>%
+  filter(Sleep_Start_Pos == 0) %>%
+  pull(Weight_On_Advice_Sleep_Traditional) %>%
+  hist()
+
+
+Health_Algorithm_Behavior_Final %>%
+  filter(Sleep_Start_Pos == 1) %>%
+  pull(Weight_On_Advice_Sleep_Traditional) %>%
+  hist()
+
+hist(Health_Algorithm_Behavior_Final$Sleep_Hours_4)
+```
+### Histogram Plots
+```{r}
+
+Health_Algorithm_Behavior_Final %>%
+  filter(Intervention == "Intervention") %>%
+ggplot(., aes(Weight_On_Advice_Sleep_Traditional)) + geom_histogram(aes(y = ..count..), color = "black", fill = "lightblue", bins = 15) +
+  ggtitle("Adherence to Sleep Recommendation - Traditional") +
+  ylab('Count') + 
+  xlab('Propotion of Adherence') +
+  theme_apa()
+
+ggsave("Study 6 - Sleep - WOA Traditional.png", width = 12, height = 8)
+```
+
+
+```{r}
+
+Health_Algorithm_Behavior_Final %>%
+  filter(Intervention == "Intervention") %>%
+ggplot(., aes(Weight_On_Advice_Sleep_Alternative)) + geom_histogram(aes(y = ..count..), color = "black", fill = "lightgrey", bins = 15) +
+  ggtitle("Adherence to Sleep Recommendation - Alternative") +
+  ylab('Count') + 
+  xlab('Propotion of Adherence') +
+  theme_apa()
+
+ggsave("Study 6 - Sleep - WOA Alternative.png", width = 12, height = 8)
+```
+
+
+
+```{r}
+hist(Health_Algorithm_Behavior_Final$Weight_On_Advice_DIB_Alternative)
+
+hist(Health_Algorithm_Behavior_Final$Weight_On_Advice_DIB_Traditional)
+
+hist(Health_Algorithm_Behavior_Final$DIB_Minutes_1)
+```
+
+### Histogram Plots
+```{r}
+
+Health_Algorithm_Behavior_Final %>%
+  filter(Intervention == "Intervention") %>%
+ggplot(., aes(Weight_On_Advice_DIB_Traditional)) + geom_histogram(aes(y = ..count..), color = "black", fill = "lightblue", bins = 15) +
+  ggtitle("Adherence to DIB Recommendation - Traditional") +
+  ylab('Count') + 
+  xlab('Propotion of Adherence') +
+  theme_apa()
+
+ggsave("Study 6 - DIB - WOA Traditional.png", width = 12, height = 8)
+```
+
+
+```{r}
+
+Health_Algorithm_Behavior_Final %>%
+  filter(Intervention == "Intervention") %>%
+ggplot(., aes(Weight_On_Advice_DIB_Alternative)) + geom_histogram(aes(y = ..count..), color = "black", fill = "lightgrey", bins = 15) +
+  ggtitle("Adherence to DIB Recommendation - Alternative") +
+  ylab('Count') + 
+  xlab('Propotion of Adherence') +
+  theme_apa()
+
+ggsave("Study 6 - DIB - WOA Alternative.png", width = 12, height = 8)
+```
+
+```{r}
+Health_Algorithm_Behavior_Final <- Health_Algorithm_Behavior_Final %>%
+  mutate(
+    IsAlg = factor(
+      IsAlg,
+      levels = c(0,1),
+      labels =c("AI", "Doctor")
+),
+    Intervention = factor(
+      Intervention,
+      levels = c(0,1),
+      labels =c("Baseline", "Intervention")
+)
+  )
+```
+
+
+# Save Data
+```{r}
+write_sav(Health_Algorithm_Behavior_Final, "Health_Algorithm_Behavior_Final.sav")
+
+write_sav(Health_Algorithm_Behavior_Debrief_Combined, "Health_Algorithm_Behavior_Debrief.sav")
+```
+
+
+# Fucking Around
+
+## Person as Effect Size
+What I want to do is determine if the degree of difference experienced by the participant experienced change. The problem being is that how to I determine what is a significant effect.
+
+I can do it where I take a proportion over 0 and under zero.
+
+```{r}
+
+# This would indicate whether the task worked for the participant on the day of question. So whether they listened to the advice or not.
+Person_As_Effect_Size_Test <- Health_Algorithm_Behavior_Final %>%
+  filter(Intervention == "Intervention") %>%
+  dplyr::select(PROLIFIC_PID, Weight_On_Advice_Sleep_Alternative, IsAlg) %>%
+  mutate(
+    Person_As_Effect_Size_Sleep = case_when(
+      Weight_On_Advice_Sleep_Alternative > 0 ~ 1,
+      Weight_On_Advice_Sleep_Alternative == 0 ~ 0,
+      Weight_On_Advice_Sleep_Alternative < 0 ~ -1
+    )
+)
+
+
+table(Person_As_Effect_Size_Test$Person_As_Effect_Size_Sleep)
+prop.table(table(Person_As_Effect_Size_Test$Person_As_Effect_Size_Sleep))
+
+
+table(Person_As_Effect_Size_Test$Person_As_Effect_Size_Sleep, Person_As_Effect_Size_Test$IsAlg)
+prop.table(table(Person_As_Effect_Size_Test$Person_As_Effect_Size_Sleep, Person_As_Effect_Size_Test$IsAlg))
+
+Person_As_Effect_Size_Test_Deeper <- Person_As_Effect_Size_Test %>%
+  group_by(PROLIFIC_PID, IsAlg) %>%
+  summarise(Mean = mean(Person_As_Effect_Size_Sleep, na.rm = TRUE))
+
+
+# This would indicate whether the intervention was sustained a majority of the time during the intervention.
+Person_As_Effect_Size_Test_Deeper <- Person_As_Effect_Size_Test_Deeper %>%
+  mutate(
+    Person_As_Effect_Size_Sleep_Deeper = case_when(
+      Mean >= .5 ~ 1,
+      Mean < 0.5 & Mean > -.5 ~ 0,
+      Mean <= -.5 ~ -1
+    )
+)
+
+table(Person_As_Effect_Size_Test_Deeper$Person_As_Effect_Size_Sleep_Deeper)
+prop.table(table(Person_As_Effect_Size_Test_Deeper$Person_As_Effect_Size_Sleep_Deeper))
+
+table(Person_As_Effect_Size_Test_Deeper$Person_As_Effect_Size_Sleep_Deeper, Person_As_Effect_Size_Test_Deeper$IsAlg)
+prop.table(table(Person_As_Effect_Size_Test_Deeper$Person_As_Effect_Size_Sleep_Deeper, Person_As_Effect_Size_Test_Deeper$IsAlg))
+
+
+
+hist(Person_As_Effect_Size_Test_Deeper$Mean)
+
+hist(Person_As_Effect_Size_Test_Deeper$Person_As_Effect_Size_Sleep_Deeper)
+
+
+```
+
+
+# Analysis
+
+## Secondary Analysis
+```{r}
+report(t.test(Health_Algorithm_Behavior_Debrief_Combined$Trust_Intuit_1, Health_Algorithm_Behavior_Debrief_Combined$Trust_Quant_1, paired = TRUE))
+
+t.test(Health_Algorithm_Behavior_Debrief_Combined$Trust_Intuit_1, Health_Algorithm_Behavior_Debrief_Combined$Trust_Quant_1, paired = TRUE)
+```
+
+## Primary Analysis
+
+1. Participants who receive recommendations from a “medical professional” will adhere more closely to the recommendation than those recommended by the AI system.
+2. The differences in treatment adherence will be partially mediated by the degree of mind perceived in the recommender. 
+
+We will use a multilevel model framework to investigate the efficacy of the sleep intervention and the difference in the effect based on the participant's condition. 
+We will then do a mediation analysis to investigate the degree the difference in the efficacy of the AI intervention versus the Doctor's interventions is due to Mind Perception.
+
+
+I might need to condition this effect on the amount of change to the intervention
+
+### Sleep Duration
+#### Intercept Only Model
+```{r}
+Health_Behavior_LMER_0 <- lmer(Sleep_Hours_4 ~ Intervention +  (1 |PROLIFIC_PID), data = Health_Algorithm_Behavior_Final)
+
+summary(Health_Behavior_LMER_0)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_0, show.std = TRUE)
+```
+
+
+#### Add Intervention
+
+```{r}
+Health_Behavior_LMER_1 <- lmer(Sleep_Hours_4 ~ Intervention +  (Intervention |PROLIFIC_PID), data = Health_Algorithm_Behavior_Final)
+
+summary(Health_Behavior_LMER_1)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_1, show.std = TRUE)
+```
+
+
+#### Add Condition Differences (No Interaction)
+
+```{r}
+Health_Behavior_LMER_2 <- lmer(Sleep_Hours_4 ~ Intervention + IsAlg + (1 + Intervention + IsAlg |PROLIFIC_PID), data = Health_Algorithm_Behavior_Final)
+
+summary(Health_Behavior_LMER_2)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_2, show.std = TRUE)
+```
+
+
+
+
+#### Interaction Model
+
+```{r}
+Health_Behavior_LMER_3 <- lmer(Sleep_Hours_4 ~ Intervention * IsAlg + (1 + Intervention + IsAlg |PROLIFIC_PID), data = Health_Algorithm_Behavior_Final)
+
+summary(Health_Behavior_LMER_3)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_3, show.std = TRUE)
+```
+
+
+#### Covariate Model
+
+```{r}
+Health_Behavior_LMER_4 <- lmer(Sleep_Hours_4 ~ Intervention * IsAlg + as.numeric(Age) + IsMale + (1 + Intervention + IsAlg |PROLIFIC_PID), data = Health_Algorithm_Behavior_Final)
+
+summary(Health_Behavior_LMER_4)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_4, show.std = TRUE)
+```
+
+
+
+#### Covariate Model + Mind Perception
+
+```{r}
+Health_Behavior_LMER_5 <- lmer(Sleep_Hours_4 ~ Intervention * IsAlg + as.numeric(Age) + IsMale + Decision_Maker.IN + Decision_Maker.QR + (1 |PROLIFIC_PID), data = Health_Algorithm_Behavior_Final)
+
+summary(Health_Behavior_LMER_5)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_5, show.std = TRUE)
+```
+
+
+### Phone Use
+#### Intercept Only Model
+```{r}
+Health_Behavior_LMER_0 <- glmer(DIB_Minutes_1 ~ Intervention +  (1 |PROLIFIC_PID), data = Health_Algorithm_Behavior_Final, family = poisson)
+
+summary(Health_Behavior_LMER_0)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_0, show.std = TRUE)
+```
+
+
+#### Add Intervention
+
+```{r}
+Health_Behavior_LMER_1 <- glmer(DIB_Minutes_1 ~ Intervention +  (1|PROLIFIC_PID), data = Health_Algorithm_Behavior_Final, family = poisson)
+
+summary(Health_Behavior_LMER_1)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_1, show.std = TRUE)
+```
+
+
+#### Add Condition Differences (No Interaction)
+
+```{r}
+Health_Behavior_LMER_2 <- glmer(DIB_Minutes_1 ~ Intervention + IsAlg + (1 + Intervention |PROLIFIC_PID), data = Health_Algorithm_Behavior_Final, family = poisson)
+
+summary(Health_Behavior_LMER_2)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_2, show.std = TRUE)
+```
+
+
+
+
+#### Interaction Model
+
+```{r}
+Health_Behavior_LMER_3 <- glmer(DIB_Minutes_1 ~ Intervention * IsAlg + (1 + Intervention |PROLIFIC_PID), data = Health_Algorithm_Behavior_Final, family = poisson)
+
+summary(Health_Behavior_LMER_3)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_3, show.std = TRUE)
+```
+
+
+#### Covariate Model
+
+```{r}
+Health_Behavior_LMER_4 <- glmer(DIB_Minutes_1 ~ Intervention * IsAlg + as.numeric(Age) + IsMale + (1 |PROLIFIC_PID), data = Health_Algorithm_Behavior_Final, family = poisson)
+
+summary(Health_Behavior_LMER_4)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_4, show.std = TRUE)
+```
+
+
+
+#### Covariate Model + Mind Perception
+
+```{r}
+Health_Behavior_LMER_5 <- glmer(DIB_Minutes_1 ~ Intervention * IsAlg  + as.numeric(Age) + IsMale + Mind_Perception + (1 + Intervention |PROLIFIC_PID), data = Health_Algorithm_Behavior_Final, family = poisson)
+
+summary(Health_Behavior_LMER_5)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_5, show.std = TRUE)
+```
+
+### Weight On Advice
+
+#### Sleep Duration
+##### Traditional
+###### Intercept Only Model
+```{r}
+Health_Behavior_LMER_0 <- lmer(Weight_On_Advice_Sleep_Traditional ~ (1 |PROLIFIC_PID), data = Health_Algorithm_Behavior_Final)
+
+summary(Health_Behavior_LMER_0)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_0, show.std = TRUE)
+```
+
+
+###### Add Intervention
+
+```{r}
+Health_Behavior_LMER_1 <- lmer(Weight_On_Advice_Sleep_Traditional ~ Intervention + (1 + Intervention |PROLIFIC_PID), data = Health_Algorithm_Behavior_Final)
+
+summary(Health_Behavior_LMER_1)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_1, show.std = TRUE)
+```
+
+
+###### Add Condition Differences (No Interaction)
+
+```{r}
+Health_Behavior_LMER_2 <- lmer(Weight_On_Advice_Sleep_Traditional ~ Intervention + IsAlg + (1 |PROLIFIC_PID), data = Health_Algorithm_Behavior_Final)
+
+summary(Health_Behavior_LMER_2)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_2, show.std = TRUE)
+```
+
+
+
+
+###### Interaction Model
+
+```{r}
+Health_Behavior_LMER_3 <- lmer(Weight_On_Advice_Sleep_Traditional ~ Intervention + Alg_Intervention + (1|PROLIFIC_PID), data = Health_Algorithm_Behavior_Final)
+
+summary(Health_Behavior_LMER_3)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_3, show.std = TRUE)
+```
+
+
+###### Covariate Model
+
+```{r}
+Health_Behavior_LMER_4 <- lmer(Weight_On_Advice_Sleep_Traditional ~ Intervention * IsAlg + as.numeric(Age) + IsMale + (1 |PROLIFIC_PID), data = Health_Algorithm_Behavior_Final)
+
+summary(Health_Behavior_LMER_4)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_4, show.std = TRUE)
+```
+
+
+
+W###### Covariate Model + Mind Perception
+
+```{r}
+Health_Behavior_LMER_5 <- lmer(Weight_On_Advice_Sleep_Traditional ~ Intervention * IsAlg + Sleep_Start_Pos + as.numeric(Age) + IsMale + Mind_Perception + (1|PROLIFIC_PID), data = Health_Algorithm_Behavior_Final)
+
+summary(Health_Behavior_LMER_5)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_5, show.std = TRUE)
+```
+
+
+
+##### Alternative
+###### Intercept Only Model
+```{r}
+Health_Behavior_LMER_0 <- lmer(Weight_On_Advice_Sleep_Alternative ~ Intervention +  (1 |PROLIFIC_PID), data = Health_Algorithm_Behavior_Final)
+
+summary(Health_Behavior_LMER_0)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_0, digits = 3, show.std = TRUE)
+```
+
+
+###### Add Intervention
+
+```{r}
+Health_Behavior_LMER_1 <- lmer(Weight_On_Advice_Sleep_Alternative ~ Intervention +  (1 |PROLIFIC_PID), data = Health_Algorithm_Behavior_Final)
+
+summary(Health_Behavior_LMER_1)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_1, show.std = TRUE)
+```
+
+
+###### Add Condition Differences (No Interaction)
+
+```{r}
+Health_Behavior_LMER_2 <- lmer(Weight_On_Advice_Sleep_Alternative ~ Intervention + IsAlg + (1 |PROLIFIC_PID), data = Health_Algorithm_Behavior_Final)
+
+summary(Health_Behavior_LMER_2)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_2, show.std = TRUE)
+```
+
+
+
+
+###### Interaction Model
+
+```{r}
+Health_Behavior_LMER_3 <- lmer(Weight_On_Advice_Sleep_Alternative ~ Intervention * IsAlg + (1  |PROLIFIC_PID), data = Health_Algorithm_Behavior_Final)
+
+summary(Health_Behavior_LMER_3)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_3, show.std = TRUE)
+```
+
+
+###### Covariate Model
+
+```{r}
+Health_Behavior_LMER_4 <- lmer(Weight_On_Advice_Sleep_Alternative ~ Intervention * IsAlg + Sleep_Start_Pos + as.numeric(Age) + IsMale + (1 |PROLIFIC_PID), data = Health_Algorithm_Behavior_Final)
+
+summary(Health_Behavior_LMER_4)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_4, digits = 3, show.std = TRUE)
+```
+
+
+
+###### Covariate Model + Mind Perception
+
+```{r}
+Health_Behavior_LMER_5 <- lmer(Weight_On_Advice_Sleep_Alternative ~ Intervention * IsAlg + as.numeric(Age) + IsMale + Mind_Perception + (1 |PROLIFIC_PID), data = Health_Algorithm_Behavior_Final)
+
+summary(Health_Behavior_LMER_5)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_5, digits = 3, show.std = TRUE)
+```
+
+
+```{r}
+Health_Behavior_LMER_5 <- lmer(Weight_On_Advice_Sleep_Alternative ~ Intervention * IsAlg + as.numeric(Age) + IsMale + Mind_Perception_Alt + (1 |PROLIFIC_PID), data = Health_Algorithm_Behavior_Final)
+
+summary(Health_Behavior_LMER_5)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_5, digits = 3, show.std = TRUE)
+```
+
+
+###### Bayesean Analysis
+
+```{r}
+Health_Behavior_LMER_Bayes <- brm(Weight_On_Advice_Sleep_Alternative ~ Intervention * IsAlg + as.numeric(Age) + IsMale + Mind_Perception + (1 |PROLIFIC_PID), data = Health_Algorithm_Behavior_Final)
+
+summary(Health_Behavior_LMER_Bayes, waic = TRUE)
+
+
+hypothesis(Health_Behavior_LMER_Bayes,"Intervention < 0" )
+```
+
+
+###### Plots
+```{r}
+Health_Algorithm_Behavior_Final %>%
+  filter(!is.na(IsAlg)) %>%
+  ggplot(., aes(x = Day, y = Weight_On_Advice_Sleep_Alternative, fill = Intervention, color = Intervention, na.rm = TRUE)) +
+   geom_point(position=position_jitter(width = .3),size = 2, alpha = 1/2, color = "black") +
+  geom_boxplot(aes(color = Intervention), lwd = 1.2, alpha = .7) +
+  scale_fill_manual(values = c("#F18C8E", "#568EA6"))+
+      scale_colour_manual(values = c("#F18C8E", "#568EA6"))+
+  facet_wrap(~IsAlg) +
+  stat_summary(fun.data = "mean_cl_normal", geom = "errorbar", width = .5, size = 1.5, color = "white") + 
+ stat_summary(fun = "mean", geom = "point",shape = 23, stroke = 1.5, size = 3, color = "white") +
+ ggtitle("Adherence to Sleep Recommendation") +
+  ylab('Weight on Sleep Advice') + 
+  xlab('Day') +
+  scale_x_continuous(breaks=seq(1,14,1)) +
+  theme_apa() +
+  theme(plot.title = element_text(face = "bold", size = 16), axis.title = element_text(face = "bold", size = 14), panel.background = element_rect("transparent"), plot.background = element_rect("transparent", color = NA), legend.text = element_text(colour = "white", size = 14, face = "bold"), legend.title = element_text(size = 16, face = "bold"), legend.background = element_blank(), legend.box.background = element_rect("transparent", colour = 'transparent'),  axis.text = element_text(colour = "white", size = 14, face = "bold"), axis.ticks = element_line(colour = "white"), axis.line = element_line(colour = "white"), strip.text = element_text(colour = "white", size = 14, face = "bold")) 
+
+ggsave("Study 6 - Sleep - Within Subjects.png", width = 15, height = 9)
+```
+
+
+#### Phone Use
+##### Traditional
+###### Intercept Only Model
+```{r}
+Health_Behavior_LMER_0 <- lmer(Weight_On_Advice_DIB_Traditional ~ Intervention + (1 |PROLIFIC_PID), data = Health_Algorithm_Behavior_Final)
+
+summary(Health_Behavior_LMER_0)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_0, show.std = TRUE)
+```
+
+
+###### Add Intervention
+
+```{r}
+Health_Behavior_LMER_1 <- lmer(Weight_On_Advice_DIB_Traditional ~ Intervention +  (1 + Intervention |PROLIFIC_PID), data = Health_Algorithm_Behavior_Final)
+
+summary(Health_Behavior_LMER_1)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_1, show.std = TRUE)
+```
+
+
+###### Add Condition Differences (No Interaction)
+
+```{r}
+Health_Behavior_LMER_2 <- lmer(Weight_On_Advice_DIB_Traditional ~ IsAlg + DIB_Start_Pos +(1 + Intervention |PROLIFIC_PID), data = Health_Algorithm_Behavior_Final)
+
+summary(Health_Behavior_LMER_2)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_2, show.std = TRUE)
+```
+
+
+
+
+###### Interaction Model
+
+```{r}
+Health_Behavior_LMER_3 <- lmer(Weight_On_Advice_DIB_Traditional ~ Intervention * IsAlg + (1 + Intervention |PROLIFIC_PID), data = Health_Algorithm_Behavior_Final)
+
+summary(Health_Behavior_LMER_3)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_3, show.std = TRUE)
+```
+
+
+###### Covariate Model
+
+```{r}
+Health_Behavior_LMER_4 <- lmer(Weight_On_Advice_DIB_Traditional ~ Intervention + IsAlg + DIB_Start_Pos + as.numeric(Age) + IsMale + (1 + Intervention  |PROLIFIC_PID), data = Health_Algorithm_Behavior_Final)
+
+summary(Health_Behavior_LMER_4)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_4, show.std = TRUE)
+```
+
+
+
+###### Covariate Model + Mind Perception
+
+```{r}
+Health_Behavior_LMER_5 <- lmer(Weight_On_Advice_DIB_Traditional ~ Intervention * IsAlg + DIB_Start_Pos + as.numeric(Age) + IsMale + Mind_Perception + (1 |PROLIFIC_PID), data = Health_Algorithm_Behavior_Final)
+
+summary(Health_Behavior_LMER_5)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_5, show.std = TRUE)
+```
+
+
+##### Alternative
+###### Intercept Only Model
+```{r}
+Health_Behavior_LMER_0 <- lmer(Weight_On_Advice_DIB_Alternative ~ Intervention +  (1 |PROLIFIC_PID), data = Health_Algorithm_Behavior_Final)
+
+summary(Health_Behavior_LMER_0)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_0, show.std = TRUE)
+```
+
+
+###### Add Intervention
+
+```{r}
+Health_Behavior_LMER_1 <- lmer(Weight_On_Advice_DIB_Alternative ~ Intervention +  (1|PROLIFIC_PID), data = Health_Algorithm_Behavior_Final)
+
+summary(Health_Behavior_LMER_1)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_1, digits = 3, show.std = TRUE)
+```
+
+
+###### Add Condition Differences (No Interaction)
+
+```{r}
+Health_Behavior_LMER_2 <- lmer(Weight_On_Advice_DIB_Alternative ~ Intervention + IsAlg + (1 + Intervention |PROLIFIC_PID), data = Health_Algorithm_Behavior_Final)
+
+summary(Health_Behavior_LMER_2)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_2, show.std = TRUE)
+```
+
+
+
+
+###### Interaction Model
+
+```{r}
+Health_Behavior_LMER_3 <- lmer(Weight_On_Advice_DIB_Alternative ~ Intervention * IsAlg + (1|PROLIFIC_PID), data = Health_Algorithm_Behavior_Final)
+
+summary(Health_Behavior_LMER_3)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_3, show.std = TRUE)
+```
+
+
+###### Covariate Model
+
+```{r}
+Health_Behavior_LMER_4 <- lmer(Weight_On_Advice_DIB_Alternative ~ Intervention * IsAlg + as.numeric(Age) + IsMale + (1 |PROLIFIC_PID), data = Health_Algorithm_Behavior_Final)
+
+summary(Health_Behavior_LMER_4)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_4, digits = 3, show.std = TRUE)
+```
+
+
+
+###### Covariate Model + Mind Perception
+
+
+
+```{r}
+Health_Behavior_LMER_5 <- lmer(Weight_On_Advice_DIB_Alternative ~ Intervention*IsAlg + as.numeric(Age) + IsMale + Mind_Perception + (1 |PROLIFIC_PID), data = Health_Algorithm_Behavior_Final)
+
+summary(Health_Behavior_LMER_5)
+```
+
+```{r}
+tab_model(Health_Behavior_LMER_5, digits = 3, show.std = TRUE)
+```
+
+```{r}
+Health_Behavior_LMER_5
+```
+
+
+
+###### Plots
+
+
+```{r}
+Health_Algorithm_Behavior_Final %>%
+  filter(!is.na(IsAlg)) %>%
+  ggplot(., aes(x = Day, y = Weight_On_Advice_DIB_Alternative, fill = Intervention, color = Intervention, na.rm = TRUE)) +
+   geom_point(position=position_jitter(width = .3),size = 2, alpha = 1/2, color = "black") +
+  geom_boxplot(aes(color = Intervention), lwd = 1.2, alpha = .7) +
+  scale_fill_manual(values = c("#F18C8E", "#568EA6"))+
+      scale_colour_manual(values = c("#F18C8E", "#568EA6"))+
+  facet_wrap(~IsAlg) +
+  stat_summary(fun.data = "mean_cl_normal", geom = "errorbar", width = .5, size = 1.5, color = "white") + 
+ stat_summary(fun = "mean", geom = "point",shape = 23, stroke = 1.5, size = 3, color = "white") +
+ ggtitle("Adherence to Device-In-Bed Recommendation") +
+  ylab('Weight on Device-In-Bed Advice') + 
+  xlab('Day') +
+  scale_x_continuous(breaks=seq(1,14,1)) +
+  theme_apa() +
+  theme(plot.title = element_text(face = "bold", size = 16), axis.title = element_text(face = "bold", size = 14), panel.background = element_rect("transparent"), plot.background = element_rect("transparent", color = NA), legend.text = element_text(colour = "white", size = 14, face = "bold"), legend.title = element_text(size = 16, face = "bold"), legend.background = element_blank(), legend.box.background = element_rect("transparent", colour = 'transparent'),  axis.text = element_text(colour = "white", size = 14, face = "bold"), axis.ticks = element_line(colour = "white"), axis.line = element_line(colour = "white"), strip.text = element_text(colour = "white", size = 14, face = "bold")) 
+
+ggsave("Study 6 - DIB - Within Subjects.png", width = 15, height = 9)
+```
+
+
+
+## Extra Analysis
+
+### Correlation
+```{r}
+WithinCor_Behavior <- Health_Algorithm_Behavior_Final %>%
+  dplyr::select(PROLIFIC_PID, Intervention, IsAlg, Sleep_Hours_4, DIB_Minutes_1, Weight_On_Advice_Sleep_Alternative, Weight_On_Advice_DIB_Alternative, Sleep_Difficulty_1, Sleep_Difficulty_2, Morning_Depletion_1, Morning_Depletion_2, Mood_Daily_1,  Mind_Perception, Warmth, Competence, Decision_Maker.QR, Decision_Maker.IN) %>%
+ statsBy(., group = "PROLIFIC_PID")
+```
+
+
+```{r}
+WithinCor_Behavior$rwg
+WithinCor_Behavior$pwg
+```
+
+
+```{r}
+corrplot(WithinCor_Behavior$rwg, method = "color", type = "upper", tl.col = "black", addCoef.col = "black",  p.mat = WithinCor_Behavior$pwg, sig.level = .01, diag = FALSE, tl.cex = 0.70, number.cex = 0.9)
+```
+
+
+```{r}
+WithinCor_Behavior$rbg
+WithinCor_Behavior$pbg
+```
+
+```{r}
+corrplot(WithinCor_Behavior$rbg, method = "color", type = "upper", tl.col = "black", addCoef.col = "black",  p.mat = WithinCor_Behavior$pbg, sig.level = .01, diag = FALSE, tl.cex = 0.70, number.cex = 0.9)
+```
+
+
+## Trying With Lavaan
+
+
+```{r}
+
+## Clustering with Lavaan
+Mediation_Path <- '
+
+
+#Direct Effect
+Sleep_Hours_4 ~ c*IsAlg
+
+#Mediator
+Mind_Perception ~ a*IsAlg
+Sleep_Hours_4 ~ b*Mind_Perception
+
+#Indirect Effect (a*b)
+ab :=a*b
+
+#total effect
+total := c + (a*b)
+
+'
+PathModel <- sem(Mediation_Path, data = Health_Algorithm_Behavior_Final, cluster = "PROLIFIC_PID")
+
+
+summary(PathModel, standardized = TRUE, fit.measures = TRUE, rsq = TRUE)
+```
+
+
+```{r}
+fitmeasures(PathModel, c("chisq", "cfi", "rmsea", "df"))
+```
+
+
+```{r}
+
+semPaths(PathModel, whatLabel ='std', residuals = TRUE, rotation = 2,sizeMan=6, edge.label.cex=.8)
+```
+
+## Mediated Moderation
+```{r}
+
+## Clustering with Lavaan
+Mediation_Path <- '
+
+#Direct Effect
+ level: 1
+Weight_On_Advice_Sleep_Alternative ~ 1 + Intervention
+
+  level: 2
+  Weight_On_Advice_Sleep_Alternative ~ IsAlg*Intervention + b*Mind_Perception
+  #Mediator
+  Mind_Perception ~ a*IsAlg
+
+#Indirect Effect (a*b)
+ab :=a*b
+
+
+'
+PathModel <- sem(Mediation_Path, data = Health_Algorithm_Behavior_Final, cluster = "PROLIFIC_PID")
+
+
+summary(PathModel, standardized = TRUE, fit.measures = TRUE, rsq = TRUE)
+```
+
+```{r}
+fitmeasures(PathModel, c("chisq", "cfi", "rmsea", "df"))
+```
+
+
+```{r}
+
+semPaths(PathModel, whatLabel ='std', layout = "spring", residuals = TRUE, rotation = 4,sizeMan=6, edge.label.cex=.8)
+```
+#### Intervention Only
+```{r}
+IntOnly_Health_Algorithm_Behavior_Final <- Health_Algorithm_Behavior_Final %>%
+  filter(Intervention == "Intervention")
+```
+
+
+```{r}
+
+## Clustering with Lavaan
+Mediation_Path <- '
+
+#Direct Effect
+ level: 1
+  Weight_On_Advice_Sleep_Alternative ~ 1
+
+  level: 2
+  Weight_On_Advice_Sleep_Alternative ~ c*IsAlg + b*Mind_Perception
+  #Mediator
+  Mind_Perception ~ a*IsAlg
+
+#Indirect Effect (a*b)
+ab :=a*b
+total := c + (a*b)
+
+'
+PathModel <- sem(Mediation_Path, data = IntOnly_Health_Algorithm_Behavior_Final, cluster = "PROLIFIC_PID")
+
+
+summary(PathModel, standardized = TRUE, fit.measures = TRUE, rsq = TRUE)
+```
+
+```{r}
+fitmeasures(PathModel, c("chisq", "cfi", "rmsea", "df"))
+```
+
+
+```{r}
+
+## Clustering with Lavaan
+Mediation_Path <- '
+
+#Direct Effect
+ level: 1
+  Weight_On_Advice_DIB_Alternative ~ 1
+
+  level: 2
+  Weight_On_Advice_DIB_Alternative ~ c*IsAlg + b*Mind_Perception
+  #Mediator
+  Mind_Perception ~ a*IsAlg
+
+#Indirect Effect (a*b)
+ab :=a*b
+total := c + (a*b)
+
+'
+PathModel <- sem(Mediation_Path, data = IntOnly_Health_Algorithm_Behavior_Final, cluster = "PROLIFIC_PID")
+
+
+summary(PathModel, standardized = TRUE, fit.measures = TRUE, rsq = TRUE)
+```
+
+
+## MPlus
+```{r}
+Health_Algorithm_Behavior_Final <- Health_Algorithm_Behavior_Final %>%              
+  group_by(PROLIFIC_PID) %>%
+  dplyr::mutate(ID = cur_group_id())
+
+Health_Algorithm_Behavior_Final <-ungroup(Health_Algorithm_Behavior_Final)
+```
+
+
+```{r}
+MPLus_ST6_Long <- Health_Algorithm_Behavior_Final %>%
+  dplyr::select(ID, IsAlg, Intervention, Weight_On_Advice_Sleep_Alternative, Mind_Perception, Weight_On_Advice_DIB_Alternative, Decision_Maker.IN, Decision_Maker.QR) %>%
+  drop_na() #%>%
+ 
+MPLus_ST6_Long$IsAlg <- as.numeric(MPLus_ST6_Long$IsAlg)
+MPLus_ST6_Long$Intervention <- as.numeric(MPLus_ST6_Long$Intervention)
+MPLus_ST6_Long$Mind_Perception <- as.numeric(MPLus_ST6_Long$Mind_Perception)
+
+MPLus_ST6_Long <- MPLus_ST6_Long %>%
+    rename(Inter = Intervention,
+           WOAS  = Weight_On_Advice_Sleep_Alternative,
+           WOAD  = Weight_On_Advice_DIB_Alternative,
+           Mind  = Mind_Perception,
+           Quant = Decision_Maker.QR,
+           Intuit= Decision_Maker.IN
+          
+    )
+
+# write_csv(., "MPLus_Multilevel_Mediation.csv")
+```
+
+```{r}
+Mediation_Intuition <- mplusObject(
+  TITLE = "Sleep MEDIATION",
+
+VARIABLE = "
+USEVARIABLES ARE ID Inter WOAS IsAlg Mind;
+
+CLUSTER IS ID;",
+
+ANALYSIS =  "TYPE IS TWOLEVEL RANDOM;",
+
+MODEL =  
+  "%WITHIN%
+	WOAS Inter;
+	WOAS ON Inter;
+	%BETWEEN%
+	WOAS Mind;
+	WOAS ON Mind;",
+
+OUTPUT = "SAMPSTAT STANDARDIZED(CLUSTER) STDYX TECH1 TECH8 CINTERVAL;",
+
+usevariables = colnames(MPLus_ST6_Long),
+
+rdata = MPLus_ST6_Long)
+
+
+Mediation_Quant_Output <-   mplusModeler(Mediation_Intuition, dataout = "Quant_R.dat", modelout = "Quant_R.inp", check = TRUE, run = TRUE, hashfilename = FALSE)
+
+
+Quant_Output_Mplus <- readModels("Quant_R.out")
+
+Quant_Output_Mplus$parameters
+```
+
+
+```{r}
+Mediation_Intuition <- mplusObject(
+  TITLE = "Sleep MEDIATION",
+
+VARIABLE = "
+USEVARIABLES ARE ID Inter WOAS IsAlg Quant;
+
+CLUSTER IS ID;",
+
+ANALYSIS =  "TYPE IS TWOLEVEL RANDOM;",
+
+MODEL =  
+  "%WITHIN%
+	WOAS Inter;
+	WOAS ON Inter;
+	%BETWEEN%
+	WOAS Quant;
+	WOAS ON Quant;",
+
+OUTPUT = "SAMPSTAT STANDARDIZED(CLUSTER) STDYX TECH1 TECH8 CINTERVAL;",
+
+usevariables = colnames(MPLus_ST6_Long),
+
+rdata = MPLus_ST6_Long)
+
+
+Mediation_Quant_Output <-   mplusModeler(Mediation_Intuition, dataout = "Quant_R.dat", modelout = "Quant_R.inp", check = TRUE, run = TRUE, hashfilename = FALSE)
+
+
+Quant_Output_Mplus <- readModels("Quant_R.out")
+
+Quant_Output_Mplus$parameters
+```
+
+I need to check where there is potentially some unexpected variance. These IS Alg condition should not very within subjects and yet I am getting with subjects variance.
+
+
+```{r}
+
+Health_Algorithm_Behavior_Final %>%
+  group_by(IsAlg, Intervention) %>%
+  count(IsAlg)
+
+
+Health_Algorithm_Behavior_Final %>%
+  filter(IsAlg == "AI", Intervention == "Intervention") %>%
+  distinct(PROLIFIC_PID)
+
+Health_Algorithm_Behavior_Final %>%
+  filter(IsAlg == "Doctor", Intervention == "Intervention") %>%
+  distinct(PROLIFIC_PID)
+
+```
+
+It appears some people got sorted into the wrong categories somewhere along the way, but I need to identify which ones are duplicates to see which rows I need to verify. It looks like a lot of the duplicates are 8 in one category and 6 in another. Which makes me believe that some part of this mixup should be in part due to the Orignal survey (which would the perfered error)
+
+I am going to use the example of Participant #5a1efc2b517dfb00013dd370 and see what their data looks like.
+
+```{r}
+
+Health_Algorithm_Behavior_Final %>%
+  filter(PROLIFIC_PID == "5a1efc2b517dfb00013dd370")
+
+IsAlgorithm_Array %>%
+  filter(PROLIFIC_PID == "5a1efc2b517dfb00013dd370")
+
+IsDoctor_Array %>%
+  filter(PROLIFIC_PID == "5a1efc2b517dfb00013dd370")
+
+
+IsDoctor_Array %>%
+  filter(PROLIFIC_PID == "5a1efc2b517dfb00013dd370")
+```
+
+

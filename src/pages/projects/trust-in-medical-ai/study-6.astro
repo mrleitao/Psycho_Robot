@@ -2,63 +2,83 @@
 import Base from '../../../layouts/Base.astro';
 import MainFindings from '../../../components/MainFindings.astro';
 import StatTable from '../../../components/StatTable.astro';
+import DailyLines from '../../../components/DailyLines.astro';
 import bayes from '../../../data/trust-in-medical-ai/bayes.json';
+import s6 from '../../../data/trust-in-medical-ai/study6-full.json';
+import meta from '../../../data/trust-in-medical-ai/meta.json';
 import { times } from '../../../utils/bayes';
 import { href } from '../../../utils/url';
+import { f2, minus, noZero, pv } from '../../../utils/fmt';
 
 const bf = (id: string) => bayes.rows.find((r) => r.id === id)!;
+const S = s6.sample;
+const M = s6.mind;
+const term = (out: 'sleep' | 'device', m: number, raw: string) => s6.models[out].models[m].terms.find((t: any) => t.raw === raw)!;
+const d2 = (v: number) => noZero((Math.round((v + Number.EPSILON) * 100) / 100).toFixed(2));
+const b3 = (v: number) => minus(noZero(v.toFixed(3)));
+const ci = (t: any) => `${b3(t.b)} [${b3(t.lo)}, ${b3(t.hi)}]`;
+const star = (p: number) => (p < 0.001 ? '***' : p < 0.01 ? '**' : p < 0.05 ? '*' : '');
 
-// Coefficients and 95% intervals as printed in Tables 23 and 24 of the dissertation.
+const advS = term('sleep', 0, 'after');
+const advD = term('device', 0, 'after');
+const intS = term('sleep', 1, 'after:AI');
+const intD = term('device', 1, 'after:AI');
+const medS = s6.mediation.sleep;
+const medD = s6.mediation.device;
+const raw = s6.raw.Everyone;
+const minutesLonger = Math.round((raw.sleepAfter - raw.sleepBefore) * 60);
+const minutesLess = Math.round(raw.deviceBefore - raw.deviceAfter);
+
+// Coefficients for the chart: Model 1 for the advice, Model 2 for the recommender terms.
 const est = [
-  { grp: 'Sleep (Table 23)', rows: [
-    { label: 'Change after the advice', note: 'Model 1', b: 0.27, lo: 0.214, hi: 0.324, key: true },
-    { label: 'AI versus doctor, overall', note: 'Model 2', b: 0.03, lo: -0.053, hi: 0.108 },
-    { label: 'AI versus doctor, change after the advice', note: 'Model 2', b: -0.03, lo: -0.144, hi: 0.079 },
+  { grp: 'Sleep', rows: [
+    { label: 'Change after the advice', note: 'Model 1', t: advS, key: true },
+    { label: 'AI versus doctor, overall', note: 'Model 2', t: term('sleep', 1, 'AI') },
+    { label: 'AI versus doctor, change after the advice', note: 'Model 2', t: intS },
   ] },
-  { grp: 'Phone in bed (Table 24)', rows: [
-    { label: 'Change after the advice', note: 'Model 1', b: 0.32, lo: 0.264, hi: 0.365, key: true },
-    { label: 'AI versus doctor, overall', note: 'Model 2', b: 0.03, lo: -0.065, hi: 0.132 },
-    { label: 'AI versus doctor, change after the advice', note: 'Model 2', b: 0.07, lo: -0.03, hi: 0.175 },
+  { grp: 'Phone in bed', rows: [
+    { label: 'Change after the advice', note: 'Model 1', t: advD, key: true },
+    { label: 'AI versus doctor, overall', note: 'Model 2', t: term('device', 1, 'AI') },
+    { label: 'AI versus doctor, change after the advice', note: 'Model 2', t: intD },
   ] },
 ];
 const AX0 = -0.2;
 const AX1 = 0.4;
 const pos = (v: number) => (((v - AX0) * 100) * (1 / (AX1 - AX0))).toFixed(2);
-const fm = (v: number) => (v < 0 ? '−' : '') + Math.abs(v).toFixed(3).replace(/^0/, '').replace(/0$/, '');
 const ticks = [-0.2, 0, 0.2, 0.4];
 
 const findings = [
   {
     head: 'People moved toward the advice after hearing it, whoever gave it',
     body: [
-      'In the last study, 560 people were recruited for 15 days of daily sleep logging, and 455 completed it. On day eight a doctor or an AI told them to sleep 7.5 to 9 hours and to spend 15 minutes or less on a device in bed. They got a reminder after each daily survey.',
-      'Sleep moved toward the recommendation by about a quarter of the way (.27, 95% interval .214 to .324), and time on a device in bed by about a third (.32, interval .264 to .365).',
+      `${S.assigned} people were shown the advice on day 8: a doctor or an AI told them to sleep 7.5 to 9 hours and to spend 15 minutes or less on a device in bed. They got a reminder after each daily survey for the next week.`,
+      `On average people slept about ${minutesLonger} minutes longer and spent about ${minutesLess} fewer minutes on a device in bed. Measured as the share of the way to the recommendation, sleep moved ${d2(advS.b)} (95% interval ${b3(advS.lo)} to ${b3(advS.hi)}) and device time ${d2(advD.b)} (${b3(advD.lo)} to ${b3(advD.hi)}).`,
     ],
-    visual: { type: 'stat', value: '.27 and .32', label: 'share of the way toward the advice that people moved, for sleep and for device time in bed', caption: 'Weight on advice: 0 is no change, 1 is meeting the recommendation. Tables 23 and 24, Model 1.' },
+    visual: { type: 'stat', value: `${d2(advS.b)} and ${d2(advD.b)}`, label: 'share of the way toward the advice that people moved, for sleep and for device time in bed', caption: 'Weight on advice: 0 is no change, 1 is meeting the recommendation. Model 1, all people with daily data.' },
   },
   {
     head: 'The doctor and the AI did not differ in how well the advice worked',
     body: [
-      `The change after the advice was about the same for the two recommenders. For sleep the AI-versus-doctor difference was −.03 (interval −.144 to .079), and for device time .07 (interval −.030 to .175). The data are ${times(bf('S6-sleep-int').bf01)} under no difference for sleep and ${times(bf('S6-dib-int').bf01)} for device time, moderate evidence both times.`,
-      'This is a lack of evidence for a difference, not proof of none. With about 220 people per condition, the study could detect effects of about d = .265 or larger, as large as the trust gaps in the earlier studies.',
+      `The change after the advice was about the same for the two recommenders. For sleep the AI-versus-doctor difference was ${b3(intS.b)} (interval ${b3(intS.lo)} to ${b3(intS.hi)}), and for device time ${b3(intD.b)} (interval ${b3(intD.lo)} to ${b3(intD.hi)}). The data are ${times(bf('S6-sleep-int').bf01)} under no difference for sleep and ${times(bf('S6-dib-int').bf01)} for device time, moderate evidence both times.`,
+      `This is a lack of evidence for a difference, not proof of none. With about 225 people per condition, the study could detect effects of about d = .265 or larger, as large as the trust gaps in the earlier studies.`,
     ],
-    visual: { type: 'stat', value: 'No gap', label: 'in how closely people followed a doctor’s or an AI’s advice', caption: 'Study 6, 15 days, 455 people.' },
+    visual: { type: 'stat', value: 'No gap', label: 'in how closely people followed a doctor’s or an AI’s advice', caption: `Study 6, 14 days, ${S.assigned} people.` },
   },
   {
     head: 'People still saw more mind in the doctor than in the AI',
     body: [
-      'After the study, people rated the doctor and the AI on seven items such as whether the recommender understood their feelings or could anticipate their needs. The doctor was rated about one point higher on the 0 to 10 average (b = −1.02, z = −4.33, p < .001).',
+      `On the final survey, people rated the recommender on seven items such as whether it understood their feelings or could anticipate their needs. The doctor averaged ${f2(M.doctor.mean)} and the AI ${f2(M.ai.mean)} on the 0 to 10 scale, a gap of ${f2(-M.a)} points (Welch t(${M.df}) = ${minus(f2(M.t))}, p < .001, d = ${minus(f2(M.d))}).`,
       'So the perception gap from Studies 1 to 5 showed up again, even though it did not change what people did.',
     ],
-    visual: { type: 'stat', value: '1.0 point', label: 'more perceived mind for the doctor than for the AI, on a 0 to 10 scale', caption: 'Mind perception, Study 6.' },
+    visual: { type: 'stat', value: `${f2(-M.a)} points`, label: 'more perceived mind for the doctor than for the AI, on a 0 to 10 scale', caption: `Mind perception, Study 6, ${M.n} people who answered.` },
   },
   {
     head: 'Perceived mind did not carry the effect',
     body: [
-      `The path through mind perception was close to zero for both outcomes (sleep: −.012, p = .346; device time: .006, p = .736). The data are ${times(bf('S6-sleep-med').bf01)} under no mediation for sleep and ${times(bf('S6-dib-med').bf01)} for device time, strong evidence.`,
+      `The path through mind perception was close to zero for both outcomes (sleep: ${b3(medS.ind)}, p = ${noZero(medS.p.toFixed(3))}; device time: ${b3(medD.ind)}, p = ${noZero(medD.p.toFixed(3))}). The data are ${times(bf('S6-sleep-med').bf01)} under no mediation for sleep and ${times(bf('S6-dib-med').bf01)} for device time, strong evidence.`,
       'Because the recommenders did not change behavior, there was nothing for mind perception to explain.',
     ],
-    visual: { type: 'stat', value: 'About 0', label: 'indirect effect of the recommender through mind perception', caption: 'Multilevel mediation, Figures 31 and 33 of the dissertation.' },
+    visual: { type: 'stat', value: 'About 0', label: 'indirect effect of the recommender through mind perception', caption: 'Multilevel mediation on the days after the advice.' },
   },
 ];
 
@@ -68,42 +88,79 @@ const col = [
   { key: 'm2', label: 'Model 2', num: true },
   { key: 'm3', label: 'Model 3', num: true },
 ];
-const t23 = [
-  { term: 'Intercept', m1: '.02 [−.022, .055]', m2: '.11 [−.005, .221]', m3: '.078 [−.064, .219]' },
-  { term: 'Change after the advice', m1: '.27*** [.214, .324]', m2: '.28*** [.207, .363]', m3: '−.28*** [.200, .359]' },
-  { term: 'Condition (0 = doctor, 1 = AI)', m1: '', m2: '.03 [−.053, .108]', m3: '.05 [−.040, .131]' },
-  { term: 'Advice × condition', m1: '', m2: '−.03 [−.144, .079]', m3: '−.03 [−.143, .086]' },
-  { term: 'Age', m1: '', m2: '−.00 [−.004, .000]', m3: '−.00* [−.005, −.000]' },
-  { term: 'Gender (0 = female, 1 = male)', m1: '', m2: '−.02 [−.144, .079]', m3: '−.04 [−.101, .024]' },
-  { term: 'Mind perception', m1: '', m2: '', m3: '.00 [−.143, .086]' },
-  { term: 'People', m1: '510', m2: '455', m3: '412' },
-  { term: 'Observations', m1: '5,803', m2: '5,604', m3: '5,262' },
-  { term: 'Marginal / conditional R²', m1: '.016 / .023', m2: '.016 / .026', m3: '.017 / .030' },
+const termRows = [
+  ['Intercept', 'Intercept'],
+  ['Change after the advice', 'after'],
+  ['Recommender (0 = doctor, 1 = AI)', 'AI'],
+  ['Advice × recommender', 'after:AI'],
+  ['Age group (1 to 4)', 'age_n'],
+  ['Gender (1 = man, 0 = woman or another)', 'male'],
+  ['Mind perception', 'mind_perception'],
 ];
-const t24 = [
-  { term: 'Intercept', m1: '.02 [−.023, .071]', m2: '.11 [−.005, .221]', m3: '.02 [−.178, .218]' },
-  { term: 'Change after the advice', m1: '.32*** [.264, .365]', m2: '.28*** [.207, .363]', m3: '−.29*** [.214, .360]' },
-  { term: 'Condition (0 = doctor, 1 = AI)', m1: '', m2: '.03 [−.065, .132]', m3: '.04 [−.069, .142]' },
-  { term: 'Advice × condition', m1: '', m2: '.07 [−.030, .175]', m3: '−.09 [−.014, .195]' },
-  { term: 'Age', m1: '', m2: '.00 [−.003, .004]', m3: '.00 [−.003, .004]' },
-  { term: 'Gender (0 = female, 1 = male)', m1: '', m2: '−.02 [−.106, .065]', m3: '−.04 [−.127, .053]' },
-  { term: 'Mind perception', m1: '', m2: '', m3: '−.00 [−.021, .053]' },
-  { term: 'People', m1: '510', m2: '455', m3: '412' },
-  { term: 'Observations', m1: '5,781', m2: '5,582', m3: '5,246' },
-  { term: 'Marginal / conditional R²', m1: '.023 / .138', m2: '.024 / .147', m3: '.027 / .152' },
-];
-const med = [
-  { out: 'Sleep (Figure 31)', a: '−1.019***', b: '−.012', c: '.026', cp: '.015', ind: '−.012', test: 'z(412) = −.943, p = .346' },
-  { out: 'Device in bed (Figure 33)', a: '−1.019***', b: '−.006', c: '.127', cp: '.121', ind: '.006', test: 'z(412) = .333, p = .736' },
-];
+const modelTable = (out: 'sleep' | 'device') => {
+  const ms = s6.models[out].models;
+  const rows: Record<string, string>[] = termRows.map(([label, raw]) => {
+    const r: Record<string, string> = { term: label };
+    ms.forEach((m: any, i: number) => {
+      const t = m.terms.find((x: any) => x.raw === raw);
+      r[`m${i + 1}`] = t ? `${b3(t.b)}${star(t.p)} [${b3(t.lo)}, ${b3(t.hi)}]` : '';
+    });
+    return r;
+  });
+  const add = (label: string, fn: (m: any) => string) => {
+    const r: Record<string, string> = { term: label };
+    ms.forEach((m: any, i: number) => (r[`m${i + 1}`] = fn(m)));
+    rows.push(r);
+  };
+  add('People', (m) => String(m.people));
+  add('Observations', (m) => m.n.toLocaleString('en-US'));
+  add('Marginal / conditional R²', (m) => `${noZero(m.r2m.toFixed(3))} / ${noZero(m.r2c.toFixed(3))}`);
+  add('Share of variance between people (ICC)', (m) => noZero(m.icc.toFixed(3)));
+  return rows;
+};
 const medCols = [
   { key: 'out', label: 'Outcome' },
   { key: 'a', label: 'a: recommender to mind', num: true },
   { key: 'b', label: 'b: mind to adherence', num: true },
-  { key: 'c', label: 'c: total', num: true },
-  { key: 'cp', label: 'c′: direct', num: true },
-  { key: 'ind', label: 'Indirect effect', num: true },
-  { key: 'test', label: 'Test of the indirect effect', wrap: true, minw: '12rem' },
+  { key: 'c', label: 'c: total effect', num: true },
+  { key: 'cp', label: 'c′: direct effect', num: true },
+  { key: 'ind', label: 'Indirect effect a × b [bootstrap 95% CI]', num: true, wrap: true, minw: '11rem' },
+  { key: 'test', label: 'Sobel test of a × b', num: true, wrap: true, minw: '9rem' },
+];
+const medRow = (label: string, m: any) => ({
+  out: label,
+  a: `${b3(m.a)}*** (${noZero(m.aSe.toFixed(3))})`,
+  b: `${minus(noZero(m.b.toFixed(4)))} (${noZero(m.bSe.toFixed(4))})`,
+  c: `${b3(m.c)} (${noZero(m.cSe.toFixed(3))})`,
+  cp: `${b3(m.cp)} (${noZero(m.cpSe.toFixed(3))})`,
+  ind: `${minus(noZero(m.ind.toFixed(4)))} [${minus(noZero(m.bootLo.toFixed(4)))}, ${minus(noZero(m.bootHi.toFixed(4)))}]`,
+  test: `z = ${minus(m.z.toFixed(3))}, p = ${noZero(m.p.toFixed(3))}`,
+});
+const sampleRows = S.table.variables.flatMap((v: any) => v.rows.map((r: any) => ({ v: v.variable, g: r.group, n: r.n, pct: `${r.pct.toFixed(1)}%` })));
+const sampleCols = [
+  { key: 'v', label: 'Variable' },
+  { key: 'g', label: 'Group' },
+  { key: 'n', label: 'People', num: true },
+  { key: 'pct', label: 'Share', num: true },
+];
+const diff = [
+  { where: 'Table 24, Model 2: intercept and advice row', printed: 'Repeats Table 23 Model 2 (.11 and .28 [.207, .363])', data: `${ci(term('device', 1, 'after'))} for the advice row` },
+  { where: 'Table 23, Model 3: advice row', printed: '−.28 [.200, .359]', data: ci(term('sleep', 2, 'after')) },
+  { where: 'Table 24, Model 3: advice row', printed: '−.29 [.214, .360]', data: ci(term('device', 2, 'after')) },
+  { where: 'Table 24, Model 3: advice × recommender', printed: '−.09 [−.014, .195]', data: ci(term('device', 2, 'after:AI')) },
+  { where: 'Table 23, Model 2: gender', printed: '−.02 [−.144, .079], the interaction’s interval', data: ci(term('sleep', 1, 'male')) },
+  { where: 'Table 23, Model 3: mind perception', printed: '.00 [−.143, .086], the interaction’s interval', data: ci(term('sleep', 2, 'mind_perception')) },
+  { where: 'Table 24, Model 3: mind perception', printed: '−.00 [−.021, .053]', data: ci(term('device', 2, 'mind_perception')) },
+  { where: 'Figure 31 (sleep): path b', printed: '−.012, which is the indirect effect', data: `b = ${minus(noZero(medS.b.toFixed(4)))}; indirect = ${minus(noZero(medS.ind.toFixed(4)))}` },
+  { where: 'Figure 31 (sleep): c and c′', printed: 'c = .026, c′ = .015', data: `c = ${noZero(medS.c.toFixed(3))} (without mind perception), c′ = ${noZero(medS.cp.toFixed(3))} (with it)` },
+  { where: 'Mind perception reliability', printed: 'Cronbach’s α = .887', data: `α = ${noZero(M.alpha.toFixed(3))}` },
+  { where: 'Length of the study', printed: 'A fifteen-day study', data: 'The file has 14 daily surveys, the last of which also held the final questions' },
+  { where: 'Who was kept', printed: 'Excluded people with fewer than three post-advice surveys', data: `${S.fewerThan3Post} of the ${S.assigned} have fewer than three (${S.noPost} have none)` },
+];
+const diffCols = [
+  { key: 'where', label: 'Where', wrap: true, minw: '12rem' },
+  { key: 'printed', label: 'As printed', wrap: true, minw: '13rem' },
+  { key: 'data', label: 'From the data', wrap: true, minw: '13rem' },
 ];
 ---
 
@@ -116,8 +173,8 @@ const medCols = [
       <p class="back small"><a href={href('/projects/trust-in-medical-ai/')}>Trust in medical AI</a></p>
       <h1>Study 6</h1>
       <p class="lede">
-        The first five studies asked what people say about a doctor and an AI. Study 6 asked what they do. 455 people logged their sleep and phone use for 15 days, and on day eight a doctor or an AI gave them
-        advice. The numbers on this page are the ones printed in my dissertation, because the raw data for this study are not on this site.
+        The first five studies asked what people say about a doctor and an AI. Study 6 asked what they do. {S.assigned} people logged their sleep and phone use for 14 days, and on day eight a doctor or an AI gave them
+        advice. Every table and figure on this page is computed from the de-identified daily file, which you can download below.
       </p>
     </header>
 
@@ -138,28 +195,45 @@ const medCols = [
       <h2 id="did-title">What I did</h2>
       <div class="prose">
         <p>
-          I recruited 560 people from Prolific. After a week of daily surveys about sleep, phone use, restfulness and mood, 455 completed the study (47% women, average age 40, range 19 to 85). I kept people who got the advice and finished at least three
-          of the surveys that followed. Each person was randomly given a doctor or an AI as the source.
+          I recruited 560 people from Prolific. {S.daily} of them completed at least one daily survey about sleep, phone use, restfulness and mood, and {S.assigned} were randomly given a doctor ({S.doctor} people) or an AI ({S.ai} people) as the source of
+          the advice. The other {S.notAssigned} never received it and only help with the before-and-after comparison. At the end, {S.withMind} people answered questions about how much mind they gave the recommender.
         </p>
         <p>
           On day eight, each person read and heard a health infographic and a recommendation to sleep 7.5 to 9 hours and to spend 15 minutes or less on a device in bed. After each daily survey they were reminded of the commitment.
-          The advice was identical for both recommenders. At the end I asked how much mind they gave the recommender, using the same seven items as in the earlier studies (Cronbach's α = .887).
+          The advice was identical for both recommenders. Mind perception used seven items such as whether the recommender understood their feelings or could anticipate their needs (Cronbach's α = {noZero(M.alpha.toFixed(3))}).
         </p>
         <p>
-          <strong>Weight on advice.</strong> People start at different places, so I measured how far each day's sleep moved from that person's average in the first seven days toward the recommended value, as a share of the full distance.
+          <strong>Weight on advice.</strong> People start at different places, so I measured how far each day's sleep moved from that person's average in the first seven days toward the recommended value (8.25 hours, the middle of 7.5 to 9), as a share of the full distance.
           Zero means no change and 1 means meeting the recommendation. Moving in either direction counts as progress if it ends nearer the recommended value, and I capped values at −2 and 2. I did the same for device time with 15 minutes as the target.
           This is the Judge-Advisor approach from decision research.
         </p>
         <p>
           I fit linear mixed-effects models with a random intercept for each person: first the change after the advice, then the recommender and its interaction with the advice, then age, gender and mind perception.
-          I tested mind perception as a mediator with a multilevel mediation analysis.
+          I tested mind perception as a mediator with a multilevel mediation analysis on the days after the advice.
         </p>
       </div>
+      <StatTable
+        id="sample"
+        title={`Who got the advice: ${S.assigned} people, demographic groups from the released file`}
+        columns={sampleCols}
+        rows={sampleRows}
+        note="Coarse groups only; age, race and the other demographic questions were reduced to a few groups before release. People who skipped the demographic block are not in these counts."
+      />
+    </section>
+
+    <section class="section" id="days" aria-labelledby="days-title">
+      <h2 id="days-title">Both groups moved after day 7 and kept moving</h2>
+      <p class="sub">
+        Each dot is the group's average weight on advice for one day, and the line through it is the 95% interval. Before the advice the averages hover near zero, because each person's baseline is their own first-week average.
+        After it, both groups move toward the recommendation, and the doctor and AI lines stay close together.
+      </p>
+      <DailyLines id="fig-1" title="Figure 1. Sleep: weight on advice by day" rows={s6.daily} field="sleep" caption="Zero is the person's own first-week average and 1 is 8.25 hours of sleep. Dissertation Figure 30." />
+      <DailyLines id="fig-2" title="Figure 2. Phone in bed: weight on advice by day" rows={s6.daily} field="device" caption="Zero is the person's own first-week average and 1 is 15 minutes or less on a device in bed. Dissertation Figure 32." />
     </section>
 
     <section class="section" id="estimates" aria-labelledby="est-title">
       <h2 id="est-title">Everything that mattered was the advice, not who gave it</h2>
-      <p class="sub">Each dot is a coefficient from Tables 23 and 24, and each line is its 95% interval. Zero means no difference. Only the first row of each group clears zero.</p>
+      <p class="sub">Each dot is a coefficient from the models below, and each line is its 95% interval. Zero means no difference. Only the first row of each group clears zero.</p>
       <figure class="forest" aria-label="Coefficients with 95% intervals for sleep and device-in-bed adherence">
         {est.map((g) => (
           <div class="grp">
@@ -167,46 +241,46 @@ const medCols = [
             {g.rows.map((r) => (
               <div class={`row ${r.key ? 'key' : ''}`}>
                 <div class="lab">{r.label} <span>{r.note}</span></div>
-                <div class="track" role="img" aria-label={`${r.label}: ${fm(r.b)}, interval ${fm(r.lo)} to ${fm(r.hi)}`}>
+                <div class="track" role="img" aria-label={`${r.label}: ${b3(r.t.b)}, interval ${b3(r.t.lo)} to ${b3(r.t.hi)}`}>
                   <span class="zero" style={`left:${pos(0)}%`}></span>
-                  <span class="ci" style={`left:${pos(r.lo)}%;width:${(Number(pos(r.hi)) - Number(pos(r.lo))).toFixed(2)}%`}></span>
-                  <span class="pt" style={`left:${pos(r.b)}%`}></span>
+                  <span class="ci" style={`left:${pos(r.t.lo)}%;width:${(Number(pos(r.t.hi)) - Number(pos(r.t.lo))).toFixed(2)}%`}></span>
+                  <span class="pt" style={`left:${pos(r.t.b)}%`}></span>
                 </div>
-                <div class="val">{fm(r.b)} [{fm(r.lo)}, {fm(r.hi)}]</div>
+                <div class="val">{b3(r.t.b)} [{b3(r.t.lo)}, {b3(r.t.hi)}]</div>
               </div>
             ))}
           </div>
         ))}
-        <div class="axis">{ticks.map((t) => <span style={`left:${pos(t)}%`}>{t === 0 ? '0' : fm(t)}</span>)}</div>
-        <figcaption class="small muted">Weight on advice. Left of zero is movement away from the recommendation, right of zero is movement toward it. Intervals as printed in the dissertation.</figcaption>
+        <div class="axis">{ticks.map((t) => <span style={`left:${pos(t)}%`}>{t === 0 ? '0' : minus(noZero(t.toFixed(1)))}</span>)}</div>
+        <figcaption class="small muted">Figure 3. Weight on advice. Left of zero is movement away from the recommendation, right of zero is movement toward it.</figcaption>
       </figure>
     </section>
 
     <section class="section" id="tables" aria-labelledby="tables-title">
       <h2 id="tables-title">The tables</h2>
       <StatTable
-        id="table-23"
+        id="table-1"
         title="Table 1. Change in sleep after the advice, by recommender (dissertation Table 23)"
         columns={col}
-        rows={t23}
-        look="The intervention row is the only one that excludes zero. The condition and interaction rows are about zero."
-        note="Coefficients with 95% intervals as printed. * p < .05, *** p < .001. Doctor is the reference condition. Variance of people about .01 and ICC .01 in every model."
+        rows={modelTable('sleep')}
+        look="The advice row is the only one that excludes zero. The recommender and interaction rows are about zero."
+        note="Coefficients with 95% intervals. * p < .05, *** p < .001. Doctor is the reference group. Model 1 uses everyone with daily data, Model 2 the people who got the advice, Model 3 those who also rated mind perception. Age is the age group number in the released file, so its coefficient is in different units than the dissertation’s age in years."
       />
       <StatTable
-        id="table-24"
+        id="table-2"
         title="Table 2. Change in device time in bed after the advice, by recommender (dissertation Table 24)"
         columns={col}
-        rows={t24}
+        rows={modelTable('device')}
         look="Same pattern as sleep. The advice moved device time, and the recommender did not."
-        note="As printed. The table note in the dissertation names the humanlike AI as the reference, which looks like a carry-over from Chapter 3. The condition is coded 0 = doctor, 1 = AI."
+        note="Same models and notes as Table 1, with weight on advice for minutes on a device in bed."
       />
       <StatTable
-        id="table-med"
+        id="table-3"
         title="Table 3. Mediation through mind perception (dissertation Figures 31 and 33)"
         columns={medCols}
-        rows={med}
+        rows={[medRow('Sleep', medS), medRow('Device in bed', medD)]}
         look="Path a is large: people saw less mind in the AI. The indirect effects are about zero."
-        note="Path labels as printed in the figures. a, b and the indirect effect follow the dissertation's coding (doctor = 0, AI = 1). Mind perception rated higher for the doctor: b = −1.02, z(412) = −4.331, p < .001."
+        note={`Days after the advice, ${medS.n} people. Coefficients with standard errors in parentheses. The recommender is coded 0 = doctor, 1 = AI, so a negative a means less mind in the AI. Indirect effects use the Sobel test, as in the printed z values, and a 5,000-resample bootstrap of people.`}
       />
     </section>
 
@@ -222,30 +296,40 @@ const medCols = [
           differences might only show up when trust falls below some threshold, or when the stakes are higher.
         </p>
         <p>
-          <strong>Limits.</strong> The advice was low stakes and easy to follow. It was delivered online to people who agreed to a 15-day study and were paid, so they may be more willing to follow a recommendation than patients in a clinic.
+          <strong>Limits.</strong> The advice was low stakes and easy to follow. It was delivered online to people who agreed to a 14-day study and were paid, so they may be more willing to follow a recommendation than patients in a clinic.
           The recommender text and the reminders were the same for both, which may have lessened any difference. The study could detect effects of about d = .265 or larger, so smaller differences are possible. Behavior was self-reported.
         </p>
       </div>
     </section>
 
     <section class="section" id="files" aria-labelledby="files-title">
-      <h2 id="files-title">Sources and notes on the printed tables</h2>
+      <h2 id="files-title">Data, code and where this differs from the printed dissertation</h2>
       <div class="prose">
         <ul class="filelist">
+          <li><a href={href('/data/study6-ratings.csv')}>study6-ratings.csv</a>, the de-identified daily file, one row per person per day</li>
+          <li><a href={href('/data/study6-codebook.csv')}>study6-codebook.csv</a>, what every column means</li>
+          <li><a href={href('/code/study6-original-analysis.Rmd')}>study6-original-analysis.Rmd</a>, my original notebook for this study, with local file paths removed</li>
+          <li><a href="https://github.com/mrleitao/Psycho_Robot/tree/main/analysis">The Python scripts</a> that de-identify the file and compute this page (study6-deidentify.py and study6-full-results.py)</li>
           <li><a href="https://doi.org/10.17605/OSF.IO/736HEF">Preregistration on OSF</a>, written before data collection</li>
-          <li><a href={href('/projects/trust-in-medical-ai/#dig-deeper')}>Bayes factors for the Study 6 comparisons</a>, computed from the printed statistics</li>
+          <li><a href={href('/projects/trust-in-medical-ai/#dig-deeper')}>Bayes factors for the Study 6 comparisons</a>, which use the printed statistics; the data give the same estimates</li>
         </ul>
         <p>
-          Everything here comes from the printed dissertation, not from the raw data. No participant-level data for Study 6 are on this site.
-          The Bayes factors use the estimate and the width of the interval, so they are accurate to about the first digit.
+          The file has no IDs, timestamps, free-text answers or locations. Participant numbers were assigned after a shuffle, and only the coarse demographic groups are included.
+          The data are shared under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> and the code under the MIT license. Please do not use the file to try to identify anyone.
         </p>
         <p>
-          <strong>Printed values I could not reconcile.</strong> I show the tables as printed and use Model 1 for the effect of the advice. Table 24 Model 2 repeats the intercept (.11) and the advice effect (.28, [.207, .363]) from Table 23 Model 2 to every digit,
-          and Model 3 prints the advice effect with a minus sign (−.28 and −.29) although the models above it print it as positive. A few intervals in Table 23 match each other exactly (for gender in Model 2 and for the interaction, and for mind perception in Model 3).
-          The dissertation's participant counts also differ across models (510, 455 and 412). The conclusions do not depend on these values: the advice effect is large and clear of zero in every column, and the recommender effects are small and clear of nothing.
+          <strong>The recommender labels in my SPSS file are reversed.</strong> The variable is saved as 1 and 2 with labels that call 1 the AI. The data show the opposite (group 1 rated the recommender about a point higher on mind, as the doctor was in the dissertation), so the released file uses the words Doctor and AI.
         </p>
-        <p class="small muted">Please cite the dissertation: Leitao, M. R. (2024). <em>Artificial Intelligence, Humanization, and Health Beliefs</em>. Georgetown University.</p>
       </div>
+      <StatTable
+        id="differences"
+        title="Where rebuilding from the data differs from the printed tables"
+        columns={diffCols}
+        rows={diff}
+        look="The printed tables had copy and sign errors. None changes a conclusion: the advice effect is large and clear of zero in every column, and the recommender effects are small and clear of nothing."
+        note="The models here use age group and a gender indicator in place of age in years, so those rows and the intercepts differ in units from the printed ones. Everything else matches the printed values to the digit unless listed."
+      />
+      <p class="small muted">Please cite the dissertation: Leitao, M. R. (2024). <em>Artificial Intelligence, Humanization, and Health Beliefs</em>. Georgetown University.</p>
     </section>
   </div>
 </Base>

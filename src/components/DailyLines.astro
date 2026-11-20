@@ -1,0 +1,117 @@
+---
+// Mean weight on advice for each study day, doctor and AI, with 95% intervals. The advice arrived at the end of day 7's survey.
+interface Pt { n: number; mean: number; lo: number; hi: number }
+interface Row { recommender: 'Doctor' | 'AI'; day: number; [k: string]: any }
+interface Props {
+  rows: Row[];
+  field: 'sleep' | 'device';
+  title: string;
+  id?: string;
+  caption?: string;
+}
+const { rows, field, title, id, caption } = Astro.props;
+const W = 680;
+const H = 330;
+const L = 46;
+const R = 74;
+const T = 18;
+const B = 44;
+const y0 = -0.4;
+const y1 = 0.8;
+const x = (d: number, off = 0) => L + ((d - 0.5 + off) / 14) * (W - L - R);
+const y = (v: number) => T + (1 - (v - y0) / (y1 - y0)) * (H - T - B);
+const fmt = (v: number) => (v < 0 ? '−' : '') + Math.abs(v).toFixed(2).replace(/^0/, '');
+const who = ['Doctor', 'AI'] as const;
+const off = { Doctor: -0.13, AI: 0.13 } as const;
+const series = who.map((w) => ({ w, pts: rows.filter((r) => r.recommender === w).sort((a, b) => a.day - b.day) }));
+const yt = [-0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8];
+const line = (pts: Row[]) => pts.map((p, i) => `${i ? 'L' : 'M'}${x(p.day, off[p.recommender]).toFixed(1)},${y((p[field] as Pt).mean).toFixed(1)}`).join(' ');
+---
+
+<figure class="dl" id={id}>
+  <figcaption>{title}</figcaption>
+  <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`${title}. Mean weight on advice by day for the doctor and AI groups. Zero is no change from each person's own first-week average and 1 is meeting the recommendation. Both groups sit near zero in the first week and rise after the advice on day 8.`}>
+    <rect x={x(7.5)} y={T} width={W - R - x(7.5)} height={H - T - B} class="after" />
+    {yt.map((t) => (
+      <g>
+        <line x1={L} x2={W - R} y1={y(t)} y2={y(t)} class={t === 0 ? 'zero' : 'grid'} />
+        <text x={L - 8} y={y(t) + 4} text-anchor="end" class="tick">{fmt(t)}</text>
+      </g>
+    ))}
+    <line x1={x(7.5)} x2={x(7.5)} y1={T} y2={H - B} class="split" />
+    <text x={x(7.5) - 6} y={T + 12} text-anchor="end" class="lab">Before the advice</text>
+    <text x={x(7.5) + 6} y={T + 12} class="lab">After the advice</text>
+    {Array.from({ length: 14 }, (_, i) => i + 1).map((d) => (
+      <text x={x(d)} y={H - B + 18} text-anchor="middle" class="tick">{d}</text>
+    ))}
+    <text x={(L + W - R) / 2} y={H - 6} text-anchor="middle" class="axis">Study day</text>
+    {series.map(({ w, pts }) => (
+      <g class={w === 'AI' ? 'ai' : 'doc'}>
+        <path d={line(pts)} class="ln" />
+        {pts.map((p) => {
+          const s = p[field] as Pt;
+          const cx = x(p.day, off[w]);
+          return (
+            <g>
+              <line x1={cx} x2={cx} y1={y(s.lo)} y2={y(s.hi)} class="ci" />
+              <circle cx={cx} cy={y(s.mean)} r="4" class="pt">
+                <title>{`${w}, day ${p.day}: mean ${fmt(s.mean)}, 95% interval ${fmt(s.lo)} to ${fmt(s.hi)}, ${s.n} people`}</title>
+              </circle>
+            </g>
+          );
+        })}
+        <text x={x(14, off[w]) + 14} y={y((pts[pts.length - 1][field] as Pt).mean) + (w === 'AI' ? -4 : 12)} class="end">{w === 'AI' ? 'AI' : 'Doctor'}</text>
+      </g>
+    ))}
+  </svg>
+  {caption && <figcaption class="cap">{caption}</figcaption>}
+  <details>
+    <summary>Show the numbers</summary>
+    <div class="tw" tabindex="0" role="region" aria-label="Table of daily means. Scrolls sideways on narrow screens.">
+      <table>
+        <thead><tr><th>Day</th><th>Doctor mean [95% CI]</th><th>n</th><th>AI mean [95% CI]</th><th>n</th></tr></thead>
+        <tbody>
+          {Array.from({ length: 14 }, (_, i) => i + 1).map((d) => {
+            const a = series[0].pts.find((p) => p.day === d)![field] as Pt;
+            const b = series[1].pts.find((p) => p.day === d)![field] as Pt;
+            return (
+              <tr>
+                <td>{d}</td>
+                <td>{fmt(a.mean)} [{fmt(a.lo)}, {fmt(a.hi)}]</td><td>{a.n}</td>
+                <td>{fmt(b.mean)} [{fmt(b.lo)}, {fmt(b.hi)}]</td><td>{b.n}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  </details>
+</figure>
+
+<style>
+  .dl { margin: 1.6rem 0; max-width: 46rem; font-family: var(--display); }
+  figcaption { font-weight: 600; margin-bottom: 0.4rem; }
+  figcaption.cap { font-weight: 400; color: var(--muted); font-size: 0.88rem; margin-top: 0.3rem; }
+  svg { width: 100%; height: auto; display: block; }
+  .after { fill: var(--wash); }
+  .grid { stroke: var(--rule); stroke-width: 1; }
+  .zero { stroke: var(--muted); stroke-width: 1.2; }
+  .split { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 4 4; }
+  .tick, .lab, .axis, .end { font-size: 12px; fill: var(--muted); }
+  .end { font-weight: 600; }
+  .doc .ln, .doc .ci { stroke: var(--doctor); }
+  .ai .ln, .ai .ci { stroke: var(--ai); }
+  .doc .pt { fill: var(--doctor); }
+  .ai .pt { fill: var(--ai); }
+  .doc .end { fill: var(--doctor); }
+  .ai .end { fill: var(--ai); }
+  .ln { fill: none; stroke-width: 2; }
+  .ci { stroke-width: 1.5; opacity: 0.7; }
+  .pt { stroke: var(--paper); stroke-width: 1.5; }
+  details { margin-top: 0.5rem; font-size: 0.9rem; }
+  summary { cursor: pointer; color: var(--muted); }
+  .tw { overflow-x: auto; margin-top: 0.4rem; }
+  table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+  th, td { text-align: right; padding: 0.25rem 0.6rem; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+  th:first-child, td:first-child { text-align: left; }
+</style>

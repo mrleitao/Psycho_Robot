@@ -1,0 +1,1966 @@
+{
+ "sample": {
+  "daily": 510,
+  "assigned": 455,
+  "notAssigned": 55,
+  "doctor": 228,
+  "ai": 227,
+  "withMind": 412,
+  "rows": 5805,
+  "minPostSurveys": 0,
+  "medianPostSurveys": 7.0,
+  "fewerThan3Post": 28,
+  "noPost": 8,
+  "table": {
+   "n": 455,
+   "variables": [
+    {
+     "variable": "Age group",
+     "rows": [
+      {
+       "group": "18-44",
+       "n": 301,
+       "pct": 66.2
+      },
+      {
+       "group": "45-59",
+       "n": 101,
+       "pct": 22.2
+      },
+      {
+       "group": "60-69",
+       "n": 43,
+       "pct": 9.5
+      },
+      {
+       "group": "70+",
+       "n": 10,
+       "pct": 2.2
+      }
+     ],
+     "missing": 0
+    },
+    {
+     "variable": "Gender",
+     "rows": [
+      {
+       "group": "Woman",
+       "n": 219,
+       "pct": 48.1
+      },
+      {
+       "group": "Man",
+       "n": 230,
+       "pct": 50.5
+      }
+     ],
+     "missing": 6
+    },
+    {
+     "variable": "Race",
+     "rows": [
+      {
+       "group": "White",
+       "n": 314,
+       "pct": 69.0
+      },
+      {
+       "group": "Another or multiple",
+       "n": 141,
+       "pct": 31.0
+      }
+     ],
+     "missing": 0
+    },
+    {
+     "variable": "Education",
+     "rows": [
+      {
+       "group": "No college degree",
+       "n": 188,
+       "pct": 41.3
+      },
+      {
+       "group": "College degree or more",
+       "n": 267,
+       "pct": 58.7
+      }
+     ],
+     "missing": 0
+    },
+    {
+     "variable": "How religious",
+     "rows": [
+      {
+       "group": "Not at all to slightly",
+       "n": 300,
+       "pct": 65.9
+      },
+      {
+       "group": "Moderately",
+       "n": 40,
+       "pct": 8.8
+      },
+      {
+       "group": "More than moderately",
+       "n": 115,
+       "pct": 25.3
+      }
+     ],
+     "missing": 0
+    }
+   ]
+  }
+ },
+ "mind": {
+  "alpha": 0.877,
+  "n": 412,
+  "doctor": {
+   "n": 212,
+   "mean": 6.48,
+   "sd": 2.5,
+   "se": 0.17,
+   "lo": 6.14,
+   "hi": 6.81,
+   "median": 6.43,
+   "min": 0.0,
+   "max": 12.57
+  },
+  "ai": {
+   "n": 200,
+   "mean": 5.46,
+   "sd": 2.27,
+   "se": 0.16,
+   "lo": 5.14,
+   "hi": 5.77,
+   "median": 5.36,
+   "min": 0.0,
+   "max": 12.57
+  },
+  "a": -1.019,
+  "aSe": 0.236,
+  "aLo": -1.482,
+  "aHi": -0.555,
+  "z": -4.32,
+  "p": 1.9530509177734868e-05,
+  "t": -4.33,
+  "df": 409.3,
+  "d": -0.43
+ },
+ "models": {
+  "sleep": {
+   "label": "Sleep",
+   "y": "woa_sleep",
+   "models": [
+    {
+     "label": "Model 1",
+     "formula": "woa_sleep ~ after",
+     "n": 5803,
+     "people": 510,
+     "terms": [
+      {
+       "term": "Intercept",
+       "raw": "Intercept",
+       "b": 0.017,
+       "se": 0.02,
+       "lo": -0.022,
+       "hi": 0.055,
+       "z": 0.86,
+       "p": 0.3922347312917567
+      },
+      {
+       "term": "Change after the advice",
+       "raw": "after",
+       "b": 0.269,
+       "se": 0.028,
+       "lo": 0.214,
+       "hi": 0.324,
+       "z": 9.63,
+       "p": 6.124312420262267e-22
+      }
+     ],
+     "varPerson": 0.008,
+     "varResidual": 1.127,
+     "icc": 0.007,
+     "r2m": 0.016,
+     "r2c": 0.023,
+     "converged": true
+    },
+    {
+     "label": "Model 2",
+     "formula": "woa_sleep ~ after * AI + age_n + male",
+     "n": 5618,
+     "people": 455,
+     "terms": [
+      {
+       "term": "Intercept",
+       "raw": "Intercept",
+       "b": 0.068,
+       "se": 0.043,
+       "lo": -0.016,
+       "hi": 0.153,
+       "z": 1.59,
+       "p": 0.11289944203050842
+      },
+      {
+       "term": "Change after the advice",
+       "raw": "after",
+       "b": 0.285,
+       "se": 0.04,
+       "lo": 0.207,
+       "hi": 0.363,
+       "z": 7.17,
+       "p": 7.2841593988375e-13
+      },
+      {
+       "term": "Recommender (0 = doctor, 1 = AI)",
+       "raw": "AI",
+       "b": 0.028,
+       "se": 0.041,
+       "lo": -0.052,
+       "hi": 0.109,
+       "z": 0.69,
+       "p": 0.4885263895357377
+      },
+      {
+       "term": "Advice x recommender",
+       "raw": "after:AI",
+       "b": -0.032,
+       "se": 0.057,
+       "lo": -0.143,
+       "hi": 0.08,
+       "z": -0.56,
+       "p": 0.5781135031047646
+      },
+      {
+       "term": "Age group (1 to 4)",
+       "raw": "age_n",
+       "b": -0.036,
+       "se": 0.02,
+       "lo": -0.074,
+       "hi": 0.003,
+       "z": -1.83,
+       "p": 0.06697908332964733
+      },
+      {
+       "term": "Gender (1 = man)",
+       "raw": "male",
+       "b": -0.024,
+       "se": 0.03,
+       "lo": -0.083,
+       "hi": 0.036,
+       "z": -0.78,
+       "p": 0.4362616932665906
+      }
+     ],
+     "varPerson": 0.011,
+     "varResidual": 1.129,
+     "icc": 0.01,
+     "r2m": 0.016,
+     "r2c": 0.026,
+     "converged": true
+    },
+    {
+     "label": "Model 3",
+     "formula": "woa_sleep ~ after * AI + age_n + male + mind_perception",
+     "n": 5276,
+     "people": 412,
+     "terms": [
+      {
+       "term": "Intercept",
+       "raw": "Intercept",
+       "b": 0.032,
+       "se": 0.06,
+       "lo": -0.086,
+       "hi": 0.149,
+       "z": 0.53,
+       "p": 0.5978935375788104
+      },
+      {
+       "term": "Change after the advice",
+       "raw": "after",
+       "b": 0.28,
+       "se": 0.041,
+       "lo": 0.2,
+       "hi": 0.359,
+       "z": 6.91,
+       "p": 4.9598284409303614e-12
+      },
+      {
+       "term": "Recommender (0 = doctor, 1 = AI)",
+       "raw": "AI",
+       "b": 0.047,
+       "se": 0.044,
+       "lo": -0.039,
+       "hi": 0.132,
+       "z": 1.07,
+       "p": 0.2867662601783687
+      },
+      {
+       "term": "Advice x recommender",
+       "raw": "after:AI",
+       "b": -0.027,
+       "se": 0.058,
+       "lo": -0.141,
+       "hi": 0.087,
+       "z": -0.46,
+       "p": 0.6429962659352202
+      },
+      {
+       "term": "Age group (1 to 4)",
+       "raw": "age_n",
+       "b": -0.039,
+       "se": 0.02,
+       "lo": -0.079,
+       "hi": 0.001,
+       "z": -1.93,
+       "p": 0.05318785585576936
+      },
+      {
+       "term": "Gender (1 = man)",
+       "raw": "male",
+       "b": -0.038,
+       "se": 0.032,
+       "lo": -0.101,
+       "hi": 0.024,
+       "z": -1.21,
+       "p": 0.22774449223641524
+      },
+      {
+       "term": "Mind perception",
+       "raw": "mind_perception",
+       "b": 0.008,
+       "se": 0.007,
+       "lo": -0.005,
+       "hi": 0.021,
+       "z": 1.14,
+       "p": 0.25478172841413604
+      }
+     ],
+     "varPerson": 0.015,
+     "varResidual": 1.119,
+     "icc": 0.013,
+     "r2m": 0.017,
+     "r2c": 0.03,
+     "converged": true
+    }
+   ]
+  },
+  "device": {
+   "label": "Device in bed",
+   "y": "woa_device",
+   "models": [
+    {
+     "label": "Model 1",
+     "formula": "woa_device ~ after",
+     "n": 5781,
+     "people": 510,
+     "terms": [
+      {
+       "term": "Intercept",
+       "raw": "Intercept",
+       "b": 0.024,
+       "se": 0.024,
+       "lo": -0.023,
+       "hi": 0.071,
+       "z": 1.0,
+       "p": 0.31833027480504816
+      },
+      {
+       "term": "Change after the advice",
+       "raw": "after",
+       "b": 0.315,
+       "se": 0.026,
+       "lo": 0.264,
+       "hi": 0.365,
+       "z": 12.18,
+       "p": 4.205118577650247e-34
+      }
+     ],
+     "varPerson": 0.126,
+     "varResidual": 0.942,
+     "icc": 0.118,
+     "r2m": 0.023,
+     "r2c": 0.138,
+     "converged": true
+    },
+    {
+     "label": "Model 2",
+     "formula": "woa_device ~ after * AI + age_n + male",
+     "n": 5596,
+     "people": 455,
+     "terms": [
+      {
+       "term": "Intercept",
+       "raw": "Intercept",
+       "b": 0.01,
+       "se": 0.058,
+       "lo": -0.104,
+       "hi": 0.124,
+       "z": 0.17,
+       "p": 0.8645307631251633
+      },
+      {
+       "term": "Change after the advice",
+       "raw": "after",
+       "b": 0.282,
+       "se": 0.036,
+       "lo": 0.211,
+       "hi": 0.354,
+       "z": 7.74,
+       "p": 9.736626096661865e-15
+      },
+      {
+       "term": "Recommender (0 = doctor, 1 = AI)",
+       "raw": "AI",
+       "b": 0.033,
+       "se": 0.05,
+       "lo": -0.066,
+       "hi": 0.132,
+       "z": 0.66,
+       "p": 0.5106106444902939
+      },
+      {
+       "term": "Advice x recommender",
+       "raw": "after:AI",
+       "b": 0.073,
+       "se": 0.052,
+       "lo": -0.029,
+       "hi": 0.175,
+       "z": 1.39,
+       "p": 0.16319786396580727
+      },
+      {
+       "term": "Age group (1 to 4)",
+       "raw": "age_n",
+       "b": 0.002,
+       "se": 0.028,
+       "lo": -0.053,
+       "hi": 0.058,
+       "z": 0.08,
+       "p": 0.9350005327908816
+      },
+      {
+       "term": "Gender (1 = man)",
+       "raw": "male",
+       "b": -0.02,
+       "se": 0.044,
+       "lo": -0.106,
+       "hi": 0.065,
+       "z": -0.47,
+       "p": 0.6393170328632187
+      }
+     ],
+     "varPerson": 0.135,
+     "varResidual": 0.937,
+     "icc": 0.126,
+     "r2m": 0.024,
+     "r2c": 0.147,
+     "converged": true
+    },
+    {
+     "label": "Model 3",
+     "formula": "woa_device ~ after * AI + age_n + male + mind_perception",
+     "n": 5260,
+     "people": 412,
+     "terms": [
+      {
+       "term": "Intercept",
+       "raw": "Intercept",
+       "b": 0.034,
+       "se": 0.083,
+       "lo": -0.129,
+       "hi": 0.198,
+       "z": 0.41,
+       "p": 0.680109245936001
+      },
+      {
+       "term": "Change after the advice",
+       "raw": "after",
+       "b": 0.287,
+       "se": 0.037,
+       "lo": 0.214,
+       "hi": 0.359,
+       "z": 7.73,
+       "p": 1.0888638633278465e-14
+      },
+      {
+       "term": "Recommender (0 = doctor, 1 = AI)",
+       "raw": "AI",
+       "b": 0.037,
+       "se": 0.054,
+       "lo": -0.069,
+       "hi": 0.142,
+       "z": 0.68,
+       "p": 0.49589649156546944
+      },
+      {
+       "term": "Advice x recommender",
+       "raw": "after:AI",
+       "b": 0.09,
+       "se": 0.053,
+       "lo": -0.014,
+       "hi": 0.195,
+       "z": 1.69,
+       "p": 0.09073058138076061
+      },
+      {
+       "term": "Age group (1 to 4)",
+       "raw": "age_n",
+       "b": -0.0,
+       "se": 0.029,
+       "lo": -0.058,
+       "hi": 0.057,
+       "z": -0.01,
+       "p": 0.9922672193620813
+      },
+      {
+       "term": "Gender (1 = man)",
+       "raw": "male",
+       "b": -0.037,
+       "se": 0.046,
+       "lo": -0.127,
+       "hi": 0.053,
+       "z": -0.81,
+       "p": 0.4197678428701672
+      },
+      {
+       "term": "Mind perception",
+       "raw": "mind_perception",
+       "b": -0.002,
+       "se": 0.01,
+       "lo": -0.021,
+       "hi": 0.016,
+       "z": -0.25,
+       "p": 0.8003342422644736
+      }
+     ],
+     "varPerson": 0.138,
+     "varResidual": 0.931,
+     "icc": 0.129,
+     "r2m": 0.027,
+     "r2c": 0.153,
+     "converged": true
+    }
+   ]
+  }
+ },
+ "mediation": {
+  "sleep": {
+   "label": "Sleep",
+   "n": 412,
+   "obs": 2629,
+   "a": -1.019,
+   "aSe": 0.236,
+   "b": 0.0116,
+   "bSe": 0.012,
+   "bP": 0.3356507351492357,
+   "c": 0.014,
+   "cSe": 0.058,
+   "cp": 0.026,
+   "cpSe": 0.059,
+   "ind": -0.0118,
+   "sobelSe": 0.0126,
+   "z": -0.94,
+   "p": 0.34734751564917266,
+   "bootLo": -0.0379,
+   "bootHi": 0.013
+  },
+  "device": {
+   "label": "Device in bed",
+   "n": 412,
+   "obs": 2621,
+   "a": -1.019,
+   "aSe": 0.236,
+   "b": -0.0055,
+   "bSe": 0.0166,
+   "bP": 0.7391185889150557,
+   "c": 0.127,
+   "cSe": 0.079,
+   "cp": 0.121,
+   "cpSe": 0.081,
+   "ind": 0.0056,
+   "sobelSe": 0.017,
+   "z": 0.332,
+   "p": 0.7398620458677321,
+   "bootLo": -0.0307,
+   "bootHi": 0.0439
+  }
+ },
+ "daily": [
+  {
+   "recommender": "Doctor",
+   "day": 1,
+   "sleep": {
+    "n": 203,
+    "mean": -0.09,
+    "sd": 1.04,
+    "se": 0.07,
+    "lo": -0.23,
+    "hi": 0.06,
+    "median": -0.08,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "device": {
+    "n": 202,
+    "mean": -0.11,
+    "sd": 0.95,
+    "se": 0.07,
+    "lo": -0.24,
+    "hi": 0.02,
+    "median": 0.0,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "sleepHours": {
+    "n": 203,
+    "mean": 7.16,
+    "sd": 1.61,
+    "se": 0.11,
+    "lo": 6.94,
+    "hi": 7.38,
+    "median": 7.1,
+    "min": 3.1,
+    "max": 15.0
+   },
+   "deviceMinutes": {
+    "n": 202,
+    "mean": 31.88,
+    "sd": 35.19,
+    "se": 2.48,
+    "lo": 27.0,
+    "hi": 36.76,
+    "median": 20.0,
+    "min": 0.0,
+    "max": 150.0
+   }
+  },
+  {
+   "recommender": "Doctor",
+   "day": 2,
+   "sleep": {
+    "n": 204,
+    "mean": -0.03,
+    "sd": 1.07,
+    "se": 0.07,
+    "lo": -0.18,
+    "hi": 0.12,
+    "median": -0.05,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "device": {
+    "n": 204,
+    "mean": 0.01,
+    "sd": 0.94,
+    "se": 0.07,
+    "lo": -0.12,
+    "hi": 0.14,
+    "median": 0.0,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "sleepHours": {
+    "n": 204,
+    "mean": 7.01,
+    "sd": 1.6,
+    "se": 0.11,
+    "lo": 6.79,
+    "hi": 7.24,
+    "median": 7.0,
+    "min": 0.5,
+    "max": 12.0
+   },
+   "deviceMinutes": {
+    "n": 204,
+    "mean": 29.31,
+    "sd": 33.03,
+    "se": 2.31,
+    "lo": 24.75,
+    "hi": 33.87,
+    "median": 20.0,
+    "min": 0.0,
+    "max": 150.0
+   }
+  },
+  {
+   "recommender": "Doctor",
+   "day": 3,
+   "sleep": {
+    "n": 178,
+    "mean": 0.04,
+    "sd": 1.13,
+    "se": 0.09,
+    "lo": -0.12,
+    "hi": 0.21,
+    "median": 0.14,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "device": {
+    "n": 176,
+    "mean": 0.01,
+    "sd": 1.02,
+    "se": 0.08,
+    "lo": -0.14,
+    "hi": 0.16,
+    "median": 0.0,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "sleepHours": {
+    "n": 178,
+    "mean": 7.21,
+    "sd": 1.75,
+    "se": 0.13,
+    "lo": 6.95,
+    "hi": 7.47,
+    "median": 7.5,
+    "min": 0.6,
+    "max": 14.0
+   },
+   "deviceMinutes": {
+    "n": 176,
+    "mean": 31.36,
+    "sd": 35.44,
+    "se": 2.67,
+    "lo": 26.09,
+    "hi": 36.64,
+    "median": 16.0,
+    "min": 0.0,
+    "max": 150.0
+   }
+  },
+  {
+   "recommender": "Doctor",
+   "day": 4,
+   "sleep": {
+    "n": 210,
+    "mean": 0.21,
+    "sd": 1.14,
+    "se": 0.08,
+    "lo": 0.05,
+    "hi": 0.36,
+    "median": 0.21,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "device": {
+    "n": 209,
+    "mean": -0.03,
+    "sd": 1.02,
+    "se": 0.07,
+    "lo": -0.17,
+    "hi": 0.11,
+    "median": 0.0,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "sleepHours": {
+    "n": 210,
+    "mean": 7.45,
+    "sd": 1.6,
+    "se": 0.11,
+    "lo": 7.23,
+    "hi": 7.67,
+    "median": 7.5,
+    "min": 2.0,
+    "max": 13.5
+   },
+   "deviceMinutes": {
+    "n": 209,
+    "mean": 30.52,
+    "sd": 35.03,
+    "se": 2.42,
+    "lo": 25.74,
+    "hi": 35.29,
+    "median": 19.0,
+    "min": 0.0,
+    "max": 150.0
+   }
+  },
+  {
+   "recommender": "Doctor",
+   "day": 5,
+   "sleep": {
+    "n": 208,
+    "mean": -0.03,
+    "sd": 1.13,
+    "se": 0.08,
+    "lo": -0.18,
+    "hi": 0.13,
+    "median": 0.06,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "device": {
+    "n": 208,
+    "mean": 0.04,
+    "sd": 1.03,
+    "se": 0.07,
+    "lo": -0.1,
+    "hi": 0.18,
+    "median": 0.0,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "sleepHours": {
+    "n": 208,
+    "mean": 7.06,
+    "sd": 1.7,
+    "se": 0.12,
+    "lo": 6.83,
+    "hi": 7.29,
+    "median": 7.35,
+    "min": 0.0,
+    "max": 12.0
+   },
+   "deviceMinutes": {
+    "n": 208,
+    "mean": 32.98,
+    "sd": 38.81,
+    "se": 2.69,
+    "lo": 27.67,
+    "hi": 38.29,
+    "median": 18.0,
+    "min": 0.0,
+    "max": 150.0
+   }
+  },
+  {
+   "recommender": "Doctor",
+   "day": 6,
+   "sleep": {
+    "n": 219,
+    "mean": -0.1,
+    "sd": 1.12,
+    "se": 0.08,
+    "lo": -0.25,
+    "hi": 0.05,
+    "median": -0.12,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "device": {
+    "n": 217,
+    "mean": 0.01,
+    "sd": 1.05,
+    "se": 0.07,
+    "lo": -0.13,
+    "hi": 0.15,
+    "median": 0.0,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "sleepHours": {
+    "n": 219,
+    "mean": 7.03,
+    "sd": 1.83,
+    "se": 0.12,
+    "lo": 6.79,
+    "hi": 7.27,
+    "median": 7.2,
+    "min": 1.0,
+    "max": 12.1
+   },
+   "deviceMinutes": {
+    "n": 217,
+    "mean": 32.33,
+    "sd": 36.73,
+    "se": 2.49,
+    "lo": 27.41,
+    "hi": 37.24,
+    "median": 20.0,
+    "min": 0.0,
+    "max": 150.0
+   }
+  },
+  {
+   "recommender": "Doctor",
+   "day": 7,
+   "sleep": {
+    "n": 228,
+    "mean": 0.03,
+    "sd": 1.07,
+    "se": 0.07,
+    "lo": -0.11,
+    "hi": 0.17,
+    "median": 0.01,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "device": {
+    "n": 228,
+    "mean": 0.09,
+    "sd": 1.04,
+    "se": 0.07,
+    "lo": -0.05,
+    "hi": 0.23,
+    "median": 0.02,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "sleepHours": {
+    "n": 228,
+    "mean": 7.04,
+    "sd": 1.56,
+    "se": 0.1,
+    "lo": 6.83,
+    "hi": 7.24,
+    "median": 7.0,
+    "min": 1.0,
+    "max": 11.5
+   },
+   "deviceMinutes": {
+    "n": 228,
+    "mean": 31.26,
+    "sd": 35.33,
+    "se": 2.34,
+    "lo": 26.65,
+    "hi": 35.87,
+    "median": 20.0,
+    "min": 0.0,
+    "max": 150.0
+   }
+  },
+  {
+   "recommender": "Doctor",
+   "day": 8,
+   "sleep": {
+    "n": 204,
+    "mean": 0.1,
+    "sd": 1.12,
+    "se": 0.08,
+    "lo": -0.06,
+    "hi": 0.25,
+    "median": 0.19,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "device": {
+    "n": 204,
+    "mean": 0.28,
+    "sd": 1.11,
+    "se": 0.08,
+    "lo": 0.13,
+    "hi": 0.43,
+    "median": 0.14,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "sleepHours": {
+    "n": 204,
+    "mean": 7.07,
+    "sd": 1.49,
+    "se": 0.1,
+    "lo": 6.86,
+    "hi": 7.28,
+    "median": 7.25,
+    "min": 0.8,
+    "max": 10.6
+   },
+   "deviceMinutes": {
+    "n": 204,
+    "mean": 22.19,
+    "sd": 29.87,
+    "se": 2.09,
+    "lo": 18.07,
+    "hi": 26.32,
+    "median": 11.0,
+    "min": 0.0,
+    "max": 150.0
+   }
+  },
+  {
+   "recommender": "Doctor",
+   "day": 9,
+   "sleep": {
+    "n": 208,
+    "mean": 0.19,
+    "sd": 1.09,
+    "se": 0.08,
+    "lo": 0.04,
+    "hi": 0.33,
+    "median": 0.29,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "device": {
+    "n": 208,
+    "mean": 0.33,
+    "sd": 1.12,
+    "se": 0.08,
+    "lo": 0.17,
+    "hi": 0.48,
+    "median": 0.28,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "sleepHours": {
+    "n": 208,
+    "mean": 7.35,
+    "sd": 1.49,
+    "se": 0.1,
+    "lo": 7.15,
+    "hi": 7.56,
+    "median": 7.5,
+    "min": 1.9,
+    "max": 15.0
+   },
+   "deviceMinutes": {
+    "n": 208,
+    "mean": 20.28,
+    "sd": 29.5,
+    "se": 2.05,
+    "lo": 16.25,
+    "hi": 24.31,
+    "median": 10.0,
+    "min": 0.0,
+    "max": 150.0
+   }
+  },
+  {
+   "recommender": "Doctor",
+   "day": 10,
+   "sleep": {
+    "n": 187,
+    "mean": 0.43,
+    "sd": 1.09,
+    "se": 0.08,
+    "lo": 0.28,
+    "hi": 0.59,
+    "median": 0.55,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "device": {
+    "n": 187,
+    "mean": 0.27,
+    "sd": 1.17,
+    "se": 0.09,
+    "lo": 0.1,
+    "hi": 0.44,
+    "median": 0.16,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "sleepHours": {
+    "n": 187,
+    "mean": 7.63,
+    "sd": 1.29,
+    "se": 0.09,
+    "lo": 7.45,
+    "hi": 7.82,
+    "median": 7.8,
+    "min": 3.0,
+    "max": 11.0
+   },
+   "deviceMinutes": {
+    "n": 187,
+    "mean": 21.09,
+    "sd": 31.53,
+    "se": 2.31,
+    "lo": 16.54,
+    "hi": 25.63,
+    "median": 10.0,
+    "min": 0.0,
+    "max": 150.0
+   }
+  },
+  {
+   "recommender": "Doctor",
+   "day": 11,
+   "sleep": {
+    "n": 190,
+    "mean": 0.35,
+    "sd": 1.14,
+    "se": 0.08,
+    "lo": 0.19,
+    "hi": 0.51,
+    "median": 0.5,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "device": {
+    "n": 190,
+    "mean": 0.28,
+    "sd": 1.11,
+    "se": 0.08,
+    "lo": 0.12,
+    "hi": 0.43,
+    "median": 0.36,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "sleepHours": {
+    "n": 190,
+    "mean": 7.67,
+    "sd": 1.35,
+    "se": 0.1,
+    "lo": 7.48,
+    "hi": 7.86,
+    "median": 8.0,
+    "min": 3.0,
+    "max": 11.4
+   },
+   "deviceMinutes": {
+    "n": 190,
+    "mean": 18.47,
+    "sd": 26.22,
+    "se": 1.9,
+    "lo": 14.72,
+    "hi": 22.22,
+    "median": 10.0,
+    "min": 0.0,
+    "max": 150.0
+   }
+  },
+  {
+   "recommender": "Doctor",
+   "day": 12,
+   "sleep": {
+    "n": 207,
+    "mean": 0.33,
+    "sd": 1.06,
+    "se": 0.07,
+    "lo": 0.19,
+    "hi": 0.48,
+    "median": 0.43,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "device": {
+    "n": 207,
+    "mean": 0.3,
+    "sd": 1.15,
+    "se": 0.08,
+    "lo": 0.14,
+    "hi": 0.46,
+    "median": 0.29,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "sleepHours": {
+    "n": 207,
+    "mean": 7.65,
+    "sd": 1.37,
+    "se": 0.09,
+    "lo": 7.46,
+    "hi": 7.84,
+    "median": 7.7,
+    "min": 2.1,
+    "max": 12.8
+   },
+   "deviceMinutes": {
+    "n": 207,
+    "mean": 16.92,
+    "sd": 24.95,
+    "se": 1.73,
+    "lo": 13.5,
+    "hi": 20.34,
+    "median": 10.0,
+    "min": 0.0,
+    "max": 150.0
+   }
+  },
+  {
+   "recommender": "Doctor",
+   "day": 13,
+   "sleep": {
+    "n": 202,
+    "mean": 0.33,
+    "sd": 1.1,
+    "se": 0.08,
+    "lo": 0.18,
+    "hi": 0.48,
+    "median": 0.33,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "device": {
+    "n": 202,
+    "mean": 0.27,
+    "sd": 1.11,
+    "se": 0.08,
+    "lo": 0.11,
+    "hi": 0.42,
+    "median": 0.3,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "sleepHours": {
+    "n": 202,
+    "mean": 7.4,
+    "sd": 1.46,
+    "se": 0.1,
+    "lo": 7.19,
+    "hi": 7.6,
+    "median": 7.5,
+    "min": 0.5,
+    "max": 12.2
+   },
+   "deviceMinutes": {
+    "n": 202,
+    "mean": 18.58,
+    "sd": 27.56,
+    "se": 1.94,
+    "lo": 14.75,
+    "hi": 22.4,
+    "median": 10.0,
+    "min": 0.0,
+    "max": 150.0
+   }
+  },
+  {
+   "recommender": "Doctor",
+   "day": 14,
+   "sleep": {
+    "n": 212,
+    "mean": 0.31,
+    "sd": 1.07,
+    "se": 0.07,
+    "lo": 0.17,
+    "hi": 0.46,
+    "median": 0.4,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "device": {
+    "n": 212,
+    "mean": 0.27,
+    "sd": 1.17,
+    "se": 0.08,
+    "lo": 0.11,
+    "hi": 0.43,
+    "median": 0.35,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "sleepHours": {
+    "n": 212,
+    "mean": 7.59,
+    "sd": 1.33,
+    "se": 0.09,
+    "lo": 7.41,
+    "hi": 7.77,
+    "median": 7.85,
+    "min": 1.6,
+    "max": 12.0
+   },
+   "deviceMinutes": {
+    "n": 212,
+    "mean": 17.18,
+    "sd": 25.79,
+    "se": 1.77,
+    "lo": 13.69,
+    "hi": 20.67,
+    "median": 10.0,
+    "min": 0.0,
+    "max": 150.0
+   }
+  },
+  {
+   "recommender": "AI",
+   "day": 1,
+   "sleep": {
+    "n": 203,
+    "mean": -0.06,
+    "sd": 0.99,
+    "se": 0.07,
+    "lo": -0.2,
+    "hi": 0.08,
+    "median": -0.02,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "device": {
+    "n": 204,
+    "mean": -0.03,
+    "sd": 0.95,
+    "se": 0.07,
+    "lo": -0.16,
+    "hi": 0.1,
+    "median": 0.0,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "sleepHours": {
+    "n": 203,
+    "mean": 6.72,
+    "sd": 1.33,
+    "se": 0.09,
+    "lo": 6.54,
+    "hi": 6.91,
+    "median": 7.0,
+    "min": 2.0,
+    "max": 11.0
+   },
+   "deviceMinutes": {
+    "n": 204,
+    "mean": 34.09,
+    "sd": 31.92,
+    "se": 2.23,
+    "lo": 29.69,
+    "hi": 38.5,
+    "median": 30.0,
+    "min": 0.0,
+    "max": 150.0
+   }
+  },
+  {
+   "recommender": "AI",
+   "day": 2,
+   "sleep": {
+    "n": 197,
+    "mean": -0.02,
+    "sd": 1.0,
+    "se": 0.07,
+    "lo": -0.16,
+    "hi": 0.13,
+    "median": 0.0,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "device": {
+    "n": 197,
+    "mean": 0.09,
+    "sd": 0.93,
+    "se": 0.07,
+    "lo": -0.04,
+    "hi": 0.22,
+    "median": 0.0,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "sleepHours": {
+    "n": 197,
+    "mean": 6.94,
+    "sd": 1.49,
+    "se": 0.11,
+    "lo": 6.74,
+    "hi": 7.15,
+    "median": 7.0,
+    "min": 3.3,
+    "max": 15.0
+   },
+   "deviceMinutes": {
+    "n": 197,
+    "mean": 33.14,
+    "sd": 35.39,
+    "se": 2.52,
+    "lo": 28.16,
+    "hi": 38.11,
+    "median": 20.0,
+    "min": 0.0,
+    "max": 150.0
+   }
+  },
+  {
+   "recommender": "AI",
+   "day": 3,
+   "sleep": {
+    "n": 178,
+    "mean": 0.11,
+    "sd": 1.08,
+    "se": 0.08,
+    "lo": -0.05,
+    "hi": 0.27,
+    "median": 0.06,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "device": {
+    "n": 177,
+    "mean": 0.12,
+    "sd": 0.93,
+    "se": 0.07,
+    "lo": -0.02,
+    "hi": 0.26,
+    "median": 0.05,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "sleepHours": {
+    "n": 178,
+    "mean": 7.25,
+    "sd": 1.47,
+    "se": 0.11,
+    "lo": 7.03,
+    "hi": 7.47,
+    "median": 7.3,
+    "min": 4.0,
+    "max": 12.0
+   },
+   "deviceMinutes": {
+    "n": 177,
+    "mean": 34.59,
+    "sd": 37.53,
+    "se": 2.82,
+    "lo": 29.02,
+    "hi": 40.15,
+    "median": 20.0,
+    "min": 0.0,
+    "max": 150.0
+   }
+  },
+  {
+   "recommender": "AI",
+   "day": 4,
+   "sleep": {
+    "n": 197,
+    "mean": 0.11,
+    "sd": 1.1,
+    "se": 0.08,
+    "lo": -0.04,
+    "hi": 0.27,
+    "median": 0.09,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "device": {
+    "n": 196,
+    "mean": -0.12,
+    "sd": 0.99,
+    "se": 0.07,
+    "lo": -0.26,
+    "hi": 0.02,
+    "median": -0.05,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "sleepHours": {
+    "n": 197,
+    "mean": 7.25,
+    "sd": 1.5,
+    "se": 0.11,
+    "lo": 7.03,
+    "hi": 7.46,
+    "median": 7.3,
+    "min": 1.5,
+    "max": 11.5
+   },
+   "deviceMinutes": {
+    "n": 196,
+    "mean": 37.08,
+    "sd": 37.23,
+    "se": 2.66,
+    "lo": 31.84,
+    "hi": 42.33,
+    "median": 30.0,
+    "min": 0.0,
+    "max": 150.0
+   }
+  },
+  {
+   "recommender": "AI",
+   "day": 5,
+   "sleep": {
+    "n": 210,
+    "mean": 0.03,
+    "sd": 1.02,
+    "se": 0.07,
+    "lo": -0.11,
+    "hi": 0.17,
+    "median": 0.04,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "device": {
+    "n": 208,
+    "mean": 0.17,
+    "sd": 0.93,
+    "se": 0.06,
+    "lo": 0.04,
+    "hi": 0.3,
+    "median": 0.0,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "sleepHours": {
+    "n": 210,
+    "mean": 7.02,
+    "sd": 1.48,
+    "se": 0.1,
+    "lo": 6.82,
+    "hi": 7.22,
+    "median": 7.0,
+    "min": 0.0,
+    "max": 11.9
+   },
+   "deviceMinutes": {
+    "n": 208,
+    "mean": 33.57,
+    "sd": 34.33,
+    "se": 2.38,
+    "lo": 28.88,
+    "hi": 38.27,
+    "median": 25.0,
+    "min": 0.0,
+    "max": 150.0
+   }
+  },
+  {
+   "recommender": "AI",
+   "day": 6,
+   "sleep": {
+    "n": 206,
+    "mean": 0.08,
+    "sd": 1.0,
+    "se": 0.07,
+    "lo": -0.06,
+    "hi": 0.22,
+    "median": 0.06,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "device": {
+    "n": 203,
+    "mean": 0.04,
+    "sd": 0.96,
+    "se": 0.07,
+    "lo": -0.09,
+    "hi": 0.17,
+    "median": 0.0,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "sleepHours": {
+    "n": 206,
+    "mean": 7.04,
+    "sd": 1.38,
+    "se": 0.1,
+    "lo": 6.85,
+    "hi": 7.23,
+    "median": 7.0,
+    "min": 3.0,
+    "max": 12.0
+   },
+   "deviceMinutes": {
+    "n": 203,
+    "mean": 35.26,
+    "sd": 39.7,
+    "se": 2.79,
+    "lo": 29.76,
+    "hi": 40.75,
+    "median": 20.0,
+    "min": 0.0,
+    "max": 150.0
+   }
+  },
+  {
+   "recommender": "AI",
+   "day": 7,
+   "sleep": {
+    "n": 228,
+    "mean": -0.02,
+    "sd": 0.96,
+    "se": 0.06,
+    "lo": -0.14,
+    "hi": 0.11,
+    "median": -0.01,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "device": {
+    "n": 228,
+    "mean": 0.01,
+    "sd": 0.93,
+    "se": 0.06,
+    "lo": -0.12,
+    "hi": 0.13,
+    "median": 0.0,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "sleepHours": {
+    "n": 228,
+    "mean": 6.92,
+    "sd": 1.52,
+    "se": 0.1,
+    "lo": 6.72,
+    "hi": 7.12,
+    "median": 7.0,
+    "min": 0.0,
+    "max": 12.3
+   },
+   "deviceMinutes": {
+    "n": 228,
+    "mean": 35.33,
+    "sd": 34.66,
+    "se": 2.3,
+    "lo": 30.81,
+    "hi": 39.86,
+    "median": 29.0,
+    "min": 0.0,
+    "max": 150.0
+   }
+  },
+  {
+   "recommender": "AI",
+   "day": 8,
+   "sleep": {
+    "n": 201,
+    "mean": 0.14,
+    "sd": 1.08,
+    "se": 0.08,
+    "lo": -0.01,
+    "hi": 0.29,
+    "median": 0.16,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "device": {
+    "n": 200,
+    "mean": 0.27,
+    "sd": 1.06,
+    "se": 0.07,
+    "lo": 0.13,
+    "hi": 0.42,
+    "median": 0.26,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "sleepHours": {
+    "n": 201,
+    "mean": 7.18,
+    "sd": 1.41,
+    "se": 0.1,
+    "lo": 6.98,
+    "hi": 7.37,
+    "median": 7.2,
+    "min": 2.2,
+    "max": 11.9
+   },
+   "deviceMinutes": {
+    "n": 200,
+    "mean": 24.27,
+    "sd": 28.96,
+    "se": 2.05,
+    "lo": 20.24,
+    "hi": 28.31,
+    "median": 15.0,
+    "min": 0.0,
+    "max": 150.0
+   }
+  },
+  {
+   "recommender": "AI",
+   "day": 9,
+   "sleep": {
+    "n": 193,
+    "mean": 0.28,
+    "sd": 1.04,
+    "se": 0.07,
+    "lo": 0.13,
+    "hi": 0.43,
+    "median": 0.38,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "device": {
+    "n": 191,
+    "mean": 0.41,
+    "sd": 1.04,
+    "se": 0.08,
+    "lo": 0.26,
+    "hi": 0.56,
+    "median": 0.6,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "sleepHours": {
+    "n": 193,
+    "mean": 7.29,
+    "sd": 1.27,
+    "se": 0.09,
+    "lo": 7.11,
+    "hi": 7.48,
+    "median": 7.5,
+    "min": 3.0,
+    "max": 10.8
+   },
+   "deviceMinutes": {
+    "n": 191,
+    "mean": 21.13,
+    "sd": 28.72,
+    "se": 2.08,
+    "lo": 17.03,
+    "hi": 25.23,
+    "median": 12.0,
+    "min": 0.0,
+    "max": 150.0
+   }
+  },
+  {
+   "recommender": "AI",
+   "day": 10,
+   "sleep": {
+    "n": 177,
+    "mean": 0.34,
+    "sd": 1.07,
+    "se": 0.08,
+    "lo": 0.18,
+    "hi": 0.5,
+    "median": 0.42,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "device": {
+    "n": 174,
+    "mean": 0.44,
+    "sd": 1.04,
+    "se": 0.08,
+    "lo": 0.29,
+    "hi": 0.6,
+    "median": 0.59,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "sleepHours": {
+    "n": 177,
+    "mean": 7.52,
+    "sd": 1.37,
+    "se": 0.1,
+    "lo": 7.32,
+    "hi": 7.73,
+    "median": 7.6,
+    "min": 1.3,
+    "max": 12.0
+   },
+   "deviceMinutes": {
+    "n": 174,
+    "mean": 20.89,
+    "sd": 25.31,
+    "se": 1.92,
+    "lo": 17.1,
+    "hi": 24.67,
+    "median": 13.0,
+    "min": 0.0,
+    "max": 150.0
+   }
+  },
+  {
+   "recommender": "AI",
+   "day": 11,
+   "sleep": {
+    "n": 166,
+    "mean": 0.28,
+    "sd": 1.07,
+    "se": 0.08,
+    "lo": 0.12,
+    "hi": 0.44,
+    "median": 0.36,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "device": {
+    "n": 165,
+    "mean": 0.38,
+    "sd": 1.11,
+    "se": 0.09,
+    "lo": 0.21,
+    "hi": 0.55,
+    "median": 0.47,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "sleepHours": {
+    "n": 166,
+    "mean": 7.7,
+    "sd": 1.47,
+    "se": 0.11,
+    "lo": 7.48,
+    "hi": 7.93,
+    "median": 7.55,
+    "min": 0.0,
+    "max": 13.5
+   },
+   "deviceMinutes": {
+    "n": 165,
+    "mean": 20.11,
+    "sd": 26.26,
+    "se": 2.04,
+    "lo": 16.07,
+    "hi": 24.15,
+    "median": 11.0,
+    "min": 0.0,
+    "max": 150.0
+   }
+  },
+  {
+   "recommender": "AI",
+   "day": 12,
+   "sleep": {
+    "n": 196,
+    "mean": 0.27,
+    "sd": 1.02,
+    "se": 0.07,
+    "lo": 0.12,
+    "hi": 0.41,
+    "median": 0.34,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "device": {
+    "n": 194,
+    "mean": 0.34,
+    "sd": 1.07,
+    "se": 0.08,
+    "lo": 0.19,
+    "hi": 0.49,
+    "median": 0.4,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "sleepHours": {
+    "n": 196,
+    "mean": 7.5,
+    "sd": 1.3,
+    "se": 0.09,
+    "lo": 7.32,
+    "hi": 7.69,
+    "median": 7.5,
+    "min": 4.0,
+    "max": 12.1
+   },
+   "deviceMinutes": {
+    "n": 194,
+    "mean": 20.79,
+    "sd": 27.48,
+    "se": 1.97,
+    "lo": 16.9,
+    "hi": 24.68,
+    "median": 11.0,
+    "min": 0.0,
+    "max": 150.0
+   }
+  },
+  {
+   "recommender": "AI",
+   "day": 13,
+   "sleep": {
+    "n": 205,
+    "mean": 0.31,
+    "sd": 1.04,
+    "se": 0.07,
+    "lo": 0.17,
+    "hi": 0.46,
+    "median": 0.42,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "device": {
+    "n": 204,
+    "mean": 0.5,
+    "sd": 0.97,
+    "se": 0.07,
+    "lo": 0.36,
+    "hi": 0.63,
+    "median": 0.54,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "sleepHours": {
+    "n": 205,
+    "mean": 7.49,
+    "sd": 1.31,
+    "se": 0.09,
+    "lo": 7.31,
+    "hi": 7.67,
+    "median": 7.5,
+    "min": 0.0,
+    "max": 12.2
+   },
+   "deviceMinutes": {
+    "n": 204,
+    "mean": 21.77,
+    "sd": 28.35,
+    "se": 1.98,
+    "lo": 17.86,
+    "hi": 25.68,
+    "median": 13.0,
+    "min": 0.0,
+    "max": 150.0
+   }
+  },
+  {
+   "recommender": "AI",
+   "day": 14,
+   "sleep": {
+    "n": 201,
+    "mean": 0.37,
+    "sd": 1.02,
+    "se": 0.07,
+    "lo": 0.23,
+    "hi": 0.51,
+    "median": 0.39,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "device": {
+    "n": 201,
+    "mean": 0.41,
+    "sd": 1.03,
+    "se": 0.07,
+    "lo": 0.27,
+    "hi": 0.55,
+    "median": 0.57,
+    "min": -2.0,
+    "max": 2.0
+   },
+   "sleepHours": {
+    "n": 201,
+    "mean": 7.45,
+    "sd": 1.21,
+    "se": 0.09,
+    "lo": 7.28,
+    "hi": 7.62,
+    "median": 7.5,
+    "min": 3.0,
+    "max": 10.9
+   },
+   "deviceMinutes": {
+    "n": 201,
+    "mean": 20.42,
+    "sd": 26.65,
+    "se": 1.88,
+    "lo": 16.72,
+    "hi": 24.13,
+    "median": 13.0,
+    "min": 0.0,
+    "max": 150.0
+   }
+  }
+ ],
+ "raw": {
+  "Doctor": {
+   "n": 225,
+   "sleepBefore": 7.13,
+   "sleepAfter": 7.48,
+   "deviceBefore": 31.8,
+   "deviceAfter": 20.4
+  },
+  "AI": {
+   "n": 222,
+   "sleepBefore": 7.02,
+   "sleepAfter": 7.41,
+   "deviceBefore": 34.9,
+   "deviceAfter": 22.0
+  },
+  "Everyone": {
+   "n": 447,
+   "sleepBefore": 7.08,
+   "sleepAfter": 7.45,
+   "deviceBefore": 33.8,
+   "deviceAfter": 21.2
+  }
+ },
+ "notes": {
+  "target": {
+   "sleepHours": 8.25,
+   "deviceMinutes": 15
+  },
+  "cap": 2
+ }
+}
