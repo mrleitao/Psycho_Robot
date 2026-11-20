@@ -26,8 +26,6 @@ const intS = term('sleep', 1, 'after:AI');
 const intD = term('device', 1, 'after:AI');
 const medS = s6.mediation.sleep;
 const medD = s6.mediation.device;
-const mmS = s6.mediatedModeration.sleep;
-const mmD = s6.mediatedModeration.device;
 const sg = (v: number) => minus(noZero(v.toFixed(3)));
 const sg4 = (v: number) => minus(noZero(v.toFixed(4)));
 const raw = s6.raw.Everyone;
@@ -316,33 +314,6 @@ const diffCols = [
         indirect=""
         lines={['c  = .127', 'c′ = .121', 'M = .006']}
         caption={`Values as printed in the dissertation: indirect effect z(412) = .333, p = .736. Re-estimated from the released file: a = ${sg(medD.a)}, b = ${sg4(medD.b)}, indirect = ${sg4(medD.ind)} [${sg4(medD.bootLo)}, ${sg4(medD.bootHi)}], total ${sg(medD.c)}, direct ${sg(medD.cp)}, Sobel z = ${medD.z.toFixed(3).replace(/^0/, '')}. These agree with the printed values.`}
-      />
-      <h3 class="sub-h">Mediated moderation</h3>
-      <p class="sub">
-        The dissertation reports only the two diagrams above, and the Mplus code in my notebook is the same simple mediation. The notebook's lavaan section also sketched a mediated-moderation model, with no saved output, so I re-ran it on the released file (all 14 days): does the advice work differently for the AI than the doctor, and does mind perception explain any recommender effect?
-        It adds the advice and the advice × recommender interaction to the mediation above. It was exploratory, so there is no dissertation figure to match.
-      </p>
-      <MediationTriangle
-        id="fig-6"
-        title="Figure 6. Mediated moderation on sleep (re-run from my notebook's lavaan model)"
-        outcome="sleep advice"
-        a={`${sg(mmS.a)} ***`}
-        b={sg4(mmS.b)}
-        direct={sg(mmS.recommender[0])}
-        indirect={`${sg4(mmS.ind)} [${sg4(mmS.lo)}, ${sg4(mmS.hi)}]`}
-        moderation={{ label: 'Advice × recommender', value: `${sg(mmS.interaction[0])} (SE ${noZero(mmS.interaction[1].toFixed(3))})`, advice: `Advice alone: ${sg(mmS.advice[0])} ***` }}
-        caption={`All days, ${mmS.n} people. Interval for the indirect effect is a Sobel 95% interval.`}
-      />
-      <MediationTriangle
-        id="fig-7"
-        title="Figure 7. Mediated moderation on phone in bed (re-run from my notebook's lavaan model)"
-        outcome="device advice"
-        a={`${sg(mmD.a)} ***`}
-        b={sg4(mmD.b)}
-        direct={sg(mmD.recommender[0])}
-        indirect={`${sg4(mmD.ind)} [${sg4(mmD.lo)}, ${sg4(mmD.hi)}]`}
-        moderation={{ label: 'Advice × recommender', value: `${sg(mmD.interaction[0])} (SE ${noZero(mmD.interaction[1].toFixed(3))})`, advice: `Advice alone: ${sg(mmD.advice[0])} ***` }}
-        caption={`All days, ${mmD.n} people. Interval for the indirect effect is a Sobel 95% interval.`}
       />
     </section>
 
