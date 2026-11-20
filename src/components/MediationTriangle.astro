@@ -1,0 +1,70 @@
+---
+// The dissertation's triangle diagram: recommender -> mind perception -> weight on advice, with the direct effect along the bottom.
+// With `moderation`, a fourth box shows the advice x recommender interaction reaching the outcome directly (mediated moderation).
+interface Props {
+  title: string;
+  outcome: string;
+  a: string;
+  b: string;
+  direct: string;
+  indirect: string;
+  total?: string;
+  moderation?: { label: string; value: string; advice: string };
+  caption?: string;
+  id?: string;
+}
+const { title, outcome, a, b, direct, indirect, total, moderation, caption, id } = Astro.props;
+const W = 720;
+const H = moderation ? 370 : 300;
+---
+
+<figure class="mt" id={id}>
+  <figcaption>{title}</figcaption>
+  <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`${title}. Recommender to mind perception ${a}. Mind perception to ${outcome} ${b}. Direct effect of the recommender ${direct}. Indirect effect through mind perception ${indirect}.${moderation ? ` ${moderation.label} ${moderation.value}.` : ''}`}>
+    <defs>
+      <marker id={`ah-${id}`} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" class="head" />
+      </marker>
+    </defs>
+    <rect class="box" x="270" y="14" width="180" height="56" rx="4" />
+    <text class="bt" x="360" y="48" text-anchor="middle">Mind perception</text>
+    <rect class="box" x="14" y="170" width="190" height="64" rx="4" />
+    <text class="bt" x="109" y="198" text-anchor="middle">Recommender</text>
+    <text class="sm" x="109" y="219" text-anchor="middle">0 = doctor, 1 = AI</text>
+    <rect class="box" x="516" y="170" width="190" height="64" rx="4" />
+    <text class="bt" x="611" y="198" text-anchor="middle">Weight on</text>
+    <text class="bt" x="611" y="219" text-anchor="middle">{outcome}</text>
+    <line class="ar" x1="130" y1="170" x2="268" y2="66" marker-end={`url(#ah-${id})`} />
+    <line class="ar" x1="452" y1="66" x2="590" y2="168" marker-end={`url(#ah-${id})`} />
+    <line class="ar" x1="206" y1="202" x2="514" y2="202" marker-end={`url(#ah-${id})`} />
+    <text class="pl" x="156" y="104" text-anchor="end">a = {a}</text>
+    <text class="pl" x="566" y="104">b = {b}</text>
+    <text class="pl" x="360" y="192" text-anchor="middle">c′ = {direct}</text>
+    <text class="sm" x="360" y="224" text-anchor="middle">{total ? `c = ${total} without mind perception` : ''}</text>
+    <text class="ind" x="360" y="252" text-anchor="middle">Indirect effect (a × b) = {indirect}</text>
+    {moderation && (
+      <g>
+        <rect class="box" x="250" y="292" width="220" height="56" rx="4" />
+        <text class="bt" x="360" y="316" text-anchor="middle">Advice × recommender</text>
+        <text class="sm" x="360" y="336" text-anchor="middle">{moderation.value}</text>
+        <path class="ar" d="M472,320 L611,320 L611,236" fill="none" marker-end={`url(#ah-${id})`} />
+        <text class="sm" x="606" y="282" text-anchor="end">{moderation.advice}</text>
+      </g>
+    )}
+  </svg>
+  {caption && <figcaption class="cap">{caption}</figcaption>}
+</figure>
+
+<style>
+  .mt { margin: 1.4rem 0; max-width: 46rem; font-family: var(--display); }
+  figcaption { font-weight: 600; margin-bottom: 0.4rem; }
+  figcaption.cap { font-weight: 400; color: var(--muted); font-size: 0.88rem; margin-top: 0.3rem; }
+  svg { width: 100%; height: auto; display: block; }
+  .box { fill: var(--paper); stroke: var(--ink); stroke-width: 2; }
+  .bt { font-size: 17px; font-weight: 600; fill: var(--ink); }
+  .sm { font-size: 12.5px; fill: var(--muted); }
+  .pl { font-size: 14px; font-weight: 600; fill: var(--ink); }
+  .ind { font-size: 14px; fill: var(--ink); }
+  .ar { stroke: var(--ink); stroke-width: 2.2; fill: none; }
+  .head { fill: var(--ink); }
+</style>

@@ -3,6 +3,7 @@ import Base from '../../../layouts/Base.astro';
 import MainFindings from '../../../components/MainFindings.astro';
 import StatTable from '../../../components/StatTable.astro';
 import DailyLines from '../../../components/DailyLines.astro';
+import MediationTriangle from '../../../components/MediationTriangle.astro';
 import bayes from '../../../data/trust-in-medical-ai/bayes.json';
 import s6 from '../../../data/trust-in-medical-ai/study6-full.json';
 import meta from '../../../data/trust-in-medical-ai/meta.json';
@@ -25,6 +26,10 @@ const intS = term('sleep', 1, 'after:AI');
 const intD = term('device', 1, 'after:AI');
 const medS = s6.mediation.sleep;
 const medD = s6.mediation.device;
+const mmS = s6.mediatedModeration.sleep;
+const mmD = s6.mediatedModeration.device;
+const sg = (v: number) => minus(noZero(v.toFixed(3)));
+const sg4 = (v: number) => minus(noZero(v.toFixed(4)));
 const raw = s6.raw.Everyone;
 const minutesLonger = Math.round((raw.sleepAfter - raw.sleepBefore) * 60);
 const minutesLess = Math.round(raw.deviceBefore - raw.deviceAfter);
@@ -178,6 +183,16 @@ const diffCols = [
       </p>
     </header>
 
+    <section class="section" id="days" aria-labelledby="days-title">
+      <h2 id="days-title">Both groups moved after day 7 and kept moving</h2>
+      <p class="sub">
+        Each dot is the group's average weight on advice for one day, and the line through it is the 95% interval. Before the advice the averages hover near zero, because each person's baseline is their own first-week average.
+        After it, both groups move toward the recommendation, and the doctor and AI lines stay close together.
+      </p>
+      <DailyLines id="fig-1" title="Figure 1. Sleep: weight on advice by day" rows={s6.daily} field="sleep" caption="Zero is the person's own first-week average and 1 is 8.25 hours of sleep. Dissertation Figure 30." />
+      <DailyLines id="fig-2" title="Figure 2. Phone in bed: weight on advice by day" rows={s6.daily} field="device" caption="Zero is the person's own first-week average and 1 is 15 minutes or less on a device in bed. Dissertation Figure 32." />
+    </section>
+
     <aside class="note" aria-labelledby="ch4">
       <h2 id="ch4">Chapter 4: Does the gap change what people do?</h2>
       <p>
@@ -221,15 +236,6 @@ const diffCols = [
       />
     </section>
 
-    <section class="section" id="days" aria-labelledby="days-title">
-      <h2 id="days-title">Both groups moved after day 7 and kept moving</h2>
-      <p class="sub">
-        Each dot is the group's average weight on advice for one day, and the line through it is the 95% interval. Before the advice the averages hover near zero, because each person's baseline is their own first-week average.
-        After it, both groups move toward the recommendation, and the doctor and AI lines stay close together.
-      </p>
-      <DailyLines id="fig-1" title="Figure 1. Sleep: weight on advice by day" rows={s6.daily} field="sleep" caption="Zero is the person's own first-week average and 1 is 8.25 hours of sleep. Dissertation Figure 30." />
-      <DailyLines id="fig-2" title="Figure 2. Phone in bed: weight on advice by day" rows={s6.daily} field="device" caption="Zero is the person's own first-week average and 1 is 15 minutes or less on a device in bed. Dissertation Figure 32." />
-    </section>
 
     <section class="section" id="estimates" aria-labelledby="est-title">
       <h2 id="est-title">Everything that mattered was the advice, not who gave it</h2>
@@ -281,6 +287,63 @@ const diffCols = [
         rows={[medRow('Sleep', medS), medRow('Device in bed', medD)]}
         look="Path a is large: people saw less mind in the AI. The indirect effects are about zero."
         note={`Days after the advice, ${medS.n} people. Coefficients with standard errors in parentheses. The recommender is coded 0 = doctor, 1 = AI, so a negative a means less mind in the AI. Indirect effects use the Sobel test, as in the printed z values, and a 5,000-resample bootstrap of people.`}
+      />
+    </section>
+
+    <section class="section" id="mediation" aria-labelledby="med-title">
+      <h2 id="med-title">Did perceived mind carry the effect?</h2>
+      <p class="sub">
+        The doctor was seen as having more mind, so the question is whether that difference changed what people did. It did not. Each arrow carries its coefficient, and the indirect effect (a × b) is the part of the recommender's effect that runs through mind perception.
+        The recommender is coded 0 = doctor, 1 = AI, so a negative a means less mind in the AI.
+      </p>
+      <MediationTriangle
+        id="fig-4"
+        title="Figure 4. Multilevel mediation between doctor and AI on sleep (dissertation Figure 31)"
+        outcome="sleep advice"
+        a={`${sg(medS.a)} ***`}
+        b={sg4(medS.b)}
+        direct={sg(medS.cp)}
+        total={sg(medS.c)}
+        indirect={`${sg4(medS.ind)} [${sg4(medS.bootLo)}, ${sg4(medS.bootHi)}]`}
+        caption={`Days after the advice, ${medS.n} people. Indirect effect z = ${minus(medS.z.toFixed(3))}, p = ${noZero(medS.p.toFixed(3))}. The dissertation's figure labels the indirect effect as b and swaps c and c′; see the table at the bottom.`}
+      />
+      <MediationTriangle
+        id="fig-5"
+        title="Figure 5. Multilevel mediation between doctor and AI on phone in bed (dissertation Figure 33)"
+        outcome="device advice"
+        a={`${sg(medD.a)} ***`}
+        b={sg4(medD.b)}
+        direct={sg(medD.cp)}
+        total={sg(medD.c)}
+        indirect={`${sg4(medD.ind)} [${sg4(medD.bootLo)}, ${sg4(medD.bootHi)}]`}
+        caption={`Days after the advice, ${medD.n} people. Indirect effect z = ${medD.z.toFixed(3).replace(/^0/, '')}, p = ${noZero(medD.p.toFixed(3))}.`}
+      />
+      <h3 class="sub-h">Mediated moderation</h3>
+      <p class="sub">
+        The dissertation reports only the two diagrams above. My notebook also tried a mediated-moderation model on all 14 days: does the advice work differently for the AI than the doctor, and does mind perception explain any recommender effect?
+        This is the same idea with the advice and the advice × recommender interaction added. It was exploratory, so there is no dissertation figure to match.
+      </p>
+      <MediationTriangle
+        id="fig-6"
+        title="Figure 6. Mediated moderation on sleep (from my notebook)"
+        outcome="sleep advice"
+        a={`${sg(mmS.a)} ***`}
+        b={sg4(mmS.b)}
+        direct={sg(mmS.recommender[0])}
+        indirect={`${sg4(mmS.ind)} [${sg4(mmS.lo)}, ${sg4(mmS.hi)}]`}
+        moderation={{ label: 'Advice × recommender', value: `${sg(mmS.interaction[0])} (SE ${noZero(mmS.interaction[1].toFixed(3))})`, advice: `Advice alone: ${sg(mmS.advice[0])} ***` }}
+        caption={`All days, ${mmS.n} people. Interval for the indirect effect is a Sobel 95% interval.`}
+      />
+      <MediationTriangle
+        id="fig-7"
+        title="Figure 7. Mediated moderation on phone in bed (from my notebook)"
+        outcome="device advice"
+        a={`${sg(mmD.a)} ***`}
+        b={sg4(mmD.b)}
+        direct={sg(mmD.recommender[0])}
+        indirect={`${sg4(mmD.ind)} [${sg4(mmD.lo)}, ${sg4(mmD.hi)}]`}
+        moderation={{ label: 'Advice × recommender', value: `${sg(mmD.interaction[0])} (SE ${noZero(mmD.interaction[1].toFixed(3))})`, advice: `Advice alone: ${sg(mmD.advice[0])} ***` }}
+        caption={`All days, ${mmD.n} people. Interval for the indirect effect is a Sobel 95% interval.`}
       />
     </section>
 
@@ -357,6 +420,7 @@ const diffCols = [
     .row { grid-template-columns: 1fr; }
     .axis { margin: 0; }
   }
+  .sub-h { margin: 2rem 0 0.4rem; font-size: 1.15rem; }
   .filelist { padding-left: 1.2rem; font-family: var(--display); }
   .filelist li { margin-bottom: 0.3rem; }
   section :global(h2) { margin-bottom: 0.75rem; }

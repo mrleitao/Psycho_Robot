@@ -21,6 +21,8 @@ Models 2 and 3 on the age term.
 Mediation follows the dissertation: path a is the difference in mind perception (AI minus doctor), paths b and c' come from a
 mixed model of the after-advice days with a random intercept, c is the same model without mind perception, and the indirect
 effect a x b is tested with the Sobel z (as in the printed z values) and a 5,000-resample bootstrap of people.
+Mediated moderation repeats the notebook's exploratory model on all days: the recommender's effect through mind perception, beside the advice
+and the advice x recommender interaction (Sobel interval). The dissertation does not show a figure for it.
 Differences are AI minus doctor. A negative mind-perception difference means more mind in the doctor.
 
 Needs: pandas, numpy, scipy, statsmodels.  Run from the repository root.
@@ -163,6 +165,23 @@ for key, y, label in OUTCOMES:
         bootLo=r2(lo, 4), bootHi=r2(hi, 4),
     )
 
+# Mediated moderation, as in the notebook's two-level lavaan model: all days, the advice, the recommender and their interaction, with
+# mind perception as the mediator of the recommender. The indirect effect a x b is the part of the recommender's effect that runs through mind.
+mm = {}
+for key, y, label in OUTCOMES:
+    X = d.dropna(subset=[y, "AI", "mind_perception"])
+    pa = X.drop_duplicates("participant")
+    a = smf.ols("mind_perception ~ AI", pa).fit()
+    full = smf.mixedlm(f"{y} ~ after * AI + mind_perception", X, groups=X["participant"]).fit(reml=True)
+    A, SA = a.params["AI"], a.bse["AI"]
+    B, SB = full.fe_params["mind_perception"], full.bse_fe["mind_perception"]
+    ind = A * B
+    se = np.sqrt(B ** 2 * SA ** 2 + A ** 2 * SB ** 2)
+    g = lambda k: (r2(full.fe_params[k], 3), r2(full.bse_fe[k], 3), float(2 * stats.norm.sf(abs(full.fe_params[k] / full.bse_fe[k]))))
+    mm[key] = dict(label=label, n=int(X["participant"].nunique()), obs=int(len(X)), a=r2(A, 3), aSe=r2(SA, 3), b=r2(B, 4), bSe=r2(SB, 4),
+                   ind=r2(ind, 4), se=r2(se, 4), lo=r2(ind - 1.96 * se, 4), hi=r2(ind + 1.96 * se, 4), z=r2(ind / se, 3), p=float(2 * stats.norm.sf(abs(ind / se))),
+                   advice=g("after"), recommender=g("AI"), interaction=g("after:AI"))
+
 # Day-by-day means
 daily = []
 for who in ["Doctor", "AI"]:
@@ -189,7 +208,7 @@ allp = da.groupby(["participant", "after"])[["sleep_hours", "device_minutes"]].m
 raw["Everyone"] = dict(n=int(len(allp.dropna())), sleepBefore=r2(allp[("sleep_hours", 0)].mean(), 2), sleepAfter=r2(allp[("sleep_hours", 1)].mean(), 2),
                        deviceBefore=r2(allp[("device_minutes", 0)].mean(), 1), deviceAfter=r2(allp[("device_minutes", 1)].mean(), 1))
 
-res = dict(sample=sample, mind=mind, models=models, mediation=med, daily=daily, raw=raw,
+res = dict(sample=sample, mind=mind, models=models, mediation=med, mediatedModeration=mm, daily=daily, raw=raw,
            notes=dict(target=dict(sleepHours=8.25, deviceMinutes=15), cap=2))
 with open(OUT + "study6-full.json", "w") as f:
     json.dump(res, f, indent=1, allow_nan=False)
