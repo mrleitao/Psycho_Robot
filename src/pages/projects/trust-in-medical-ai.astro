@@ -78,7 +78,6 @@ const findings = [
 
 const bayesRows = bayes.rows.filter((r) => ['Study 3', 'Study 4', 'Study 5', 'Study 6'].includes(r.study)).map((r) => ({ ...r, group: `${r.study}: ${r.group}` }));
 const bf = (id: string) => bayes.rows.find((r) => r.id === id)!;
-const wait = 'Waiting on the Study 6 data';
 const S = (n: number, p = '') => `/projects/trust-in-medical-ai/study-${n}/${p}`;
 const figureMap36 = [
   { diss: 'Figures 13, 14, 17, 22, 28, 29', what: 'Vignette images, conceptual models and the sleep infographic', here: 'In the dissertation and on OSF', note: 'Materials, not data; not redrawn here' },
@@ -86,10 +85,10 @@ const figureMap36 = [
   { diss: 'Figures 18 to 21', what: 'Study 4: trust and belief, between people and side by side', here: 'Study 4, Figures 2 to 12', href: S(4, 'full/#fig-btrust') },
   { diss: 'Figures 23 and 24', what: 'Study 5: trust and belief by recommender, with and without a voice', here: 'Study 5, Figures 4 and 8 to 10', href: S(5, 'full/#fig-tb') },
   { diss: 'Figures 25 to 27', what: 'Study 5: mediation through mind perception', here: 'Study 5, Figures 15 to 18', href: S(5, 'full/#fig-med-0') },
-  { diss: 'Figures 30 to 33', what: 'Study 6: adherence to the sleep and phone-in-bed advice across days, and mediation', here: wait },
+  { diss: 'Figures 30 to 33', what: 'Study 6: adherence to the sleep and phone-in-bed advice across days, and mediation', here: 'Study 6, estimates chart and mediation table', href: S(6, '#estimates'), note: 'Built from the printed values; the day-by-day lines in Figures 30 and 32 are not redrawn' },
   { diss: 'Tables 14 to 19', what: 'Studies 3 and 4: regression and mixed-model tables', here: 'Study 3 and Study 4 pages', href: S(3, 'full/#models'), note: 'Age is in four bands in the public files, so age coefficients differ in scale' },
   { diss: 'Tables 20 to 22', what: 'Study 5: ANOVA and mixed-model tables', here: 'Study 5, Tables 5 and 12 to 14', href: S(5, 'full/#models') },
-  { diss: 'Tables 23 and 24', what: 'Study 6: adherence tables', here: wait },
+  { diss: 'Tables 23 and 24', what: 'Study 6: adherence tables', here: 'Study 6, Tables 1 and 2', href: S(6, '#tables'), note: 'As printed; a few printed values look inconsistent and are flagged on the page' },
   { diss: 'All t tests in the text', what: 'Planned and follow-up comparisons in Studies 3 to 6', here: 'Bayes factors below', href: '#bayes-36', note: 'Studies 3 to 5 from the raw data; Study 6 from the reported t, d and degrees of freedom' },
 ];
 ---
@@ -274,7 +273,7 @@ const figureMap36 = [
         and OSF preregistrations are linked from each overview. Studies 3 to 5 are also on OSF
         (<a href={meta.publicLinks.study3}>Study 3</a>, <a href={meta.publicLinks.study4}>Study 4</a>, <a href={meta.publicLinks.study5}>Study 5</a>).
       </p>
-      <p><a class="go" href={href('/projects/trust-in-medical-ai/study-3/')}>Study 3</a> ({full3.sample.n} adults) · <a class="go" href={href('/projects/trust-in-medical-ai/study-4/')}>Study 4</a> ({full4.sample.n} adults) · <a class="go" href={href('/projects/trust-in-medical-ai/study-5/')}>Study 5</a> ({full5.sample.n} adults)</p>
+      <p><a class="go" href={href('/projects/trust-in-medical-ai/study-3/')}>Study 3</a> ({full3.sample.n} adults) · <a class="go" href={href('/projects/trust-in-medical-ai/study-4/')}>Study 4</a> ({full4.sample.n} adults) · <a class="go" href={href('/projects/trust-in-medical-ai/study-5/')}>Study 5</a> ({full5.sample.n} adults) · <a class="go" href={href('/projects/trust-in-medical-ai/study-6/')}>Study 6</a> (455 adults, from the printed results)</p>
       <p><a href={href('/projects/trust-in-medical-ai/study-3/full/')}>Study 3 in full</a> · <a href={href('/projects/trust-in-medical-ai/study-4/full/')}>Study 4 in full</a> · <a href={href('/projects/trust-in-medical-ai/study-5/full/')}>Study 5 in full</a></p>
     </section>
 
@@ -282,8 +281,7 @@ const figureMap36 = [
       <div class="deep inner">
         <h2 id="dig-title">Dig deeper: Studies 3 to 6</h2>
         <p>
-          Studies 1 to 5 have their own pages, built from the released data. Study 6 does not have raw data here yet, so for that study this section does what the numbers in the
-          dissertation allow. It lists where each figure and table sits, and it runs Bayes factors on the comparisons the dissertation reports.
+          Studies 1 to 5 have their own pages, built from the released data. Study 6 has a page too, but it is built from the statistics printed in the dissertation, since the raw data are not here. This section lists where each figure and table sits, and it runs Bayes factors on the comparisons the dissertation reports.
         </p>
       </div>
       <h3 class="fig-title">Where each dissertation figure and table stands</h3>
