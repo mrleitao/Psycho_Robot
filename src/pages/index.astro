@@ -152,8 +152,7 @@ const asks = [
         </p>
         </div>
         <figure class="portrait">
-          <img class="lt" src={href('/images/matthew-desk.webp')} width="1200" height="800" alt="Illustration of Matthew Leitao at his desk, smiling, with a computer, a coffee mug, and a stack of books" loading="lazy" decoding="async" />
-          <img class="dk" src={href('/images/matthew-desk-dark.webp')} width="1200" height="800" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+          <img src={href('/images/matthew-desk.webp')} width="1200" height="800" alt="Illustration of Matthew Leitao at his desk, smiling, with a computer, a coffee mug, and a stack of books" loading="lazy" decoding="async" />
         </figure>
       </div>
     </section>
@@ -367,13 +366,8 @@ const asks = [
   .about-text p { margin: 0 0 1rem; max-width: 60ch; }
   .portrait { margin: 0; }
   .portrait img { display: block; width: 100%; height: auto; max-width: 34rem; margin-inline: auto; }
-  .portrait .dk { display: none; }
-  @media (prefers-color-scheme: dark) {
-    :global(:root:not([data-theme='light'])) .portrait .lt { display: none; }
-    :global(:root:not([data-theme='light'])) .portrait .dk { display: block; }
-  }
-  :global(:root[data-theme='dark']) .portrait .lt { display: none; }
-  :global(:root[data-theme='dark']) .portrait .dk { display: block; }
+  :global([data-theme='dark']) .portrait img { background: #f7efe6; border-radius: 14px; padding: 0.5rem; }
+  @media (prefers-color-scheme: dark) { :global(:root:not([data-theme='light'])) .portrait img { background: #f7efe6; border-radius: 14px; padding: 0.5rem; } }
   @media (min-width: 900px) { .about-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
   .band.skills { --bg: var(--wash); margin-top: 0; }
   .sk-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 0.9rem; }
