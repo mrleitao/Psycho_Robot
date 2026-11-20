@@ -10,6 +10,8 @@ export const counts: Count[] = [
   { name: 'Gaming motivations scale', n: 572, basis: 'recruited, two samples', own: false },
   { name: 'Master’s thesis, obedience to computers', n: 305, basis: 'recruited', own: true },
   { name: 'Risk creep, eight-week study', n: 304, basis: 'enrolled', own: false },
+  { name: 'Virtual reality symptom questionnaire validation', n: 100, basis: 'participants', own: true },
+  { name: 'Virtual reality buffet in a drug trial', n: 29, basis: 'completers in the analysis, 42 enrolled', own: false },
   { name: 'Phone use and sleep', n: 91, basis: 'students', own: false },
 ];
 export const total = counts.reduce((a, c) => a + c.n, 0);
