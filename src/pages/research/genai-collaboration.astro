@@ -58,14 +58,28 @@ const findings = [
   links={[{ label: 'Read the preprint (SSRN)', href: 'https://papers.ssrn.com/abstract=6926039' }]}
 >
   <dl class="facts">
-    <div><dt>Experiment 1</dt><dd>601 people on Prolific wrote a podcast pitch. 2 (topic expertise) by 2 (AI drafter or AI editor).</dd></div>
+    <div><dt>My role</dt><dd>Co-first author. I did the conceptualization, methodology, software, formal analysis, investigation, data curation and visualization, and helped edit the writing. Logg and Ulu led the preregistration, first draft, supervision and funding.</dd></div>
+    <div><dt>Experiment 1</dt><dd>601 people on Prolific wrote a podcast pitch. 2 (topic expertise) by 2 (AI drafter or AI editor), between subjects.</dd></div>
     <div><dt>Experiment 2</dt><dd>698 teachers wrote lesson plans: 231 without GenAI, 467 with it by their own choice of strategy.</dd></div>
-    <div><dt>Data</dt><dd>Figures are rebuilt from the printed preprint. Both experiments were preregistered.</dd></div>
+    <div><dt>Quality scores</dt><dd>Blind judges scored every deliverable: 1,202 judges in Experiment 1 and 1,396 in Experiment 2, three per deliverable.</dd></div>
+    <div><dt>Methods</dt><dd>Preregistered. OLS regression, t-tests and Bayes factors (BF01, with a .707 prior, to support nulls), and a mediation model. R with psych and BayesFactor. ChatGPT 4.5 supplied the AI step.</dd></div>
+    <div><dt>Funding</dt><dd>AI, Analytics, and the Future of Work Initiative, Georgetown McDonough.</dd></div>
+    <div><dt>Data</dt><dd>Figures and tables are rebuilt from the printed preprint. Preregistrations, materials and data are on <a href="https://osf.io/eaznb/overview?view_only=0d7132aa04764803b4b2c01fe2609ab6">OSF</a> (view-only link).</dd></div>
   </dl>
 
   <section class="section" id="main-findings" aria-labelledby="mf-title">
     <h2 id="mf-title">Main findings</h2>
     <MainFindings findings={findings} />
+  </section>
+
+
+  <section class="section" id="design" aria-labelledby="design-title">
+    <h2 id="design-title">What we asked and how</h2>
+    <div class="prose">
+      <p>The paper asks four questions. Which way of working with GenAI is best (RQ1)? Which do people prefer (RQ2)? Do they pick the best one (RQ3)? What actually happens to the text as they work (RQ4)?</p>
+      <p><strong>Experiment 1.</strong> 601 Prolific participants (352 women, 237 men, 12 other, median age 37) wrote a podcast pitch in an 8 minute survey, paid $1.60 plus a bonus of up to $1.50 tied to judge scores. Topics came from a 13-topic ranking, which set high or low expertise. In one interaction, the AI either wrote the draft for the person to edit, or edited the person’s draft. Judges scored persuasiveness, creativity, feasibility and listener interest, rescaled 0 to 8. Productivity was the average judge score divided by total time. The expertise manipulation worked (d = −1.38) and never interacted with the strategy.</p>
+      <p><strong>Experiment 2.</strong> 698 teachers of grades 4 to 12 (51.6% women, 46.7% men, 1.7% other, median age 36) wrote lesson plans in a 10 minute survey, paid $1.50 plus a bonus of up to $1.50. Judges scored objectives, content quality, feasibility and student appeal. One third wrote without GenAI (n = 231). The rest (n = 467) used GenAI and chose whether it would draft or edit. Models controlled for task comfort, task difficulty, GenAI experience, tenure and STEM background.</p>
+    </div>
   </section>
 
   <section class="section" id="evidence" aria-labelledby="ev-title">
@@ -101,6 +115,121 @@ const findings = [
         { m: 'Sense of responsibility', b: '−10.13', n: '' },
         { m: 'Creativity', b: '−3.21', n: 'p = .118, not reliable. The drop is driven by drafting.' },
       ]} note="From the preprint’s Experiment 2 models." />
+
+    <StatTable title="Table 2. Experiment 1, drafter against editor (t-tests)" look="Quality and productivity were alike. Control, responsibility and creativity were lower for drafters."
+      columns={[{ key: 'o', label: 'Outcome' }, { key: 'dr', label: 'Drafter', num: true }, { key: 'ed', label: 'Editor', num: true }, { key: 'diff', label: 'Difference', num: true }, { key: 'ci', label: '95% CI', num: true }, { key: 'd', label: 'd', num: true }, { key: 'bf', label: 'BF01', num: true, hint: 'Evidence for no difference over a difference. Above 3 favors no difference; below 1/3 favors a difference.' }]}
+      rows={[
+        { o: 'Productivity (log)', dr: '−4.81', ed: '−4.91', diff: '0.11', ci: '[.01; .21]', d: '.17', bf: '1.35' },
+        { o: 'Judge score', dr: '5.57', ed: '5.65', diff: '−0.08', ci: '[−.21; .05]', d: '−.10', bf: '5.25' },
+        { o: 'Time on survey (log)', dr: '6.51', ed: '6.64', diff: '−0.13', ci: '[−.23; −.04]', d: '−.22', bf: '.33' },
+        { o: 'Sense of control', dr: '59.53', ed: '69.41', diff: '−9.88', ci: '[−14.08; −5.68]', d: '−.38', bf: '.00046' },
+        { o: 'Sense of responsibility', dr: '51.59', ed: '62.63', diff: '−11.04', ci: '[−15.32; −6.77]', d: '−.42', bf: '5.81e−5' },
+        { o: 'Creativity', dr: '49.16', ed: '69.64', diff: '−20.48', ci: '[−24.67; −16.29]', d: '−.81', bf: '1.38e−17' },
+      ]} note="Appendix A, Tables 11 to 16. High against low expertise gave no differences in quality or productivity, and a small difference in control (−5.37, d = −.20)." />
+
+    <StatTable title="Table 3. Experiment 1, regression with controls" look="The drafter penalty holds after adjusting for comfort, difficulty and AI experience."
+      columns={[{ key: 'o', label: 'Outcome' }, { key: 'b', label: 'Drafter b', num: true }, { key: 'se', label: 'SE', num: true }, { key: 'hi', label: 'High expertise b', num: true }, { key: 'r', label: 'R²', num: true }]}
+      rows={[
+        { o: 'Log productivity', b: '.07', se: '.05', hi: '−.07', r: '.04' },
+        { o: 'Judge score', b: '−.05', se: '.06', hi: '−.02', r: '.01' },
+        { o: 'Log time', b: '−.09', se: '.05', hi: '.07', r: '.04' },
+        { o: 'Sense of control', b: '−7.07***', se: '2.10', hi: '4.88*', r: '.14' },
+        { o: 'Sense of responsibility', b: '−7.47***', se: '2.11', hi: '−.09', r: '.19' },
+        { o: 'Creativity', b: '−16.59***', se: '2.04', hi: '−.18', r: '.28' },
+      ]} note="Appendix A, Tables 18 and 19 (n = 574, with controls for comfort with writing, task difficulty and AI experience). The main-text models without controls give the same pattern, for example creativity b = −17.11. * p < .05, *** p < .001." />
+
+    <p class="figcap">What happened to the text (Experiment 1)</p>
+    <div class="prose">
+      <ul>
+        <li>Drafters ended with shorter pitches than editors (b = −17.42 words).</li>
+        <li>The AI added about 99 words on average to human drafts. People deleted about 23 words on average from AI drafts.</li>
+        <li>Judge scores rose with length, about .01 per word (β = .33).</li>
+        <li>Dropping the shortest and longest 2.5% of pitches left the pattern unchanged (Appendix A, Tables 18 and 19).</li>
+      </ul>
+    </div>
+
+    <StatTable title="Table 4. Experiment 2, all three conditions (t-tests)" look="Both AI groups beat no-AI on productivity and judged quality, and both felt less control and responsibility. Only drafters lost creativity."
+      columns={[{ key: 'o', label: 'Outcome' }, { key: 'c', label: 'Comparison', wrap: true, minw: '9rem' }, { key: 'diff', label: 'Difference', num: true }, { key: 'ci', label: '95% CI', num: true }, { key: 'bf', label: 'BF01', num: true, hint: 'Evidence for no difference over a difference.' }]}
+      rows={[
+        { o: 'Productivity (log)', c: 'Drafter − editor', diff: '−0.05', ci: '[−.21; .11]', bf: '7.71' },
+        { o: '', c: 'No AI − editor', diff: '−0.27', ci: '[−.44; −.10]', bf: '.09' },
+        { o: '', c: 'No AI − drafter', diff: '−0.22', ci: '[−.37; −.07]', bf: '.21' },
+        { o: 'Judge score', c: 'Drafter − editor', diff: '−0.23', ci: '[−.42; −.05]', bf: '.81' },
+        { o: '', c: 'No AI − editor', diff: '−0.67', ci: '[−.86; −.49]', bf: '3.9e−9' },
+        { o: '', c: 'No AI − drafter', diff: '−0.44', ci: '[−.64; −.24]', bf: '1.5e−3' },
+        { o: 'Time on task (log)', c: 'Drafter − editor', diff: '−0.02', ci: '[−.17; .14]', bf: '9.26' },
+        { o: '', c: 'No AI − editor', diff: '0.13', ci: '[−.03; .29]', bf: '2.83' },
+        { o: '', c: 'No AI − drafter', diff: '0.15', ci: '[.00; .29]', bf: '1.41' },
+        { o: 'Sense of control', c: 'Drafter − editor', diff: '−1.23', ci: '[−4.67; 2.21]', bf: '7.61' },
+        { o: '', c: 'No AI − editor', diff: '10.11', ci: '[7.06; 13.17]', bf: '1.0e−8' },
+        { o: '', c: 'No AI − drafter', diff: '11.34', ci: '[8.37; 14.30]', bf: '3.1e−10' },
+        { o: 'Sense of responsibility', c: 'Drafter − editor', diff: '−7.56', ci: '[−11.36; −3.76]', bf: '.01' },
+        { o: '', c: 'No AI − editor', diff: '9.72', ci: '[6.49; 12.96]', bf: '2.8e−7' },
+        { o: '', c: 'No AI − drafter', diff: '17.29', ci: '[14.01; 20.56]', bf: '1.1e−18' },
+        { o: 'Creativity', c: 'Drafter − editor', diff: '−16.65', ci: '[−20.80; −12.50]', bf: '5.5e−11' },
+        { o: '', c: 'No AI − editor', diff: '2.97', ci: '[−.66; 6.61]', bf: '2.43' },
+        { o: '', c: 'No AI − drafter', diff: '19.63', ci: '[16.03; 23.22]', bf: '4.1e−20' },
+        { o: 'Frustration', c: 'Drafter − editor', diff: '1.01', ci: '[−3.49; 5.51]', bf: '8.28' },
+        { o: '', c: 'No AI − editor', diff: '5.24', ci: '[.45; 10.02]', bf: '1.03' },
+        { o: '', c: 'No AI − drafter', diff: '4.23', ci: '[−.05; 8.50]', bf: '1.58' },
+      ]} note="Appendix B, Tables 20 to 27 and 30. The preprint prints the no-AI minus drafter creativity difference as 119.63. The means (78.01 and 58.39) and the interval give 19.63, which is what I show." />
+
+    <StatTable title="Table 5. Experiment 2, minutes spent" look="Using GenAI saved no time overall. Writing time fell for editors, then review took it back."
+      columns={[{ key: 'c', label: 'Condition' }, { key: 'w', label: 'Writing', num: true }, { key: 'r', label: 'Reviewing', num: true }, { key: 'e', label: 'Editing', num: true }, { key: 't', label: 'Total', num: true }]}
+      rows={[
+        { c: 'No AI', w: '7.35 (5.31)', r: '', e: '', t: '7.35' },
+        { c: 'AI drafter', w: '', r: '1.43 (2.04)', e: '5.16 (5.50)', t: '6.59 (6.45)' },
+        { c: 'AI editor', w: '5.62 (5.09)', r: '1.02 (1.01)', e: '', t: '6.64 (5.36)' },
+      ]} note="Mean (SD). Writing time was shorter for AI editors than for no-AI writers (log difference 0.41, d = .48)." />
+
+    <p class="figcap">What happened to the text (Experiment 2)</p>
+    <div class="prose">
+      <ul>
+        <li>Plans written with GenAI were longer by about 206 words, and drafters wrote 0.6 more objectives.</li>
+        <li>The AI added about 185 words to human drafts, while people removed about 80 words from AI drafts.</li>
+        <li>Editors gained .78 judge points when the AI polished their draft (d = .53). Drafters lost .32 when they edited an AI draft (d = −.21).</li>
+        <li>For editors, every criterion rose: clear objectives +10.7, content quality +12.7, feasibility +5.9, student appeal +9.5 (all p &lt; .001).</li>
+      </ul>
+    </div>
+
+    <StatTable title="Table 6. Did extra words explain the quality gain?" look="The effect of using AI on judge score ran entirely through the number of words."
+      columns={[{ key: 'e', label: 'Effect' }, { key: 'est', label: 'Estimate', num: true }, { key: 'ci', label: '95% CI', num: true }, { key: 'p', label: 'p', num: true }]}
+      rows={[
+        { e: 'Mediated effect through words (ACME)', est: '.57', ci: '[.45; .68]', p: '< .001' },
+        { e: 'Direct effect of AI use (ADE)', est: '−.07', ci: '[−.21; .14]', p: '.726' },
+        { e: 'Total effect of AI use', est: '.53', ci: '[.37; .70]', p: '< .001' },
+        { e: 'Proportion mediated', est: '1.06', ci: '[.78; 1.54]', p: '< .001' },
+      ]} note="Appendix B, Table 28." />
+
+    <p class="figcap">Which way did people choose, and what did it do?</p>
+    <div class="prose">
+      <ul>
+        <li>61.7% chose to let the AI draft and 38.3% chose to edit (χ² = 49.95, p &lt; .001). No personal characteristic predicted the choice.</li>
+        <li>Productivity was similar for drafters and editors (b = −.04, p = .673, BF01 = 7.71). Drafting hurt quality slightly and hurt creativity and responsibility.</li>
+        <li>Comfort with the task and prior GenAI experience cushioned the costs to control and creativity.</li>
+        <li>People were no more motivated to reuse one strategy than the other. They were less likely to say they would use a plan written with GenAI (b = −3.92, p = .03). Reputational worry was about the same: 15.6% of drafters and 14.0% of editors.</li>
+        <li>People forecast that editing would help (forecast +.73, actual +.78). They also expected to improve AI drafts (forecast +.45) when judges saw a drop (−.32), a gap of .82 (d = .50).</li>
+      </ul>
+    </div>
+
+    <StatTable title="Table 7. Two more strategies, tested on the same plans" look="Having the AI edit the finished no-AI plan did as well as the choose-your-own editor strategy. Skipping the human step scored higher than the drafter."
+      columns={[{ key: 'c', label: 'Comparison', wrap: true, minw: '12rem' }, { key: 'diff', label: 'Difference', num: true }, { key: 'ci', label: '95% CI', num: true }, { key: 'bf', label: 'BF01', num: true }]}
+      rows={[
+        { c: 'AI edits the no-AI plans, against AI editor (judge score)', diff: '0.01', ci: '[−.15; .16]', bf: '9.02' },
+        { c: 'AI edits the no-AI plans, against AI drafter (judge score)', diff: '0.24', ci: '[.07; .41]', bf: '.38' },
+        { c: 'AI edits the no-AI plans, against AI editor (words)', diff: '2.48', ci: '[−14.44; 19.41]', bf: '8.70' },
+      ]} note="Appendix B, Tables 31 and 34. In this retrospective condition the no-AI plans went through the same AI prompt after the fact. The raw AI draft, before any human edits, also outscored the final drafter plans (−.32, p &lt; .01, d = −.21) and took about 41 seconds against 6.6 minutes." />
+
+    <StatTable title="Table 8. Experiment 2, regression with controls" look="Using GenAI raised quality and lowered control and responsibility, with controls included."
+      columns={[{ key: 'o', label: 'Outcome' }, { key: 'ai', label: 'AI used b', num: true }, { key: 'dr', label: 'Drafter b', num: true }, { key: 'r', label: 'R²', num: true }]}
+      rows={[
+        { o: 'Log productivity', ai: '.21*', dr: '.02', r: '.03' },
+        { o: 'Judge score', ai: '.69***', dr: '−.09', r: '.11' },
+        { o: 'Log time on task', ai: '−.07', dr: '−.05', r: '.02' },
+        { o: 'Sense of control', ai: '−10.56***', dr: '−1.18', r: '.20' },
+        { o: 'Sense of responsibility', ai: '−9.75***', dr: '−6.97***', r: '.21' },
+        { o: 'Creativity', ai: '−3.19', dr: '−16.83***', r: '.24' },
+      ]} note="Appendix B, Tables 37 and 38. This is the robustness check that drops the shortest and longest 2.5% of plans (n about 653 to 658); the main-text models give the same signs. * p < .05, *** p < .001." />
   </section>
 
   <section class="section" id="implications" aria-labelledby="imp-title">
@@ -108,11 +237,12 @@ const findings = [
     <div class="prose">
       <p><strong>The role matters.</strong> Letting the AI draft cost people a sense of control and creativity. Editing an AI’s work did not lower creativity as much.</p>
       <p><strong>Output can rise even as ownership falls.</strong> In Experiment 2 the gain came mostly from writing more.</p>
-      <p><strong>Limits.</strong> This is a preprint that has not been peer reviewed. Teachers chose their own strategy, so the drafter and editor groups differ by choice as well as by role.</p>
+      <p><strong>For organizations.</strong> If people tend to let the AI draft, guidance that steers them toward writing first and using the AI as editor protects creativity and ownership, without costing quality or time.</p>
+      <p><strong>Limits.</strong> This is a preprint that has not been peer reviewed. Teachers chose their own strategy, so the drafter and editor groups differ by choice as well as by role. Each person had one AI interaction, the tasks were short, and feelings were self-reported. Longer projects and repeated use remain untested.</p>
     </div>
   </section>
   <section class="section" id="files" aria-labelledby="files-title">
     <h2 id="files-title">How this page was made</h2>
-    <div class="prose"><p>Values are from the printed preprint. I did not recompute from raw data, and the preprint’s materials are not linked here.</p></div>
+    <div class="prose"><p>Values are from the printed preprint. I did not recompute them from raw data for this page. The preregistrations, materials and data are on <a href="https://osf.io/eaznb/overview?view_only=0d7132aa04764803b4b2c01fe2609ab6">OSF</a>. Effect-size intervals in the dot chart are my own derivation from the sample size.</p><p>Where the preprint’s tables disagree with themselves I used the value that agrees with the printed means and intervals, and said so in the table note. For example, a few printed Cohen’s d values in the Experiment 2 time and productivity tables do not match their own differences and intervals, so I left those out.</p></div>
   </section>
 </PaperPage>
