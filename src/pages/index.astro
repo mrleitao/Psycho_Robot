@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import ForestPlot from '../components/ForestPlot.astro';
+import RegressionBackground from '../components/RegressionBackground.astro';
 import data from '../data/trust-in-medical-ai/trust-by-domain.json';
 import s1 from '../data/trust-in-medical-ai/study1-points.json';
 import { cards } from '../data/research_cards';
@@ -81,6 +82,7 @@ const asks = [
 
 <Base description="Matthew Leitao is a behavioral scientist who runs experiments on how people decide whether to trust AI. Real data, with every figure shown.">
   <section class="hero">
+    <RegressionBackground />
     <div class="wrap hero-grid">
       <div class="hero-copy">
         <p class="kicker">Matthew Leitao, behavioral scientist</p>
@@ -296,7 +298,10 @@ const asks = [
 </script>
 
 <style>
-  .hero { padding: clamp(32px, 6vw, 72px) 0 clamp(8px, 2vw, 24px); }
+  .hero { position: relative; isolation: isolate; overflow: hidden; padding: clamp(32px, 6vw, 72px) 0 64px; }
+  .hero-copy { position: relative; isolation: isolate; }
+  .hero-copy::before { content: ''; position: absolute; inset: -48px -40px; z-index: -1; background: radial-gradient(ellipse at center, var(--paper) 40%, transparent 74%); opacity: 0.85; pointer-events: none; }
+  .career { background: color-mix(in srgb, var(--paper) 88%, transparent); padding: 1rem 1.1rem; border-radius: 10px; }
   .hero-grid { display: grid; gap: 2.5rem; align-items: center; }
   @media (min-width: 960px) { .hero-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 3rem; } }
   .kicker { font-family: var(--display); font-weight: 600; font-size: 1rem; color: var(--deep); margin: 0 0 1rem; }

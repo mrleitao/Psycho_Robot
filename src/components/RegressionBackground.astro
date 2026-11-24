@@ -1,0 +1,133 @@
+---
+// Decorative simulated regression: a rolling least-squares fit on the latest 50 simulated points.
+// Not research data. Mount once, inside a full-width section.
+---
+<svg id="wave" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" shape-rendering="geometricPrecision"></svg>
+<div class="reg-ui">
+  <p class="reg-label">Simulated points, not study data. The line is a rolling fit to the 50 highlighted points.</p>
+  <button id="pause" type="button" aria-pressed="false">Pause motion</button>
+</div>
+
+<style>
+  #wave { position: absolute; inset: 0; width: 100%; height: 100%; display: block; overflow: hidden; z-index: -1; pointer-events: none; }
+  .reg-ui { position: absolute; left: 0; right: 0; bottom: 14px; z-index: 1; max-width: 1040px; margin-inline: auto; padding-inline: clamp(16px, 4vw, 32px); display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; pointer-events: none; }
+  .reg-label { margin: 0; font: 500 0.85rem/1.4 var(--display); color: var(--muted); background: var(--paper); padding: 4px 10px; border-radius: 4px; pointer-events: auto; }
+  #pause { font: 500 0.85rem/1.4 var(--display); background: var(--paper); border: 1px solid var(--muted); border-radius: 4px; color: var(--ink); padding: 4px 12px; cursor: pointer; pointer-events: auto; }
+  #pause:hover:not(:disabled) { background: var(--wash); }
+  #pause:focus-visible { outline: 3px solid var(--doctor); outline-offset: 3px; }
+  #pause:disabled { cursor: default; opacity: 0.8; }
+</style>
+
+<script is:inline>
+(() => {
+ const svg=document.querySelector('#wave'),hero=svg.closest('section');
+ const ns='http://www.w3.org/2000/svg';
+ function node(tag){const n=document.createElementNS(ns,tag);n.setAttribute('vector-effect','non-scaling-stroke');svg.appendChild(n);return n}
+ function attrs(n,a){for(const key in a){const v=String(a[key]);if(n.getAttribute(key)!==v)n.setAttribute(key,v)}}
+ const dotNodes=Array.from({length:250},()=>node('circle'));
+ const lineNode=node('line');
+ const bubbleNodes=Array.from({length:12},()=>node('circle'));
+ const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+ const pause=document.querySelector('#pause');
+ let w=1,h=1,frame=0,last=0,time=0,paused=false,visible=true,colors={},cachedStep=-1,cachedBackgroundStep=-1,cachedCount=0,cachedPoints=[],cachedFit=null,cachedPrior=null;
+ function fit(p){
+  if(p.length<2)return null;
+  const mx=p.reduce((s,q)=>s+q.x,0)/p.length,my=p.reduce((s,q)=>s+q.y,0)/p.length;
+  let xx=0,xy=0;for(const q of p){xx+=(q.x-mx)**2;xy+=(q.x-mx)*(q.y-my)}
+  if(xx<1e-10)return null;const b=xy/xx;return {a:my-b*mx,b};
+ }
+ function pointAt(id){
+  let seed=(8219+id*7919)>>>0;
+  const random=()=>{seed=(1664525*seed+1013904223)>>>0;return seed/4294967296};
+  const x=random();
+  const slope=.48*Math.cos(id*.025),base=.5-slope*.5;
+  const noise=(random()+random()+random()-1.5)*.15;
+  return{id,x,y:base+slope*x+noise};
+ }
+ function windowAt(step,count){
+  const total=250+step,start=total-count;
+  return Array.from({length:total-start},(_,i)=>pointAt(start+i));
+ }
+ function activeWindow(step){return windowAt(step,50)}
+ function backgroundWindow(step,count){return Array.from({length:count},(_,i)=>pointAt(100000+200-count+step+i))}
+ function clocks(t){return {active:Math.floor(t/.5),background:Math.floor((t+.25)/.5)}}
+ function plotBounds(width,height){
+  // Full-bleed field; positions expand with width, circle radii stay fixed.
+  return{x:-16,y:height*.08,width:width+32,height:height*.84};
+ }
+ function lineEnds(a,b,box,width){
+  const x1=-32,x2=width+32;
+  const y=x=>box.y+(1-(a+b*(x-box.x)/box.width))*box.height;
+  return{x1,y1:y(x1),x2,y2:y(x2)};
+ }
+ function palette(){const c=getComputedStyle(document.documentElement);colors={points:['--coral','--peach','--sand','--steel','--deep'].map(t=>c.getPropertyValue(t).trim()),line:c.getPropertyValue('--ink').trim(),rule:c.getPropertyValue('--rule').trim()}}
+ function resize(){const b=hero.getBoundingClientRect();w=b.width;h=b.height;// No viewBox: one SVG unit stays one CSS pixel as the container resizes.
+ palette();draw()}
+ function draw(){
+  const t=reduced.matches?0:time,arrival=t/.5,step=clocks(t).active;
+  const backgroundStep=clocks(t).background,backgroundArrival=(t+.25)/.5;
+  const count=w<600?125:250,backgroundCount=count-50;
+  if(step!==cachedStep){
+   cachedFit=fit(activeWindow(step));cachedPrior=step>0?fit(activeWindow(step-1)):cachedFit;
+  }
+  if(step!==cachedStep||backgroundStep!==cachedBackgroundStep||count!==cachedCount){
+   cachedPoints=backgroundWindow(backgroundStep,backgroundCount).concat(activeWindow(step));
+   cachedStep=step;cachedBackgroundStep=backgroundStep;cachedCount=count;
+  }
+  const points=cachedPoints,box=plotBounds(w,h);
+  const X=x=>box.x+x*box.width,Y=y=>box.y+(1-y)*box.height;
+  for(let i=0;i<points.length;i++){
+   const p=points[i],isActive=i>=backgroundCount;
+   const phase=isActive?arrival-step:backgroundArrival-backgroundStep;
+   const fresh=isActive?step>0&&i===points.length-1:backgroundStep>0&&i===backgroundCount-1;
+   const fade=fresh?Math.min(1,.25+phase*1.5):1;
+   attrs(dotNodes[i],{cx:X(p.x),cy:Y(p.y),r:4.5,fill:colors.points[p.id%5],opacity:fade*(i>=points.length-50?.78:.19)});
+  }
+  for(let i=count;i<dotNodes.length;i++)attrs(dotNodes[i],{opacity:0});
+  const current=cachedFit,prior=cachedPrior;
+  if(current){
+   const blend=Math.min(1,(arrival-step)/.7),ease=blend*blend*(3-2*blend);
+   const a=prior.a+(current.a-prior.a)*ease,b=prior.b+(current.b-prior.b)*ease;
+   attrs(lineNode,Object.assign(lineEnds(a,b,box,w),{stroke:colors.line,'stroke-width':2,opacity:.6}));
+  }
+  let slot=0;
+  if(!reduced.matches){
+   const interval=.5,duration=2.8;
+   const streams=[{step,offset:0,base:200,opacity:.65},{step:backgroundStep,offset:.25,base:100000+200-backgroundCount,opacity:.4}];
+   for(const stream of streams){
+    for(let event=Math.max(1,stream.step-Math.ceil(duration/interval));event<=stream.step;event++){
+     const age=t-(event*interval-stream.offset);if(age<0||age>=duration)continue;
+     const u=age/duration,outgoing=pointAt(stream.base+event-1),startY=Y(outgoing.y);
+     const drift=Math.sin(outgoing.id*2.4)*14;
+     const exitY=startY-(startY+30)*Math.pow(u,.85);
+     const exitX=X(outgoing.x)+Math.sin(u*Math.PI*4+outgoing.id)*Math.sin(Math.PI*u)*14+drift*u;
+     attrs(bubbleNodes[slot++],{cx:exitX,cy:exitY,r:4.5*(1+.22*Math.sin(Math.PI*u)),
+      stroke:colors.points[outgoing.id%5],fill:colors.points[outgoing.id%5],
+      'stroke-width':1,'fill-opacity':Math.max(0,1-u*3),opacity:stream.opacity*Math.pow(1-u,1.15)});
+    }
+   }
+  }
+  while(slot<bubbleNodes.length)attrs(bubbleNodes[slot++],{opacity:0});
+ }
+ function tick(stamp){frame=0;if(!visible||document.hidden||paused||reduced.matches)return;
+  if(!last||stamp-last>=32){time+=last?Math.min((stamp-last)/1000,.1):0;last=stamp;draw()}
+  frame=requestAnimationFrame(tick);
+ }
+ function sync(){cancelAnimationFrame(frame);last=0;
+  if(!paused&&!reduced.matches&&visible&&!document.hidden)frame=requestAnimationFrame(tick);else draw();
+  pause.textContent=reduced.matches?'Motion reduced':paused?'Resume motion':'Pause motion';
+  pause.disabled=reduced.matches;pause.setAttribute('aria-pressed',String(paused||reduced.matches));
+ }
+ pause.addEventListener('click',()=>{paused=!paused;sync()});
+ new MutationObserver(()=>{palette();draw()}).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+ matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{palette();draw()});
+ // Hero side padding grows on wide screens, keeping its content box constant.
+ // Watch the border box so the full-width SVG geometry is refreshed regardless.
+ const resizeObserver=new ResizeObserver(resize);
+ resizeObserver.observe(hero,{box:'border-box'});
+ window.addEventListener('resize',resize,{passive:true});
+ new IntersectionObserver(e=>{visible=e[0].isIntersecting;sync()}).observe(hero);
+ reduced.addEventListener('change',sync);document.addEventListener('visibilitychange',sync);
+ resize();sync();
+})();
+</script>
