@@ -2,18 +2,14 @@
 import { href } from '../utils/url';
 interface Props { theme?: 'auto' | 'light' | 'dark'; }
 const { theme = 'auto' } = Astro.props;
-const src = `${href('/graphics/skill-tower.html')}?embed=1&center=1&theme=${theme}`;
+const src = `${href('/graphics/skill-tower.html')}?embed=1&theme=${theme}`;
 ---
 <skill-tower-band data-theme-mode={theme}>
-  <figure class="band">
-    <div class="stage">
-      <iframe class="tower" src={src} title="Animated illustration of skill blocks settling into a tower" aria-hidden="true" tabindex="-1" loading="lazy"></iframe>
-    </div>
-    <figcaption>
-      <span>Skills build on one another: each new block settles on the ones before it. This is an illustration, not a score or a measure.</span>
-      <button class="pause" type="button" aria-pressed="false" disabled>Loading animation</button>
-    </figcaption>
-  </figure>
+  <iframe class="tower" src={src} title="Animated illustration of skill blocks settling into a tower" aria-hidden="true" tabindex="-1" loading="lazy"></iframe>
+  <div class="ui">
+    <p class="cap">Skills build on one another. This is an illustration, not a score or a measure.</p>
+    <button class="pause" type="button" aria-pressed="false" disabled>Loading animation</button>
+  </div>
 </skill-tower-band>
 <script is:inline>
   if (!customElements.get('skill-tower-band')) {
@@ -68,15 +64,14 @@ const src = `${href('/graphics/skill-tower.html')}?embed=1&center=1&theme=${them
   }
 </script>
 <style>
-  skill-tower-band { display: block; margin-top: clamp(20px, 3vw, 32px); }
-  .band { margin: 0; border: 1.5px solid var(--rule); border-radius: 14px; overflow: hidden; background: var(--paper); }
-  .stage { position: relative; height: clamp(340px, 46vw, 470px); }
-  .tower { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: transparent; pointer-events: none; }
-  figcaption { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.6rem 1.2rem; padding: 0.7rem 1rem; border-top: 1px solid var(--rule); font-family: var(--display); font-size: 0.88rem; color: var(--muted); line-height: 1.45; }
-  figcaption span { flex: 1 1 22rem; max-width: 46rem; }
-  .pause { min-height: 44px; padding: 0.5rem 1rem; border: 1.5px solid var(--rule); border-radius: 999px; background: transparent; color: var(--ink); font: inherit; font-size: 0.85rem; cursor: pointer; }
-  .pause:hover:not(:disabled) { border-color: var(--coral); }
+  skill-tower-band { position: absolute; inset: 0; display: block; pointer-events: none; }
+  .ui { pointer-events: auto; }
+  .tower { position: absolute; z-index: -1; inset: 0; width: 100%; height: 100%; border: 0; background: transparent; pointer-events: none; }
+  .ui { position: absolute; left: 0; right: 0; bottom: 14px; z-index: 1; max-width: 1040px; margin-inline: auto; padding-inline: clamp(16px, 4vw, 32px); display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1rem; }
+  .cap { margin: 0; font: 500 0.85rem/1.4 var(--display); color: var(--muted); background: var(--paper); padding: 4px 10px; border-radius: 4px; }
+  .pause { min-height: 44px; padding: 4px 14px; font: 500 0.85rem/1.4 var(--display); background: var(--paper); border: 1px solid var(--muted); border-radius: 4px; color: var(--ink); cursor: pointer; }
+  .pause:hover:not(:disabled) { background: var(--wash); }
   .pause:focus-visible { outline: 3px solid var(--coral); outline-offset: 3px; }
-  .pause:disabled { opacity: 0.65; cursor: default; }
-  @media (max-width: 700px) { .stage { height: 420px; } }
+  .pause:disabled { cursor: default; opacity: 0.8; }
+  @media (max-width: 900px) { .tower { inset: auto 0 64px 0; height: 340px; } }
 </style>
