@@ -1,0 +1,82 @@
+---
+import { href } from '../utils/url';
+interface Props { theme?: 'auto' | 'light' | 'dark'; }
+const { theme = 'auto' } = Astro.props;
+const src = `${href('/graphics/skill-tower.html')}?embed=1&center=1&theme=${theme}`;
+---
+<skill-tower-band data-theme-mode={theme}>
+  <figure class="band">
+    <div class="stage">
+      <iframe class="tower" src={src} title="Animated illustration of skill blocks settling into a tower" aria-hidden="true" tabindex="-1" loading="lazy"></iframe>
+    </div>
+    <figcaption>
+      <span>Skills build on one another: each new block settles on the ones before it. This is an illustration, not a score or a measure.</span>
+      <button class="pause" type="button" aria-pressed="false" disabled>Loading animation</button>
+    </figcaption>
+  </figure>
+</skill-tower-band>
+<script is:inline>
+  if (!customElements.get('skill-tower-band')) {
+    customElements.define('skill-tower-band', class extends HTMLElement {
+      connectedCallback() {
+        if (this.cleanup) return;
+        const frame = this.querySelector('iframe');
+        const button = this.querySelector('button');
+        let userPaused = false;
+        const api = () => { try { return frame.contentWindow && frame.contentWindow.SkillTower; } catch (_) { return null; } };
+        const hostTheme = () => {
+          const mode = this.dataset.themeMode;
+          if (mode === 'light' || mode === 'dark') return mode;
+          const root = document.documentElement;
+          const attr = root.dataset.theme;
+          if (attr === 'light' || attr === 'dark') return attr;
+          return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        };
+        const label = () => {
+          const t = api();
+          if (!t) { button.disabled = true; button.textContent = 'Animation unavailable'; return; }
+          const paused = t.getState().paused;
+          button.disabled = false;
+          button.textContent = paused ? 'Play animation' : 'Pause animation';
+          button.setAttribute('aria-pressed', String(paused));
+        };
+        const syncTheme = () => { const t = api(); if (t && t.setTheme) t.setTheme(hostTheme()); };
+        const onLoad = () => { syncTheme(); userPaused = !!(api() && api().getState().paused); label(); };
+        const onClick = () => {
+          const t = api(); if (!t) return;
+          if (t.getState().paused) { userPaused = false; t.resume(); } else { userPaused = true; t.pause(); }
+          label();
+        };
+        frame.addEventListener('load', onLoad);
+        button.addEventListener('click', onClick);
+        const mo = new MutationObserver(syncTheme);
+        mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+        const mq = matchMedia('(prefers-color-scheme: dark)');
+        mq.addEventListener('change', syncTheme);
+        // Stop drawing while the band is off screen, unless the visitor paused it themselves.
+        const io = new IntersectionObserver((entries) => {
+          const t = api(); if (!t || userPaused) return;
+          if (entries[0].isIntersecting) t.resume(); else t.pause();
+          label();
+        });
+        io.observe(this);
+        if (api()) onLoad();
+        this.cleanup = () => { frame.removeEventListener('load', onLoad); button.removeEventListener('click', onClick); mo.disconnect(); mq.removeEventListener('change', syncTheme); io.disconnect(); };
+      }
+      disconnectedCallback() { if (this.cleanup) this.cleanup(); this.cleanup = null; }
+    });
+  }
+</script>
+<style>
+  skill-tower-band { display: block; margin-top: clamp(20px, 3vw, 32px); }
+  .band { margin: 0; border: 1.5px solid var(--rule); border-radius: 14px; overflow: hidden; background: var(--paper); }
+  .stage { position: relative; height: clamp(340px, 46vw, 470px); }
+  .tower { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: transparent; pointer-events: none; }
+  figcaption { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.6rem 1.2rem; padding: 0.7rem 1rem; border-top: 1px solid var(--rule); font-family: var(--display); font-size: 0.88rem; color: var(--muted); line-height: 1.45; }
+  figcaption span { flex: 1 1 22rem; max-width: 46rem; }
+  .pause { min-height: 44px; padding: 0.5rem 1rem; border: 1.5px solid var(--rule); border-radius: 999px; background: transparent; color: var(--ink); font: inherit; font-size: 0.85rem; cursor: pointer; }
+  .pause:hover:not(:disabled) { border-color: var(--coral); }
+  .pause:focus-visible { outline: 3px solid var(--coral); outline-offset: 3px; }
+  .pause:disabled { opacity: 0.65; cursor: default; }
+  @media (max-width: 700px) { .stage { height: 420px; } }
+</style>

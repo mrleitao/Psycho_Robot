@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import SkillsNav from '../../components/SkillsNav.astro';
+import SkillTowerBand from '../../components/SkillTowerBand.astro';
 import EvidenceMatrix from '../../components/EvidenceMatrix.astro';
 import { href } from '../../utils/url';
 import skills from '../../data/skills.json';
@@ -21,6 +22,7 @@ const starts = [
       <h1>Skills, backed by the work</h1>
       <p class="lede">Each skill below comes with the studies, roles, courses, and workshops that show it. Start with the map, then open the full list to filter by level, type, field, or year.</p>
     </header>
+    <SkillTowerBand />
     <SkillsNav current="overview" />
     <section class="start" aria-labelledby="start-h">
       <h2 id="start-h">Looking for something specific?</h2>
