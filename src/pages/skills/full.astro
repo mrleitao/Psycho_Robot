@@ -11,15 +11,22 @@ import evidence from '../../data/evidence.json';
   <div class="wrap">
     <header class="page-head">
       <h1>Every skill and its evidence</h1>
-      <p class="lede">Filter by level, type, field, area, or year. Each entry says what I did and where it shows up in my record.</p>
+      <p class="lede">Filter by level, type, field, area, or year. Each entry defines the skill, then says what I did and where it shows up in my record.</p>
     </header>
     <SkillsNav current="full" />
     <div class="body">
       <EvidenceMatrix skills={skills} fields={fields} evidence={evidence} part="full" />
     </div>
+    <section class="sources" aria-labelledby="src-h">
+      <h2 id="src-h">Where the definitions come from</h2>
+      <p>I wrote each definition in my own words, based on a reputable source for that field. For statistical methods the base is the UCLA Advanced Research Computing tutorials (stats.oarc.ucla.edu). Other bases include Penn State STAT 509, the Cochrane Handbook, the Center for Open Science, the NIH Office of Behavioral and Social Sciences Research mixed-methods guide, the Belmont Report, and the NCI Team Science Toolkit. For working-style and tool skills I drew on O*NET OnLine from the US Department of Labor, plus standard textbooks.</p>
+    </section>
   </div>
 </Base>
 
 <style>
   .body { margin-top: clamp(24px, 4vw, 40px); }
+  .sources { margin-top: 3rem; padding-top: 1.5rem; border-top: 1.5px solid var(--rule); max-width: 46rem; }
+  .sources h2 { font-size: 1.1rem; }
+  .sources p { color: var(--muted); line-height: 1.55; }
 </style>

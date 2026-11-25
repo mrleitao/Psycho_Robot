@@ -2,6 +2,7 @@
 interface Skill {
   group: string;
   name: string;
+  definition?: string;
   level: 'have' | 'developing';
   proof: string;
   also?: string[];
@@ -170,7 +171,8 @@ const nSoft = skills.length - nHard;
     }
   </dl>
 
-  <p class="hint">Hover over or tap a skill name to see its other names and what it covers.</p>
+  <p class="hint">Each skill gives a short definition, its other names, and what it covers. Open "How I used it" to see the work behind it.</p>
+  <button type="button" class="openall" data-openall aria-pressed="false">Show all “How I used it” notes</button>
 
   <p class="count" aria-live="polite" data-count>Showing all {skills.length} skills.</p>
   <button type="button" class="area all rst" data-reset disabled>Show all skills</button>
@@ -185,23 +187,7 @@ const nSoft = skills.length - nHard;
             <li class={`skill a${g.i}`} id={`s-${slug(s.name)}`} data-level={s.level} data-type={s.type ?? "hard"} data-fields={(s.fields ?? []).join(" ")} data-area={s.group} data-years={yearsOf(s).join(" ")}>
               <h3>
                 <span class="chip chip-s"><SkillIcon name={s.icon ?? 'spark'} size={18} /></span>
-                {s.also?.length ? (
-                  <span class="has-tip" tabindex="0" aria-describedby={`tip-${s.name.replace(/\W+/g, '-')}`}>
-                    {s.name}
-                    <span class="tip" role="tooltip" id={`tip-${s.name.replace(/\W+/g, '-')}`}>
-                      <span class="tip-h">Also referred to as</span>
-                      {s.also.join('; ')}
-                      {s.includes?.length ? (
-                        <>
-                          <span class="tip-h tip-h2">Skill encompasses</span>
-                          {s.includes.join('; ')}
-                        </>
-                      ) : null}
-                    </span>
-                  </span>
-                ) : (
-                  s.name
-                )}
+                {s.name}
               </h3>
               <p class="level">
                 <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
@@ -210,20 +196,28 @@ const nSoft = skills.length - nHard;
                 </svg>
                 {labelOf[s.level]}
               </p>
-              <p class="proof">{s.proof}</p>
-              <p class="ev">
-                <span class="ev-h">Where it shows up</span>
-                {(s.evidence ?? []).length ? (
-                  (s.evidence ?? []).map((id, k) => {
-                    const e = evOf(id);
-                    return (
-                      <>{k > 0 ? '; ' : ''}{e.href ? <a href={href(e.href)}>{e.name}</a> : e.name}{' '}<span class="ev-m">({kindLabel[e.kind].toLowerCase()}, {span(e)})</span></>
-                    );
-                  })
-                ) : (
-                  <span class="ev-m">No project, role or course tied to it yet.</span>
-                )}
-              </p>
+              <div class="detail">
+                {s.definition && <p class="def"><span class="lbl">Definition</span>{s.definition}</p>}
+                {s.also?.length ? <p class="meta"><span class="lbl">Also known as</span>{s.also.join('; ')}</p> : null}
+                {s.includes?.length ? <p class="meta"><span class="lbl">Skill encompasses</span>{s.includes.join('; ')}</p> : null}
+                <details class="used">
+                  <summary>How I used it</summary>
+                  <p class="proof">{s.proof}</p>
+                </details>
+                <p class="ev">
+                  <span class="ev-h">Where it shows up</span>
+                  {(s.evidence ?? []).length ? (
+                    (s.evidence ?? []).map((id, k) => {
+                      const e = evOf(id);
+                      return (
+                        <>{k > 0 ? '; ' : ''}{e.href ? <a href={href(e.href)}>{e.name}</a> : e.name}{' '}<span class="ev-m">({kindLabel[e.kind].toLowerCase()}, {span(e)})</span></>
+                      );
+                    })
+                  ) : (
+                    <span class="ev-m">No project, role or course tied to it yet.</span>
+                  )}
+                </p>
+              </div>
             </li>
           ))}
         </ul>
@@ -278,7 +272,13 @@ const nSoft = skills.length - nHard;
       if (state.year !== 'all') bits.push(state.year);
       count.textContent = (shown === total ? `Showing all ${total} skills.` : `Showing ${shown} of ${total} skills`) + (bits.length && shown !== total ? ` (${bits.join(', ')}).` : shown !== total ? '.' : '');
     };
-    const toList = () => {};
+    const openAll = root.querySelector<HTMLButtonElement>('[data-openall]');
+    openAll?.addEventListener('click', () => {
+      const on = openAll.getAttribute('aria-pressed') !== 'true';
+      openAll.setAttribute('aria-pressed', String(on));
+      openAll.textContent = on ? 'Hide all “How I used it” notes' : 'Show all “How I used it” notes';
+      root.querySelectorAll<HTMLDetailsElement>('details.used').forEach((x) => { x.open = on; });
+    });
 
     root.querySelectorAll<HTMLButtonElement>('[data-filter]').forEach((b) => b.addEventListener('click', () => { state.level = b.dataset.filter ?? 'all'; apply(); }));
     root.querySelectorAll<HTMLButtonElement>('[data-type]').forEach((b) => b.addEventListener('click', () => { state.type = b.dataset.type ?? 'all'; apply(); }));
@@ -328,7 +328,7 @@ const nSoft = skills.length - nHard;
   .tl-key { margin: 0.6rem 0 0; font-family: var(--display); font-size: 0.82rem; color: var(--muted); }
   .a0 { --c: #3b6ea8; } .a1 { --c: #1f8582; } .a2 { --c: #6a4fa3; } .a3 { --c: #55606e; } .a4 { --c: #c4553a; } .a5 { --c: #a87912; } .a6 { --c: #3d8a4a; } .a7 { --c: #17819f; } .a8 { --c: #a8387a; } .a9 { --c: #8a5a2b; } .a10 { --c: #6f7f1f; } .a11 { --c: #2f3f7a; }
   .skill h3 .chip { color: #fff; }
-  .ev { grid-column: 1 / -1; margin: 0.35rem 0 0; font-size: 0.92rem; line-height: 1.5; color: var(--muted); }
+  .ev { margin: 0.6rem 0 0; font-size: 0.92rem; line-height: 1.5; color: var(--muted); }
   .ev-h { font-family: var(--display); font-weight: 600; color: var(--ink); margin-right: 0.4rem; }
   .ev-m { white-space: nowrap; }
   .rst { margin-top: 0.6rem; }
@@ -339,13 +339,18 @@ const nSoft = skills.length - nHard;
   .controls { display: grid; gap: 0.7rem; margin-top: 0.8rem; }
   .fsel { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; font-family: var(--display); font-size: 0.95rem; }
   select { font: inherit; font-family: var(--display); color: var(--ink); background: var(--paper); border: 1.5px solid var(--rule); border-radius: 6px; padding: 0.4rem 0.6rem; max-width: 100%; }
-  .tip-h2 { margin-top: 0.5rem; }
   .hint { margin: 1.25rem 0 0; font-family: var(--display); font-size: 0.9rem; color: var(--muted); }
-  .has-tip { position: relative; display: inline-block; cursor: help; text-decoration: underline dotted var(--muted); text-underline-offset: 0.25em; text-decoration-thickness: 1.5px; }
-  .has-tip:focus-visible { outline: 3px solid var(--steel); outline-offset: 3px; border-radius: 2px; }
-  .tip { position: absolute; left: 0; top: calc(100% + 0.5rem); z-index: 5; width: max-content; max-width: min(19rem, 80vw); padding: 0.6rem 0.8rem; background: var(--ink); color: var(--paper); border-radius: 6px; font-family: var(--display); font-weight: 400; font-size: 0.88rem; line-height: 1.4; text-decoration: none; display: none; pointer-events: none; }
-  .tip-h { display: block; font-weight: 600; margin-bottom: 0.15rem; }
-  .has-tip:hover .tip, .has-tip:focus .tip { display: block; }
+  .detail { min-width: 0; }
+  .lbl { display: block; font-family: var(--display); font-size: 0.8rem; font-weight: 600; color: var(--muted); margin-bottom: 0.1rem; }
+  .def { margin: 0; line-height: 1.55; }
+  .meta { margin: 0.55rem 0 0; font-size: 0.92rem; line-height: 1.5; color: var(--muted); }
+  .used { margin: 0.7rem 0 0; }
+  .used summary { display: inline-block; cursor: pointer; font-family: var(--display); font-size: 0.88rem; font-weight: 600; color: var(--ink); padding: 0.25rem 0.7rem; border: 1.5px solid var(--rule); border-radius: 6px 6px 0 0; border-bottom-color: transparent; background: var(--wash); }
+  .used summary:hover { border-color: var(--muted); }
+  .used summary:focus-visible { outline: 3px solid var(--steel); outline-offset: 2px; }
+  .used:not([open]) summary { border-radius: 6px; border-bottom-color: var(--rule); background: transparent; }
+  .used .proof { margin: 0; padding: 0.7rem 0.9rem; border: 1.5px solid var(--rule); border-radius: 0 8px 8px 8px; background: var(--wash); font-size: 0.97rem; }
+  .openall { margin-top: 0.6rem; }
   .filters {
     display: flex;
     flex-wrap: wrap;
@@ -430,7 +435,7 @@ const nSoft = skills.length - nHard;
 
   @media (min-width: 760px) {
     .skill {
-      grid-template-columns: minmax(0, 0.9fr) 11.5rem minmax(0, 1.7fr);
+      grid-template-columns: minmax(0, 0.8fr) 8rem minmax(0, 2fr);
       align-items: baseline;
     }
   }
