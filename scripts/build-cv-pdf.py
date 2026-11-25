@@ -9,6 +9,16 @@ cv = json.load(open(root / 'src/data/cv/cv.json'))
 pubs = json.load(open(root / 'src/data/cv/publications.json'))
 rs = json.load(open(root / 'src/data/cv/resume.json'))
 S = {s['id']: s for s in cv['sections']}
+
+# Consistency check: every resume bullet must also appear in the mapped CV entry.
+bad = []
+for x in rs['experience']:
+    sec, i = x['cv']
+    have = S[sec]['items'][i].get('lines', [])
+    bad += [b for b in x['bullets'] if b not in have]
+if bad:
+    sys.exit('Resume bullets missing from cv.json:\n' + '\n'.join(bad))
+
 e = html.escape
 import datetime
 updated = datetime.date.fromisoformat(cv['updated']).strftime('%B %-d, %Y')
@@ -16,12 +26,12 @@ updated = datetime.date.fromisoformat(cv['updated']).strftime('%B %-d, %Y')
 CSS = """
 
 * { box-sizing: border-box; }
-body { font-family: Carlito, 'Liberation Sans', Arial, sans-serif; font-size: 10.5pt; line-height: 1.28; color: #111; margin: 0; }
+body { font-family: Carlito, 'Liberation Sans', Arial, sans-serif; font-size: 10.5pt; line-height: 1.28; color: #1a2e4a; margin: 0; }
 h1 { font-size: 21pt; margin: 0 0 2pt; letter-spacing: .2pt; }
-.title { font-size: 11.5pt; color: #305f72; margin: 0 0 3pt; font-weight: 700; }
+.title { font-size: 11.5pt; color: #2c5282; margin: 0 0 3pt; font-weight: 700; }
 .contact { font-size: 10pt; margin: 0 0 7pt; }
 .contact span + span::before { content: ' | '; color: #777; }
-h2 { font-size: 11pt; text-transform: uppercase; letter-spacing: .8pt; border-bottom: 1.2pt solid #305f72; color: #17313c; margin: 10pt 0 4pt; padding-bottom: 1.5pt; break-after: avoid; }
+h2 { font-size: 11pt; text-transform: uppercase; letter-spacing: .8pt; border-bottom: 1.2pt solid #2c5282; color: #1a2e4a; margin: 10pt 0 4pt; padding-bottom: 1.5pt; break-after: avoid; }
 h3 { font-size: 10.5pt; margin: 6pt 0 1pt; break-after: avoid; }
 .row { display: flex; justify-content: space-between; gap: 12pt; break-inside: avoid; }
 .row .when { white-space: nowrap; font-weight: 400; }
@@ -32,8 +42,8 @@ p { margin: 0 0 3pt; }
 .entry { break-inside: avoid; margin-bottom: 4pt; }
 .cite { break-inside: avoid; margin: 0 0 3pt; padding-left: 14pt; text-indent: -14pt; }
 a { color: inherit; text-decoration: none; }
-.group h3 { font-size: 10.5pt; margin: 5pt 0 2pt; color: #305f72; }
-.note { color: #555; font-size: 9.5pt; }
+.group h3 { font-size: 10.5pt; margin: 5pt 0 2pt; color: #2c5282; }
+.note { color: #4a5568; font-size: 9.5pt; }
 """
 
 def page(body):
@@ -51,7 +61,7 @@ def resume():
     h += "<h2>Selected Publications</h2>" + ''.join(f"<p class='cite'>{c}</p>" for c in rs['publications'])
     h += "<h2>Education</h2>" + ''.join(f"<div class='row'><span><strong>{e(d['degree'])}</strong>, {e(d['org'])}</span><span class='when'>{e(d['when'])}</span></div>" for d in rs['education'])
     h += "<h2>Technical Skills</h2>" + ''.join(f"<p><strong>{e(a)}:</strong> {e(b)}</p>" for a, b in rs['skills'])
-    h += "<h2>Honors and Service</h2><ul>" + ''.join(f'<li>{e(x)}</li>' for x in rs['honors']) + '</ul>'
+    h += "<h2>Honors and Grants</h2><ul>" + ''.join(f'<li>{e(x)}</li>' for x in rs['honors']) + '</ul>'
     return page(h)
 
 def strip(t):
@@ -67,7 +77,7 @@ def entries(sec):
     return out
 
 def cvdoc():
-    h = f"<h1>{e(rs['name'])}</h1><p class='contact'>{contact}</p>"
+    h = f"<h1>{e(rs['name'])}</h1><p class='title'>{e(rs['title'])}</p><p class='contact'>{contact}</p>"
     for sid in ['positions', 'education', 'publications', 'grants', 'honors', 'research-experience', 'professional-experience', 'teaching', 'mentorship', 'invited', 'talks', 'posters', 'intramural', 'skills', 'workshops-attended', 'workshops-led', 'service', 'memberships']:
         if sid == 'publications':
             h += '<h2>Publications</h2>'

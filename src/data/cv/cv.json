@@ -4,37 +4,11 @@
   "changes": [
     {
       "date": "2026-11-24",
-      "text": "Renamed the page CV/Resume. Ended the NIH position on Oct 30, 2026 and added detail to it. Added lab management and institutional research detail, corrected the GRE service entry, and added skills. Replaced the download placeholder with a two-page resume PDF and a full CV PDF, both checked against my resume and writing guides."
+      "text": "Renamed the page CV/Resume and put the resume first, built from the same data as the downloadable PDF. Ended the NIH position on Oct 30, 2026. Added lab management and institutional research detail, corrected the GRE entry, and aligned titles, tools and claims with my resume and LinkedIn. Added a two-page resume PDF and a full CV PDF."
     },
     {
       "date": "2026-10-15",
       "text": "Rebuilt as a data-driven page from the 2026 CV, with citation fixes: published buffet paper and DOI, published smartphone DOI, Ergonomics 2021, Persky S., Tibbetts, Parrott, and Society for Personality and Social Psychology."
-    }
-  ],
-  "summary": [
-    {
-      "when": "2024 to 2026",
-      "title": "Postdoctoral research fellow",
-      "org": "National Human Genome Research Institute, National Institutes of Health",
-      "detail": "Managed six projects, including an FDA-regulated pharmacology trial. Ran a study of how AI review changes trust in genetic risk results, under principal investigator Susan Persky. Taught R and Quarto to colleagues. Left the position on Oct 30, 2026."
-    },
-    {
-      "when": "2019 to 2024",
-      "title": "PhD in Psychology and Master of Public Policy",
-      "org": "Georgetown University",
-      "detail": "Ran my dissertation, six preregistered studies on trust in medical AI. Managed five research assistants across six or seven concurrent projects. Taught Psychology of Technology as instructor of record and received the 2023 Graduate Student Teaching Award. Coordinated the department research pool, where yield rose 50% over the prior year."
-    },
-    {
-      "when": "2017 to 2019",
-      "title": "Master's in Psychology, General Experimental",
-      "org": "California State University, Northridge",
-      "detail": "Wrote a preregistered thesis on obedience to computer authority. Worked as a data analyst in Institutional Research on more than 100,000 student records, building dashboards administrators used. Coordinated an applied social psychology lab and trained 14 lab assistants."
-    },
-    {
-      "when": "2013 to 2017",
-      "title": "Research assistant and lab manager",
-      "org": "University of California, Riverside",
-      "detail": "Managed the schedules and reviews of 15 research assistants as lab manager, and wrote Excel macros and Praat scripts to process speech data."
     }
   ],
   "sections": [
@@ -48,11 +22,13 @@
           "title": "IRTA postdoctoral researcher",
           "org": "National Human Genome Research Institute, National Institutes of Health",
           "lines": [
-            "Social and Behavioral Research Branch (principal investigator: Susan Persky)",
-            "Managed six projects, including a ghrelin-related pharmacology randomized controlled trial under FDA oversight.",
-            "Led the design of a 2 x 3 vignette experiment on trust in a genetic risk result: a standard result, a geneticist's review, or an AI review. The protocol reached ethics review, with power set at half my dissertation effect (d = 0.115).",
-            "Analyzed data from the pharmacology trial's virtual reality buffet simulation and first-authored the paper in the Journal of Medical Extended Reality.",
-            "Taught Introduction to R and Introduction to Quarto to colleagues."
+            "Social and Behavioral Research Branch",
+            "Principal investigator: Susan Persky.",
+            "Managed six concurrent research projects, including an FDA-regulated pharmacology trial.",
+            "Wrote the protocol, IRB submission and power analysis for a randomized online experiment on trust in genetic risk results, as lead researcher under the principal investigator.",
+            "Analyzed data from a randomized pharmacology trial and first-authored the paper in the Journal of Medical Extended Reality.",
+            "Co-first-authored a preprint on how employees collaborate with generative AI (under review), building the cloud-hosted experiment and designing the blind third-party ratings.",
+            "Taught Introduction to R and Introduction to Quarto to NIH colleagues (Spring 2025)."
           ]
         }
       ]
@@ -194,8 +170,11 @@
           "title": "Graduate researcher",
           "org": "Digital Health and Happiness Lab, Georgetown University",
           "lines": [
-            "Ran six or seven concurrent projects and managed five research assistants.",
-            "Ran preregistered online experiments and daily-diary studies on trust in medical AI."
+            "Designed six experiments on trust in AI versus doctors, with 3,000+ participants, including a 15-day daily-diary study with random assignment to AI or doctor advice.",
+            "Pooled data from eight experiments, removed 173 placeholder rows, and fit multilevel models; first-authored the published paper, with open data.",
+            "Managed five research assistants across six or seven concurrent projects, and co-coordinated the department research pool, where yield rose 50% over the prior year.",
+            "Taught Psychology of Technology as instructor of record and won the 2023 Graduate Student Teaching Award.",
+            "Presented at national conferences, gave an invited talk at the University of Virginia and a public talk at the Alexandria Film Festival, and led workshops on R, power analysis and open science."
           ]
         },
         {
@@ -203,7 +182,8 @@
           "title": "Lab coordinator",
           "org": "Applied Social Psychology Lab, California State University, Northridge (Dr. Abraham M. Rutchick)",
           "lines": [
-            "Coordinated the lab and trained 14 lab assistants on projects, schedules and administration."
+            "Coordinated the lab and trained 14 lab assistants.",
+            "Wrote a thesis on obedience to computer authority, with the analysis plan registered in advance."
           ]
         },
         {
@@ -248,13 +228,15 @@
       "kind": "entries",
       "items": [
         {
-          "when": "Jan to Nov 2021",
+          "when": "2021",
           "title": "Institutional research fellow",
           "org": "Office of Assessment and Decision Support, Georgetown University",
           "lines": [
-            "Compiled and cleaned longitudinal data on student and faculty outcomes and relationships.",
-            "Analyzed class size and instructor time by student rank, faculty type, ethnicity and gender, and presented initial findings.",
-            "Used multilevel modeling to evaluate longitudinal student outcomes and trajectories."
+            "Analyzed class size and instructor type by student rank and demographics, and presented the initial findings.",
+            "Built a GRE database with another graduate student showing the GRE predicted first-year GPA no better than undergraduate GPA, and presented it to faculty and administrators. The program then made the GRE optional.",
+            "Recommended and implemented a data-visibility policy for student gender identity and pronouns.",
+            "Used multilevel modeling to evaluate longitudinal student outcomes.",
+            "Compiled and cleaned longitudinal data on student and faculty outcomes and relationships."
           ]
         },
         {
@@ -262,10 +244,13 @@
           "title": "Data analyst",
           "org": "Office of Institutional Research, California State University, Northridge",
           "lines": [
-            "Merged, cleaned and analyzed campus-wide data on more than 100,000 students to learn how student traits and choices relate to academic outcomes.",
-            "Compared how first-year unit load relates to GPA, retention and graduation across student groups. Groups included athletes, Pell-eligible students, and students served by disability services, including Deaf students.",
+            "Merged and analyzed campus-wide records on 100,000+ students to learn how student choices relate to academic outcomes.",
+            "Tested whether heavier course loads affect GPA using quasi-experimental methods, including propensity score matching.",
+            "Compared unit load, GPA, retention and graduation for athletes, Pell-eligible students, and students served by disability services.",
+            "Analyzed 635,000+ course grades to compare online, hybrid and in-person courses, controlling for student background.",
+            "Built Tableau dashboards that administrators, department chairs and deans used.",
+            "Ran focus groups and surveys for a summer-skills program and presented the results.",
             "Wrote and presented internal reports on the findings to university administration.",
-            "Built Tableau worksheets and dashboards that administrators, department chairs and deans used, refreshed each semester.",
             "Prepared manuscripts based on the reports for publication."
           ]
         },
@@ -545,11 +530,11 @@
         },
         {
           "heading": "Statistics software",
-          "text": "SPSS, R and RStudio, Stata, Mplus, Jamovi, JASP, Python"
+          "text": "SPSS, R and RStudio, Stata, Mplus, Jamovi, JASP"
         },
         {
           "heading": "Languages",
-          "text": "R, Python, HTML5, JavaScript, SQL"
+          "text": "R, HTML5, JavaScript; Python and SQL (developing)"
         },
         {
           "heading": "Productivity",
@@ -557,7 +542,7 @@
         },
         {
           "heading": "AI tools",
-          "text": "Claude, Claude Code and ChatGPT for coding and research workflows (developing)"
+          "text": "Familiar with Claude, Claude Code and ChatGPT for coding and analysis"
         }
       ]
     },

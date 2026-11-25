@@ -4,6 +4,7 @@ import Base from '../layouts/Base.astro';
 import { href } from '../utils/url';
 import cv from '../data/cv/cv.json';
 import pubs from '../data/cv/publications.json';
+import resume from '../data/cv/resume.json';
 
 // "Updated" comes from the last commit that touched the CV data, so it moves on its own.
 // If git history is not available at build time, fall back to the date written in cv.json.
@@ -67,30 +68,41 @@ const sections = order.map((id) =>
     <div class="layout">
       <nav class="index" aria-label="CV/Resume sections">
         <ul>
-          <li><a href="#glance">At a glance</a></li>
+          <li><a href="#resume">Resume</a></li>
+          <li><a href="#cv-full">Full CV</a></li>
           {sections.map((s) => <li><a href={`#${s.id}`}>{s.title}</a></li>)}
           <li><a href="#changes">Recent changes</a></li>
         </ul>
       </nav>
 
       <div class="body">
-        <section id="glance" class="block" aria-labelledby="glance-h">
-          <h2 id="glance-h">At a glance</h2>
+        <section id="resume" class="block" aria-labelledby="resume-h">
+          <h2 id="resume-h">Resume</h2>
+          <p class="summary">{resume.summary}</p>
           <ol class="rows timeline">
             {
-              cv.summary.map((r) => (
+              resume.experience.map((x) => (
                 <li>
-                  <p class="when">{r.when}</p>
+                  <p class="when">{x.when}</p>
                   <div>
-                    <h3>{r.title}</h3>
-                    <p class="org">{r.org}</p>
-                    <p>{r.detail}</p>
+                    <h3>{x.role}</h3>
+                    <p class="org">{x.org}</p>
+                    <ul class="lines">
+                      {x.bullets.map((b) => (
+                        <li>{b}</li>
+                      ))}
+                    </ul>
                   </div>
                 </li>
               ))
             }
           </ol>
+          <p class="small muted note">
+            This is the same text as the resume PDF. The full CV below adds every paper, talk, poster, workshop and service role.
+          </p>
         </section>
+
+        <h2 id="cv-full" class="part">Full CV</h2>
 
         {
           sections.map((s) => (
@@ -239,6 +251,18 @@ const sections = order.map((id) =>
 </script>
 
 <style>
+  .summary {
+    max-width: 62ch;
+    margin: 0 0 1.5rem;
+  }
+
+  .part {
+    margin: 3rem 0 0;
+    padding-top: 1rem;
+    border-top: 3px solid var(--coral);
+    font-size: 1.6rem;
+  }
+
   .meta {
     margin-top: 0.75rem;
   }
