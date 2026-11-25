@@ -1,18 +1,27 @@
 {
   "name": "Matthew Leitao",
   "title": "Behavioral Scientist and Quantitative Researcher",
-  "contact": ["mrleitao@me.com", "linkedin.com/in/mrleitao", "mrleitao.com"],
+  "contact": [
+    "mrleitao@me.com",
+    "linkedin.com/in/mrleitao",
+    "mrleitao.com"
+  ],
   "summary": "Behavioral scientist and quantitative researcher with 13+ years designing studies, analyzing data, and turning results into recommendations for decision makers. Designs and analyzes randomized experiments, surveys, and longitudinal studies on how people trust and use AI. Analyzed student records at CSUN (100,000+ students) and Georgetown, and built dashboards that administrators used. Explains results to campus leaders, faculty, and public audiences.",
   "experience": [
     {
       "org": "National Human Genome Research Institute, National Institutes of Health",
       "role": "Postdoctoral Researcher (IRTA), Social and Behavioral Research Branch",
       "when": "Oct 2024 to Oct 2026",
-      "cv": ["positions", 0],
-      "cvExtra": ["Principal investigator: Susan Persky."],
+      "cv": [
+        "positions",
+        0
+      ],
+      "cvExtra": [
+        "Principal investigator: Susan Persky."
+      ],
       "bullets": [
         "Managed six concurrent research projects, including an FDA-regulated pharmacology trial.",
-        "Wrote the protocol, IRB submission and power analysis for a randomized online experiment on trust in genetic risk results, as lead researcher under the principal investigator.",
+        "As lead researcher under the principal investigator, wrote the protocol, IRB submission and power analysis for a randomized experiment on trust in genetic risk results.",
         "Analyzed data from a randomized pharmacology trial and first-authored the paper in the Journal of Medical Extended Reality.",
         "Co-first-authored a preprint on how employees collaborate with generative AI (under review), building the cloud-hosted experiment and designing the blind third-party ratings.",
         "Taught Introduction to R and Introduction to Quarto to NIH colleagues (Spring 2025)."
@@ -22,24 +31,37 @@
       "org": "Georgetown University",
       "role": "Graduate Research Fellow",
       "when": "2019 to 2024",
-      "cv": ["research-experience", 0],
+      "cv": [
+        "research-experience",
+        0
+      ],
       "bullets": [
         "Designed six experiments on trust in AI versus doctors, with 3,000+ participants, including a 15-day daily-diary study with random assignment to AI or doctor advice.",
         "Pooled data from eight experiments, removed 173 placeholder rows, and fit multilevel models; first-authored the published paper, with open data.",
         "Managed five research assistants across six or seven concurrent projects, and co-coordinated the department research pool, where yield rose 50% over the prior year.",
         "Taught Psychology of Technology as instructor of record and won the 2023 Graduate Student Teaching Award.",
-        "Presented at national conferences, gave an invited talk at the University of Virginia and a public talk at the Alexandria Film Festival, and led workshops on R, power analysis and open science."
+        "Gave invited and public talks, presented at national conferences, and led workshops on R, power analysis and open science."
+      ],
+      "cvExtra": [
+        "Wrote and managed IRB applications for new studies and for changes to ongoing studies.",
+        "Organized, cleaned, merged and analyzed longitudinal ecological momentary assessment data.",
+        "Wrote manuscripts and compiled analyses for publication."
       ]
     },
     {
       "org": "Georgetown University, Office of Assessment and Decision Support",
       "role": "Institutional Research Fellow",
       "when": "2021",
-      "cv": ["professional-experience", 0],
-      "cvExtra": ["Compiled and cleaned longitudinal data on student and faculty outcomes and relationships."],
+      "cv": [
+        "professional-experience",
+        0
+      ],
+      "cvExtra": [
+        "Compiled and cleaned longitudinal data on student and faculty outcomes and relationships."
+      ],
       "bullets": [
         "Analyzed class size and instructor type by student rank and demographics, and presented the initial findings.",
-        "Built a GRE database with another graduate student showing the GRE predicted first-year GPA no better than undergraduate GPA, and presented it to faculty and administrators. The program then made the GRE optional.",
+        "Built a GRE database with another graduate student showing the GRE predicted first-year GPA no better than undergraduate GPA. Presented it to faculty and administrators, and the program then made the GRE optional.",
         "Recommended and implemented a data-visibility policy for student gender identity and pronouns.",
         "Used multilevel modeling to evaluate longitudinal student outcomes."
       ]
@@ -48,8 +70,14 @@
       "org": "California State University, Northridge (CSUN), Office of Institutional Research",
       "role": "Data Analyst",
       "when": "May 2018 to Aug 2019",
-      "cv": ["professional-experience", 1],
-      "cvExtra": ["Wrote and presented internal reports on the findings to university administration.", "Prepared manuscripts based on the reports for publication."],
+      "cv": [
+        "professional-experience",
+        1
+      ],
+      "cvExtra": [
+        "Wrote and presented internal reports on the findings to university administration.",
+        "Prepared manuscripts based on the reports for publication."
+      ],
       "bullets": [
         "Merged and analyzed campus-wide records on 100,000+ students to learn how student choices relate to academic outcomes.",
         "Tested whether heavier course loads affect GPA using quasi-experimental methods, including propensity score matching.",
@@ -63,17 +91,24 @@
       "org": "California State University, Northridge, Applied Social Psychology Lab",
       "role": "Graduate Researcher and Lab Coordinator",
       "when": "2017 to 2019",
-      "cv": ["research-experience", 1],
+      "cv": [
+        "research-experience",
+        1
+      ],
       "bullets": [
-        "Coordinated the lab and trained 14 lab assistants.",
+        "Coordinated, scheduled and trained 14 lab assistants to run experiments.",
         "Wrote a thesis on obedience to computer authority, with the analysis plan registered in advance."
-      ]
+      ],
+      "cvExtra": []
     },
     {
       "org": "University of California, Riverside, OBSERVE Lab",
       "role": "Lab Manager and Research Assistant",
       "when": "2014 to 2017",
-      "cv": ["research-experience", 6],
+      "cv": [
+        "research-experience",
+        6
+      ],
       "bullets": [
         "Managed the schedules and reviews of 15 research assistants.",
         "Wrote Excel macros and Praat scripts to process speech data."
@@ -86,15 +121,40 @@
     "Logg, J. M.†, <strong>Leitao, M. R.</strong>†, &amp; Ulu, C. The cost of generative AI collaboration strategies to the psychological experience of work. Preprint, under review. † Co-first authors."
   ],
   "education": [
-    {"degree": "Ph.D., Psychology (Human Development and Public Policy)", "org": "Georgetown University", "when": "2024"},
-    {"degree": "M.P.P., Master of Public Policy", "org": "Georgetown University", "when": "2021"},
-    {"degree": "M.A., General Experimental Psychology", "org": "California State University, Northridge", "when": "2019"},
-    {"degree": "B.A., Psychology", "org": "University of California, Riverside", "when": "2015"}
+    {
+      "degree": "Ph.D., Psychology (Human Development and Public Policy)",
+      "org": "Georgetown University",
+      "when": "2024"
+    },
+    {
+      "degree": "M.P.P., Master of Public Policy",
+      "org": "Georgetown University",
+      "when": "2021"
+    },
+    {
+      "degree": "M.A., General Experimental Psychology",
+      "org": "California State University, Northridge",
+      "when": "2019"
+    },
+    {
+      "degree": "B.A., Psychology",
+      "org": "University of California, Riverside",
+      "when": "2015"
+    }
   ],
   "skills": [
-    ["Statistics and programming", "R and RStudio, SPSS, Stata, Mplus, Jamovi, JASP; Python and SQL (developing)"],
-    ["Data and survey tools", "Tableau, Qualtrics, Prolific, CloudResearch, Mechanical Turk, SONA, Quarto, Excel"],
-    ["Methods", "Randomized experiments, survey design, daily-diary studies, regression and multilevel modeling, causal inference, group comparisons, mixed methods"]
+    [
+      "Statistics and programming",
+      "R and RStudio, SPSS, Stata, Mplus, Jamovi, JASP; Python and SQL (developing)"
+    ],
+    [
+      "Data and survey tools",
+      "Tableau, Qualtrics, Prolific, CloudResearch, Mechanical Turk, SONA, Quarto, Excel"
+    ],
+    [
+      "Methods",
+      "Randomized experiments, survey design, daily-diary studies, regression and multilevel modeling, causal inference, group comparisons, mixed methods"
+    ]
   ],
   "honors": [
     "Graduate Student Teaching Award, Georgetown University (2023)",
