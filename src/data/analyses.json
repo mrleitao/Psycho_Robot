@@ -333,37 +333,37 @@
         "name": "Classification trees",
         "level": "developing",
         "about": "Predict a category by splitting cases through a series of yes-or-no questions about their features.",
-        "skill": "Machine learning and prediction"
+        "skill": "Classification and model evaluation"
       },
       {
         "name": "Support vector machines",
         "level": "developing",
         "about": "Predict a category by finding the boundary that best separates the groups of cases.",
-        "skill": "Machine learning and prediction"
+        "skill": "Classification and model evaluation"
       },
       {
         "name": "Nearest neighbors",
         "level": "developing",
         "about": "Predict a case's category from the categories of the most similar cases.",
-        "skill": "Machine learning and prediction"
+        "skill": "Classification and model evaluation"
       },
       {
         "name": "Naive Bayes",
         "level": "developing",
         "about": "Predict a category by combining the odds from each feature, assuming the features act independently.",
-        "skill": "Machine learning and prediction"
+        "skill": "Classification and model evaluation"
       },
       {
         "name": "Cross-validation",
         "level": "developing",
         "about": "Test a model on data it was not trained on, by repeatedly holding out part of the data.",
-        "skill": "Machine learning and prediction"
+        "skill": "Classification and model evaluation"
       },
       {
         "name": "ROC curves and confusion matrices",
         "level": "developing",
         "about": "Show how often a classifier is right and in what ways it is wrong, across different cutoffs.",
-        "skill": "Machine learning and prediction"
+        "skill": "Classification and model evaluation"
       }
     ]
   },

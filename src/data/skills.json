@@ -995,19 +995,17 @@
   {
     "group": "Analysis",
     "type": "hard",
-    "name": "Machine learning and prediction",
-    "definition": "Building models that learn patterns from data and predict new cases, then testing them on data the model has not seen.",
+    "name": "Classification and model evaluation",
+    "definition": "Building a model that sorts cases into groups, then testing it on data the model has not seen. The test shows how often it is right and what its mistakes cost.",
     "level": "developing",
     "also": [
-      "Predictive modeling",
       "Classifiers",
       "Model evaluation"
     ],
     "includes": [
       "Trees, SVM, KNN, Naive Bayes",
       "Cross-validation",
-      "ROC and confusion matrices",
-      "App-usage prediction"
+      "ROC and confusion matrices"
     ],
     "fields": [
       "dsa",
@@ -1015,7 +1013,7 @@
       "game",
       "acad"
     ],
-    "proof": "I built and tested classifiers in an end-to-end Python project for a graduate course, and I presented a poster on predicting app use.",
+    "proof": "I built and tested classifiers in an end-to-end Python project for a graduate course. My prediction work outside coursework is regression-based, such as a poster on predicting app use.",
     "icon": "tree",
     "evidence": [
       "c-py",
@@ -1122,12 +1120,10 @@
     "level": "have",
     "also": [
       "Psychological text analysis",
-      "LIWC",
-      "Text-similarity metrics"
+      "LIWC"
     ],
     "includes": [
-      "LIWC",
-      "Cosine, Jaccard and Sørensen-Dice similarity"
+      "LIWC"
     ],
     "fields": [
       "ai",
@@ -1135,7 +1131,7 @@
       "ins",
       "game"
     ],
-    "proof": "I ran LIWC text analysis at a university lab in 2018 and 2019. In my generative AI preprint, I compared human and AI writing with similarity scores.",
+    "proof": "I ran LIWC text analysis at a university lab in 2018 and 2019.",
     "icon": "lines",
     "evidence": [
       "visn",
@@ -1183,19 +1179,21 @@
     "also": [
       "Natural language processing",
       "Embeddings",
-      "Topic models"
+      "Topic models",
+      "Text-similarity metrics"
     ],
     "includes": [
       "TF-IDF",
       "Bag of words",
-      "Language-model coding"
+      "Language-model coding",
+      "Cosine, Jaccard and Sørensen-Dice similarity"
     ],
     "fields": [
       "ai",
       "dsa",
       "ins"
     ],
-    "proof": "I took a 2023 text-analytics workshop and a graduate course on word-frequency methods (TF-IDF) and language processing.",
+    "proof": "In my generative AI preprint, I compared human and AI writing with similarity scores. I also took a 2023 text-analytics workshop and a graduate course on word-frequency methods (TF-IDF) and language processing.",
     "icon": "quote",
     "evidence": [
       "t-text",
@@ -1582,7 +1580,7 @@
       "lnd",
       "eval"
     ],
-    "proof": "I redesigned parts of the Georgetown participant pool, and research yield rose 50% over the previous year. I also built reusable lab templates.",
+    "proof": "As co-coordinator of the Georgetown participant pool, I helped redesign how it worked, and research yield rose 50% over the previous year. I also built reusable lab templates.",
     "icon": "cycle",
     "evidence": [
       "sona"
@@ -1744,7 +1742,7 @@
       "lnd",
       "acad"
     ],
-    "proof": "I have taught at Georgetown, CSUN and Kaplan, led recitations, tutored, and given guest lectures in people analytics and learning analytics.",
+    "proof": "I have taught at Georgetown and Kaplan, assisted and tutored at CSUN, led recitations, and given guest lectures in people analytics and learning analytics.",
     "icon": "book",
     "evidence": [
       "psytech",
@@ -1987,6 +1985,34 @@
     "evidence": [
       "genai",
       "riskcreep",
+      "thissite"
+    ]
+  },
+  {
+    "group": "AI integration",
+    "type": "hard",
+    "name": "AI coding assistants",
+    "definition": "Using an AI assistant to draft code, check it, and explain it, while keeping responsibility for what the code does.",
+    "level": "developing",
+    "also": [
+      "Claude",
+      "Claude Code",
+      "ChatGPT"
+    ],
+    "includes": [
+      "Claude",
+      "Claude Code",
+      "ChatGPT code output"
+    ],
+    "fields": [
+      "ai",
+      "dsa",
+      "acad",
+      "ins"
+    ],
+    "proof": "I am familiar with Claude, Claude Code and ChatGPT for coding and analysis. I use them for specific tasks, not as a daily tool, and I check what they write.",
+    "icon": "terminal",
+    "evidence": [
       "thissite"
     ]
   },
