@@ -287,10 +287,13 @@ const asks = [
     requestAnimationFrame(() => requestAnimationFrame(() => strip.classList.add('go')));
   }
   const read = document.getElementById('c-read');
-  document.getElementById('career')?.addEventListener('pointerover', (e) => {
+  const show = (e: Event) => {
     const b = (e.target as HTMLElement).closest('.c-bar') as HTMLElement | null;
     if (b && read) read.textContent = `${b.dataset.name}, ${b.dataset.yrs}`;
-  });
+  };
+  // Mouse hover updates the readout. Touch updates it only on a deliberate tap, so brushing a bar while scrolling changes nothing.
+  document.getElementById('career')?.addEventListener('pointerover', (e) => { if ((e as PointerEvent).pointerType === 'mouse') show(e); });
+  document.getElementById('career')?.addEventListener('click', show);
   document.getElementById('career')?.addEventListener('focusin', (e) => {
     const b = (e.target as HTMLElement).closest('.c-bar') as HTMLElement | null;
     if (b && read) read.textContent = `${b.dataset.name}, ${b.dataset.yrs}`;
@@ -343,7 +346,7 @@ const asks = [
   .c-bar:hover, .c-bar:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; z-index: 1; }
   .c-axis { position: relative; height: 1.2rem; font-size: 0.8rem; color: var(--muted); margin-top: 0.2rem; }
   .c-axis span { position: absolute; left: calc(var(--l) * 1%); transform: translateX(0); }
-  .c-read { margin: 0.5rem 0 0; font-size: 0.9rem; color: var(--muted); min-height: 1.4em; }
+  .c-read { margin: 0.5rem 0 0; font-size: 0.9rem; line-height: 1.4; color: var(--muted); min-height: 2.8em; overflow-anchor: none; }
   .strip.lead { margin-top: 0; }
   @media (min-width: 720px) { .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
   .count { margin-top: 1rem; font-family: var(--display); }
