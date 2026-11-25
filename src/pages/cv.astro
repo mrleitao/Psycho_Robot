@@ -1,7 +1,7 @@
 ---
 import { execSync } from 'node:child_process';
 import Base from '../layouts/Base.astro';
-import Placeholder from '../components/Placeholder.astro';
+import { href } from '../utils/url';
 import cv from '../data/cv/cv.json';
 import pubs from '../data/cv/publications.json';
 
@@ -49,13 +49,13 @@ const sections = order.map((id) =>
 );
 ---
 
-<Base title="CV" description="Matthew Leitao's CV: positions, education, publications, teaching, presentations and skills, kept up to date.">
+<Base title="CV/Resume" description="Matthew Leitao's CV and resume: positions, education, publications, teaching, presentations and skills, kept up to date.">
   <div class="wrap">
     <header class="page-head">
-      <h1>CV</h1>
+      <h1>CV/Resume</h1>
       <p class="lede">
-        The full record, kept up to date. This page builds from a data file, so each new paper, talk or role shows here
-        as soon as it is added.
+        The short version first, then the full academic record. It is kept up to date, and each new paper, talk or role
+        shows here as soon as I add it.
       </p>
       <p class="meta small muted">
         Updated {fmtDate(updated)}.
@@ -64,7 +64,7 @@ const sections = order.map((id) =>
     </header>
 
     <div class="layout">
-      <nav class="index" aria-label="CV sections">
+      <nav class="index" aria-label="CV/Resume sections">
         <ul>
           <li><a href="#glance">At a glance</a></li>
           {sections.map((s) => <li><a href={`#${s.id}`}>{s.title}</a></li>)}
@@ -193,12 +193,9 @@ const sections = order.map((id) =>
         </section>
 
         <section class="block">
-          <Placeholder
-            title="CV download"
-            provide={[
-              'A PDF of your CV, saved as public/Matthew_Leitao_CV.pdf. Tell me which version to link: the full academic CV, a one-page industry resume, or both.',
-            ]}
-          />
+          <p class="small">
+            <a href={href("/Matthew_Leitao_CV_Resume.pdf")}>Download the CV/Resume as a PDF</a>, current as of {fmtDate(updated)}.
+          </p>
         </section>
       </div>
     </div>

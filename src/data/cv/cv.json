@@ -1,7 +1,11 @@
 {
   "_note": "The live CV. Edit this file (or send changes in chat) and the CV page rebuilds from it. Publications live in publications.json. Public repo: no home address, no phone number.",
-  "updated": "2026-10-15",
+  "updated": "2026-11-24",
   "changes": [
+    {
+      "date": "2026-11-24",
+      "text": "Renamed the page CV/Resume. Ended the NIH position on Oct 30, 2026 and added detail to it. Added lab management and institutional research detail, corrected the GRE service entry, added skills, and replaced the download placeholder with a PDF."
+    },
     {
       "date": "2026-10-15",
       "text": "Rebuilt as a data-driven page from the 2026 CV, with citation fixes: published buffet paper and DOI, published smartphone DOI, Ergonomics 2021, Persky S., Tibbetts, Parrott, and Society for Personality and Social Psychology."
@@ -9,10 +13,10 @@
   ],
   "summary": [
     {
-      "when": "2024 to now",
+      "when": "2024 to 2026",
       "title": "Postdoctoral research fellow",
       "org": "National Human Genome Research Institute, National Institutes of Health",
-      "detail": "Manage six projects, including an FDA-regulated pharmacology trial. Run a study of how AI review changes trust in genetic risk results, under principal investigator Susan Persky. Teach R and Quarto to colleagues."
+      "detail": "Managed six projects, including an FDA-regulated pharmacology trial. Ran a study of how AI review changes trust in genetic risk results, under principal investigator Susan Persky. Taught R and Quarto to colleagues. Left the position on Oct 30, 2026."
     },
     {
       "when": "2019 to 2024",
@@ -40,11 +44,15 @@
       "kind": "entries",
       "items": [
         {
-          "when": "Oct 2024 to present",
+          "when": "Oct 2024 to Oct 2026",
           "title": "IRTA postdoctoral researcher",
           "org": "National Human Genome Research Institute, National Institutes of Health",
           "lines": [
-            "Social and Behavioral Research Branch"
+            "Social and Behavioral Research Branch (principal investigator: Susan Persky)",
+            "Managed six projects, including a ghrelin-related pharmacology randomized controlled trial under FDA oversight.",
+            "Led the design of a protocol, now at ethics review, for a 2 x 3 vignette experiment on how a standard result, a geneticist's review or an AI review changes trust in a genetic risk result, with power set at half my dissertation effect (d = 0.115).",
+            "Analyzed data from the pharmacology trial's virtual reality buffet simulation and first-authored the paper in the Journal of Medical Extended Reality.",
+            "Taught Introduction to R and Introduction to Quarto to colleagues."
           ]
         }
       ]
@@ -61,7 +69,7 @@
           "lines": [
             "Concentration: Human Development and Public Policy",
             "Research interest: human-technology interaction and wellbeing",
-            "Dissertation: trust in medical AI versus trust in doctors"
+            "Dissertation: trust in medical AI versus trust in doctors, six preregistered studies including a 15-day daily-diary study with random assignment to AI or doctor advice"
           ]
         },
         {
@@ -184,12 +192,19 @@
         {
           "when": "May 2019 to Jul 2023",
           "title": "Graduate researcher",
-          "org": "Digital Health and Happiness Lab, Georgetown University"
+          "org": "Digital Health and Happiness Lab, Georgetown University",
+          "lines": [
+            "Ran six or seven concurrent projects and managed five research assistants.",
+            "Ran preregistered online experiments and daily-diary studies on trust in medical AI."
+          ]
         },
         {
           "when": "Aug 2018 to Aug 2019",
           "title": "Lab coordinator",
-          "org": "Applied Social Psychology Lab, California State University, Northridge (Dr. Abraham M. Rutchick)"
+          "org": "Applied Social Psychology Lab, California State University, Northridge (Dr. Abraham M. Rutchick)",
+          "lines": [
+            "Coordinated the lab and trained 14 lab assistants on projects, schedules and administration."
+          ]
         },
         {
           "when": "Jun 2017 to Aug 2019",
@@ -214,7 +229,11 @@
         {
           "when": "Jan to Dec 2014",
           "title": "Lab manager",
-          "org": "OBSERVE Lab, University of California, Riverside (Dr. Megan Robbins)"
+          "org": "OBSERVE Lab, University of California, Riverside (Dr. Megan Robbins)",
+          "lines": [
+            "Managed the schedules and reviews of 15 research assistants.",
+            "Wrote Excel macros and Praat scripts to process speech data."
+          ]
         },
         {
           "when": "Aug 2013 to Apr 2014",
@@ -234,7 +253,7 @@
           "org": "Office of Assessment and Decision Support, Georgetown University",
           "lines": [
             "Compiled and cleaned longitudinal data on student and faculty outcomes and relationships.",
-            "Ran initial descriptive and inferential analyses of student scholastic outcomes.",
+            "Analyzed class size and instructor time by student rank, faculty type, ethnicity and gender, and presented initial findings.",
             "Used multilevel modeling to evaluate longitudinal student outcomes and trajectories."
           ]
         },
@@ -244,8 +263,9 @@
           "org": "Office of Institutional Research, California State University, Northridge",
           "lines": [
             "Merged, cleaned and analyzed campus-wide data on more than 100,000 students to learn how student traits and choices relate to academic outcomes.",
+            "Compared how first-year unit load relates to GPA, retention and graduation for student groups, including athletes, Pell-eligible students, and students served by disability services, including Deaf students.",
             "Wrote and presented internal reports on the findings to university administration.",
-            "Built Tableau worksheets and dashboards for the university to use.",
+            "Built Tableau worksheets and dashboards that administrators, department chairs and deans used, refreshed each semester.",
             "Prepared manuscripts based on the reports for publication."
           ]
         },
@@ -509,11 +529,11 @@
       "groups": [
         {
           "heading": "Research methods",
-          "text": "Experimental design; human-subjects research; survey design; behavioral interventions; vignette studies; mixed-methods research; preregistration"
+          "text": "Experimental design; human-subjects research; survey design; behavioral interventions; vignette studies; daily-diary studies; focus groups; mixed-methods research; blind rating design; preregistration"
         },
         {
           "heading": "Analysis",
-          "text": "Statistical modeling; causal inference; longitudinal analysis; multilevel modeling; data cleaning; data management; behavioral data analysis; data visualization; dashboard development"
+          "text": "Statistical modeling; causal inference; longitudinal analysis; multilevel modeling; repeated-measures analysis; subgroup and group-difference analysis; student-success and institutional analytics; data cleaning; data management; behavioral data analysis; data visualization; dashboard development"
         },
         {
           "heading": "Research platforms",
@@ -534,6 +554,10 @@
         {
           "heading": "Productivity",
           "text": "Excel, Word, PowerPoint and Keynote, WordPress, Canva, Quarto, LaTeX"
+        },
+        {
+          "heading": "AI tools",
+          "text": "Claude, Claude Code and ChatGPT for coding and research workflows (developing)"
         }
       ]
     },
@@ -642,7 +666,7 @@
         },
         {
           "when": "Fall 2021 to Spring 2022",
-          "title": "Member, Gender Identity and Pronoun Task Force",
+          "title": "Member, Gender Identity and Pronoun Task Force; recommended the data policy",
           "org": "Data Governance Task Force, Georgetown University"
         },
         {
@@ -657,7 +681,7 @@
         },
         {
           "when": "",
-          "title": "Member, initiative that made the GRE optional",
+          "title": "Evidence for making the GRE optional: with another graduate student, built a database on how useful the GRE was in recruitment and interviews and presented it to faculty and administrators. The program then made it optional.",
           "org": "Georgetown University"
         }
       ]
