@@ -2,14 +2,14 @@
 // Decorative simulated regression: a rolling least-squares fit on the latest 50 simulated points.
 // Not research data. Mount once, inside a full-width section.
 ---
-<svg id="wave" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" shape-rendering="geometricPrecision"></svg>
+<svg id="wave" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"></svg>
 <div class="reg-ui">
   <p class="reg-label">Simulated points, not study data. The line is a rolling fit to the 50 highlighted points.</p>
   <button id="pause" type="button" aria-pressed="false">Pause motion</button>
 </div>
 
 <style>
-  #wave { position: absolute; inset: 0; width: 100%; height: 100%; display: block; overflow: hidden; z-index: -1; pointer-events: none; }
+  #wave { position: absolute; inset: 0; width: 100%; height: 100%; display: block; overflow: hidden; z-index: -1; pointer-events: none; contain: strict; }
   .reg-ui { position: absolute; left: 0; right: 0; bottom: 14px; z-index: 1; max-width: 1040px; margin-inline: auto; padding-inline: clamp(16px, 4vw, 32px); display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; pointer-events: none; }
   .reg-label { margin: 0; font: 500 0.85rem/1.4 var(--display); color: var(--muted); background: var(--paper); padding: 4px 10px; border-radius: 4px; pointer-events: auto; }
   #pause { font: 500 0.85rem/1.4 var(--display); background: var(--paper); border: 1px solid var(--muted); border-radius: 4px; color: var(--ink); padding: 4px 12px; cursor: pointer; pointer-events: auto; }
@@ -22,14 +22,15 @@
 (() => {
  const svg=document.querySelector('#wave'),hero=svg.closest('section');
  const ns='http://www.w3.org/2000/svg';
- function node(tag){const n=document.createElementNS(ns,tag);n.setAttribute('vector-effect','non-scaling-stroke');svg.appendChild(n);return n}
+ function node(tag){const n=document.createElementNS(ns,tag);svg.appendChild(n);return n}
  function attrs(n,a){for(const key in a){const v=String(a[key]);if(n.getAttribute(key)!==v)n.setAttribute(key,v)}}
  const dotNodes=Array.from({length:250},()=>node('circle'));
  const lineNode=node('line');
  const bubbleNodes=Array.from({length:12},()=>node('circle'));
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
  const pause=document.querySelector('#pause');
- let w=1,h=1,frame=0,last=0,time=0,paused=false,visible=true,colors={},cachedStep=-1,cachedBackgroundStep=-1,cachedCount=0,cachedPoints=[],cachedFit=null,cachedPrior=null;
+ const small=matchMedia('(max-width: 600px), (pointer: coarse)');
+ let scrolling=false,scrollTimer=0,w=1,h=1,frame=0,last=0,time=0,paused=false,visible=true,colors={},cachedStep=-1,cachedBackgroundStep=-1,cachedCount=0,cachedPoints=[],cachedFit=null,cachedPrior=null;
  function fit(p){
   if(p.length<2)return null;
   const mx=p.reduce((s,q)=>s+q.x,0)/p.length,my=p.reduce((s,q)=>s+q.y,0)/p.length;
@@ -61,8 +62,11 @@
   return{x1,y1:y(x1),x2,y2:y(x2)};
  }
  function palette(){const c=getComputedStyle(document.documentElement);colors={points:['--coral','--peach','--sand','--steel','--deep'].map(t=>c.getPropertyValue(t).trim()),line:c.getPropertyValue('--ink').trim(),rule:c.getPropertyValue('--rule').trim()}}
- function resize(){const b=hero.getBoundingClientRect();w=b.width;h=b.height;// No viewBox: one SVG unit stays one CSS pixel as the container resizes.
- palette();draw()}
+ function resize(){const b=hero.getBoundingClientRect();
+  // Phone toolbars resize the window while scrolling. Ignore changes that do not alter the hero box.
+  if(Math.abs(b.width-w)<1&&Math.abs(b.height-h)<1)return;
+  w=b.width;h=b.height;// No viewBox: one SVG unit stays one CSS pixel as the container resizes.
+  draw()}
  function draw(){
   const t=reduced.matches?0:time,arrival=t/.5,step=clocks(t).active;
   const backgroundStep=clocks(t).background,backgroundArrival=(t+.25)/.5;
@@ -110,7 +114,9 @@
   while(slot<bubbleNodes.length)attrs(bubbleNodes[slot++],{opacity:0});
  }
  function tick(stamp){frame=0;if(!visible||document.hidden||paused||reduced.matches)return;
-  if(!last||stamp-last>=32){time+=last?Math.min((stamp-last)/1000,.1):0;last=stamp;draw()}
+  // On phones draw at about 15 frames a second and hold still while the page is scrolling, so scrolling stays smooth.
+  const gap=small.matches?64:32;
+  if(!last||stamp-last>=gap){const dt=last?Math.min((stamp-last)/1000,.1):0;last=stamp;if(!scrolling){time+=dt;draw()}}
   frame=requestAnimationFrame(tick);
  }
  function sync(){cancelAnimationFrame(frame);last=0;
@@ -126,8 +132,9 @@
  const resizeObserver=new ResizeObserver(resize);
  resizeObserver.observe(hero,{box:'border-box'});
  window.addEventListener('resize',resize,{passive:true});
+ window.addEventListener('scroll',()=>{scrolling=true;clearTimeout(scrollTimer);scrollTimer=setTimeout(()=>{scrolling=false},140)},{passive:true});
  new IntersectionObserver(e=>{visible=e[0].isIntersecting;sync()}).observe(hero);
  reduced.addEventListener('change',sync);document.addEventListener('visibilitychange',sync);
- resize();sync();
+ palette();resize();draw();sync();
 })();
 </script>
