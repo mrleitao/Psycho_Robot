@@ -306,6 +306,7 @@ const asks = [
   .hero-copy::before { content: ''; position: absolute; inset: -48px -40px; z-index: -1; background: radial-gradient(ellipse at center, var(--paper) 40%, transparent 74%); opacity: 0.85; pointer-events: none; }
   .career { background: color-mix(in srgb, var(--paper) 88%, transparent); padding: 1rem 1.1rem; border-radius: 10px; }
   .hero-grid { display: grid; gap: 2.5rem; align-items: center; }
+  @media (max-width: 959px) { .career { background: var(--paper); border: 1.5px solid var(--rule); } }
   @media (min-width: 960px) { .hero-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 3rem; } }
   .kicker { font-family: var(--display); font-weight: 600; font-size: 1rem; color: var(--deep); margin: 0 0 1rem; }
   :global([data-theme='dark']) .kicker, .kicker { color: var(--muted); }

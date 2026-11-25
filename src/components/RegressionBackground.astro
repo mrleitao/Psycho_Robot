@@ -64,12 +64,21 @@
   return{x1,y1:y(x1),x2,y2:y(x2)};
  }
  function palette(){const c=getComputedStyle(document.documentElement);colors={points:['--coral','--peach','--sand','--steel','--deep'].map(t=>c.getPropertyValue(t).trim()),line:c.getPropertyValue('--ink').trim(),rule:c.getPropertyValue('--rule').trim()}}
- function resize(){const b=hero.getBoundingClientRect();
-  // Phone toolbars resize the window while scrolling. Ignore changes that do not alter the hero box.
-  if(Math.abs(b.width-w)<1&&Math.abs(b.height-h)<1)return;
+ const stacked=matchMedia('(max-width: 959px)'),ui=document.querySelector('.reg-ui');
+ let copy=null;// The headline block comes after this script in the page, so look it up when first needed.
+ // In the stacked (phone and tablet) layout the field sits behind the headline block only, not the career map below it.
+ function box(){const b=hero.getBoundingClientRect();let height=b.height;
+  if(!copy){copy=hero.querySelector('.hero-copy');if(copy&&window.ResizeObserver&&typeof resizeObserver!=='undefined')resizeObserver.observe(copy)}
+  if(stacked.matches&&copy){height=Math.min(b.height,copy.getBoundingClientRect().bottom-b.top+28);svg.style.bottom='auto';svg.style.height=height+'px';ui.style.bottom=(b.height-height+14)+'px'}
+  else{svg.style.removeProperty('bottom');svg.style.removeProperty('height');ui.style.removeProperty('bottom')}
+  return{width:b.width,height}}
+ function resize(force){const b=box();
+  // Phone toolbars resize the window while scrolling. Ignore changes that do not alter the field box.
+  if(force!==true&&Math.abs(b.width-w)<1&&Math.abs(b.height-h)<1)return;
   w=b.width;h=b.height;// No viewBox: one SVG unit stays one CSS pixel as the container resizes.
   draw()}
  function draw(){
+  if(!colors.points)palette();
   const t=reduced.matches?0:time,arrival=t/.5,step=clocks(t).active;
   const backgroundStep=clocks(t).background,backgroundArrival=(t+.25)/.5;
   const count=w<600?125:250,backgroundCount=count-50;
@@ -131,13 +140,15 @@
  matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{palette();draw()});
  // Hero side padding grows on wide screens, keeping its content box constant.
  // Watch the border box so the full-width SVG geometry is refreshed regardless.
- const resizeObserver=new ResizeObserver(resize);
+ const resizeObserver=new ResizeObserver(()=>resize());
  resizeObserver.observe(hero,{box:'border-box'});
- window.addEventListener('resize',resize,{passive:true});
+ stacked.addEventListener('change',()=>resize(true));
+ window.addEventListener('resize',()=>resize(),{passive:true});
  window.addEventListener('scroll',()=>{scrolling=true;clearTimeout(scrollTimer);scrollTimer=setTimeout(()=>{scrolling=false},140)},{passive:true});
  new IntersectionObserver(e=>{visible=e[0].isIntersecting;sync()}).observe(hero);
  reduced.addEventListener('change',sync);document.addEventListener('visibilitychange',sync);
- palette();resize();draw();sync();
+ const start=()=>{palette();resize(true);draw();sync()};
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
  // Show the field only after fonts have loaded and the hero has settled, so dots never jump when the text reflows.
  const show=()=>requestAnimationFrame(()=>{resize();svg.classList.add('ready')});
  if(document.fonts&&document.fonts.ready){document.fonts.ready.then(show);setTimeout(show,2500)}else show();
