@@ -1,0 +1,22 @@
+---
+import SkillTowerBand from './SkillTowerBand.astro';
+interface Props { title: string; lede: string; }
+const { title, lede } = Astro.props;
+---
+<section class="sk-hero">
+  <SkillTowerBand />
+  <div class="wrap">
+    <header class="page-head">
+      <div class="head-copy">
+        <h1>{title}</h1>
+        <p class="lede">{lede}</p>
+      </div>
+    </header>
+  </div>
+</section>
+<style>
+  .sk-hero { position: relative; isolation: isolate; overflow: hidden; min-height: clamp(380px, 44vw, 460px); padding-bottom: 70px; }
+  .head-copy { position: relative; isolation: isolate; max-width: 34rem; }
+  .head-copy::before { content: ''; position: absolute; inset: -40px -40px; z-index: -1; background: radial-gradient(ellipse at center, var(--paper) 40%, transparent 74%); opacity: 0.85; pointer-events: none; }
+  @media (max-width: 900px) { .sk-hero { min-height: 0; padding-bottom: 430px; } }
+</style>

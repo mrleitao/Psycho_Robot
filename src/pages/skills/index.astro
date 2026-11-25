@@ -1,7 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import SkillsNav from '../../components/SkillsNav.astro';
-import SkillTowerBand from '../../components/SkillTowerBand.astro';
+import SkillsHero from '../../components/SkillsHero.astro';
 import EvidenceMatrix from '../../components/EvidenceMatrix.astro';
 import { href } from '../../utils/url';
 import skills from '../../data/skills.json';
@@ -17,17 +17,7 @@ const starts = [
 ---
 
 <Base title="Skills" description="A map of my technical and working-style skills, with the work that backs each one.">
-  <section class="sk-hero">
-    <SkillTowerBand />
-    <div class="wrap">
-      <header class="page-head">
-        <div class="head-copy">
-          <h1>Skills, backed by the work</h1>
-          <p class="lede">Each skill below comes with the studies, roles, courses, and workshops that show it. Start with the map, then open the full list to filter by level, type, field, or year.</p>
-        </div>
-      </header>
-    </div>
-  </section>
+  <SkillsHero title="Skills, backed by the work" lede="Each skill below comes with the studies, roles, courses, and workshops that show it. Start with the map, then open the full list to filter by level, type, field, or year." />
   <div class="wrap">
     <SkillsNav current="overview" />
     <section class="start" aria-labelledby="start-h">
@@ -43,10 +33,6 @@ const starts = [
 </Base>
 
 <style>
-  .sk-hero { position: relative; isolation: isolate; overflow: hidden; min-height: clamp(380px, 44vw, 460px); padding-bottom: 70px; }
-  .head-copy { position: relative; isolation: isolate; max-width: 34rem; }
-  .head-copy::before { content: ''; position: absolute; inset: -40px -40px; z-index: -1; background: radial-gradient(ellipse at center, var(--paper) 40%, transparent 74%); opacity: 0.85; pointer-events: none; }
-  @media (max-width: 900px) { .sk-hero { min-height: 0; padding-bottom: 430px; } }
   .start { margin-top: 2rem; font-family: var(--display); }
   .start h2 { font-size: 1.1rem; margin: 0 0 0.6rem; }
   .start ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: 0.6rem; }

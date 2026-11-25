@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import SkillsHero from '../../components/SkillsHero.astro';
 import SkillsNav from '../../components/SkillsNav.astro';
 import EvidenceMatrix from '../../components/EvidenceMatrix.astro';
 import skills from '../../data/skills.json';
@@ -8,11 +9,8 @@ import evidence from '../../data/evidence.json';
 ---
 
 <Base title="Skills in full" description="Every skill with its level, proof, and evidence, filterable by type, field, area, and year.">
+  <SkillsHero title="Every skill and its evidence" lede="Filter by level, type, field, area, or year. Each entry defines the skill, then says what I did and where it shows up in my record." />
   <div class="wrap">
-    <header class="page-head">
-      <h1>Every skill and its evidence</h1>
-      <p class="lede">Filter by level, type, field, area, or year. Each entry defines the skill, then says what I did and where it shows up in my record.</p>
-    </header>
     <SkillsNav current="full" />
     <div class="body">
       <EvidenceMatrix skills={skills} fields={fields} evidence={evidence} part="full" />

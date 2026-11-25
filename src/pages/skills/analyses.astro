@@ -1,15 +1,13 @@
 ---
 import Base from '../../layouts/Base.astro';
+import SkillsHero from '../../components/SkillsHero.astro';
 import SkillsNav from '../../components/SkillsNav.astro';
 import Analyses from '../../components/Analyses.astro';
 ---
 
 <Base title="Analyses" description="The statistical methods I use, grouped by purpose.">
+  <SkillsHero title="Analyses" lede="The statistical methods I use, grouped by purpose." />
   <div class="wrap">
-    <header class="page-head">
-      <h1>Analyses</h1>
-      <p class="lede">The statistical methods I use, grouped by purpose.</p>
-    </header>
     <SkillsNav current="analyses" />
     <div class="body">
       <Analyses />
