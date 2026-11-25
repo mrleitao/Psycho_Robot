@@ -185,21 +185,23 @@ const nSoft = skills.length - nHard;
         <ul class="rows">
           {g.items.map((s) => (
             <li class={`skill a${g.i}`} id={`s-${slug(s.name)}`} data-level={s.level} data-type={s.type ?? "hard"} data-fields={(s.fields ?? []).join(" ")} data-area={s.group} data-years={yearsOf(s).join(" ")}>
-              <div class="head">
-              <span class="chip chip-s"><SkillIcon name={s.icon ?? 'spark'} size={36} /></span>
-              <h3>{s.name}</h3>
-              <p class="level">
-                <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
-                  {s.level === 'have' && <circle cx="8" cy="8" r="6" class="fill" />}
-                  {s.level === 'developing' && <circle cx="8" cy="8" r="6" class="line" />}
-                </svg>
-                {labelOf[s.level]}
-              </p>
-              </div>
-              <div class="detail">
+              <div class="left">
+                <div class="head">
+                  <span class="chip chip-s"><SkillIcon name={s.icon ?? 'spark'} size={36} /></span>
+                  <h3>{s.name}</h3>
+                  <p class="level">
+                    <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+                      {s.level === 'have' && <circle cx="8" cy="8" r="6" class="fill" />}
+                      {s.level === 'developing' && <circle cx="8" cy="8" r="6" class="line" />}
+                    </svg>
+                    {labelOf[s.level]}
+                  </p>
+                </div>
                 {s.definition && <p class="def"><span class="lbl">Definition</span>{s.definition}</p>}
                 {s.also?.length ? <p class="meta"><span class="lbl">Also known as</span>{s.also.join('; ')}</p> : null}
                 {s.includes?.length ? <p class="meta"><span class="lbl">Skill encompasses</span>{s.includes.join('; ')}</p> : null}
+              </div>
+              <div class="right">
                 <details class="used">
                   <summary>How I used it</summary>
                   <p class="proof">{s.proof}</p>
@@ -314,12 +316,12 @@ const nSoft = skills.length - nHard;
   .tile a:hover, .tile a:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
   .tile.dim a { opacity: 0.25; }
   .chip { flex: none; display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 7px; background: var(--c); color: #fff; }
-  .chip-s { display: grid; width: 3.6rem; height: 3.6rem; border-radius: 12px; }
+  .chip-s { display: grid; width: 4.2rem; height: 4.2rem; border-radius: 13px; }
   .chip-s :global(svg) { width: 62%; height: 62%; }
   .head { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 0.2rem 0.9rem; align-content: start; }
-  .head h3 { margin: 0; font-size: 1.3rem; line-height: 1.2; }
-  .head .level { grid-column: 2; }
-  @media (min-width: 760px) { .head { grid-template-columns: 1fr; gap: 0.7rem; } .head .level { grid-column: 1; } .head h3 { font-size: 1.45rem; } .chip-s { width: 4.6rem; height: 4.6rem; border-radius: 14px; } }
+  .head h3 { margin: 0; font-size: 1.5rem; line-height: 1.15; align-self: end; }
+  .head .level { grid-column: 2; align-self: start; }
+  @media (min-width: 760px) { .head { grid-template-columns: auto 1fr; gap: 0.3rem 1.1rem; } .head .level { grid-column: 2; } .head h3 { font-size: 1.9rem; line-height: 1.12; } .chip-s { grid-row: 1 / span 2; width: 6rem; height: 6rem; border-radius: 18px; } }
   .tname { min-width: 0; overflow-wrap: anywhere; }
   .tl { display: grid; gap: 3px; max-width: 54rem; }
   .tl-head, .tl-row { display: grid; grid-template-columns: 8.5rem repeat(14, minmax(0, 1fr)); gap: 3px; align-items: center; }
@@ -345,7 +347,10 @@ const nSoft = skills.length - nHard;
   .fsel { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; font-family: var(--display); font-size: 0.95rem; }
   select { font: inherit; font-family: var(--display); color: var(--ink); background: var(--paper); border: 1.5px solid var(--rule); border-radius: 6px; padding: 0.4rem 0.6rem; max-width: 100%; }
   .hint { margin: 1.25rem 0 0; font-family: var(--display); font-size: 0.9rem; color: var(--muted); }
-  .detail { min-width: 0; }
+  .left, .right { min-width: 0; }
+  .left .def { margin-top: 1rem; }
+  .right { align-self: start; }
+  @media (min-width: 760px) { .right { padding-top: 0.4rem; } }
   .lbl { display: block; font-family: var(--display); font-size: 0.8rem; font-weight: 600; color: var(--muted); margin-bottom: 0.1rem; }
   .def { margin: 0; line-height: 1.55; }
   .meta { margin: 0.55rem 0 0; font-size: 0.92rem; line-height: 1.5; color: var(--muted); }
@@ -440,8 +445,8 @@ const nSoft = skills.length - nHard;
 
   @media (min-width: 760px) {
     .skill {
-      grid-template-columns: minmax(0, 0.85fr) minmax(0, 2fr);
-      align-items: baseline;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+      align-items: start;
     }
   }
 
