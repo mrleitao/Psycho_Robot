@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import pubs from '../data/cv/publications.json';
+import TerritoryBand from '../components/TerritoryBand.astro';
 import { href } from '../utils/url';
 import { cards, topicLabels } from '../data/research_cards';
 
@@ -12,14 +13,21 @@ const groups = pubs.groups.filter((g) => !g.cvOnly);
   title="Research"
   description="Ten papers published, accepted or under review on trust in AI, smartphones, wellbeing and clinical research, with my role on each."
 >
+  <section class="rs-hero">
+    <TerritoryBand />
+    <div class="wrap">
+      <header class="page-head">
+        <div class="head-copy">
+          <h1>Research</h1>
+          <p class="lede">
+            Ten papers: seven published, one accepted and two under review. I have also given more than 25 conference
+            presentations and chaired the 2024 SPSP session on aversion to and appreciation of AI.
+          </p>
+        </div>
+      </header>
+    </div>
+  </section>
   <div class="wrap">
-    <header class="page-head">
-      <h1>Research</h1>
-      <p class="lede">
-        Ten papers: seven published, one accepted and two under review. I have also given more than 25 conference
-        presentations and chaired the 2024 SPSP session on aversion to and appreciation of AI.
-      </p>
-    </header>
 
 
     <section class="gallery" aria-labelledby="gal-title">
@@ -106,6 +114,10 @@ const groups = pubs.groups.filter((g) => !g.cvOnly);
 </script>
 
 <style>
+  .rs-hero { position: relative; isolation: isolate; overflow: hidden; min-height: clamp(440px, 46vw, 560px); padding-bottom: 70px; }
+  .head-copy { position: relative; isolation: isolate; max-width: 34rem; }
+  .head-copy::before { content: ''; position: absolute; inset: -40px -40px; z-index: -1; background: radial-gradient(ellipse at center, var(--paper) 40%, transparent 74%); opacity: 0.85; pointer-events: none; }
+  @media (max-width: 900px) { .rs-hero { min-height: 0; padding-bottom: 520px; } }
   .group {
     margin-top: clamp(40px, 6vw, 72px);
     max-width: 780px;
