@@ -1,2457 +1,2528 @@
 [
-    {
-        "group": "Study design",
-        "type": "hard",
-        "name": "Theory and construct development",
-        "definition": "Turning a loose idea about behavior into a claim that data can test. That means defining each concept, saying how the concepts connect, and stating what result would count as evidence.",
-        "level": "have",
-        "also": [
-            "Behavioral diagnosis",
-            "Mechanism development",
-            "Theory-driven intervention design"
-        ],
-        "includes": [
-            "Conceptual models",
-            "Construct definition",
-            "Hypothesis formation"
-        ],
-        "fields": [
-            "bar",
-            "ai",
-            "hlth",
-            "acad",
-            "ins"
-        ],
-        "proof": "I developed the theory behind a COVID-19 field study, a study of fans and their favorite characters, a review of smartphones and wellbeing, my thesis, and my dissertation.",
-        "icon": "idea",
-        "evidence": [
-            "riskcreep",
-            "parasocial",
-            "phonereview",
-            "thesis",
-            "diss"
-        ]
-    },
-    {
-        "group": "Study design",
-        "type": "hard",
-        "name": "Experimental design",
-        "definition": "Planning a study so a difference between groups can be traced to one cause. Chance decides who gets which condition, everything else stays the same, and the outcome is measured the same way for everyone.",
-        "level": "have",
-        "also": [
-            "Randomized controlled experiments",
-            "Experiment design and measurement",
-            "Causal tests"
-        ],
-        "includes": [
-            "Random assignment",
-            "Between-subjects designs",
-            "Vignettes",
-            "Manipulation checks",
-            "Cover stories"
-        ],
-        "fields": [
-            "xpr",
-            "bar",
-            "ai",
-            "hlth",
-            "acad",
-            "tsi",
-            "game"
-        ],
-        "proof": "I designed and ran six studies for my dissertation, with each plan registered in advance, and recruited more than 3,000 people. My master's thesis was a registered experiment with 305 participants.",
-        "icon": "flask",
-        "evidence": [
-            "diss",
-            "thesis",
-            "genai",
-            "csunlab"
-        ]
-    },
-    {
-        "group": "Study design",
-        "type": "hard",
-        "name": "Longitudinal and repeated-measures design",
-        "definition": "Planning a study that measures the same people more than once, such as daily diaries or follow-ups. One person's answers are related to each other. The analysis has to account for that so it can separate change over time from differences between people.",
-        "level": "have",
-        "also": [
-            "Intensive longitudinal research",
-            "Diary and experience-sampling studies",
-            "Real-world behavioral measurement"
-        ],
-        "includes": [
-            "Field studies",
-            "Lagged predictors",
-            "Adherence tracking"
-        ],
-        "fields": [
-            "bar",
-            "hlth",
-            "ssp",
-            "ins",
-            "tsi",
-            "acad"
-        ],
-        "proof": "I ran a 15-day behavior-change study with 560 people recruited and 455 retained. I also managed seven-day student diary studies, with about four surveys a day.",
-        "icon": "clock",
-        "evidence": [
-            "diss",
-            "riskcreep",
-            "ema",
-            "t-pitt"
-        ]
-    },
-    {
-        "group": "Study design",
-        "type": "hard",
-        "name": "Causal and quasi-experimental methods",
-        "definition": "Estimating what a program or event changed when people cannot be assigned at random. Methods include difference-in-differences, regression discontinuity, and matching. Each compares a treated group with a similar group and rests on assumptions that must be stated.",
-        "level": "have",
-        "also": [
-            "Impact evaluation",
-            "Difference-in-differences",
-            "Propensity-score matching",
-            "Regression discontinuity"
-        ],
-        "includes": [
-            "Randomized designs",
-            "Matching",
-            "Difference-in-differences",
-            "Regression discontinuity"
-        ],
-        "fields": [
-            "xpr",
-            "eval",
-            "pol",
-            "dsa",
-            "bar"
-        ],
-        "proof": "I matched comparison groups on records for more than 100,000 students and used difference-in-differences terms in my longitudinal studies. Graduate courses trained me in regression discontinuity and instrumental variables.",
-        "icon": "fork",
-        "evidence": [
-            "csunir",
-            "c-stats"
-        ]
-    },
-    {
-        "group": "Study design",
-        "type": "hard",
-        "name": "Crossover trial analysis",
-        "definition": "Analyzing a study in which each person gets every treatment in turn, so each person serves as their own comparison. The analysis has to account for the order, the time period, and effects that carry over from one treatment to the next.",
-        "level": "have",
-        "also": [
-            "Clinical outcomes analysis",
-            "Secondary analysis of a randomized trial"
-        ],
-        "includes": [
-            "Drug and placebo comparisons",
-            "Order effects"
-        ],
-        "fields": [
-            "hlth",
-            "acad"
-        ],
-        "proof": "I am first author on a 2026 paper analyzing a randomized, double-blind crossover trial of a ghrelin-receptor blocker in 29 people with alcohol use disorder. The NIH team designed the trial. I ran the analysis and made the figures.",
-        "icon": "pill",
-        "evidence": [
-            "vrbuffet"
-        ]
-    },
-    {
-        "group": "Study design",
-        "type": "hard",
-        "name": "Mixed-methods program evaluation",
-        "definition": "Judging whether a program works by collecting, analyzing, and combining numbers and words. Surveys and outcome data show how much changed, and interviews and open comments show why. Joining the two gives a fuller answer than either alone.",
-        "level": "have",
-        "also": [
-            "Program evaluation",
-            "Evaluation design",
-            "Mixed-methods research"
-        ],
-        "includes": [
-            "Surveys",
-            "Focus groups",
-            "Interviews",
-            "Administrative data"
-        ],
-        "fields": [
-            "eval",
-            "ins",
-            "lnd",
-            "pol",
-            "bar"
-        ],
-        "proof": "I evaluated a university summer-skills program with focus groups, surveys, and student outcome data. I presented the results at departmental meetings.",
-        "icon": "clipboard",
-        "evidence": [
-            "aims2"
-        ]
-    },
-    {
-        "group": "Study design",
-        "type": "hard",
-        "name": "Research synthesis",
-        "definition": "Pulling the findings of many studies together to answer one question. The question and the rules for including studies are set in advance, and every step is documented to limit bias.",
-        "level": "have",
-        "also": [
-            "Evidence synthesis",
-            "Literature review",
-            "Research agenda development"
-        ],
-        "includes": [
-            "Theory integration",
-            "Evidence comparison"
-        ],
-        "fields": [
-            "bar",
-            "eval",
-            "acad",
-            "ai"
-        ],
-        "proof": "I co-wrote a published review of how smartphones affect wellbeing. I synthesized the evidence for a COVID-19 social-contact paper and pooled the raw data from eight experiments.",
-        "icon": "layers",
-        "evidence": [
-            "phonereview",
-            "covid",
-            "mega"
-        ]
-    },
-    {
-        "group": "Study design",
-        "type": "hard",
-        "name": "Open and reproducible research",
-        "definition": "Working so others can check the results. That means writing the research plan down and registering it before collecting data, then sharing materials and code. Any analysis that was not in the plan is labeled as such.",
-        "level": "have",
-        "also": [
-            "Transparent methods",
-            "Reproducible workflows",
-            "Open science"
-        ],
-        "includes": [
-            "Preregistration",
-            "Public code and materials",
-            "Quarto reports"
-        ],
-        "fields": [
-            "acad",
-            "bar",
-            "ai",
-            "xpr",
-            "eval",
-            "dsa"
-        ],
-        "proof": "I write my analysis plan down and register it publicly before I look at results. I share code and materials, and I co-founded a campus open-science group.",
-        "icon": "unlock",
-        "evidence": [
-            "diss",
-            "thesis",
-            "genai",
-            "mega",
-            "gios",
-            "w-open",
-            "w-power",
-            "w-r"
-        ]
-    },
-    {
-        "group": "Study design",
-        "type": "hard",
-        "name": "Digital behavior and technology effects",
-        "definition": "Studying how using phones, apps, games, and online platforms relates to what people think, feel, and do.",
-        "level": "have",
-        "also": [
-            "Technology-use measurement",
-            "Digital wellbeing"
-        ],
-        "includes": [
-            "Social connection",
-            "Sleep",
-            "Next-day depletion"
-        ],
-        "fields": [
-            "bar",
-            "hlth",
-            "game",
-            "tsi",
-            "ins"
-        ],
-        "proof": "I studied how phone use relates to face-to-face connection, wellbeing and sleep, and how time with close and distant contacts online related to stress during COVID-19.",
-        "icon": "phone",
-        "evidence": [
-            "mega",
-            "phonesleep",
-            "covid",
-            "phonereview",
-            "ema"
-        ]
-    },
-    {
-        "group": "Study design",
-        "type": "hard",
-        "name": "Applied memory and cognition research",
-        "definition": "Using what is known about memory, attention, and judgment to answer practical questions. Examples are how people hold on to information and how they weigh advice.",
-        "level": "developing",
-        "also": [
-            "Cognitive research synthesis",
-            "Applied research proposals"
-        ],
-        "includes": [
-            "Memory theory comparison",
-            "Experiment and grant proposals"
-        ],
-        "fields": [
-            "acad",
-            "bar"
-        ],
-        "proof": "In a graduate seminar, I turned theories of memory into a proposal for an applied study.",
-        "icon": "brain",
-        "evidence": [
-            "c-mem"
-        ]
-    },
-    {
-        "group": "Study design",
-        "type": "hard",
-        "name": "Socio-technical systems analysis",
-        "definition": "Studying a technology together with the people, rules, and settings around it. Outcomes depend on all of them, not on the tool alone.",
-        "level": "developing",
-        "also": [
-            "Deblackboxing technology",
-            "Systems and design thinking"
-        ],
-        "includes": [
-            "AI and cloud systems",
-            "Social and policy dependencies"
-        ],
-        "fields": [
-            "ai",
-            "pol",
-            "lnd"
-        ],
-        "proof": "In a graduate course, I traced how AI, cloud, and data systems depend on people and policy, through essays, a group project, and a final project.",
-        "icon": "gear",
-        "evidence": [
-            "c-ai"
-        ]
-    },
-    {
-        "group": "Measurement and participants",
-        "type": "hard",
-        "name": "Survey and questionnaire development",
-        "definition": "Writing questions that people read the same way and can answer honestly, then testing and revising them before the survey goes out.",
-        "level": "have",
-        "also": [
-            "Survey design",
-            "Questionnaire programming",
-            "Qualtrics"
-        ],
-        "includes": [
-            "Item writing",
-            "Piloting",
-            "Study launch and monitoring"
-        ],
-        "fields": [
-            "ssp",
-            "bar",
-            "ins",
-            "eval",
-            "pol",
-            "game",
-            "hlth"
-        ],
-        "proof": "I built the surveys for every study I have run and programmed them in Qualtrics. I wrote items for a published survey of why people play games.",
-        "icon": "form",
-        "evidence": [
-            "gaming",
-            "diss",
-            "aims2",
-            "ema"
-        ]
-    },
-    {
-        "group": "Measurement and participants",
-        "type": "hard",
-        "name": "Scale development and psychometrics",
-        "definition": "Building a set of questions that measures one idea. The work has three parts: writing and checking the items, building the scale, and testing it. Testing covers how many ideas it captures (dimensionality), how consistent it is (reliability), and whether it measures what it claims (validity).",
-        "level": "have",
-        "also": [
-            "Measurement and validation",
-            "Instrument development",
-            "Factor analysis"
-        ],
-        "includes": [
-            "Item analysis",
-            "EFA and CFA",
-            "Reliability and validity"
-        ],
-        "fields": [
-            "ssp",
-            "bar",
-            "ins",
-            "hlth",
-            "game",
-            "ai"
-        ],
-        "proof": "I built the trust measures for my dissertation and a scale of how close people feel to their smartphones (in preparation, first author). I contributed to a published survey of gaming motivation and a VR symptom questionnaire.",
-        "icon": "ruler",
-        "evidence": [
-            "diss",
-            "iss",
-            "gaming",
-            "vrq"
-        ]
-    },
-    {
-        "group": "Measurement and participants",
-        "type": "hard",
-        "name": "Participant recruitment",
-        "definition": "Finding and enrolling the right people for a study, in enough numbers, through online panels, campuses, clinics, or community groups.",
-        "level": "have",
-        "also": [
-            "Participant pipeline management",
-            "Panel research",
-            "Clinical recruitment support"
-        ],
-        "includes": [
-            "In-person outreach",
-            "Research pools",
-            "Online panels",
-            "Scheduling and tracking"
-        ],
-        "fields": [
-            "rpm",
-            "hlth",
-            "ssp",
-            "xpr",
-            "ins",
-            "tsi"
-        ],
-        "proof": "I recruit in person, through university pools, and on MTurk, CloudResearch and Prolific. I also handle recruitment administration for an NIH clinical trial.",
-        "icon": "people",
-        "evidence": [
-            "diss",
-            "thesis",
-            "covid",
-            "genai",
-            "nih"
-        ]
-    },
-    {
-        "group": "Measurement and participants",
-        "type": "hard",
-        "name": "Participant-centered communication",
-        "definition": "Explaining a study, consent, and results in plain words. People can then decide for themselves whether to take part and know what happens to their information.",
-        "level": "have",
-        "also": [
-            "Participant experience",
-            "Research communication"
-        ],
-        "includes": [
-            "Clear instructions",
-            "Consent-sensitive communication"
-        ],
-        "fields": [
-            "rpm",
-            "hlth",
-            "ssp",
-            "ins"
-        ],
-        "proof": "I wrote the instructions and handled questions for general-public, student, online-panel and clinical-study participants.",
-        "icon": "chat",
-        "evidence": [
-            "csunlab",
-            "ucr",
-            "nih"
-        ]
-    },
-    {
-        "group": "Measurement and participants",
-        "type": "hard",
-        "name": "Online-panel data quality",
-        "definition": "Keeping careless and fake responses out of online studies. Attention checks and screening for bots and duplicates are set before data collection starts.",
-        "level": "have",
-        "also": [
-            "Data quality screening",
-            "Fitness for use",
-            "Attention checks"
-        ],
-        "includes": [
-            "Exclusions",
-            "Duplicate and bot screening"
-        ],
-        "fields": [
-            "ssp",
-            "tsi",
-            "bar",
-            "dsa",
-            "pol"
-        ],
-        "proof": "I screen out inattentive and duplicate respondents. In a COVID-19 survey, 674 people consented and 569 completed it.",
-        "icon": "shieldcheck",
-        "evidence": [
-            "covid",
-            "diss",
-            "genai"
-        ]
-    },
-    {
-        "group": "Measurement and participants",
-        "type": "hard",
-        "name": "Behavioral intervention measurement",
-        "definition": "Choosing and tracking the outcomes that show whether a program changed behavior, and by how much. The same measures are used before and after, and for every group.",
-        "level": "have",
-        "also": [
-            "Digital-health intervention",
-            "Adherence measurement",
-            "Behavior-change outcomes"
-        ],
-        "includes": [
-            "Baseline and follow-up",
-            "Repeated measurement"
-        ],
-        "fields": [
-            "hlth",
-            "bar",
-            "eval"
-        ],
-        "proof": "I designed dissertation Study 6, which tracked trust, adherence, and behavior for 15 days. It showed no reliable difference between the doctor and AI conditions, and I reported it that way.",
-        "icon": "target",
-        "evidence": [
-            "diss"
-        ]
-    },
-    {
-        "group": "Measurement and participants",
-        "type": "hard",
-        "name": "Content and media coding",
-        "definition": "Turning text, video, or images into data with a written coding scheme. Several coders apply it, and their agreement is checked.",
-        "level": "have",
-        "also": [
-            "Qualitative coding",
-            "Content analysis",
-            "Transcription"
-        ],
-        "includes": [
-            "Video evaluation",
-            "Transcription",
-            "Emotional speech analysis"
-        ],
-        "fields": [
-            "tsi",
-            "ins",
-            "pol",
-            "game",
-            "eval"
-        ],
-        "proof": "I coded video for prejudice in media, transcribed focus groups, and analyzed emotional speech in earlier lab roles.",
-        "icon": "tag",
-        "evidence": [
-            "ucr",
-            "aims2",
-            "visn"
-        ]
-    },
-    {
-        "group": "Analysis",
-        "type": "hard",
-        "name": "Regression and multilevel modeling",
-        "definition": "Estimating how an outcome moves with other variables. Multilevel models add random effects for data that are not independent, such as repeated answers from one person or students in the same classroom.",
-        "level": "have",
-        "also": [
-            "Driver analysis",
-            "Predictor modeling",
-            "Nested-data analysis"
-        ],
-        "includes": [
-            "Linear, logistic, ordinal, negative-binomial",
-            "Forward stepwise",
-            "Mixed-effects models",
-            "Person-mean centering"
-        ],
-        "fields": [
-            "bar",
-            "xpr",
-            "dsa",
-            "ins",
-            "hlth",
-            "acad"
-        ],
-        "proof": "I fit linear, logistic, ordinal, negative-binomial, and mixed-effects models. In one analysis I pooled eight experiments (1,778 people) into a single multilevel model.",
-        "icon": "trend",
-        "evidence": [
-            "riskcreep",
-            "mega",
-            "diss",
-            "genai",
-            "covid",
-            "t-pitt"
-        ]
-    },
-    {
-        "group": "Analysis",
-        "type": "hard",
-        "name": "Core statistical tests",
-        "definition": "Choosing the standard test that fits the data, based on how many variables there are and what kind. T-tests compare averages, chi-square handles categories, correlation links two measures, and ANOVA compares three or more groups.",
-        "level": "have",
-        "also": [
-            "Hypothesis testing",
-            "Group comparison",
-            "Inferential statistics"
-        ],
-        "includes": [
-            "t-tests",
-            "ANOVA and mixed ANOVA",
-            "Chi-square tests",
-            "Planned contrasts",
-            "Effect sizes"
-        ],
-        "fields": [
-            "bar",
-            "xpr",
-            "ssp",
-            "ins",
-            "acad",
-            "hlth",
-            "dsa"
-        ],
-        "proof": "I run t-tests, ANOVA, planned contrasts and chi-square tests, and I report effect sizes with them, in my thesis, my dissertation and my graduate statistics courses.",
-        "icon": "trend",
-        "evidence": [
-            "diss",
-            "thesis",
-            "covid",
-            "c-stats"
-        ]
-    },
-    {
-        "group": "Analysis",
-        "type": "hard",
-        "name": "Mediation and moderation",
-        "definition": "Testing how an effect works and for whom it holds. A mediator is the middle step that carries the effect, and a moderator is a condition that makes it stronger or weaker. One model can test both.",
-        "level": "have",
-        "also": [
-            "Mechanism analysis",
-            "Subgroup and conditional effects",
-            "Pathway testing"
-        ],
-        "includes": [
-            "Interaction terms",
-            "Planned contrasts",
-            "Causal mediation (ACME)",
-            "Multilevel mediation",
-            "Dominance analysis"
-        ],
-        "fields": [
-            "bar",
-            "ai",
-            "hlth",
-            "xpr",
-            "ins",
-            "acad"
-        ],
-        "proof": "I tested who is affected and why. My dissertation used a multilevel mediated-moderation model, and my generative AI preprint used causal mediation.",
-        "icon": "mediate",
-        "evidence": [
-            "diss",
-            "genai",
-            "mega",
-            "parasocial"
-        ]
-    },
-    {
-        "group": "Analysis",
-        "type": "hard",
-        "name": "Structural equation modeling",
-        "definition": "Testing a whole set of relationships at once, including ideas that cannot be measured directly. The model is then checked for how well it fits the data.",
-        "level": "have",
-        "also": [
-            "Latent-variable modeling",
-            "Path analysis",
-            "Structural validity"
-        ],
-        "includes": [
-            "CFA",
-            "Path models",
-            "Multi-group models",
-            "Mplus through R"
-        ],
-        "fields": [
-            "ssp",
-            "bar",
-            "dsa",
-            "acad"
-        ],
-        "proof": "I built latent-variable path models for an award-winning data competition entry, replicated a published model in R for a graduate course, and ran Mplus models for my dissertation.",
-        "icon": "path",
-        "evidence": [
-            "datajam",
-            "c-sem",
-            "diss"
-        ]
-    },
-    {
-        "group": "Analysis",
-        "type": "hard",
-        "name": "Power and sensitivity analysis",
-        "definition": "Working out how many people a study needs to detect an effect of a given size, often with an 80% chance. After a study ends, the same math shows which effect sizes it could have detected.",
-        "level": "have",
-        "also": [
-            "Sample-size planning",
-            "Minimum detectable effect",
-            "Power analysis"
-        ],
-        "includes": [
-            "A priori power planning",
-            "Sensitivity analysis"
-        ],
-        "fields": [
-            "xpr",
-            "bar",
-            "ssp",
-            "hlth",
-            "eval",
-            "acad"
-        ],
-        "proof": "I plan sample sizes before each study and check what each one can detect. I taught a power-analysis workshop in 2023.",
-        "icon": "gauge",
-        "evidence": [
-            "diss",
-            "mega",
-            "covid",
-            "w-power"
-        ]
-    },
-    {
-        "group": "Analysis",
-        "type": "hard",
-        "name": "Robustness checks",
-        "definition": "Re-running an analysis with other reasonable choices, such as different exclusions or models, to see whether the conclusion holds.",
-        "level": "have",
-        "also": [
-            "Sensitivity checks",
-            "Specification-curve analysis",
-            "Trustworthy results"
-        ],
-        "includes": [
-            "Bonferroni and Tukey corrections",
-            "Intent-to-treat",
-            "Deviation coding",
-            "Variance inflation checks"
-        ],
-        "fields": [
-            "xpr",
-            "ai",
-            "dsa",
-            "bar",
-            "acad"
-        ],
-        "proof": "In my generative AI research, I tested the main result across 69 alternative analyses, so the conclusion does not rest on one analysis choice.",
-        "icon": "shield",
-        "evidence": [
-            "genai",
-            "riskcreep",
-            "mega",
-            "diss"
-        ]
-    },
-    {
-        "group": "Analysis",
-        "type": "hard",
-        "name": "Blind outcome rating",
-        "definition": "Having judges score work without knowing which condition produced it. That keeps their expectations from shaping the scores.",
-        "level": "have",
-        "also": [
-            "Independent evaluation",
-            "Quality scoring"
-        ],
-        "includes": [
-            "Judges blind to condition",
-            "Quality-per-time ratio"
-        ],
-        "fields": [
-            "ai",
-            "xpr",
-            "bar"
-        ],
-        "proof": "I designed blind ratings for my generative AI preprint. Judges who did not know the condition rated the work, and I compared quality with time spent.",
-        "icon": "eyeoff",
-        "evidence": [
-            "genai"
-        ]
-    },
-    {
-        "group": "Analysis",
-        "type": "hard",
-        "name": "Cross-study data integration",
-        "definition": "Combining data from separate studies into one dataset. The measures and coding are matched first, so the studies can be analyzed together.",
-        "level": "have",
-        "also": [
-            "Data harmonization",
-            "Dataset standardization",
-            "Pooled analysis"
-        ],
-        "includes": [
-            "Study indicators",
-            "Sensitivity checks"
-        ],
-        "fields": [
-            "bar",
-            "eval",
-            "ins",
-            "dsa",
-            "rpm",
-            "acad"
-        ],
-        "proof": "I pooled eight experiments for a published analysis. Along the way I found and removed 173 placeholder rows.",
-        "icon": "merge",
-        "evidence": [
-            "mega"
-        ]
-    },
-    {
-        "group": "Analysis",
-        "type": "hard",
-        "name": "Data cleaning and quality control",
-        "definition": "Checking raw data for errors, duplicates, impossible values, and missing answers. Every change is documented so the analysis can be repeated.",
-        "level": "have",
-        "also": [
-            "Data wrangling",
-            "Data integrity",
-            "Analysis-ready data"
-        ],
-        "includes": [
-            "Exclusions",
-            "Missing-data review",
-            "Variable harmonization"
-        ],
-        "fields": [
-            "dsa",
-            "pol",
-            "eval",
-            "ins",
-            "bar",
-            "ssp"
-        ],
-        "proof": "I prepared the data for a study of fans and their favorite characters, for the pooled analysis, and for more than 100,000 student records.",
-        "icon": "funnel",
-        "evidence": [
-            "parasocial",
-            "mega",
-            "csunir",
-            "prs"
-        ]
-    },
-    {
-        "group": "Analysis",
-        "type": "hard",
-        "name": "Data visualization and dashboards",
-        "definition": "Showing data in charts and interactive pages so a reader can see patterns, compare groups, and check the numbers.",
-        "level": "have",
-        "also": [
-            "Self-serve dashboards",
-            "Decision-support reporting",
-            "Tableau"
-        ],
-        "includes": [
-            "ggplot",
-            "Tableau",
-            "Figures for stakeholders"
-        ],
-        "fields": [
-            "dsa",
-            "eval",
-            "ins",
-            "xpr",
-            "rpm",
-            "pol"
-        ],
-        "proof": "I built Tableau dashboards that department chairs and administrators used each semester, and I made the figures for my generative AI preprint and this website.",
-        "icon": "bars",
-        "evidence": [
-            "csunir",
-            "genai",
-            "vrbuffet",
-            "thissite"
-        ]
-    },
-    {
-        "group": "Analysis",
-        "type": "hard",
-        "name": "Bayesian inference",
-        "definition": "Weighing how strongly the data support one hypothesis over another, using a number called the Bayes factor. Unlike a p-value alone, it can show evidence for no effect as well as for an effect.",
-        "level": "have",
-        "also": [
-            "Bayes factors",
-            "Evidence for null effects"
-        ],
-        "includes": [
-            "Bayesian t-tests",
-            "Bayes factors"
-        ],
-        "fields": [
-            "bar",
-            "ssp",
-            "acad",
-            "dsa"
-        ],
-        "proof": "I use Bayes factors and Bayesian t-tests to show how strongly the data support a null result. They appear in my generative AI preprint and on the Studies 1 and 2 pages of this site.",
-        "icon": "odds",
-        "evidence": [
-            "diss",
-            "genai"
-        ]
-    },
-    {
-        "group": "Analysis",
-        "type": "hard",
-        "name": "Latent profile analysis",
-        "definition": "Finding hidden subgroups of people who share a pattern across several measures. The groups are not defined in advance, and the data reveal them.",
-        "level": "developing",
-        "also": [
-            "Person-centered analysis",
-            "Segmentation"
-        ],
-        "includes": [
-            "Latent profiles"
-        ],
-        "fields": [
-            "bar",
-            "ins",
-            "dsa"
-        ],
-        "proof": "I completed a 2023 workshop on latent profile analysis, a method that sorts people into groups by their pattern of answers.",
-        "icon": "clusters",
-        "evidence": [
-            "t-lpa"
-        ]
-    },
-    {
-        "group": "Analysis",
-        "type": "hard",
-        "name": "Machine learning and prediction",
-        "definition": "Building models that learn patterns from data and predict new cases, then testing them on data the model has not seen.",
-        "level": "developing",
-        "also": [
-            "Predictive modeling",
-            "Classifiers",
-            "Model evaluation"
-        ],
-        "includes": [
-            "Trees, SVM, KNN, Naive Bayes",
-            "Cross-validation",
-            "ROC and confusion matrices",
-            "App-usage prediction"
-        ],
-        "fields": [
-            "dsa",
-            "xpr",
-            "game",
-            "acad"
-        ],
-        "proof": "I built and tested classifiers in an end-to-end Python project for a graduate course, and I presented a poster on predicting app use.",
-        "icon": "tree",
-        "evidence": [
-            "c-py",
-            "apppost"
-        ]
-    },
-    {
-        "group": "Analysis",
-        "type": "hard",
-        "name": "Economic and cost-benefit analysis",
-        "definition": "Comparing what a program costs with the value of what it produces, in money or in outcomes gained.",
-        "level": "developing",
-        "also": [
-            "Policy appraisal",
-            "Cost-benefit analysis"
-        ],
-        "includes": [
-            "Market failure",
-            "Public goods",
-            "Social insurance"
-        ],
-        "fields": [
-            "pol",
-            "eval"
-        ],
-        "proof": "I applied cost-benefit and market-failure analysis to policy questions in two graduate economics courses.",
-        "icon": "coin",
-        "evidence": [
-            "c-econ"
-        ]
-    },
-    {
-        "group": "Code and tools",
-        "type": "hard",
-        "name": "R, Stata and SPSS",
-        "definition": "Statistical software for cleaning data, running models, and producing results that others can repeat.",
-        "level": "have",
-        "also": [
-            "Statistical computing",
-            "Reproducible analytics",
-            "Research automation"
-        ],
-        "includes": [
-            "R and RStudio",
-            "Stata",
-            "SPSS",
-            "Mplus",
-            "Jamovi and JASP",
-            "Quarto"
-        ],
-        "fields": [
-            "dsa",
-            "bar",
-            "xpr",
-            "eval",
-            "hlth",
-            "ins",
-            "acad",
-            "ssp"
-        ],
-        "proof": "R is my main language for modeling, figures and teaching. I used Stata across a graduate sequence in regression and program evaluation.",
-        "icon": "code",
-        "evidence": [
-            "diss",
-            "mega",
-            "vrbuffet",
-            "covid",
-            "c-stats",
-            "w-r",
-            "w-nih"
-        ]
-    },
-    {
-        "group": "Code and tools",
-        "type": "hard",
-        "name": "Cloud and API experiment engineering",
-        "definition": "Connecting a survey tool to cloud services and AI model interfaces. The experiment can then randomize people, call a model, and record every response automatically.",
-        "level": "have",
-        "also": [
-            "Prototype research tools",
-            "Model and API integration",
-            "Cloud-hosted data collection"
-        ],
-        "includes": [
-            "ChatGPT API",
-            "AWS",
-            "Qualtrics randomization"
-        ],
-        "fields": [
-            "ai",
-            "xpr"
-        ],
-        "proof": "I host research tasks in the cloud and connect them to survey software. For one study, AWS linked Qualtrics to the ChatGPT API and stored each prompt and response.",
-        "icon": "cloud",
-        "evidence": [
-            "genai"
-        ]
-    },
-    {
-        "group": "Code and tools",
-        "type": "hard",
-        "name": "Text analysis with dictionaries",
-        "definition": "Counting words from fixed word lists, such as emotion or social words, to measure what a piece of writing is about. The counts are checked against human reading.",
-        "level": "have",
-        "also": [
-            "Psychological text analysis",
-            "LIWC",
-            "Text-similarity metrics"
-        ],
-        "includes": [
-            "LIWC",
-            "Cosine, Jaccard and Sørensen-Dice similarity"
-        ],
-        "fields": [
-            "ai",
-            "bar",
-            "ins",
-            "game"
-        ],
-        "proof": "I ran LIWC text analysis at a university lab in 2018 and 2019. In my generative AI preprint, I compared human and AI writing with similarity scores.",
-        "icon": "lines",
-        "evidence": [
-            "visn",
-            "genai",
-            "t-text"
-        ]
-    },
-    {
-        "group": "Code and tools",
-        "type": "hard",
-        "name": "Web, design and automation tools",
-        "definition": "Building web pages and graphics, and writing scripts that automate repeated work.",
-        "level": "have",
-        "also": [
-            "Workflow automation",
-            "Light web development"
-        ],
-        "includes": [
-            "HTML5 and JavaScript",
-            "LaTeX",
-            "WordPress",
-            "Canva",
-            "Excel macros",
-            "Praat scripts"
-        ],
-        "fields": [
-            "rpm",
-            "lnd",
-            "ins"
-        ],
-        "proof": "I wrote Excel macros and Praat scripts in earlier lab work. I build web pages, slides, and posters, including mrleitao.com and this site.",
-        "icon": "wrench",
-        "evidence": [
-            "ucr",
-            "mrleitao",
-            "thissite"
-        ]
-    },
-    {
-        "group": "Code and tools",
-        "type": "hard",
-        "name": "Modern text analysis",
-        "definition": "Using language models and similar tools to measure meaning, similarity, and topics in large amounts of text. The output is validated against careful human reading.",
-        "level": "developing",
-        "also": [
-            "Natural language processing",
-            "Embeddings",
-            "Topic models"
-        ],
-        "includes": [
-            "TF-IDF",
-            "Bag of words",
-            "Language-model coding"
-        ],
-        "fields": [
-            "ai",
-            "dsa",
-            "ins"
-        ],
-        "proof": "I took a 2023 text-analytics workshop and a graduate course on word-frequency methods (TF-IDF) and language processing.",
-        "icon": "quote",
-        "evidence": [
-            "t-text",
-            "c-py",
-            "c-ai",
-            "genai"
-        ]
-    },
-    {
-        "group": "Code and tools",
-        "type": "hard",
-        "name": "Python",
-        "definition": "A general-purpose programming language used for cleaning data, running analyses, and automating tasks.",
-        "level": "developing",
-        "also": [
-            "Applied research computing",
-            "pandas and scikit-learn"
-        ],
-        "includes": [
-            "Pandas",
-            "Jupyter",
-            "Web scraping",
-            "APIs",
-            "scikit-learn"
-        ],
-        "fields": [
-            "dsa",
-            "xpr",
-            "ai"
-        ],
-        "proof": "I used pandas, Jupyter, web scraping, and scikit-learn in a graduate data-science course. R is the language I use daily.",
-        "icon": "terminal",
-        "evidence": [
-            "c-py"
-        ]
-    },
-    {
-        "group": "Code and tools",
-        "type": "hard",
-        "name": "SQL",
-        "definition": "The language for pulling and combining data stored in databases.",
-        "level": "developing",
-        "also": [
-            "Data access",
-            "Querying data warehouses"
-        ],
-        "includes": [
-            "Queries",
-            "Joins"
-        ],
-        "fields": [
-            "dsa",
-            "xpr",
-            "tsi",
-            "ssp"
-        ],
-        "proof": "I am building SQL skills through structured self-directed practice on DataLemur and Mode Analytics, and by translating my R code into SQL.",
-        "icon": "database",
-        "evidence": []
-    },
-    {
-        "group": "Code and tools",
-        "type": "hard",
-        "name": "Geospatial analysis",
-        "definition": "Analyzing data tied to places, such as mapping where outcomes occur and how they vary by location.",
-        "level": "developing",
-        "also": [
-            "ArcGIS",
-            "Open government data"
-        ],
-        "includes": [
-            "ArcGIS",
-            "Open county data"
-        ],
-        "fields": [
-            "pol",
-            "eval",
-            "ins"
-        ],
-        "proof": "I mapped open Los Angeles County data in ArcGIS for a 2018 data competition entry.",
-        "icon": "pin",
-        "evidence": [
-            "datajam"
-        ]
-    },
-    {
-        "group": "AI and human behavior",
-        "type": "hard",
-        "name": "Human-AI trust and reliance research",
-        "definition": "Studying when and why people accept, reject, or lean too heavily on advice from AI, compared with advice from a human expert.",
-        "level": "have",
-        "also": [
-            "Human-AI decision processes",
-            "Calibrated trust",
-            "Over-trust"
-        ],
-        "includes": [
-            "Trust",
-            "Reliance",
-            "Anthropomorphism",
-            "Autonomy",
-            "Weight-on-Advice"
-        ],
-        "fields": [
-            "ai",
-            "hlth",
-            "bar",
-            "tsi",
-            "acad"
-        ],
-        "proof": "My six-study dissertation compares trust in doctors and medical AI. It measures reliance by how far people move their own answer toward the advice.",
-        "icon": "robot",
-        "evidence": [
-            "diss",
-            "autonomy"
-        ]
-    },
-    {
-        "group": "AI and human behavior",
-        "type": "hard",
-        "name": "Human-AI collaboration experiments",
-        "definition": "Testing how splitting a task between a person and an AI changes the quality of the work and how the person feels about it. Who drafts and who edits is one example.",
-        "level": "have",
-        "also": [
-            "Evaluating AI-assisted workflows",
-            "Human-AI collaboration",
-            "Worker experience"
-        ],
-        "includes": [
-            "Draft versus edit",
-            "Ownership",
-            "Engagement"
-        ],
-        "fields": [
-            "ai",
-            "ins",
-            "xpr",
-            "acad"
-        ],
-        "proof": "I am co-first author on a preprint with two experiments (1,299 people) on drafting with generative AI versus editing its output. Work quality was similar. How people experienced the work was not.",
-        "icon": "pair",
-        "evidence": [
-            "genai"
-        ]
-    },
-    {
-        "group": "AI and human behavior",
-        "type": "hard",
-        "name": "Obedience to computer authority",
-        "definition": "Studying whether people follow a computer's instructions the way they follow an authority figure's.",
-        "level": "have",
-        "also": [
-            "Socio-technical research",
-            "Compliance with automated instructions"
-        ],
-        "includes": [
-            "Text-to-speech versus human voice",
-            "Perceived sophistication"
-        ],
-        "fields": [
-            "ai",
-            "tsi",
-            "bar"
-        ],
-        "proof": "My master's thesis (305 participants) tested whether people obey computer instructors as readily as human ones. People obeyed both about equally, and I reported the null result.",
-        "icon": "hand",
-        "evidence": [
-            "thesis"
-        ]
-    },
-    {
-        "group": "AI and human behavior",
-        "type": "hard",
-        "name": "Health and risk communication research",
-        "definition": "Studying how health information and risk are explained, understood, and acted on, including what people do with test results.",
-        "level": "have",
-        "also": [
-            "Risk communication",
-            "Patient-centered research",
-            "Health beliefs"
-        ],
-        "includes": [
-            "Genetic-risk interpretation",
-            "Virtual patients",
-            "Demographic cues"
-        ],
-        "fields": [
-            "hlth",
-            "ai",
-            "bar"
-        ],
-        "proof": "I study how people read genetic-risk information. On a virtual-patient project (200 participants), I collected, cleaned, and analyzed the data.",
-        "icon": "heart",
-        "evidence": [
-            "prs",
-            "nihprot",
-            "genetic",
-            "diss"
-        ]
-    },
-    {
-        "group": "Leading and operating",
-        "type": "hard",
-        "name": "Research program management",
-        "definition": "Keeping a group of related studies on schedule, on budget, and pointed at the same research goals.",
-        "level": "have",
-        "also": [
-            "Portfolio management",
-            "Prioritizing concurrent workstreams",
-            "Study coordination"
-        ],
-        "includes": [
-            "Sequencing",
-            "Delegation",
-            "Milestone tracking"
-        ],
-        "fields": [
-            "rpm",
-            "hlth",
-            "eval"
-        ],
-        "proof": "I managed six to seven projects at once at Georgetown with a student team, and I now support six NIH projects.",
-        "icon": "board",
-        "evidence": [
-            "gtteam",
-            "nih"
-        ]
-    },
-    {
-        "group": "Leading and operating",
-        "type": "hard",
-        "name": "Study operations",
-        "definition": "Running a study day to day: scheduling, collecting data, tracking progress, and fixing problems as they come up.",
-        "level": "have",
-        "also": [
-            "Study coordination",
-            "Fieldwork management"
-        ],
-        "includes": [
-            "Survey builds",
-            "Launches and monitoring",
-            "Data handoffs"
-        ],
-        "fields": [
-            "rpm",
-            "hlth",
-            "ins"
-        ],
-        "proof": "I run studies from ethics approval through launch, monitoring and data handoff, for my own projects and for NIH collaborators.",
-        "icon": "checklist",
-        "evidence": [
-            "gtteam",
-            "nih",
-            "csunlab"
-        ]
-    },
-    {
-        "group": "Leading and operating",
-        "type": "hard",
-        "name": "Supervising and mentoring",
-        "definition": "Directing other people's work, giving feedback, and helping them build skills. Research assistants are a common example.",
-        "level": "have",
-        "also": [
-            "People management",
-            "Delegation",
-            "Mentoring and coaching"
-        ],
-        "includes": [
-            "Training",
-            "Monitoring",
-            "Honors thesis advising"
-        ],
-        "fields": [
-            "rpm",
-            "lnd",
-            "acad"
-        ],
-        "proof": "I have supervised research assistants since 2017, on teams of up to 15. I guided an honors thesis and served as a graduate mentor for a national psychology society.",
-        "icon": "people",
-        "evidence": [
-            "csunlab",
-            "ucr",
-            "gtteam",
-            "honors"
-        ]
-    },
-    {
-        "group": "Leading and operating",
-        "type": "hard",
-        "name": "Research governance",
-        "definition": "Following the rules that protect research participants: ethics review, consent, and approved protocols. They rest on three principles, respect for persons, beneficence, and justice.",
-        "level": "have",
-        "also": [
-            "Compliance",
-            "Protocol development",
-            "IRB management"
-        ],
-        "includes": [
-            "Human-subjects procedures",
-            "Protocol preparation"
-        ],
-        "fields": [
-            "rpm",
-            "hlth",
-            "eval",
-            "pol"
-        ],
-        "proof": "I wrote and managed ethics-board protocols at two universities and support regulated clinical-study administration at NIH.",
-        "icon": "document",
-        "evidence": [
-            "gtteam",
-            "csunlab",
-            "nih"
-        ]
-    },
-    {
-        "group": "Leading and operating",
-        "type": "hard",
-        "name": "Clinical-study administration",
-        "definition": "Handling the paperwork and compliance for a study with patients, including approved protocols, consent, enrollment records, and reporting. The work follows the ethics rules for human subjects research.",
-        "level": "have",
-        "also": [
-            "Regulated study operations",
-            "Clinical recruitment support"
-        ],
-        "includes": [
-            "Recruitment tracking",
-            "Study coordination"
-        ],
-        "fields": [
-            "hlth",
-            "rpm"
-        ],
-        "proof": "I support participant recruitment for an NIH clinical trial that tests a drug.",
-        "icon": "cross",
-        "evidence": [
-            "nih",
-            "vrbuffet"
-        ]
-    },
-    {
-        "group": "Leading and operating",
-        "type": "hard",
-        "name": "Recruitment operations",
-        "definition": "Managing the pipeline that brings participants into a study: outreach, screening, scheduling, and follow-up.",
-        "level": "have",
-        "also": [
-            "Research-pool administration",
-            "Yield monitoring"
-        ],
-        "includes": [
-            "Channel selection",
-            "Research-pool rules"
-        ],
-        "fields": [
-            "rpm",
-            "ssp"
-        ],
-        "proof": "I coordinated the Georgetown research participant pool and combined in-person, university and online recruitment.",
-        "icon": "door",
-        "evidence": [
-            "sona",
-            "nih"
-        ]
-    },
-    {
-        "group": "Leading and operating",
-        "type": "hard",
-        "name": "Workflow and process improvement",
-        "definition": "Finding where routine work is slow or error-prone and redesigning it to be faster and more consistent.",
-        "level": "have",
-        "also": [
-            "Standardizing recurring work",
-            "Process improvement",
-            "Operational documentation"
-        ],
-        "includes": [
-            "Templates",
-            "Standard displays",
-            "Process documentation"
-        ],
-        "fields": [
-            "rpm",
-            "lnd",
-            "eval"
-        ],
-        "proof": "I redesigned parts of the Georgetown participant pool, and research yield rose 50% over the previous year. I also built reusable lab templates.",
-        "icon": "cycle",
-        "evidence": [
-            "sona"
-        ]
-    },
-    {
-        "group": "Leading and operating",
-        "type": "hard",
-        "name": "Grants and budgets",
-        "definition": "Planning what a project will cost and tracking spending against the funding.",
-        "level": "have",
-        "also": [
-            "Proposal development",
-            "Budget development",
-            "Grantsmanship"
-        ],
-        "includes": [
-            "Specific aims",
-            "Budgets",
-            "Timelines"
-        ],
-        "fields": [
-            "rpm",
-            "acad"
-        ],
-        "proof": "I won three named grants and fellowships, and I wrote the budgets and timelines for my funded and independent research.",
-        "icon": "coin",
-        "evidence": [
-            "grants"
-        ]
-    },
-    {
-        "group": "Leading and operating",
-        "type": "hard",
-        "name": "Grant-proposal writing",
-        "definition": "Writing the case for funding: the question, the plan, the budget, and why the work matters.",
-        "level": "developing",
-        "also": [
-            "Proposal writing",
-            "Short-form grant writing"
-        ],
-        "includes": [
-            "Specific aims",
-            "Significance",
-            "Research design"
-        ],
-        "fields": [
-            "acad",
-            "rpm"
-        ],
-        "proof": "I wrote full proposals in graduate seminars, including a three-study program, and I presented grant literature at a university lab.",
-        "icon": "pen",
-        "evidence": [
-            "c-meth",
-            "c-brain",
-            "visn"
-        ]
-    },
-    {
-        "group": "Leading and operating",
-        "type": "hard",
-        "name": "Policy analysis and memos",
-        "definition": "Weighing evidence on a policy question and writing a short memo that gives decision makers a clear recommendation.",
-        "level": "have",
-        "also": [
-            "Policy recommendations",
-            "Data governance",
-            "Briefings"
-        ],
-        "includes": [
-            "Policy memos",
-            "Congressional testimony project",
-            "Options and recommendations"
-        ],
-        "fields": [
-            "pol",
-            "eval",
-            "lnd"
-        ],
-        "proof": "I served on the task force whose recommendation on storing and showing gender identity and pronouns became policy. I also served on the committee behind making the GRE optional at Georgetown. In graduate work I wrote policy memos and testimony.",
-        "icon": "document",
-        "evidence": [
-            "pronoun",
-            "dei",
-            "c-policy"
-        ]
-    },
-    {
-        "group": "Leading and operating",
-        "type": "hard",
-        "name": "Consultative analysis",
-        "definition": "Answering a client's question with data. That means framing the problem, choosing the method, and presenting findings the client can act on.",
-        "level": "developing",
-        "also": [
-            "Internal consulting",
-            "Client-oriented analysis"
-        ],
-        "includes": [
-            "Semi-structured interviews",
-            "Management reports"
-        ],
-        "fields": [
-            "lnd",
-            "eval",
-            "ins"
-        ],
-        "proof": "With a self-managed team, I interviewed an organization and wrote a 20 to 30 page consulting report in a graduate course.",
-        "icon": "briefcase",
-        "evidence": [
-            "c-policy"
-        ]
-    },
-    {
-        "group": "Teaching and communicating",
-        "type": "hard",
-        "name": "Curriculum and course design",
-        "definition": "Planning what a course teaches, in what order, and how learning will be assessed.",
-        "level": "have",
-        "also": [
-            "Instructional design",
-            "Backward design",
-            "Active learning"
-        ],
-        "includes": [
-            "Assessment design",
-            "Peer review",
-            "Scaffolded assignments"
-        ],
-        "fields": [
-            "lnd",
-            "acad"
-        ],
-        "proof": "I designed and taught Psychology of Technology as instructor of record. It won Georgetown's 2023 Graduate Student Teaching Award.",
-        "icon": "book",
-        "evidence": [
-            "psytech",
-            "rmta"
-        ]
-    },
-    {
-        "group": "Teaching and communicating",
-        "type": "hard",
-        "name": "Teaching across settings",
-        "definition": "Teaching in classrooms, labs, workshops, and online, and adjusting to each group of learners.",
-        "level": "have",
-        "also": [
-            "Training delivery",
-            "Tutoring",
-            "Guest lecturing"
-        ],
-        "includes": [
-            "University recitation",
-            "Test prep",
-            "Guest lectures"
-        ],
-        "fields": [
-            "lnd",
-            "acad"
-        ],
-        "proof": "I have taught at Georgetown, CSUN and Kaplan, led recitations, tutored, and given guest lectures in people analytics and learning analytics.",
-        "icon": "book",
-        "evidence": [
-            "psytech",
-            "rmta",
-            "taother",
-            "kaplan",
-            "guest"
-        ]
-    },
-    {
-        "group": "Teaching and communicating",
-        "type": "hard",
-        "name": "Workshop design and facilitation",
-        "definition": "Planning and leading a short, hands-on session so participants leave able to do something new.",
-        "level": "have",
-        "also": [
-            "Technical enablement",
-            "Capability building",
-            "Training delivery"
-        ],
-        "includes": [
-            "Hands-on instruction",
-            "Reusable materials"
-        ],
-        "fields": [
-            "lnd",
-            "rpm",
-            "acad"
-        ],
-        "proof": "I taught workshops on power analysis, R and open science, then Introduction to R and Quarto at NIH.",
-        "icon": "present",
-        "evidence": [
-            "w-open",
-            "w-r",
-            "w-power",
-            "w-nih"
-        ]
-    },
-    {
-        "group": "Teaching and communicating",
-        "type": "hard",
-        "name": "Documentation and reusable resources",
-        "definition": "Writing guides, templates, and code notes so other people can repeat the work without asking.",
-        "level": "have",
-        "also": [
-            "Knowledge products",
-            "Operational documentation"
-        ],
-        "includes": [
-            "Open materials",
-            "Templates",
-            "Training guides"
-        ],
-        "fields": [
-            "lnd",
-            "rpm"
-        ],
-        "proof": "I made public R, Quarto and power-analysis materials on OSF and lab templates that others can reuse.",
-        "icon": "folder",
-        "evidence": [
-            "w-r",
-            "w-power",
-            "mega",
-            "gios",
-            "mrleitao",
-            "thissite"
-        ]
-    },
-    {
-        "group": "Teaching and communicating",
-        "type": "hard",
-        "name": "Scientific writing",
-        "definition": "Writing papers and reports that state the question, the method, and the results clearly and completely.",
-        "level": "have",
-        "also": [
-            "Research writing",
-            "Authoring for publication"
-        ],
-        "includes": [
-            "Manuscripts",
-            "Thesis and dissertation"
-        ],
-        "fields": [
-            "acad",
-            "bar"
-        ],
-        "proof": "I wrote all of my thesis and dissertation, and I contributed writing to several published papers.",
-        "icon": "pen",
-        "evidence": [
-            "diss",
-            "thesis",
-            "riskcreep",
-            "parasocial",
-            "phonereview",
-            "genai"
-        ]
-    },
-    {
-        "group": "Teaching and communicating",
-        "type": "hard",
-        "name": "Technical translation",
-        "definition": "Explaining statistical or technical results to people outside the field without losing accuracy.",
-        "level": "have",
-        "also": [
-            "Data storytelling",
-            "Research storytelling",
-            "Communicating to non-technical audiences"
-        ],
-        "includes": [
-            "Audience adaptation",
-            "Recommendations"
-        ],
-        "fields": [
-            "ins",
-            "dsa",
-            "eval",
-            "xpr",
-            "pol",
-            "bar"
-        ],
-        "proof": "I turn statistics into plain recommendations for papers, talks, dashboards, workshops and policy discussions.",
-        "icon": "swap",
-        "evidence": [
-            "csunir",
-            "psytech",
-            "w-r",
-            "w-power",
-            "mrleitao",
-            "thissite"
-        ]
-    },
-    {
-        "group": "Teaching and communicating",
-        "type": "hard",
-        "name": "Public science communication",
-        "definition": "Sharing research with the general public in plain language, through talks, writing, or media.",
-        "level": "have",
-        "also": [
-            "Popular-press writing",
-            "Science communication"
-        ],
-        "includes": [
-            "Nonexpert audiences",
-            "Policy and business implications"
-        ],
-        "fields": [
-            "lnd",
-            "pol",
-            "bar"
-        ],
-        "proof": "I taught students to write a magazine-style article from a research paper, and I explain my own work in plain words on this site.",
-        "icon": "megaphone",
-        "evidence": [
-            "psytech",
-            "c-brain",
-            "talks",
-            "mrleitao",
-            "thissite"
-        ]
-    },
-    {
-        "group": "Teaching and communicating",
-        "type": "hard",
-        "name": "Talks and speaking",
-        "definition": "Presenting work to an audience, from conference talks to team briefings, and answering their questions.",
-        "level": "have",
-        "also": [
-            "Presenting to leadership",
-            "Public science communication"
-        ],
-        "includes": [
-            "Session chairing",
-            "Invited talks",
-            "Posters"
-        ],
-        "fields": [
-            "acad",
-            "lnd"
-        ],
-        "proof": "I chaired a 2024 conference session on AI, and gave invited talks at the University of Virginia and a film festival.",
-        "icon": "mic",
-        "evidence": [
-            "talks",
-            "autonomy"
-        ]
-    },
-    {
-        "group": "AI integration",
-        "type": "hard",
-        "name": "Building with LLM APIs",
-        "definition": "Writing software that sends requests to a large language model and uses its answers inside a tool or study.",
-        "level": "have",
-        "also": [
-            "LLM integration",
-            "Generative AI prototyping",
-            "AI-enabled research tools"
-        ],
-        "includes": [
-            "ChatGPT API",
-            "Amazon cloud services (AWS)",
-            "Qualtrics randomization",
-            "Prompt and response handling"
-        ],
-        "fields": [
-            "ai",
-            "dsa",
-            "xpr",
-            "acad"
-        ],
-        "proof": "I built the task for my generative AI preprint on the ChatGPT API. Each participant got a live AI response, and every exchange was logged.",
-        "icon": "plug",
-        "evidence": [
-            "genai"
-        ]
-    },
-    {
-        "group": "AI integration",
-        "type": "hard",
-        "name": "AI-assisted analysis and coding",
-        "definition": "Using an AI assistant to speed up writing code and analysis, with a person checking every output.",
-        "level": "have",
-        "also": [
-            "AI-assisted data science",
-            "Code generation and review",
-            "Analysis automation"
-        ],
-        "includes": [
-            "GenAI-generated specification curve",
-            "AI-assisted figures and site code",
-            "Checking AI output against the data"
-        ],
-        "fields": [
-            "ai",
-            "dsa",
-            "acad",
-            "ins"
-        ],
-        "proof": "I used generative AI to run 69 alternative analyses of the main result in my generative AI research. I also use it to build code and figures, including this website, and I check its output against the data.",
-        "icon": "terminal",
-        "evidence": [
-            "genai",
-            "riskcreep",
-            "thissite"
-        ]
-    },
-    {
-        "group": "AI integration",
-        "type": "hard",
-        "name": "AI workflow automation",
-        "definition": "Setting up repeatable steps, written rules, and small tools so an AI assistant does routine work reliably.",
-        "level": "have",
-        "also": [
-            "AI-enabled process automation",
-            "Workflow orchestration",
-            "Internal tooling"
-        ],
-        "includes": [
-            "Written rules and project files for an AI assistant",
-            "Scoring and triage workflows",
-            "Small custom apps"
-        ],
-        "fields": [
-            "ai",
-            "dsa",
-            "ins",
-            "acad"
-        ],
-        "proof": "I built a job-search workflow around an AI assistant, with written rules, a scoring scheme, and daily triage. I also build small tools of my own, such as a task-priority app.",
-        "icon": "gear",
-        "evidence": [
-            "jobsys",
-            "tools",
-            "thissite"
-        ]
-    },
-    {
-        "group": "AI integration",
-        "type": "hard",
-        "name": "Evaluating AI output",
-        "definition": "Testing whether AI answers are accurate and useful, using blind ratings, comparison sets, and clear criteria.",
-        "level": "have",
-        "also": [
-            "Human evaluation of AI",
-            "AI quality measurement",
-            "Model output review"
-        ],
-        "includes": [
-            "Blind third-party ratings",
-            "Quality and time comparisons",
-            "Text-similarity measures"
-        ],
-        "fields": [
-            "ai",
-            "xpr",
-            "ins",
-            "acad"
-        ],
-        "proof": "I designed blind ratings for my generative AI preprint. Judges who did not know the condition scored the work, and I compared quality, time, and how closely people's text matched the AI's.",
-        "icon": "circlecheck",
-        "evidence": [
-            "genai"
-        ]
-    },
-    {
-        "group": "Ownership and leadership",
-        "type": "soft",
-        "name": "Ownership",
-        "definition": "Taking responsibility for a piece of work from start to finish, including its problems.",
-        "level": "have",
-        "also": [
-            "Led end to end",
-            "Accountable for delivery"
-        ],
-        "includes": [],
-        "fields": [
-            "bar",
-            "rpm",
-            "acad",
-            "ai"
-        ],
-        "proof": "I carried my thesis and six-study dissertation from the first question through design, recruitment, analysis and writing.",
-        "icon": "flag",
-        "evidence": [
-            "diss",
-            "thesis"
-        ]
-    },
-    {
-        "group": "Ownership and leadership",
-        "type": "soft",
-        "name": "Project leadership",
-        "definition": "Setting a project's direction, assigning the work, and keeping it moving to the finish.",
-        "level": "have",
-        "also": [
-            "Led parallel workstreams",
-            "Coordinated delivery"
-        ],
-        "includes": [],
-        "fields": [
-            "rpm",
-            "hlth",
-            "eval"
-        ],
-        "proof": "I built a student team, delegated work, and kept six to seven projects moving at once.",
-        "icon": "board",
-        "evidence": [
-            "gtteam",
-            "nih"
-        ]
-    },
-    {
-        "group": "Ownership and leadership",
-        "type": "soft",
-        "name": "People leadership",
-        "definition": "Guiding a team by setting expectations, giving feedback, and supporting each person's growth.",
-        "level": "have",
-        "also": [
-            "Supervised and trained staff",
-            "Delegated and monitored work"
-        ],
-        "includes": [],
-        "fields": [
-            "rpm",
-            "lnd"
-        ],
-        "proof": "I have supervised research assistants since 2017. My teams reached 14 to 15 people.",
-        "icon": "people",
-        "evidence": [
-            "ucr",
-            "csunlab",
-            "gtteam"
-        ]
-    },
-    {
-        "group": "Ownership and leadership",
-        "type": "soft",
-        "name": "Prioritization",
-        "definition": "Deciding which tasks come first when time and resources are limited.",
-        "level": "have",
-        "also": [
-            "Sequencing competing demands"
-        ],
-        "includes": [],
-        "fields": [
-            "rpm",
-            "bar"
-        ],
-        "proof": "I handed off secondary projects to protect my dissertation deadlines and kept the wider research moving.",
-        "icon": "sort",
-        "evidence": [
-            "diss",
-            "gtteam"
-        ]
-    },
-    {
-        "group": "Ownership and leadership",
-        "type": "soft",
-        "name": "Mentorship and development",
-        "definition": "Helping others grow their skills through advice, feedback, and chances to practice.",
-        "level": "have",
-        "also": [
-            "Mentored",
-            "Developed capability"
-        ],
-        "includes": [],
-        "fields": [
-            "lnd",
-            "acad",
-            "rpm"
-        ],
-        "proof": "I guided an undergraduate honors project from start to finish and supported a former student's conference project.",
-        "icon": "sprout",
-        "evidence": [
-            "honors"
-        ]
-    },
-    {
-        "group": "Collaboration and communication",
-        "type": "soft",
-        "name": "Team science",
-        "definition": "A collaborative effort to address a scientific challenge. It draws on the strengths and expertise of people trained in different fields.",
-        "level": "have",
-        "also": [
-            "Collaborated across disciplines",
-            "Integrated expertise"
-        ],
-        "includes": [],
-        "fields": [
-            "hlth",
-            "rpm",
-            "acad",
-            "ai"
-        ],
-        "proof": "I work with teams in psychology, medicine, genomics, policy, business and clinical research, and completed formal team-science training.",
-        "icon": "puzzle",
-        "evidence": [
-            "t-team",
-            "nih",
-            "genai",
-            "vrbuffet"
-        ]
-    },
-    {
-        "group": "Collaboration and communication",
-        "type": "soft",
-        "name": "Stakeholder communication",
-        "definition": "Keeping the people who depend on or fund the work informed, in the form and level of detail they need.",
-        "level": "have",
-        "also": [
-            "Engaged stakeholders",
-            "Adapted communication"
-        ],
-        "includes": [],
-        "fields": [
-            "eval",
-            "ins",
-            "pol",
-            "dsa",
-            "lnd"
-        ],
-        "proof": "I represented graduate students to faculty, answered participants, and explained results to learners, administrators and collaborators.",
-        "icon": "chat",
-        "evidence": [
-            "csunir",
-            "dei",
-            "sona"
-        ]
-    },
-    {
-        "group": "Collaboration and communication",
-        "type": "soft",
-        "name": "Facilitation",
-        "definition": "Guiding a group conversation so everyone contributes and the meeting ends in a decision.",
-        "level": "have",
-        "also": [
-            "Facilitated discussion",
-            "Enabled participation"
-        ],
-        "includes": [],
-        "fields": [
-            "lnd",
-            "eval"
-        ],
-        "proof": "I ran workshops, guest lectures, a journal club and class discussions, and set the rules for respectful disagreement in my course.",
-        "icon": "chat",
-        "evidence": [
-            "w-r",
-            "w-open",
-            "w-power",
-            "gios",
-            "psytech"
-        ]
-    },
-    {
-        "group": "Collaboration and communication",
-        "type": "soft",
-        "name": "Collaborative authorship",
-        "definition": "Writing papers with co-authors: dividing the sections, merging edits, and agreeing on credit.",
-        "level": "have",
-        "also": [
-            "Clarified roles",
-            "Credited contributions"
-        ],
-        "includes": [],
-        "fields": [
-            "acad"
-        ],
-        "proof": "I have worked as first, co-first, middle and contributing author across labs and spelled out each contribution.",
-        "icon": "link",
-        "evidence": [
-            "genai",
-            "riskcreep",
-            "gaming",
-            "vrbuffet"
-        ]
-    },
-    {
-        "group": "Collaboration and communication",
-        "type": "soft",
-        "name": "Advocacy and representation",
-        "definition": "Speaking up for a group or cause and bringing its needs into decisions.",
-        "level": "have",
-        "also": [
-            "Represented",
-            "Advised"
-        ],
-        "includes": [],
-        "fields": [
-            "pol",
-            "eval"
-        ],
-        "proof": "I served on the diversity committee and data-governance task force and brought student needs and evidence into policy discussions.",
-        "icon": "balance",
-        "evidence": [
-            "dei",
-            "pronoun"
-        ]
-    },
-    {
-        "group": "Collaboration and communication",
-        "type": "soft",
-        "name": "Audience awareness",
-        "definition": "Fitting the message, the detail, and the wording to the person reading or listening.",
-        "level": "have",
-        "also": [
-            "Tailored content",
-            "Designed for users"
-        ],
-        "includes": [],
-        "fields": [
-            "lnd",
-            "ins"
-        ],
-        "proof": "I design participant instructions, course assignments and technical materials for readers with different backgrounds.",
-        "icon": "eye",
-        "evidence": [
-            "psytech",
-            "w-r",
-            "diss"
-        ]
-    },
-    {
-        "group": "Judgment and integrity",
-        "type": "soft",
-        "name": "Methodological judgment",
-        "definition": "Choosing the right design and analysis for the question, and knowing what the data can and cannot show.",
-        "level": "have",
-        "also": [
-            "Fit-for-purpose research judgment"
-        ],
-        "includes": [],
-        "fields": [
-            "bar",
-            "xpr",
-            "dsa",
-            "ssp"
-        ],
-        "proof": "I match the analysis to the question: count models for counts, multilevel models for nested data, scale methods for measures, causal designs for cause.",
-        "icon": "compass",
-        "evidence": [
-            "riskcreep",
-            "mega",
-            "diss",
-            "genai"
-        ]
-    },
-    {
-        "group": "Judgment and integrity",
-        "type": "soft",
-        "name": "Honest reporting",
-        "definition": "Reporting what the data show, including results that did not work, without overstating them.",
-        "level": "have",
-        "also": [
-            "Reported results candidly",
-            "Scientific integrity"
-        ],
-        "includes": [],
-        "fields": [
-            "bar",
-            "ai",
-            "acad",
-            "eval",
-            "tsi"
-        ],
-        "proof": "I reported null results as nulls in my thesis and in dissertation Study 6, disclosed changes to my plans, and stated the limits of each design.",
-        "icon": "circlecheck",
-        "evidence": [
-            "thesis",
-            "diss",
-            "mega",
-            "autonomy"
-        ]
-    },
-    {
-        "group": "Judgment and integrity",
-        "type": "soft",
-        "name": "Learning from null results",
-        "definition": "Treating a finding of no effect as information: asking why, and using the answer to design the next study.",
-        "level": "have",
-        "also": [
-            "Refined hypotheses",
-            "Adapted study design"
-        ],
-        "includes": [],
-        "fields": [
-            "bar",
-            "ai",
-            "acad"
-        ],
-        "proof": "After my thesis null result, I studied what it implies for authority in new situations. Each dissertation study refined the one before.",
-        "icon": "stairs",
-        "evidence": [
-            "thesis",
-            "diss"
-        ]
-    },
-    {
-        "group": "Judgment and integrity",
-        "type": "soft",
-        "name": "Ethical judgment",
-        "definition": "Seeing the ethical side of a decision and choosing the course that respects people, limits harm, and treats them fairly.",
-        "level": "have",
-        "also": [
-            "Surfaced tradeoffs",
-            "Defined decision criteria"
-        ],
-        "includes": [],
-        "fields": [
-            "pol",
-            "eval",
-            "tsi",
-            "ai"
-        ],
-        "proof": "I weigh evidence against values, rights and fairness in policy work, and studied privacy, accountability and bias in data courses.",
-        "icon": "balance",
-        "evidence": [
-            "c-policy",
-            "c-ai"
-        ]
-    },
-    {
-        "group": "Judgment and integrity",
-        "type": "soft",
-        "name": "Ethical risk assessment",
-        "definition": "Identifying how a study or tool could harm people, weighing that against its benefits, and putting safeguards in place first.",
-        "level": "have",
-        "also": [
-            "Assessed participant risk",
-            "Designed with safeguards"
-        ],
-        "includes": [],
-        "fields": [
-            "tsi",
-            "ai",
-            "hlth"
-        ],
-        "proof": "My studies involved deception, participant discomfort, clinical samples, and genetic-risk data. I examined cases where trust in AI is too high or too low.",
-        "icon": "alert",
-        "evidence": [
-            "thesis",
-            "prs",
-            "nihprot"
-        ]
-    },
-    {
-        "group": "Judgment and integrity",
-        "type": "soft",
-        "name": "Systems thinking",
-        "definition": "Seeing how the parts of a larger system affect one another, so a fix in one place does not break another.",
-        "level": "have",
-        "also": [
-            "Mapped dependencies",
-            "Designed systems"
-        ],
-        "includes": [],
-        "fields": [
-            "rpm",
-            "eval",
-            "xpr"
-        ],
-        "proof": "In the participant pool I connected participant experience, researcher needs, recruitment rules and course credit into one system.",
-        "icon": "network",
-        "evidence": [
-            "sona"
-        ]
-    },
-    {
-        "group": "Learning and adapting",
-        "type": "soft",
-        "name": "Initiative and community building",
-        "definition": "Starting useful work without being asked and bringing people together around it.",
-        "level": "have",
-        "also": [
-            "Established",
-            "Launched",
-            "Convened"
-        ],
-        "includes": [],
-        "fields": [
-            "lnd",
-            "rpm",
-            "acad"
-        ],
-        "proof": "I co-founded an open-science group and a journal club and started workshops that keep running.",
-        "icon": "spark",
-        "evidence": [
-            "gios",
-            "w-open",
-            "w-r"
-        ]
-    },
-    {
-        "group": "Learning and adapting",
-        "type": "soft",
-        "name": "Adaptability",
-        "definition": "Changing the approach when plans, tools, or conditions change.",
-        "level": "have",
-        "also": [
-            "Adapted delivery",
-            "Navigated change"
-        ],
-        "includes": [],
-        "fields": [
-            "rpm",
-            "lnd"
-        ],
-        "proof": "I moved research, teaching and collaboration online during the pandemic and kept delivering.",
-        "icon": "shuffle",
-        "evidence": [
-            "gtteam",
-            "rmta"
-        ]
-    },
-    {
-        "group": "Learning and adapting",
-        "type": "soft",
-        "name": "Continuous learning",
-        "definition": "Keeping skills current by picking up new methods and tools as the field moves.",
-        "level": "have",
-        "also": [
-            "Built capability",
-            "Adopted new methods"
-        ],
-        "includes": [],
-        "fields": [
-            "acad",
-            "lnd"
-        ],
-        "proof": "I trained in management, team science, latent profiles, text analytics and longitudinal methods, then used them where I could.",
-        "icon": "stairs",
-        "evidence": [
-            "t-mgmt",
-            "t-team",
-            "t-lpa",
-            "t-text",
-            "t-pitt"
-        ]
-    }
+  {
+    "group": "Study design",
+    "type": "hard",
+    "name": "Theory and construct development",
+    "definition": "Turning a loose idea about behavior into a claim that data can test. That means defining each concept, saying how the concepts connect, and stating what result would count as evidence.",
+    "level": "have",
+    "also": [
+      "Behavioral diagnosis",
+      "Mechanism development",
+      "Theory-driven intervention design"
+    ],
+    "includes": [
+      "Conceptual models",
+      "Construct definition",
+      "Hypothesis formation"
+    ],
+    "fields": [
+      "bar",
+      "ai",
+      "hlth",
+      "acad",
+      "ins"
+    ],
+    "proof": "I developed the theory behind a COVID-19 field study, a study of fans and their favorite characters, a review of smartphones and wellbeing, my thesis, and my dissertation.",
+    "icon": "idea",
+    "evidence": [
+      "riskcreep",
+      "parasocial",
+      "phonereview",
+      "thesis",
+      "diss"
+    ]
+  },
+  {
+    "group": "Study design",
+    "type": "hard",
+    "name": "Experimental design",
+    "definition": "Planning a study so a difference between groups can be traced to one cause. Chance decides who gets which condition, everything else stays the same, and the outcome is measured the same way for everyone.",
+    "level": "have",
+    "also": [
+      "Randomized controlled experiments",
+      "Experiment design and measurement",
+      "Causal tests"
+    ],
+    "includes": [
+      "Random assignment",
+      "Between-subjects designs",
+      "Vignettes",
+      "Manipulation checks",
+      "Cover stories"
+    ],
+    "fields": [
+      "xpr",
+      "bar",
+      "ai",
+      "hlth",
+      "acad",
+      "tsi",
+      "game"
+    ],
+    "proof": "I designed and ran six studies for my dissertation, with each plan registered in advance, and recruited more than 3,000 people. My master's thesis was a registered experiment with 305 participants.",
+    "icon": "flask",
+    "evidence": [
+      "diss",
+      "thesis",
+      "genai",
+      "csunlab"
+    ]
+  },
+  {
+    "group": "Study design",
+    "type": "hard",
+    "name": "Longitudinal and repeated-measures design",
+    "definition": "Planning a study that measures the same people more than once, such as daily diaries or follow-ups. One person's answers are related to each other. The analysis has to account for that so it can separate change over time from differences between people.",
+    "level": "have",
+    "also": [
+      "Intensive longitudinal research",
+      "Diary and experience-sampling studies",
+      "Real-world behavioral measurement"
+    ],
+    "includes": [
+      "Field studies",
+      "Lagged predictors",
+      "Adherence tracking"
+    ],
+    "fields": [
+      "bar",
+      "hlth",
+      "ssp",
+      "ins",
+      "tsi",
+      "acad"
+    ],
+    "proof": "I ran a 15-day behavior-change study with 560 people recruited and 455 retained. I also managed seven-day student diary studies, with about four surveys a day.",
+    "icon": "clock",
+    "evidence": [
+      "diss",
+      "riskcreep",
+      "ema",
+      "t-pitt"
+    ]
+  },
+  {
+    "group": "Study design",
+    "type": "hard",
+    "name": "Causal and quasi-experimental methods",
+    "definition": "Estimating what a program or event changed when people cannot be assigned at random. Methods include difference-in-differences, regression discontinuity, and matching. Each compares a treated group with a similar group and rests on assumptions that must be stated.",
+    "level": "have",
+    "also": [
+      "Impact evaluation",
+      "Difference-in-differences",
+      "Propensity-score matching",
+      "Regression discontinuity"
+    ],
+    "includes": [
+      "Randomized designs",
+      "Matching",
+      "Difference-in-differences",
+      "Regression discontinuity"
+    ],
+    "fields": [
+      "xpr",
+      "eval",
+      "pol",
+      "dsa",
+      "bar"
+    ],
+    "proof": "At CSUN Institutional Research I ran a regression discontinuity analysis at the 15-unit load cutoff, then matched comparison groups on student records. In my dissertation's randomized before-and-after study I tested the intervention-by-condition interaction, a difference-in-differences structure. Graduate courses trained me in instrumental variables.",
+    "icon": "fork",
+    "evidence": [
+      "csunir",
+      "diss",
+      "c-stats"
+    ]
+  },
+  {
+    "group": "Study design",
+    "type": "hard",
+    "name": "Crossover trial analysis",
+    "definition": "Analyzing a study in which each person gets every treatment in turn, so each person serves as their own comparison. The analysis has to account for the order, the time period, and effects that carry over from one treatment to the next.",
+    "level": "have",
+    "also": [
+      "Clinical outcomes analysis",
+      "Secondary analysis of a randomized trial"
+    ],
+    "includes": [
+      "Drug and placebo comparisons",
+      "Order effects"
+    ],
+    "fields": [
+      "hlth",
+      "acad"
+    ],
+    "proof": "I am first author on a 2026 paper analyzing a randomized, double-blind crossover trial of a ghrelin-receptor blocker in 29 people with alcohol use disorder. The NIH team designed the trial. I ran the analysis and made the figures.",
+    "icon": "pill",
+    "evidence": [
+      "vrbuffet"
+    ]
+  },
+  {
+    "group": "Study design",
+    "type": "hard",
+    "name": "Mixed-methods program evaluation",
+    "definition": "Judging whether a program works by collecting, analyzing, and combining numbers and words. Surveys and outcome data show how much changed, and interviews and open comments show why. Joining the two gives a fuller answer than either alone.",
+    "level": "have",
+    "also": [
+      "Program evaluation",
+      "Evaluation design",
+      "Mixed-methods research"
+    ],
+    "includes": [
+      "Surveys",
+      "Focus groups",
+      "Interviews",
+      "Administrative data"
+    ],
+    "fields": [
+      "eval",
+      "ins",
+      "lnd",
+      "pol",
+      "bar"
+    ],
+    "proof": "I evaluated a university summer-skills program with focus groups, surveys, and student outcome data. I presented the results at departmental meetings.",
+    "icon": "clipboard",
+    "evidence": [
+      "aims2"
+    ]
+  },
+  {
+    "group": "Study design",
+    "type": "hard",
+    "name": "Research synthesis",
+    "definition": "Pulling the findings of many studies together to answer one question. The question and the rules for including studies are set in advance, and every step is documented to limit bias.",
+    "level": "have",
+    "also": [
+      "Evidence synthesis",
+      "Literature review",
+      "Research agenda development"
+    ],
+    "includes": [
+      "Theory integration",
+      "Evidence comparison"
+    ],
+    "fields": [
+      "bar",
+      "eval",
+      "acad",
+      "ai"
+    ],
+    "proof": "I co-wrote a published review of how smartphones affect wellbeing. I synthesized the evidence for a COVID-19 social-contact paper and pooled the raw data from eight experiments.",
+    "icon": "layers",
+    "evidence": [
+      "phonereview",
+      "covid",
+      "mega"
+    ]
+  },
+  {
+    "group": "Study design",
+    "type": "hard",
+    "name": "Open and reproducible research",
+    "definition": "Working so others can check the results. That means writing the research plan down and registering it before collecting data, then sharing materials and code. Any analysis that was not in the plan is labeled as such.",
+    "level": "have",
+    "also": [
+      "Transparent methods",
+      "Reproducible workflows",
+      "Open science"
+    ],
+    "includes": [
+      "Preregistration",
+      "Public code and materials",
+      "Quarto reports"
+    ],
+    "fields": [
+      "acad",
+      "bar",
+      "ai",
+      "xpr",
+      "eval",
+      "dsa"
+    ],
+    "proof": "I write my analysis plan down and register it publicly before I look at results. I share code and materials, and I co-founded a campus open-science group.",
+    "icon": "unlock",
+    "evidence": [
+      "diss",
+      "thesis",
+      "genai",
+      "mega",
+      "gios",
+      "w-open",
+      "w-power",
+      "w-r"
+    ]
+  },
+  {
+    "group": "Study design",
+    "type": "hard",
+    "name": "Digital behavior and technology effects",
+    "definition": "Studying how using phones, apps, games, and online platforms relates to what people think, feel, and do.",
+    "level": "have",
+    "also": [
+      "Technology-use measurement",
+      "Digital wellbeing"
+    ],
+    "includes": [
+      "Social connection",
+      "Sleep",
+      "Next-day depletion"
+    ],
+    "fields": [
+      "bar",
+      "hlth",
+      "game",
+      "tsi",
+      "ins"
+    ],
+    "proof": "I studied how phone use relates to face-to-face connection, wellbeing and sleep, and how time with close and distant contacts online related to stress during COVID-19.",
+    "icon": "phone",
+    "evidence": [
+      "mega",
+      "phonesleep",
+      "covid",
+      "phonereview",
+      "ema"
+    ]
+  },
+  {
+    "group": "Study design",
+    "type": "hard",
+    "name": "Applied memory and cognition research",
+    "definition": "Using what is known about memory, attention, and judgment to answer practical questions. Examples are how people hold on to information and how they weigh advice.",
+    "level": "developing",
+    "also": [
+      "Cognitive research synthesis",
+      "Applied research proposals"
+    ],
+    "includes": [
+      "Memory theory comparison",
+      "Experiment and grant proposals"
+    ],
+    "fields": [
+      "acad",
+      "bar"
+    ],
+    "proof": "In a graduate seminar, I turned theories of memory into a proposal for an applied study.",
+    "icon": "brain",
+    "evidence": [
+      "c-mem"
+    ]
+  },
+  {
+    "group": "Study design",
+    "type": "hard",
+    "name": "Socio-technical systems analysis",
+    "definition": "Studying a technology together with the people, rules, and settings around it. Outcomes depend on all of them, not on the tool alone.",
+    "level": "developing",
+    "also": [
+      "Deblackboxing technology",
+      "Systems and design thinking"
+    ],
+    "includes": [
+      "AI and cloud systems",
+      "Social and policy dependencies"
+    ],
+    "fields": [
+      "ai",
+      "pol",
+      "lnd"
+    ],
+    "proof": "In a graduate course, I traced how AI, cloud, and data systems depend on people and policy, through essays, a group project, and a final project.",
+    "icon": "gear",
+    "evidence": [
+      "c-ai"
+    ]
+  },
+  {
+    "group": "Measurement and participants",
+    "type": "hard",
+    "name": "Survey and questionnaire development",
+    "definition": "Writing questions that people read the same way and can answer honestly, then testing and revising them before the survey goes out.",
+    "level": "have",
+    "also": [
+      "Survey design",
+      "Questionnaire programming",
+      "Qualtrics"
+    ],
+    "includes": [
+      "Item writing",
+      "Piloting",
+      "Study launch and monitoring"
+    ],
+    "fields": [
+      "ssp",
+      "bar",
+      "ins",
+      "eval",
+      "pol",
+      "game",
+      "hlth"
+    ],
+    "proof": "I built the surveys for every study I have run and programmed them in Qualtrics. I wrote items for a published survey of why people play games.",
+    "icon": "form",
+    "evidence": [
+      "gaming",
+      "diss",
+      "aims2",
+      "ema"
+    ]
+  },
+  {
+    "group": "Measurement and participants",
+    "type": "hard",
+    "name": "Scale development and psychometrics",
+    "definition": "Building a set of questions that measures one idea. The work has three parts: writing and checking the items, building the scale, and testing it. Testing covers how many ideas it captures (dimensionality), how consistent it is (reliability), and whether it measures what it claims (validity).",
+    "level": "have",
+    "also": [
+      "Measurement and validation",
+      "Instrument development",
+      "Factor analysis"
+    ],
+    "includes": [
+      "Item analysis",
+      "EFA and CFA",
+      "Reliability and validity"
+    ],
+    "fields": [
+      "ssp",
+      "bar",
+      "ins",
+      "hlth",
+      "game",
+      "ai"
+    ],
+    "proof": "I built the trust measures for my dissertation and a scale of how close people feel to their smartphones (in preparation, first author). I contributed to a published survey of gaming motivation and a VR symptom questionnaire.",
+    "icon": "ruler",
+    "evidence": [
+      "diss",
+      "iss",
+      "gaming",
+      "vrq"
+    ]
+  },
+  {
+    "group": "Measurement and participants",
+    "type": "hard",
+    "name": "Participant recruitment",
+    "definition": "Finding and enrolling the right people for a study, in enough numbers, through online panels, campuses, clinics, or community groups.",
+    "level": "have",
+    "also": [
+      "Participant pipeline management",
+      "Panel research",
+      "Clinical recruitment support"
+    ],
+    "includes": [
+      "In-person outreach",
+      "Research pools",
+      "Online panels",
+      "Scheduling and tracking",
+      "MTurk, CloudResearch, Prolific, and SONA"
+    ],
+    "fields": [
+      "rpm",
+      "hlth",
+      "ssp",
+      "xpr",
+      "ins",
+      "tsi"
+    ],
+    "proof": "I recruit in person, through university pools, and on MTurk, CloudResearch and Prolific. I also handle recruitment administration for an NIH clinical trial.",
+    "icon": "people",
+    "evidence": [
+      "diss",
+      "thesis",
+      "covid",
+      "genai",
+      "nih"
+    ]
+  },
+  {
+    "group": "Measurement and participants",
+    "type": "hard",
+    "name": "Participant-centered communication",
+    "definition": "Explaining a study, consent, and results in plain words. People can then decide for themselves whether to take part and know what happens to their information.",
+    "level": "have",
+    "also": [
+      "Participant experience",
+      "Research communication"
+    ],
+    "includes": [
+      "Clear instructions",
+      "Consent-sensitive communication"
+    ],
+    "fields": [
+      "rpm",
+      "hlth",
+      "ssp",
+      "ins"
+    ],
+    "proof": "I wrote the instructions and handled questions for general-public, student, online-panel and clinical-study participants.",
+    "icon": "chat",
+    "evidence": [
+      "csunlab",
+      "ucr",
+      "nih"
+    ]
+  },
+  {
+    "group": "Measurement and participants",
+    "type": "hard",
+    "name": "Online-panel data quality",
+    "definition": "Keeping careless and fake responses out of online studies. Attention checks and screening for bots and duplicates are set before data collection starts.",
+    "level": "have",
+    "also": [
+      "Data quality screening",
+      "Fitness for use",
+      "Attention checks"
+    ],
+    "includes": [
+      "Exclusions",
+      "Duplicate and bot screening"
+    ],
+    "fields": [
+      "ssp",
+      "tsi",
+      "bar",
+      "dsa",
+      "pol"
+    ],
+    "proof": "I screen out inattentive and duplicate respondents. In a COVID-19 survey, 674 people consented and 569 completed it.",
+    "icon": "shieldcheck",
+    "evidence": [
+      "covid",
+      "diss",
+      "genai"
+    ]
+  },
+  {
+    "group": "Measurement and participants",
+    "type": "hard",
+    "name": "Behavioral intervention measurement",
+    "definition": "Choosing and tracking the outcomes that show whether a program changed behavior, and by how much. The same measures are used before and after, and for every group.",
+    "level": "have",
+    "also": [
+      "Digital-health intervention",
+      "Adherence measurement",
+      "Behavior-change outcomes"
+    ],
+    "includes": [
+      "Baseline and follow-up",
+      "Repeated measurement"
+    ],
+    "fields": [
+      "hlth",
+      "bar",
+      "eval"
+    ],
+    "proof": "I designed dissertation Study 6, which tracked trust, adherence, and behavior for 15 days. It showed no reliable difference between the doctor and AI conditions, and I reported it that way.",
+    "icon": "target",
+    "evidence": [
+      "diss"
+    ]
+  },
+  {
+    "group": "Measurement and participants",
+    "type": "hard",
+    "name": "Content and media coding",
+    "definition": "Turning text, video, or images into data with a written coding scheme. Several coders apply it, and their agreement is checked.",
+    "level": "have",
+    "also": [
+      "Qualitative coding",
+      "Content analysis",
+      "Transcription"
+    ],
+    "includes": [
+      "Video evaluation",
+      "Transcription",
+      "Emotional speech analysis"
+    ],
+    "fields": [
+      "tsi",
+      "ins",
+      "pol",
+      "game",
+      "eval"
+    ],
+    "proof": "I coded video for prejudice in media, transcribed focus groups, and analyzed emotional speech in earlier lab roles.",
+    "icon": "tag",
+    "evidence": [
+      "ucr",
+      "aims2",
+      "visn"
+    ]
+  },
+  {
+    "group": "Analysis",
+    "type": "hard",
+    "name": "Regression and multilevel modeling",
+    "definition": "Estimating how an outcome moves with other variables. Multilevel models add random effects for data that are not independent, such as repeated answers from one person or students in the same classroom.",
+    "level": "have",
+    "also": [
+      "Driver analysis",
+      "Predictor modeling",
+      "Nested-data analysis"
+    ],
+    "includes": [
+      "Linear, logistic, ordinal, negative-binomial",
+      "Forward stepwise",
+      "Mixed-effects models",
+      "Person-mean centering"
+    ],
+    "fields": [
+      "bar",
+      "xpr",
+      "dsa",
+      "ins",
+      "hlth",
+      "acad"
+    ],
+    "proof": "I fit linear, logistic, ordinal, negative-binomial, and mixed-effects models. In one analysis I pooled eight experiments (1,778 people) into a single multilevel model.",
+    "icon": "trend",
+    "evidence": [
+      "riskcreep",
+      "mega",
+      "diss",
+      "genai",
+      "covid",
+      "t-pitt"
+    ]
+  },
+  {
+    "group": "Analysis",
+    "type": "hard",
+    "name": "Core statistical tests",
+    "definition": "Choosing the standard test that fits the data, based on how many variables there are and what kind. T-tests compare averages, chi-square handles categories, correlation links two measures, and ANOVA compares three or more groups.",
+    "level": "have",
+    "also": [
+      "Hypothesis testing",
+      "Group comparison",
+      "Inferential statistics"
+    ],
+    "includes": [
+      "t-tests",
+      "ANOVA and mixed ANOVA",
+      "Repeated-measures ANOVA",
+      "Chi-square tests",
+      "Planned contrasts",
+      "Effect sizes"
+    ],
+    "fields": [
+      "bar",
+      "xpr",
+      "ssp",
+      "ins",
+      "acad",
+      "hlth",
+      "dsa"
+    ],
+    "proof": "I run t-tests, ANOVA (including repeated-measures designs), planned contrasts and chi-square tests, and I report effect sizes with them. I used them in my thesis, my dissertation, my graduate statistics courses, and a CSUN analysis of probation students' GPA.",
+    "icon": "trend",
+    "evidence": [
+      "diss",
+      "thesis",
+      "covid",
+      "csunir",
+      "c-stats"
+    ]
+  },
+  {
+    "group": "Analysis",
+    "type": "hard",
+    "name": "Mediation and moderation",
+    "definition": "Testing how an effect works and for whom it holds. A mediator is the middle step that carries the effect, and a moderator is a condition that makes it stronger or weaker. One model can test both.",
+    "level": "have",
+    "also": [
+      "Mechanism analysis",
+      "Subgroup and conditional effects",
+      "Pathway testing"
+    ],
+    "includes": [
+      "Interaction terms",
+      "Planned contrasts",
+      "Causal mediation (ACME)",
+      "Multilevel mediation",
+      "Dominance analysis"
+    ],
+    "fields": [
+      "bar",
+      "ai",
+      "hlth",
+      "xpr",
+      "ins",
+      "acad"
+    ],
+    "proof": "I tested who is affected and why. My dissertation used a multilevel mediated-moderation model, and my generative AI preprint used causal mediation.",
+    "icon": "mediate",
+    "evidence": [
+      "diss",
+      "genai",
+      "mega",
+      "parasocial"
+    ]
+  },
+  {
+    "group": "Analysis",
+    "type": "hard",
+    "name": "Subgroup and group-difference analysis",
+    "definition": "Comparing outcomes across groups of people and testing whether a relationship holds in each one. The aim is to show where results differ and for whom.",
+    "level": "have",
+    "also": [
+      "Disaggregated analysis",
+      "Group-difference testing",
+      "Student-group comparisons"
+    ],
+    "includes": [
+      "Student-group comparisons",
+      "Faculty-type comparisons",
+      "Interaction terms"
+    ],
+    "fields": [
+      "eval",
+      "pol",
+      "acad",
+      "dsa",
+      "bar"
+    ],
+    "proof": "At CSUN I compared how unit load related to GPA, retention and graduation for athletes, Pell recipients, and students served by disability services. At Georgetown I compared class size by student rank, faculty type, and demographic group.",
+    "icon": "clusters",
+    "evidence": [
+      "csunir",
+      "gtir"
+    ]
+  },
+  {
+    "group": "Analysis",
+    "type": "hard",
+    "name": "Structural equation modeling",
+    "definition": "Testing a whole set of relationships at once, including ideas that cannot be measured directly. The model is then checked for how well it fits the data.",
+    "level": "have",
+    "also": [
+      "Latent-variable modeling",
+      "Path analysis",
+      "Structural validity"
+    ],
+    "includes": [
+      "CFA",
+      "Path models",
+      "Multi-group models",
+      "Mplus through R"
+    ],
+    "fields": [
+      "ssp",
+      "bar",
+      "dsa",
+      "acad"
+    ],
+    "proof": "I built latent-variable path models for an award-winning data competition entry, replicated a published model in R for a graduate course, and ran Mplus models for my dissertation.",
+    "icon": "path",
+    "evidence": [
+      "datajam",
+      "c-sem",
+      "diss"
+    ]
+  },
+  {
+    "group": "Analysis",
+    "type": "hard",
+    "name": "Power and sensitivity analysis",
+    "definition": "Working out how many people a study needs to detect an effect of a given size, often with an 80% chance. After a study ends, the same math shows which effect sizes it could have detected.",
+    "level": "have",
+    "also": [
+      "Sample-size planning",
+      "Minimum detectable effect",
+      "Power analysis"
+    ],
+    "includes": [
+      "A priori power planning",
+      "Sensitivity analysis"
+    ],
+    "fields": [
+      "xpr",
+      "bar",
+      "ssp",
+      "hlth",
+      "eval",
+      "acad"
+    ],
+    "proof": "I plan sample sizes before each study and check what each one can detect. I taught a power-analysis workshop in 2023.",
+    "icon": "gauge",
+    "evidence": [
+      "diss",
+      "mega",
+      "covid",
+      "w-power"
+    ]
+  },
+  {
+    "group": "Analysis",
+    "type": "hard",
+    "name": "Robustness checks",
+    "definition": "Re-running an analysis with other reasonable choices, such as different exclusions or models, to see whether the conclusion holds.",
+    "level": "have",
+    "also": [
+      "Sensitivity checks",
+      "Specification-curve analysis",
+      "Trustworthy results"
+    ],
+    "includes": [
+      "Bonferroni and Tukey corrections",
+      "Intent-to-treat",
+      "Deviation coding",
+      "Variance inflation checks"
+    ],
+    "fields": [
+      "xpr",
+      "ai",
+      "dsa",
+      "bar",
+      "acad"
+    ],
+    "proof": "In my generative AI research, I tested the main result across 69 alternative analyses, so the conclusion does not rest on one analysis choice.",
+    "icon": "shield",
+    "evidence": [
+      "genai",
+      "riskcreep",
+      "mega",
+      "diss"
+    ]
+  },
+  {
+    "group": "Analysis",
+    "type": "hard",
+    "name": "Blind outcome rating",
+    "definition": "Having judges score work without knowing which condition produced it. That keeps their expectations from shaping the scores.",
+    "level": "have",
+    "also": [
+      "Independent evaluation",
+      "Quality scoring"
+    ],
+    "includes": [
+      "Judges blind to condition",
+      "Quality-per-time ratio"
+    ],
+    "fields": [
+      "ai",
+      "xpr",
+      "bar"
+    ],
+    "proof": "I designed blind ratings for my generative AI preprint. Judges who did not know the condition rated the work, and I compared quality with time spent.",
+    "icon": "eyeoff",
+    "evidence": [
+      "genai"
+    ]
+  },
+  {
+    "group": "Analysis",
+    "type": "hard",
+    "name": "Cross-study data integration",
+    "definition": "Combining data from separate studies into one dataset. The measures and coding are matched first, so the studies can be analyzed together.",
+    "level": "have",
+    "also": [
+      "Data harmonization",
+      "Dataset standardization",
+      "Pooled analysis"
+    ],
+    "includes": [
+      "Study indicators",
+      "Sensitivity checks"
+    ],
+    "fields": [
+      "bar",
+      "eval",
+      "ins",
+      "dsa",
+      "rpm",
+      "acad"
+    ],
+    "proof": "I pooled eight experiments for a published analysis. Along the way I found and removed 173 placeholder rows.",
+    "icon": "merge",
+    "evidence": [
+      "mega"
+    ]
+  },
+  {
+    "group": "Analysis",
+    "type": "hard",
+    "name": "Data cleaning and quality control",
+    "definition": "Checking raw data for errors, duplicates, impossible values, and missing answers. Every change is documented so the analysis can be repeated.",
+    "level": "have",
+    "also": [
+      "Data wrangling",
+      "Data integrity",
+      "Analysis-ready data"
+    ],
+    "includes": [
+      "Exclusions",
+      "Missing-data review",
+      "Variable harmonization",
+      "Duplicate-record resolution"
+    ],
+    "fields": [
+      "dsa",
+      "pol",
+      "eval",
+      "ins",
+      "bar",
+      "ssp"
+    ],
+    "proof": "I prepared the data for a study of fans and their favorite characters, for the pooled analysis, and for more than 100,000 student records. At CSUN I profiled duplicate records, confirmed where they came from, removed the true duplicates, and reported the limits.",
+    "icon": "funnel",
+    "evidence": [
+      "parasocial",
+      "mega",
+      "csunir",
+      "prs"
+    ]
+  },
+  {
+    "group": "Analysis",
+    "type": "hard",
+    "name": "Data visualization and dashboards",
+    "definition": "Showing data in charts and interactive pages so a reader can see patterns, compare groups, and check the numbers.",
+    "level": "have",
+    "also": [
+      "Self-serve dashboards",
+      "Decision-support reporting",
+      "Tableau"
+    ],
+    "includes": [
+      "ggplot",
+      "Tableau",
+      "Figures for stakeholders",
+      "Recurring administrator dashboards"
+    ],
+    "fields": [
+      "dsa",
+      "eval",
+      "ins",
+      "xpr",
+      "rpm",
+      "pol"
+    ],
+    "proof": "I built Tableau dashboards that department chairs and administrators used each semester, and I made the figures for my generative AI preprint and this website.",
+    "icon": "bars",
+    "evidence": [
+      "csunir",
+      "genai",
+      "vrbuffet",
+      "thissite"
+    ]
+  },
+  {
+    "group": "Analysis",
+    "type": "hard",
+    "name": "Student-success and institutional analytics",
+    "definition": "Using student and institutional records to answer questions about how courses, workloads, and programs relate to grades, retention, and graduation. The goal is evidence that administrators can use.",
+    "level": "have",
+    "also": [
+      "Institutional research",
+      "Higher-education analytics",
+      "Student outcomes analysis"
+    ],
+    "includes": [
+      "Unit-load analysis",
+      "Course-format analysis",
+      "Retention and graduation",
+      "Recurring dashboards"
+    ],
+    "fields": [
+      "eval",
+      "pol",
+      "acad",
+      "dsa",
+      "lnd"
+    ],
+    "proof": "At CSUN Institutional Research I analyzed how unit load and course format related to GPA, retention and graduation, including more than 630,000 course grades with controls for student background. At Georgetown I analyzed class size and teacher time.",
+    "icon": "board",
+    "evidence": [
+      "csunir",
+      "gtir"
+    ]
+  },
+  {
+    "group": "Analysis",
+    "type": "hard",
+    "name": "Bayesian inference",
+    "definition": "Weighing how strongly the data support one hypothesis over another, using a number called the Bayes factor. Unlike a p-value alone, it can show evidence for no effect as well as for an effect.",
+    "level": "have",
+    "also": [
+      "Bayes factors",
+      "Evidence for null effects"
+    ],
+    "includes": [
+      "Bayesian t-tests",
+      "Bayes factors"
+    ],
+    "fields": [
+      "bar",
+      "ssp",
+      "acad",
+      "dsa"
+    ],
+    "proof": "I use Bayes factors and Bayesian t-tests to show how strongly the data support a null result. They appear in my generative AI preprint and on the Studies 1 and 2 pages of this site.",
+    "icon": "odds",
+    "evidence": [
+      "diss",
+      "genai"
+    ]
+  },
+  {
+    "group": "Analysis",
+    "type": "hard",
+    "name": "Latent profile analysis",
+    "definition": "Finding hidden subgroups of people who share a pattern across several measures. The groups are not defined in advance, and the data reveal them.",
+    "level": "developing",
+    "also": [
+      "Person-centered analysis",
+      "Segmentation"
+    ],
+    "includes": [
+      "Latent profiles"
+    ],
+    "fields": [
+      "bar",
+      "ins",
+      "dsa"
+    ],
+    "proof": "I completed a 2023 workshop on latent profile analysis, a method that sorts people into groups by their pattern of answers.",
+    "icon": "clusters",
+    "evidence": [
+      "t-lpa"
+    ]
+  },
+  {
+    "group": "Analysis",
+    "type": "hard",
+    "name": "Machine learning and prediction",
+    "definition": "Building models that learn patterns from data and predict new cases, then testing them on data the model has not seen.",
+    "level": "developing",
+    "also": [
+      "Predictive modeling",
+      "Classifiers",
+      "Model evaluation"
+    ],
+    "includes": [
+      "Trees, SVM, KNN, Naive Bayes",
+      "Cross-validation",
+      "ROC and confusion matrices",
+      "App-usage prediction"
+    ],
+    "fields": [
+      "dsa",
+      "xpr",
+      "game",
+      "acad"
+    ],
+    "proof": "I built and tested classifiers in an end-to-end Python project for a graduate course, and I presented a poster on predicting app use.",
+    "icon": "tree",
+    "evidence": [
+      "c-py",
+      "apppost"
+    ]
+  },
+  {
+    "group": "Analysis",
+    "type": "hard",
+    "name": "Economic and cost-benefit analysis",
+    "definition": "Comparing what a program costs with the value of what it produces, in money or in outcomes gained.",
+    "level": "developing",
+    "also": [
+      "Policy appraisal",
+      "Cost-benefit analysis"
+    ],
+    "includes": [
+      "Market failure",
+      "Public goods",
+      "Social insurance"
+    ],
+    "fields": [
+      "pol",
+      "eval"
+    ],
+    "proof": "I applied cost-benefit and market-failure analysis to policy questions in two graduate economics courses.",
+    "icon": "coin",
+    "evidence": [
+      "c-econ"
+    ]
+  },
+  {
+    "group": "Code and tools",
+    "type": "hard",
+    "name": "R, Stata and SPSS",
+    "definition": "Statistical software for cleaning data, running models, and producing results that others can repeat.",
+    "level": "have",
+    "also": [
+      "Statistical computing",
+      "Reproducible analytics",
+      "Research automation"
+    ],
+    "includes": [
+      "R and RStudio",
+      "Stata",
+      "SPSS",
+      "Mplus",
+      "Jamovi and JASP",
+      "Quarto"
+    ],
+    "fields": [
+      "dsa",
+      "bar",
+      "xpr",
+      "eval",
+      "hlth",
+      "ins",
+      "acad",
+      "ssp"
+    ],
+    "proof": "R is my main language for modeling, figures and teaching. I used Stata across a graduate sequence in regression and program evaluation.",
+    "icon": "code",
+    "evidence": [
+      "diss",
+      "mega",
+      "vrbuffet",
+      "covid",
+      "c-stats",
+      "w-r",
+      "w-nih"
+    ]
+  },
+  {
+    "group": "Code and tools",
+    "type": "hard",
+    "name": "Cloud and API experiment engineering",
+    "definition": "Connecting a survey tool to cloud services and AI model interfaces. The experiment can then randomize people, call a model, and record every response automatically.",
+    "level": "have",
+    "also": [
+      "Prototype research tools",
+      "Model and API integration",
+      "Cloud-hosted data collection"
+    ],
+    "includes": [
+      "ChatGPT API",
+      "AWS",
+      "Qualtrics randomization"
+    ],
+    "fields": [
+      "ai",
+      "xpr"
+    ],
+    "proof": "I host research tasks in the cloud and connect them to survey software. For one study, AWS linked Qualtrics to the ChatGPT API and stored each prompt and response.",
+    "icon": "cloud",
+    "evidence": [
+      "genai"
+    ]
+  },
+  {
+    "group": "Code and tools",
+    "type": "hard",
+    "name": "Text analysis with dictionaries",
+    "definition": "Counting words from fixed word lists, such as emotion or social words, to measure what a piece of writing is about. The counts are checked against human reading.",
+    "level": "have",
+    "also": [
+      "Psychological text analysis",
+      "LIWC",
+      "Text-similarity metrics"
+    ],
+    "includes": [
+      "LIWC",
+      "Cosine, Jaccard and Sørensen-Dice similarity"
+    ],
+    "fields": [
+      "ai",
+      "bar",
+      "ins",
+      "game"
+    ],
+    "proof": "I ran LIWC text analysis at a university lab in 2018 and 2019. In my generative AI preprint, I compared human and AI writing with similarity scores.",
+    "icon": "lines",
+    "evidence": [
+      "visn",
+      "genai",
+      "t-text"
+    ]
+  },
+  {
+    "group": "Code and tools",
+    "type": "hard",
+    "name": "Web, design and automation tools",
+    "definition": "Building web pages and graphics, and writing scripts that automate repeated work.",
+    "level": "have",
+    "also": [
+      "Workflow automation",
+      "Light web development"
+    ],
+    "includes": [
+      "HTML5 and JavaScript",
+      "LaTeX",
+      "WordPress",
+      "Canva",
+      "Excel macros",
+      "Praat scripts"
+    ],
+    "fields": [
+      "rpm",
+      "lnd",
+      "ins"
+    ],
+    "proof": "I wrote Excel macros and Praat scripts in earlier lab work. I build web pages, slides, and posters, including mrleitao.com and this site.",
+    "icon": "wrench",
+    "evidence": [
+      "ucr",
+      "mrleitao",
+      "thissite"
+    ]
+  },
+  {
+    "group": "Code and tools",
+    "type": "hard",
+    "name": "Modern text analysis",
+    "definition": "Using language models and similar tools to measure meaning, similarity, and topics in large amounts of text. The output is validated against careful human reading.",
+    "level": "developing",
+    "also": [
+      "Natural language processing",
+      "Embeddings",
+      "Topic models"
+    ],
+    "includes": [
+      "TF-IDF",
+      "Bag of words",
+      "Language-model coding"
+    ],
+    "fields": [
+      "ai",
+      "dsa",
+      "ins"
+    ],
+    "proof": "I took a 2023 text-analytics workshop and a graduate course on word-frequency methods (TF-IDF) and language processing.",
+    "icon": "quote",
+    "evidence": [
+      "t-text",
+      "c-py",
+      "c-ai",
+      "genai"
+    ]
+  },
+  {
+    "group": "Code and tools",
+    "type": "hard",
+    "name": "Python",
+    "definition": "A general-purpose programming language used for cleaning data, running analyses, and automating tasks.",
+    "level": "developing",
+    "also": [
+      "Applied research computing",
+      "pandas and scikit-learn"
+    ],
+    "includes": [
+      "Pandas",
+      "Jupyter",
+      "Web scraping",
+      "APIs",
+      "scikit-learn"
+    ],
+    "fields": [
+      "dsa",
+      "xpr",
+      "ai"
+    ],
+    "proof": "I used pandas, Jupyter, web scraping, and scikit-learn in a graduate data-science course. R is the language I use daily.",
+    "icon": "terminal",
+    "evidence": [
+      "c-py"
+    ]
+  },
+  {
+    "group": "Code and tools",
+    "type": "hard",
+    "name": "SQL",
+    "definition": "The language for pulling and combining data stored in databases.",
+    "level": "developing",
+    "also": [
+      "Data access",
+      "Querying data warehouses"
+    ],
+    "includes": [
+      "Queries",
+      "Joins"
+    ],
+    "fields": [
+      "dsa",
+      "xpr",
+      "tsi",
+      "ssp"
+    ],
+    "proof": "I am building SQL skills through structured self-directed practice on DataLemur and Mode Analytics, and by translating my R code into SQL.",
+    "icon": "database",
+    "evidence": []
+  },
+  {
+    "group": "Code and tools",
+    "type": "hard",
+    "name": "Geospatial analysis",
+    "definition": "Analyzing data tied to places, such as mapping where outcomes occur and how they vary by location.",
+    "level": "developing",
+    "also": [
+      "ArcGIS",
+      "Open government data"
+    ],
+    "includes": [
+      "ArcGIS",
+      "Open county data"
+    ],
+    "fields": [
+      "pol",
+      "eval",
+      "ins"
+    ],
+    "proof": "I mapped open Los Angeles County data in ArcGIS for a 2018 data competition entry.",
+    "icon": "pin",
+    "evidence": [
+      "datajam"
+    ]
+  },
+  {
+    "group": "AI and human behavior",
+    "type": "hard",
+    "name": "Human-AI trust and reliance research",
+    "definition": "Studying when and why people accept, reject, or lean too heavily on advice from AI, compared with advice from a human expert.",
+    "level": "have",
+    "also": [
+      "Human-AI decision processes",
+      "Calibrated trust",
+      "Over-trust"
+    ],
+    "includes": [
+      "Trust",
+      "Reliance",
+      "Anthropomorphism",
+      "Autonomy",
+      "Weight-on-Advice"
+    ],
+    "fields": [
+      "ai",
+      "hlth",
+      "bar",
+      "tsi",
+      "acad"
+    ],
+    "proof": "My six-study dissertation compares trust in doctors and medical AI. It measures reliance by how far people move their own answer toward the advice.",
+    "icon": "robot",
+    "evidence": [
+      "diss",
+      "autonomy"
+    ]
+  },
+  {
+    "group": "AI and human behavior",
+    "type": "hard",
+    "name": "Human-AI collaboration experiments",
+    "definition": "Testing how splitting a task between a person and an AI changes the quality of the work and how the person feels about it. Who drafts and who edits is one example.",
+    "level": "have",
+    "also": [
+      "Evaluating AI-assisted workflows",
+      "Human-AI collaboration",
+      "Worker experience"
+    ],
+    "includes": [
+      "Draft versus edit",
+      "Ownership",
+      "Engagement"
+    ],
+    "fields": [
+      "ai",
+      "ins",
+      "xpr",
+      "acad"
+    ],
+    "proof": "I am co-first author on a preprint with two experiments (1,299 people) on drafting with generative AI versus editing its output. Work quality was similar. How people experienced the work was not.",
+    "icon": "pair",
+    "evidence": [
+      "genai"
+    ]
+  },
+  {
+    "group": "AI and human behavior",
+    "type": "hard",
+    "name": "Obedience to computer authority",
+    "definition": "Studying whether people follow a computer's instructions the way they follow an authority figure's.",
+    "level": "have",
+    "also": [
+      "Socio-technical research",
+      "Compliance with automated instructions"
+    ],
+    "includes": [
+      "Text-to-speech versus human voice",
+      "Perceived sophistication"
+    ],
+    "fields": [
+      "ai",
+      "tsi",
+      "bar"
+    ],
+    "proof": "My master's thesis (305 participants) tested whether people obey computer instructors as readily as human ones. People obeyed both about equally, and I reported the null result.",
+    "icon": "hand",
+    "evidence": [
+      "thesis"
+    ]
+  },
+  {
+    "group": "AI and human behavior",
+    "type": "hard",
+    "name": "Health and risk communication research",
+    "definition": "Studying how health information and risk are explained, understood, and acted on, including what people do with test results.",
+    "level": "have",
+    "also": [
+      "Risk communication",
+      "Patient-centered research",
+      "Health beliefs"
+    ],
+    "includes": [
+      "Genetic-risk interpretation",
+      "Virtual patients",
+      "Demographic cues"
+    ],
+    "fields": [
+      "hlth",
+      "ai",
+      "bar"
+    ],
+    "proof": "I study how people read genetic-risk information. On a virtual-patient project (200 participants), I collected, cleaned, and analyzed the data.",
+    "icon": "heart",
+    "evidence": [
+      "prs",
+      "nihprot",
+      "genetic",
+      "diss"
+    ]
+  },
+  {
+    "group": "Leading and operating",
+    "type": "hard",
+    "name": "Research program management",
+    "definition": "Keeping a group of related studies on schedule, on budget, and pointed at the same research goals.",
+    "level": "have",
+    "also": [
+      "Portfolio management",
+      "Prioritizing concurrent workstreams",
+      "Study coordination"
+    ],
+    "includes": [
+      "Sequencing",
+      "Delegation",
+      "Milestone tracking"
+    ],
+    "fields": [
+      "rpm",
+      "hlth",
+      "eval"
+    ],
+    "proof": "I managed six to seven projects at once at Georgetown with a student team, and I now support six NIH projects.",
+    "icon": "board",
+    "evidence": [
+      "gtteam",
+      "nih"
+    ]
+  },
+  {
+    "group": "Leading and operating",
+    "type": "hard",
+    "name": "Study operations",
+    "definition": "Running a study day to day: scheduling, collecting data, tracking progress, and fixing problems as they come up.",
+    "level": "have",
+    "also": [
+      "Study coordination",
+      "Fieldwork management"
+    ],
+    "includes": [
+      "Survey builds",
+      "Launches and monitoring",
+      "Data handoffs"
+    ],
+    "fields": [
+      "rpm",
+      "hlth",
+      "ins"
+    ],
+    "proof": "I run studies from ethics approval through launch, monitoring and data handoff, for my own projects and for NIH collaborators.",
+    "icon": "checklist",
+    "evidence": [
+      "gtteam",
+      "nih",
+      "csunlab"
+    ]
+  },
+  {
+    "group": "Leading and operating",
+    "type": "hard",
+    "name": "Supervising and mentoring",
+    "definition": "Directing other people's work, giving feedback, and helping them build skills. Research assistants are a common example.",
+    "level": "have",
+    "also": [
+      "People management",
+      "Delegation",
+      "Mentoring and coaching"
+    ],
+    "includes": [
+      "Training",
+      "Monitoring",
+      "Honors thesis advising"
+    ],
+    "fields": [
+      "rpm",
+      "lnd",
+      "acad"
+    ],
+    "proof": "I have supervised research assistants since 2017, on teams of up to 15. I guided an honors thesis and served as a graduate mentor for a national psychology society.",
+    "icon": "people",
+    "evidence": [
+      "csunlab",
+      "ucr",
+      "gtteam",
+      "honors"
+    ]
+  },
+  {
+    "group": "Leading and operating",
+    "type": "hard",
+    "name": "Research governance",
+    "definition": "Following the rules that protect research participants: ethics review, consent, and approved protocols. They rest on three principles, respect for persons, beneficence, and justice.",
+    "level": "have",
+    "also": [
+      "Compliance",
+      "Protocol development",
+      "IRB management"
+    ],
+    "includes": [
+      "Human-subjects procedures",
+      "Protocol preparation"
+    ],
+    "fields": [
+      "rpm",
+      "hlth",
+      "eval",
+      "pol"
+    ],
+    "proof": "I wrote and managed ethics-board protocols at two universities and support regulated clinical-study administration at NIH.",
+    "icon": "document",
+    "evidence": [
+      "gtteam",
+      "csunlab",
+      "nih"
+    ]
+  },
+  {
+    "group": "Leading and operating",
+    "type": "hard",
+    "name": "Clinical-study administration",
+    "definition": "Handling the paperwork and compliance for a study with patients, including approved protocols, consent, enrollment records, and reporting. The work follows the ethics rules for human subjects research.",
+    "level": "have",
+    "also": [
+      "Regulated study operations",
+      "Clinical recruitment support"
+    ],
+    "includes": [
+      "Recruitment tracking",
+      "Study coordination"
+    ],
+    "fields": [
+      "hlth",
+      "rpm"
+    ],
+    "proof": "I support participant recruitment for an NIH clinical trial that tests a drug.",
+    "icon": "cross",
+    "evidence": [
+      "nih",
+      "vrbuffet"
+    ]
+  },
+  {
+    "group": "Leading and operating",
+    "type": "hard",
+    "name": "Recruitment operations",
+    "definition": "Managing the pipeline that brings participants into a study: outreach, screening, scheduling, and follow-up.",
+    "level": "have",
+    "also": [
+      "Research-pool administration",
+      "Yield monitoring"
+    ],
+    "includes": [
+      "Channel selection",
+      "Research-pool rules"
+    ],
+    "fields": [
+      "rpm",
+      "ssp"
+    ],
+    "proof": "I coordinated the Georgetown research participant pool and combined in-person, university and online recruitment.",
+    "icon": "door",
+    "evidence": [
+      "sona",
+      "nih"
+    ]
+  },
+  {
+    "group": "Leading and operating",
+    "type": "hard",
+    "name": "Workflow and process improvement",
+    "definition": "Finding where routine work is slow or error-prone and redesigning it to be faster and more consistent.",
+    "level": "have",
+    "also": [
+      "Standardizing recurring work",
+      "Process improvement",
+      "Operational documentation"
+    ],
+    "includes": [
+      "Templates",
+      "Standard displays",
+      "Process documentation"
+    ],
+    "fields": [
+      "rpm",
+      "lnd",
+      "eval"
+    ],
+    "proof": "I redesigned parts of the Georgetown participant pool, and research yield rose 50% over the previous year. I also built reusable lab templates.",
+    "icon": "cycle",
+    "evidence": [
+      "sona"
+    ]
+  },
+  {
+    "group": "Leading and operating",
+    "type": "hard",
+    "name": "Grants and budgets",
+    "definition": "Planning what a project will cost and tracking spending against the funding.",
+    "level": "have",
+    "also": [
+      "Proposal development",
+      "Budget development",
+      "Grantsmanship"
+    ],
+    "includes": [
+      "Specific aims",
+      "Budgets",
+      "Timelines"
+    ],
+    "fields": [
+      "rpm",
+      "acad"
+    ],
+    "proof": "I won three named grants and fellowships, and I wrote the budgets and timelines for my funded and independent research.",
+    "icon": "coin",
+    "evidence": [
+      "grants"
+    ]
+  },
+  {
+    "group": "Leading and operating",
+    "type": "hard",
+    "name": "Grant-proposal writing",
+    "definition": "Writing the case for funding: the question, the plan, the budget, and why the work matters.",
+    "level": "developing",
+    "also": [
+      "Proposal writing",
+      "Short-form grant writing"
+    ],
+    "includes": [
+      "Specific aims",
+      "Significance",
+      "Research design"
+    ],
+    "fields": [
+      "acad",
+      "rpm"
+    ],
+    "proof": "I wrote full proposals in graduate seminars, including a three-study program, and I presented grant literature at a university lab.",
+    "icon": "pen",
+    "evidence": [
+      "c-meth",
+      "c-brain",
+      "visn"
+    ]
+  },
+  {
+    "group": "Leading and operating",
+    "type": "hard",
+    "name": "Policy analysis and memos",
+    "definition": "Weighing evidence on a policy question and writing a short memo that gives decision makers a clear recommendation.",
+    "level": "have",
+    "also": [
+      "Policy recommendations",
+      "Data governance",
+      "Briefings"
+    ],
+    "includes": [
+      "Policy memos",
+      "Congressional testimony project",
+      "Options and recommendations",
+      "Data-visibility policy (pronouns and gender identity)",
+      "Evidence for admissions policy"
+    ],
+    "fields": [
+      "pol",
+      "eval",
+      "lnd"
+    ],
+    "proof": "I served on the task force whose recommendation on storing and showing gender identity and pronouns became policy. With another graduate student I built the evidence on how well the GRE predicted first-year grades and presented it to faculty and administrators. My program then made the GRE optional. In graduate work I wrote policy memos and testimony.",
+    "icon": "document",
+    "evidence": [
+      "pronoun",
+      "dei",
+      "c-policy"
+    ]
+  },
+  {
+    "group": "Leading and operating",
+    "type": "hard",
+    "name": "Consultative analysis",
+    "definition": "Answering a client's question with data. That means framing the problem, choosing the method, and presenting findings the client can act on.",
+    "level": "developing",
+    "also": [
+      "Internal consulting",
+      "Client-oriented analysis"
+    ],
+    "includes": [
+      "Semi-structured interviews",
+      "Management reports"
+    ],
+    "fields": [
+      "lnd",
+      "eval",
+      "ins"
+    ],
+    "proof": "With a self-managed team, I interviewed an organization and wrote a 20 to 30 page consulting report in a graduate course.",
+    "icon": "briefcase",
+    "evidence": [
+      "c-policy"
+    ]
+  },
+  {
+    "group": "Teaching and communicating",
+    "type": "hard",
+    "name": "Curriculum and course design",
+    "definition": "Planning what a course teaches, in what order, and how learning will be assessed.",
+    "level": "have",
+    "also": [
+      "Instructional design",
+      "Backward design",
+      "Active learning"
+    ],
+    "includes": [
+      "Assessment design",
+      "Peer review",
+      "Scaffolded assignments"
+    ],
+    "fields": [
+      "lnd",
+      "acad"
+    ],
+    "proof": "I designed and taught Psychology of Technology as instructor of record. It won Georgetown's 2023 Graduate Student Teaching Award.",
+    "icon": "book",
+    "evidence": [
+      "psytech",
+      "rmta"
+    ]
+  },
+  {
+    "group": "Teaching and communicating",
+    "type": "hard",
+    "name": "Teaching across settings",
+    "definition": "Teaching in classrooms, labs, workshops, and online, and adjusting to each group of learners.",
+    "level": "have",
+    "also": [
+      "Training delivery",
+      "Tutoring",
+      "Guest lecturing"
+    ],
+    "includes": [
+      "University recitation",
+      "Test prep",
+      "Guest lectures"
+    ],
+    "fields": [
+      "lnd",
+      "acad"
+    ],
+    "proof": "I have taught at Georgetown, CSUN and Kaplan, led recitations, tutored, and given guest lectures in people analytics and learning analytics.",
+    "icon": "book",
+    "evidence": [
+      "psytech",
+      "rmta",
+      "taother",
+      "kaplan",
+      "guest"
+    ]
+  },
+  {
+    "group": "Teaching and communicating",
+    "type": "hard",
+    "name": "Workshop design and facilitation",
+    "definition": "Planning and leading a short, hands-on session so participants leave able to do something new.",
+    "level": "have",
+    "also": [
+      "Technical enablement",
+      "Capability building",
+      "Training delivery"
+    ],
+    "includes": [
+      "Hands-on instruction",
+      "Reusable materials"
+    ],
+    "fields": [
+      "lnd",
+      "rpm",
+      "acad"
+    ],
+    "proof": "I taught workshops on power analysis, R and open science, then Introduction to R and Quarto at NIH.",
+    "icon": "present",
+    "evidence": [
+      "w-open",
+      "w-r",
+      "w-power",
+      "w-nih"
+    ]
+  },
+  {
+    "group": "Teaching and communicating",
+    "type": "hard",
+    "name": "Documentation and reusable resources",
+    "definition": "Writing guides, templates, and code notes so other people can repeat the work without asking.",
+    "level": "have",
+    "also": [
+      "Knowledge products",
+      "Operational documentation"
+    ],
+    "includes": [
+      "Open materials",
+      "Templates",
+      "Training guides"
+    ],
+    "fields": [
+      "lnd",
+      "rpm"
+    ],
+    "proof": "I made public R, Quarto and power-analysis materials on OSF and lab templates that others can reuse.",
+    "icon": "folder",
+    "evidence": [
+      "w-r",
+      "w-power",
+      "mega",
+      "gios",
+      "mrleitao",
+      "thissite"
+    ]
+  },
+  {
+    "group": "Teaching and communicating",
+    "type": "hard",
+    "name": "Scientific writing",
+    "definition": "Writing papers and reports that state the question, the method, and the results clearly and completely.",
+    "level": "have",
+    "also": [
+      "Research writing",
+      "Authoring for publication"
+    ],
+    "includes": [
+      "Manuscripts",
+      "Thesis and dissertation"
+    ],
+    "fields": [
+      "acad",
+      "bar"
+    ],
+    "proof": "I wrote all of my thesis and dissertation, and I contributed writing to several published papers.",
+    "icon": "pen",
+    "evidence": [
+      "diss",
+      "thesis",
+      "riskcreep",
+      "parasocial",
+      "phonereview",
+      "genai"
+    ]
+  },
+  {
+    "group": "Teaching and communicating",
+    "type": "hard",
+    "name": "Technical translation",
+    "definition": "Explaining statistical or technical results to people outside the field without losing accuracy.",
+    "level": "have",
+    "also": [
+      "Data storytelling",
+      "Research storytelling",
+      "Communicating to non-technical audiences"
+    ],
+    "includes": [
+      "Audience adaptation",
+      "Recommendations"
+    ],
+    "fields": [
+      "ins",
+      "dsa",
+      "eval",
+      "xpr",
+      "pol",
+      "bar"
+    ],
+    "proof": "I turn statistics into plain recommendations for papers, talks, dashboards, workshops and policy discussions.",
+    "icon": "swap",
+    "evidence": [
+      "csunir",
+      "psytech",
+      "w-r",
+      "w-power",
+      "mrleitao",
+      "thissite"
+    ]
+  },
+  {
+    "group": "Teaching and communicating",
+    "type": "hard",
+    "name": "Public science communication",
+    "definition": "Sharing research with the general public in plain language, through talks, writing, or media.",
+    "level": "have",
+    "also": [
+      "Popular-press writing",
+      "Science communication"
+    ],
+    "includes": [
+      "Nonexpert audiences",
+      "Policy and business implications"
+    ],
+    "fields": [
+      "lnd",
+      "pol",
+      "bar"
+    ],
+    "proof": "I taught students to write a magazine-style article from a research paper, and I explain my own work in plain words on this site.",
+    "icon": "megaphone",
+    "evidence": [
+      "psytech",
+      "c-brain",
+      "talks",
+      "mrleitao",
+      "thissite"
+    ]
+  },
+  {
+    "group": "Teaching and communicating",
+    "type": "hard",
+    "name": "Talks and speaking",
+    "definition": "Presenting work to an audience, from conference talks to team briefings, and answering their questions.",
+    "level": "have",
+    "also": [
+      "Presenting to leadership",
+      "Public science communication"
+    ],
+    "includes": [
+      "Session chairing",
+      "Invited talks",
+      "Posters"
+    ],
+    "fields": [
+      "acad",
+      "lnd"
+    ],
+    "proof": "I chaired a 2024 conference session on AI, and gave invited talks at the University of Virginia and a film festival.",
+    "icon": "mic",
+    "evidence": [
+      "talks",
+      "autonomy"
+    ]
+  },
+  {
+    "group": "AI integration",
+    "type": "hard",
+    "name": "Building with LLM APIs",
+    "definition": "Writing software that sends requests to a large language model and uses its answers inside a tool or study.",
+    "level": "have",
+    "also": [
+      "LLM integration",
+      "Generative AI prototyping",
+      "AI-enabled research tools"
+    ],
+    "includes": [
+      "ChatGPT API",
+      "Amazon cloud services (AWS)",
+      "Qualtrics randomization",
+      "Prompt and response handling"
+    ],
+    "fields": [
+      "ai",
+      "dsa",
+      "xpr",
+      "acad"
+    ],
+    "proof": "I built the task for my generative AI preprint on the ChatGPT API. Each participant got a live AI response, and every exchange was logged.",
+    "icon": "plug",
+    "evidence": [
+      "genai"
+    ]
+  },
+  {
+    "group": "AI integration",
+    "type": "hard",
+    "name": "AI-assisted analysis and coding",
+    "definition": "Using an AI assistant to speed up writing code and analysis, with a person checking every output.",
+    "level": "have",
+    "also": [
+      "AI-assisted data science",
+      "Code generation and review",
+      "Analysis automation"
+    ],
+    "includes": [
+      "GenAI-generated specification curve",
+      "AI-assisted figures and site code",
+      "Checking AI output against the data"
+    ],
+    "fields": [
+      "ai",
+      "dsa",
+      "acad",
+      "ins"
+    ],
+    "proof": "I used generative AI to run 69 alternative analyses of the main result in my generative AI research. I also use it to build code and figures, including this website, and I check its output against the data.",
+    "icon": "terminal",
+    "evidence": [
+      "genai",
+      "riskcreep",
+      "thissite"
+    ]
+  },
+  {
+    "group": "AI integration",
+    "type": "hard",
+    "name": "AI workflow automation",
+    "definition": "Setting up repeatable steps, written rules, and small tools so an AI assistant does routine work reliably.",
+    "level": "have",
+    "also": [
+      "AI-enabled process automation",
+      "Workflow orchestration",
+      "Internal tooling"
+    ],
+    "includes": [
+      "Written rules and project files for an AI assistant",
+      "Scoring and triage workflows",
+      "Small custom apps"
+    ],
+    "fields": [
+      "ai",
+      "dsa",
+      "ins",
+      "acad"
+    ],
+    "proof": "I built a job-search workflow around an AI assistant, with written rules, a scoring scheme, and daily triage. I also build small tools of my own, such as a task-priority app.",
+    "icon": "gear",
+    "evidence": [
+      "jobsys",
+      "tools",
+      "thissite"
+    ]
+  },
+  {
+    "group": "AI integration",
+    "type": "hard",
+    "name": "Evaluating AI output",
+    "definition": "Testing whether AI answers are accurate and useful, using blind ratings, comparison sets, and clear criteria.",
+    "level": "have",
+    "also": [
+      "Human evaluation of AI",
+      "AI quality measurement",
+      "Model output review"
+    ],
+    "includes": [
+      "Blind third-party ratings",
+      "Quality and time comparisons",
+      "Text-similarity measures"
+    ],
+    "fields": [
+      "ai",
+      "xpr",
+      "ins",
+      "acad"
+    ],
+    "proof": "I designed blind ratings for my generative AI preprint. Judges who did not know the condition scored the work, and I compared quality, time, and how closely people's text matched the AI's.",
+    "icon": "circlecheck",
+    "evidence": [
+      "genai"
+    ]
+  },
+  {
+    "group": "Ownership and leadership",
+    "type": "soft",
+    "name": "Ownership",
+    "definition": "Taking responsibility for a piece of work from start to finish, including its problems.",
+    "level": "have",
+    "also": [
+      "Led end to end",
+      "Accountable for delivery"
+    ],
+    "includes": [],
+    "fields": [
+      "bar",
+      "rpm",
+      "acad",
+      "ai"
+    ],
+    "proof": "I carried my thesis and six-study dissertation from the first question through design, recruitment, analysis and writing.",
+    "icon": "flag",
+    "evidence": [
+      "diss",
+      "thesis"
+    ]
+  },
+  {
+    "group": "Ownership and leadership",
+    "type": "soft",
+    "name": "Project leadership",
+    "definition": "Setting a project's direction, assigning the work, and keeping it moving to the finish.",
+    "level": "have",
+    "also": [
+      "Led parallel workstreams",
+      "Coordinated delivery"
+    ],
+    "includes": [],
+    "fields": [
+      "rpm",
+      "hlth",
+      "eval"
+    ],
+    "proof": "I built a student team, delegated work, and kept six to seven projects moving at once.",
+    "icon": "board",
+    "evidence": [
+      "gtteam",
+      "nih"
+    ]
+  },
+  {
+    "group": "Ownership and leadership",
+    "type": "soft",
+    "name": "People leadership",
+    "definition": "Guiding a team by setting expectations, giving feedback, and supporting each person's growth.",
+    "level": "have",
+    "also": [
+      "Supervised and trained staff",
+      "Delegated and monitored work"
+    ],
+    "includes": [],
+    "fields": [
+      "rpm",
+      "lnd"
+    ],
+    "proof": "I have supervised research assistants since 2017. My teams reached 14 to 15 people.",
+    "icon": "people",
+    "evidence": [
+      "ucr",
+      "csunlab",
+      "gtteam"
+    ]
+  },
+  {
+    "group": "Ownership and leadership",
+    "type": "soft",
+    "name": "Prioritization",
+    "definition": "Deciding which tasks come first when time and resources are limited.",
+    "level": "have",
+    "also": [
+      "Sequencing competing demands"
+    ],
+    "includes": [],
+    "fields": [
+      "rpm",
+      "bar"
+    ],
+    "proof": "I handed off secondary projects to protect my dissertation deadlines and kept the wider research moving.",
+    "icon": "sort",
+    "evidence": [
+      "diss",
+      "gtteam"
+    ]
+  },
+  {
+    "group": "Ownership and leadership",
+    "type": "soft",
+    "name": "Mentorship and development",
+    "definition": "Helping others grow their skills through advice, feedback, and chances to practice.",
+    "level": "have",
+    "also": [
+      "Mentored",
+      "Developed capability"
+    ],
+    "includes": [],
+    "fields": [
+      "lnd",
+      "acad",
+      "rpm"
+    ],
+    "proof": "I guided an undergraduate honors project from start to finish and supported a former student's conference project.",
+    "icon": "sprout",
+    "evidence": [
+      "honors"
+    ]
+  },
+  {
+    "group": "Collaboration and communication",
+    "type": "soft",
+    "name": "Team science",
+    "definition": "A collaborative effort to address a scientific challenge. It draws on the strengths and expertise of people trained in different fields.",
+    "level": "have",
+    "also": [
+      "Collaborated across disciplines",
+      "Integrated expertise"
+    ],
+    "includes": [],
+    "fields": [
+      "hlth",
+      "rpm",
+      "acad",
+      "ai"
+    ],
+    "proof": "I work with teams in psychology, medicine, genomics, policy, business and clinical research, and completed formal team-science training.",
+    "icon": "puzzle",
+    "evidence": [
+      "t-team",
+      "nih",
+      "genai",
+      "vrbuffet"
+    ]
+  },
+  {
+    "group": "Collaboration and communication",
+    "type": "soft",
+    "name": "Stakeholder communication",
+    "definition": "Keeping the people who depend on or fund the work informed, in the form and level of detail they need.",
+    "level": "have",
+    "also": [
+      "Engaged stakeholders",
+      "Adapted communication"
+    ],
+    "includes": [
+      "Handling disagreement with evidence"
+    ],
+    "fields": [
+      "eval",
+      "ins",
+      "pol",
+      "dsa",
+      "lnd"
+    ],
+    "proof": "I represented graduate students to faculty, answered participants, and explained results to learners, administrators and collaborators. When stakeholders disagree with the results, I respect their experience and show them the data.",
+    "icon": "chat",
+    "evidence": [
+      "csunir",
+      "dei",
+      "sona"
+    ]
+  },
+  {
+    "group": "Collaboration and communication",
+    "type": "soft",
+    "name": "Facilitation",
+    "definition": "Guiding a group conversation so everyone contributes and the meeting ends in a decision.",
+    "level": "have",
+    "also": [
+      "Facilitated discussion",
+      "Enabled participation"
+    ],
+    "includes": [],
+    "fields": [
+      "lnd",
+      "eval"
+    ],
+    "proof": "I ran workshops, guest lectures, a journal club and class discussions, and set the rules for respectful disagreement in my course.",
+    "icon": "chat",
+    "evidence": [
+      "w-r",
+      "w-open",
+      "w-power",
+      "gios",
+      "psytech"
+    ]
+  },
+  {
+    "group": "Collaboration and communication",
+    "type": "soft",
+    "name": "Collaborative authorship",
+    "definition": "Writing papers with co-authors: dividing the sections, merging edits, and agreeing on credit.",
+    "level": "have",
+    "also": [
+      "Clarified roles",
+      "Credited contributions"
+    ],
+    "includes": [],
+    "fields": [
+      "acad"
+    ],
+    "proof": "I have worked as first, co-first, middle and contributing author across labs and spelled out each contribution.",
+    "icon": "link",
+    "evidence": [
+      "genai",
+      "riskcreep",
+      "gaming",
+      "vrbuffet"
+    ]
+  },
+  {
+    "group": "Collaboration and communication",
+    "type": "soft",
+    "name": "Advocacy and representation",
+    "definition": "Speaking up for a group or cause and bringing its needs into decisions.",
+    "level": "have",
+    "also": [
+      "Represented",
+      "Advised"
+    ],
+    "includes": [],
+    "fields": [
+      "pol",
+      "eval"
+    ],
+    "proof": "I served on the diversity committee and data-governance task force and brought student needs and evidence into policy discussions.",
+    "icon": "balance",
+    "evidence": [
+      "dei",
+      "pronoun"
+    ]
+  },
+  {
+    "group": "Collaboration and communication",
+    "type": "soft",
+    "name": "Audience awareness",
+    "definition": "Fitting the message, the detail, and the wording to the person reading or listening.",
+    "level": "have",
+    "also": [
+      "Tailored content",
+      "Designed for users"
+    ],
+    "includes": [],
+    "fields": [
+      "lnd",
+      "ins"
+    ],
+    "proof": "I design participant instructions, course assignments and technical materials for readers with different backgrounds.",
+    "icon": "eye",
+    "evidence": [
+      "psytech",
+      "w-r",
+      "diss"
+    ]
+  },
+  {
+    "group": "Judgment and integrity",
+    "type": "soft",
+    "name": "Methodological judgment",
+    "definition": "Choosing the right design and analysis for the question, and knowing what the data can and cannot show.",
+    "level": "have",
+    "also": [
+      "Fit-for-purpose research judgment"
+    ],
+    "includes": [],
+    "fields": [
+      "bar",
+      "xpr",
+      "dsa",
+      "ssp"
+    ],
+    "proof": "I match the analysis to the question: count models for counts, multilevel models for nested data, scale methods for measures, causal designs for cause.",
+    "icon": "compass",
+    "evidence": [
+      "riskcreep",
+      "mega",
+      "diss",
+      "genai"
+    ]
+  },
+  {
+    "group": "Judgment and integrity",
+    "type": "soft",
+    "name": "Honest reporting",
+    "definition": "Reporting what the data show, including results that did not work, without overstating them.",
+    "level": "have",
+    "also": [
+      "Reported results candidly",
+      "Scientific integrity"
+    ],
+    "includes": [],
+    "fields": [
+      "bar",
+      "ai",
+      "acad",
+      "eval",
+      "tsi"
+    ],
+    "proof": "I reported null results as nulls in my thesis and in dissertation Study 6, disclosed changes to my plans, and stated the limits of each design.",
+    "icon": "circlecheck",
+    "evidence": [
+      "thesis",
+      "diss",
+      "mega",
+      "autonomy"
+    ]
+  },
+  {
+    "group": "Judgment and integrity",
+    "type": "soft",
+    "name": "Learning from null results",
+    "definition": "Treating a finding of no effect as information: asking why, and using the answer to design the next study.",
+    "level": "have",
+    "also": [
+      "Refined hypotheses",
+      "Adapted study design"
+    ],
+    "includes": [],
+    "fields": [
+      "bar",
+      "ai",
+      "acad"
+    ],
+    "proof": "After my thesis null result, I studied what it implies for authority in new situations. Each dissertation study refined the one before.",
+    "icon": "stairs",
+    "evidence": [
+      "thesis",
+      "diss"
+    ]
+  },
+  {
+    "group": "Judgment and integrity",
+    "type": "soft",
+    "name": "Ethical judgment",
+    "definition": "Seeing the ethical side of a decision and choosing the course that respects people, limits harm, and treats them fairly.",
+    "level": "have",
+    "also": [
+      "Surfaced tradeoffs",
+      "Defined decision criteria"
+    ],
+    "includes": [],
+    "fields": [
+      "pol",
+      "eval",
+      "tsi",
+      "ai"
+    ],
+    "proof": "I weigh evidence against values, rights and fairness in policy work, and studied privacy, accountability and bias in data courses.",
+    "icon": "balance",
+    "evidence": [
+      "c-policy",
+      "c-ai"
+    ]
+  },
+  {
+    "group": "Judgment and integrity",
+    "type": "soft",
+    "name": "Ethical risk assessment",
+    "definition": "Identifying how a study or tool could harm people, weighing that against its benefits, and putting safeguards in place first.",
+    "level": "have",
+    "also": [
+      "Assessed participant risk",
+      "Designed with safeguards"
+    ],
+    "includes": [],
+    "fields": [
+      "tsi",
+      "ai",
+      "hlth"
+    ],
+    "proof": "My studies involved deception, participant discomfort, clinical samples, and genetic-risk data. I examined cases where trust in AI is too high or too low.",
+    "icon": "alert",
+    "evidence": [
+      "thesis",
+      "prs",
+      "nihprot"
+    ]
+  },
+  {
+    "group": "Judgment and integrity",
+    "type": "soft",
+    "name": "Systems thinking",
+    "definition": "Seeing how the parts of a larger system affect one another, so a fix in one place does not break another.",
+    "level": "have",
+    "also": [
+      "Mapped dependencies",
+      "Designed systems"
+    ],
+    "includes": [],
+    "fields": [
+      "rpm",
+      "eval",
+      "xpr"
+    ],
+    "proof": "In the participant pool I connected participant experience, researcher needs, recruitment rules and course credit into one system.",
+    "icon": "network",
+    "evidence": [
+      "sona"
+    ]
+  },
+  {
+    "group": "Learning and adapting",
+    "type": "soft",
+    "name": "Initiative and community building",
+    "definition": "Starting useful work without being asked and bringing people together around it.",
+    "level": "have",
+    "also": [
+      "Established",
+      "Launched",
+      "Convened"
+    ],
+    "includes": [],
+    "fields": [
+      "lnd",
+      "rpm",
+      "acad"
+    ],
+    "proof": "I co-founded an open-science group and a journal club and started workshops that keep running.",
+    "icon": "spark",
+    "evidence": [
+      "gios",
+      "w-open",
+      "w-r"
+    ]
+  },
+  {
+    "group": "Learning and adapting",
+    "type": "soft",
+    "name": "Adaptability",
+    "definition": "Changing the approach when plans, tools, or conditions change.",
+    "level": "have",
+    "also": [
+      "Adapted delivery",
+      "Navigated change"
+    ],
+    "includes": [],
+    "fields": [
+      "rpm",
+      "lnd"
+    ],
+    "proof": "I moved research, teaching and collaboration online during the pandemic and kept delivering.",
+    "icon": "shuffle",
+    "evidence": [
+      "gtteam",
+      "rmta"
+    ]
+  },
+  {
+    "group": "Learning and adapting",
+    "type": "soft",
+    "name": "Continuous learning",
+    "definition": "Keeping skills current by picking up new methods and tools as the field moves.",
+    "level": "have",
+    "also": [
+      "Built capability",
+      "Adopted new methods"
+    ],
+    "includes": [],
+    "fields": [
+      "acad",
+      "lnd"
+    ],
+    "proof": "I trained in management, team science, latent profiles, text analytics and longitudinal methods, then used them where I could.",
+    "icon": "stairs",
+    "evidence": [
+      "t-mgmt",
+      "t-team",
+      "t-lpa",
+      "t-text",
+      "t-pitt"
+    ]
+  }
 ]
