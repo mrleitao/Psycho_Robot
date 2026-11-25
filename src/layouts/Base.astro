@@ -3,6 +3,8 @@ import '@fontsource-variable/bricolage-grotesque/opsz.css';
 import '@fontsource-variable/source-serif-4/index.css';
 import '../styles/global.css';
 import { href, basePath } from '../utils/url';
+import displayFont from '@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-opsz-normal.woff2?url';
+import textFont from '@fontsource-variable/source-serif-4/files/source-serif-4-latin-wght-normal.woff2?url';
 
 interface Props {
   title?: string;
@@ -36,6 +38,8 @@ const favicon =
     <meta name="description" content={description} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
+    <link rel="preload" as="font" type="font/woff2" href={displayFont} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={textFont} crossorigin />
     <link rel="icon" href={favicon} />
   </head>
   <body>

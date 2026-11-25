@@ -9,7 +9,9 @@
 </div>
 
 <style>
-  #wave { position: absolute; inset: 0; width: 100%; height: 100%; display: block; overflow: hidden; z-index: -1; pointer-events: none; contain: strict; }
+  #wave { position: absolute; inset: 0; width: 100%; height: 100%; display: block; overflow: hidden; z-index: -1; pointer-events: none; contain: strict; opacity: 0; transition: opacity 0.6s ease; }
+  #wave.ready { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { #wave { transition: none; } }
   .reg-ui { position: absolute; left: 0; right: 0; bottom: 14px; z-index: 1; max-width: 1040px; margin-inline: auto; padding-inline: clamp(16px, 4vw, 32px); display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; pointer-events: none; }
   .reg-label { margin: 0; font: 500 0.85rem/1.4 var(--display); color: var(--muted); background: var(--paper); padding: 4px 10px; border-radius: 4px; pointer-events: auto; }
   #pause { font: 500 0.85rem/1.4 var(--display); background: var(--paper); border: 1px solid var(--muted); border-radius: 4px; color: var(--ink); padding: 4px 12px; cursor: pointer; pointer-events: auto; }
@@ -136,5 +138,8 @@
  new IntersectionObserver(e=>{visible=e[0].isIntersecting;sync()}).observe(hero);
  reduced.addEventListener('change',sync);document.addEventListener('visibilitychange',sync);
  palette();resize();draw();sync();
+ // Show the field only after fonts have loaded and the hero has settled, so dots never jump when the text reflows.
+ const show=()=>requestAnimationFrame(()=>{resize();svg.classList.add('ready')});
+ if(document.fonts&&document.fonts.ready){document.fonts.ready.then(show);setTimeout(show,2500)}else show();
 })();
 </script>
