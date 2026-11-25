@@ -69,8 +69,12 @@
  // In the stacked (phone and tablet) layout the field sits behind the headline block only, not the career map below it.
  function box(){const b=hero.getBoundingClientRect();let height=b.height;
   if(!copy){copy=hero.querySelector('.hero-copy');if(copy&&window.ResizeObserver&&typeof resizeObserver!=='undefined')resizeObserver.observe(copy)}
-  if(stacked.matches&&copy){height=Math.min(b.height,copy.getBoundingClientRect().bottom-b.top+28);svg.style.bottom='auto';svg.style.height=height+'px';ui.style.bottom=(b.height-height+14)+'px'}
-  else{svg.style.removeProperty('bottom');svg.style.removeProperty('height');ui.style.removeProperty('bottom')}
+  if(stacked.matches&&copy){const cb=copy.getBoundingClientRect(),copyBottom=cb.bottom-b.top;
+   height=Math.min(b.height,copyBottom+28);svg.style.bottom='auto';svg.style.height=height+'px';
+   // Notice and pause button sit in their own row under the headline block, clear of the buttons.
+   const room=ui.offsetHeight+16;if(copy.style.marginBottom!==room+'px')copy.style.marginBottom=room+'px';
+   ui.style.bottom='auto';ui.style.top=(copyBottom+8)+'px'}
+  else{svg.style.removeProperty('bottom');svg.style.removeProperty('height');ui.style.removeProperty('bottom');ui.style.removeProperty('top');if(copy)copy.style.removeProperty('margin-bottom')}
   return{width:b.width,height}}
  function resize(force){const b=box();
   // Phone toolbars resize the window while scrolling. Ignore changes that do not alter the field box.
