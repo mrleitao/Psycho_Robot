@@ -24,6 +24,7 @@ const know = rows.filter((r) => r.level === 'knowledge');
           {(list as typeof rows).map((r) => (
             <li class={r.level}>
               <span class="tp-name">{r.name}</span>
+              <span class="tp-about">{r.about}</span>
               <span class="tp-ev">
                 {r.evs.map((e, k) => (
                   <>{k > 0 ? '; ' : ''}{e.href ? <a href={href(e.href)}>{e.name}</a> : e.name}{' '}<span class="m">({span(e)})</span></>
@@ -47,6 +48,7 @@ const know = rows.filter((r) => r.level === 'knowledge');
   li { padding: 0.45rem 0 0.5rem 0.9rem; border-left: 4px solid var(--coral); margin-bottom: 0.4rem; background: var(--wash); border-radius: 0 6px 6px 0; }
   li.knowledge { border-left: 4px dashed var(--steel); background: transparent; }
   .tp-name { display: block; font-family: var(--display); font-weight: 600; font-size: 0.97rem; }
-  .tp-ev { display: block; font-size: 0.88rem; line-height: 1.4; color: var(--muted); margin-top: 0.1rem; }
+  .tp-about { display: block; font-size: 0.95rem; line-height: 1.5; margin-top: 0.2rem; }
+  .tp-ev { display: block; font-size: 0.88rem; line-height: 1.4; color: var(--muted); margin-top: 0.35rem; }
   .m { white-space: nowrap; }
 </style>

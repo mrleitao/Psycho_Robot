@@ -1,173 +1,198 @@
 [
- {
-  "name": "Trust in AI and algorithms",
-  "evidence": [
-   "diss",
-   "autonomy",
-   "thesis"
-  ]
- },
- {
-  "name": "Human-AI collaboration at work",
-  "evidence": [
-   "genai"
-  ]
- },
- {
-  "name": "Anthropomorphism and mind perception",
-  "evidence": [
-   "diss"
-  ]
- },
- {
-  "name": "Medical AI and health decisions",
-  "evidence": [
-   "diss",
-   "nihprot"
-  ]
- },
- {
-  "name": "Genetic risk and health beliefs",
-  "evidence": [
-   "prs",
-   "nihprot",
-   "genetic"
-  ]
- },
- {
-  "name": "Digital health behavior change",
-  "evidence": [
-   "diss"
-  ]
- },
- {
-  "name": "Psychology of technology",
-  "evidence": [
-   "psytech",
-   "c-socog",
-   "thesis",
-   "apppost"
-  ]
- },
- {
-  "name": "Smartphones and wellbeing",
-  "evidence": [
-   "mega",
-   "phonereview",
-   "phonesleep",
-   "covid",
-   "ema"
-  ]
- },
- {
-  "name": "Virtual reality in research",
-  "evidence": [
-   "vrq",
-   "vrbuffet",
-   "visn"
-  ]
- },
- {
-  "name": "Clinical drug trials, behavioral outcomes",
-  "evidence": [
-   "vrbuffet",
-   "nih"
-  ]
- },
- {
-  "name": "COVID-19 and social behavior",
-  "evidence": [
-   "riskcreep",
-   "covid"
-  ]
- },
- {
-  "name": "Parasocial relationships",
-  "evidence": [
-   "parasocial"
-  ]
- },
- {
-  "name": "Gaming and motivation",
-  "evidence": [
-   "gaming"
-  ]
- },
- {
-  "name": "Obedience to authority",
-  "evidence": [
-   "thesis"
-  ]
- },
- {
-  "name": "Open science and reproducibility",
-  "evidence": [
-   "diss",
-   "thesis",
-   "mega",
-   "gios",
-   "w-open"
-  ]
- },
- {
-  "name": "Memory and cognition",
-  "evidence": [
-   "c-mem"
-  ]
- },
- {
-  "name": "Educational neuroscience",
-  "evidence": [
-   "c-brain"
-  ]
- },
- {
-  "name": "Neurophilosophy and consciousness",
-  "evidence": [
-   "c-neuro"
-  ]
- },
- {
-  "name": "Human development and policy",
-  "evidence": [
-   "c-dev"
-  ]
- },
- {
-  "name": "Public policy process",
-  "evidence": [
-   "c-policy"
-  ]
- },
- {
-  "name": "Public management",
-  "evidence": [
-   "c-policy"
-  ]
- },
- {
-  "name": "Ethics and values in policy",
-  "evidence": [
-   "c-policy"
-  ]
- },
- {
-  "name": "Microeconomics and public economics",
-  "evidence": [
-   "c-econ"
-  ]
- },
- {
-  "name": "AI, cloud computing and data systems",
-  "evidence": [
-   "c-ai"
-  ]
- },
- {
-  "name": "AI and data ethics",
-  "evidence": [
-   "c-ai",
-   "c-py"
-  ]
- }
+  {
+    "name": "Trust in AI and algorithms",
+    "evidence": [
+      "diss",
+      "autonomy",
+      "thesis"
+    ],
+    "about": "When and why people accept, reject, or lean on advice from AI. I measure it by how far people move their own answer toward the advice."
+  },
+  {
+    "name": "Human-AI collaboration at work",
+    "evidence": [
+      "genai"
+    ],
+    "about": "How splitting a task between a person and generative AI changes the quality of the work and how workers feel about it. My preprint tests drafting against editing in two preregistered experiments."
+  },
+  {
+    "name": "Anthropomorphism and mind perception",
+    "evidence": [
+      "diss"
+    ],
+    "about": "Whether people see a mind in an AI system, and how that changes trust. My dissertation tests whether more humanlike AI earns more trust and more willingness to follow its advice."
+  },
+  {
+    "name": "Medical AI and health decisions",
+    "evidence": [
+      "diss",
+      "nihprot"
+    ],
+    "about": "How people weigh health advice from medical AI compared with advice from doctors. My dissertation studies it, and an NIH study design asks how an AI review shapes reactions to genomic results."
+  },
+  {
+    "name": "Genetic risk and health beliefs",
+    "evidence": [
+      "prs",
+      "nihprot",
+      "genetic"
+    ],
+    "about": "How people interpret genetic-risk information and what they believe genes determine. My work covers virtual doctor visits and an accepted paper on beliefs about genes and body weight."
+  },
+  {
+    "name": "Digital health behavior change",
+    "evidence": [
+      "diss"
+    ],
+    "about": "Whether health advice changes what people do, measured with behavior over time instead of stated intentions. My dissertation tracked sleep and device use around a randomly assigned AI or doctor recommendation."
+  },
+  {
+    "name": "Psychology of technology",
+    "evidence": [
+      "psytech",
+      "c-socog",
+      "thesis",
+      "apppost"
+    ],
+    "about": "How people think, feel, and act around technology, from smartphones and algorithms to virtual reality and robots. I designed and taught a course on it at Georgetown."
+  },
+  {
+    "name": "Smartphones and wellbeing",
+    "evidence": [
+      "mega",
+      "phonereview",
+      "phonesleep",
+      "covid",
+      "ema"
+    ],
+    "about": "How phone use relates to sleep, social connection, and mood. My work includes a review, a pooled analysis of eight experiments, and student diary studies."
+  },
+  {
+    "name": "Virtual reality in research",
+    "evidence": [
+      "vrq",
+      "vrbuffet",
+      "visn"
+    ],
+    "about": "Using virtual environments to measure behavior under controlled conditions. I worked on a VR symptom questionnaire and analyzed a drug trial that used a VR buffet."
+  },
+  {
+    "name": "Clinical drug trials, behavioral outcomes",
+    "evidence": [
+      "vrbuffet",
+      "nih"
+    ],
+    "about": "Analyzing how a drug changes behavior. I am first author on the analysis of a crossover trial of a ghrelin-receptor blocker in people with alcohol use disorder."
+  },
+  {
+    "name": "COVID-19 and social behavior",
+    "evidence": [
+      "riskcreep",
+      "covid"
+    ],
+    "about": "How social contact and risk-taking changed early in the pandemic. I worked on an eight-week field study and a survey of online and in-person contact."
+  },
+  {
+    "name": "Parasocial relationships",
+    "evidence": [
+      "parasocial"
+    ],
+    "about": "How fans bond with their favorite fictional characters. I cleaned and analyzed the data for a published study of 829 fans."
+  },
+  {
+    "name": "Gaming and motivation",
+    "evidence": [
+      "gaming"
+    ],
+    "about": "Why people play video games. I helped develop a survey that measures gaming motivation."
+  },
+  {
+    "name": "Obedience to authority",
+    "evidence": [
+      "thesis"
+    ],
+    "about": "Whether people follow instructions from a computer the way they follow a human. My master's thesis found similar obedience to both."
+  },
+  {
+    "name": "Open science and reproducibility",
+    "evidence": [
+      "diss",
+      "thesis",
+      "mega",
+      "gios",
+      "w-open"
+    ],
+    "about": "Practices that let others check research, such as preregistration, open materials, and shared code. I preregistered my studies, shared code, and taught workshops on it."
+  },
+  {
+    "name": "Memory and cognition",
+    "evidence": [
+      "c-mem"
+    ],
+    "about": "How people encode, store, and recall information. I studied the major theories in a graduate memory seminar."
+  },
+  {
+    "name": "Educational neuroscience",
+    "evidence": [
+      "c-brain"
+    ],
+    "about": "What brain science can and cannot say about teaching and learning. I studied it in a graduate course."
+  },
+  {
+    "name": "Neurophilosophy and consciousness",
+    "evidence": [
+      "c-neuro"
+    ],
+    "about": "What neuroscience evidence says about consciousness, free will, and belief. I studied it in a graduate seminar."
+  },
+  {
+    "name": "Human development and policy",
+    "evidence": [
+      "c-dev"
+    ],
+    "about": "How family, school, and community shape development, and how research informs policy. I studied it in a graduate course and wrote Congressional testimony."
+  },
+  {
+    "name": "Public policy process",
+    "evidence": [
+      "c-policy"
+    ],
+    "about": "How problems reach the policy agenda and become law. I studied it in a graduate course and wrote policy memos."
+  },
+  {
+    "name": "Public management",
+    "evidence": [
+      "c-policy"
+    ],
+    "about": "How public organizations run and how to diagnose their problems. A graduate course had my team interview an organization and write a management report."
+  },
+  {
+    "name": "Ethics and values in policy",
+    "evidence": [
+      "c-policy"
+    ],
+    "about": "How to weigh competing values in policy choices. I studied it in a graduate course."
+  },
+  {
+    "name": "Microeconomics and public economics",
+    "evidence": [
+      "c-econ"
+    ],
+    "about": "Market failures, public goods, taxes, and cost-benefit reasoning. I studied them in graduate courses."
+  },
+  {
+    "name": "AI, cloud computing and data systems",
+    "evidence": [
+      "c-ai"
+    ],
+    "about": "How AI, cloud platforms, and large data systems work and shape society. I studied them in a graduate course."
+  },
+  {
+    "name": "AI and data ethics",
+    "evidence": [
+      "c-ai",
+      "c-py"
+    ],
+    "about": "Privacy, accountability, and bias in data and AI systems. I studied them in graduate courses."
+  }
 ]
