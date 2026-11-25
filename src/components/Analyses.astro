@@ -1,12 +1,15 @@
 ---
 // Every kind of analysis, grouped, with a filled dot for "have" and a ring for "developing".
 import analyses from '../data/analyses.json';
+import { href } from '../utils/url';
+const slug = (s: string) => s.toLowerCase().replace(/\W+/g, '-').replace(/^-|-$/g, '');
+const skillHref = (s: string) => `${href('/skills/full/')}#s-${slug(s)}`;
 const total = analyses.reduce((n, g) => n + g.items.length, 0);
 ---
 <section class="an" aria-labelledby="an-h">
   <h2 id="an-h" class="vh">Analyses</h2>
   <p class="an-lead">{total} methods across {analyses.length} groups. A filled dot marks a method I have used in my work. A ring marks one I am still building depth in.</p>
-  <p class="an-hint">Hover over, tap, or tab to a method to see what it is.</p>
+  <p class="an-hint">Hover over or tab to a method to see what it is. Select it to jump to its skill entry.</p>
   <div class="an-grid">
     {analyses.map((g, gi) => (
       <div class="an-group">
@@ -15,13 +18,12 @@ const total = analyses.reduce((n, g) => n + g.items.length, 0);
           {g.items.map((i, k) => (
             <li class={i.level}>
               <span class="d" aria-hidden="true"></span>
-              <span class="has-tip" tabindex="0" aria-describedby={`t-${gi}-${k}`}>
+              <a class="has-tip" href={skillHref(i.skill)} aria-describedby={`t-${gi}-${k}`}>
                 {i.name}<span class="sr"> ({i.level === 'have' ? 'have' : 'developing'})</span>
                 <span class="tip" role="tooltip" id={`t-${gi}-${k}`}>
                   {i.about}
-                  {i.mine ? <span class="tip-mine"><span class="tip-h">In my work</span>{i.mine}</span> : null}
                 </span>
-              </span>
+              </a>
             </li>
           ))}
         </ul>
@@ -48,11 +50,10 @@ const total = analyses.reduce((n, g) => n + g.items.length, 0);
   .an { margin-top: 0; }
   .an-lead { margin: 0.3rem 0 0.3rem; color: var(--muted); }
   .an-hint { margin: 0 0 1.2rem; font-family: var(--display); font-size: 0.9rem; color: var(--muted); }
-  .has-tip { position: relative; display: inline-block; cursor: help; text-decoration: underline dotted var(--muted); text-underline-offset: 0.25em; text-decoration-thickness: 1.5px; }
+  .has-tip { position: relative; display: inline-block; color: inherit; cursor: pointer; text-decoration: underline dotted var(--muted); text-underline-offset: 0.25em; text-decoration-thickness: 1.5px; }
   .has-tip:focus-visible { outline: 3px solid var(--steel); outline-offset: 3px; border-radius: 2px; }
   .tip { position: absolute; left: 0; top: calc(100% + 0.45rem); z-index: 5; width: max-content; max-width: min(19rem, 78vw); padding: 0.6rem 0.8rem; background: var(--ink); color: var(--paper); border-radius: 6px; font-family: var(--display); font-weight: 400; font-size: 0.88rem; line-height: 1.4; text-decoration: none; display: none; pointer-events: none; }
   .tip.flip { left: auto; right: 0; }
-  .tip-h { display: block; font-weight: 600; margin: 0.45rem 0 0.1rem; }
   .has-tip:hover .tip, .has-tip:focus .tip { display: block; }
   .an-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1.2rem 1.5rem; }
   .an-group { border-top: 4px solid var(--coral); padding-top: 0.5rem; }

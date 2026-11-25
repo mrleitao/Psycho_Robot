@@ -5,37 +5,44 @@
       {
         "name": "t-tests",
         "level": "have",
-        "about": "Compares the averages of two groups, or two measurements from the same people, to see whether the gap is bigger than chance would produce."
+        "about": "Compares the averages of two groups, or two measurements from the same people, to see whether the gap is bigger than chance would produce.",
+        "skill": "Core statistical tests"
       },
       {
         "name": "ANOVA and mixed ANOVA",
         "level": "have",
-        "about": "Compares averages across three or more groups. A mixed ANOVA also follows the same people across time or conditions."
+        "about": "Compares averages across three or more groups. A mixed ANOVA also follows the same people across time or conditions.",
+        "skill": "Core statistical tests"
       },
       {
         "name": "Repeated-measures ANOVA",
         "level": "have",
-        "about": "Compares the same people across several time points or conditions, so each person serves as their own comparison."
+        "about": "Compares the same people across several time points or conditions, so each person serves as their own comparison.",
+        "skill": "Core statistical tests"
       },
       {
         "name": "Chi-square tests",
         "level": "have",
-        "about": "Tests whether counts in categories, such as yes and no by group, differ more than chance would predict."
+        "about": "Tests whether counts in categories, such as yes and no by group, differ more than chance would predict.",
+        "skill": "Core statistical tests"
       },
       {
         "name": "Planned contrasts",
         "level": "have",
-        "about": "Tests a specific comparison chosen before the data came in, such as one condition against the average of the others."
+        "about": "Tests a specific comparison chosen before the data came in, such as one condition against the average of the others.",
+        "skill": "Core statistical tests"
       },
       {
         "name": "Effect sizes",
         "level": "have",
-        "about": "Reports how large a difference or relationship is, not only whether it is statistically significant."
+        "about": "Reports how large a difference or relationship is, not only whether it is statistically significant.",
+        "skill": "Core statistical tests"
       },
       {
         "name": "Crossover trial analysis",
         "level": "have",
-        "about": "Analyzes a study in which each person gets every treatment in turn, accounting for order and for effects that carry over."
+        "about": "Analyzes a study in which each person gets every treatment in turn, accounting for order and for effects that carry over.",
+        "skill": "Crossover trial analysis"
       }
     ]
   },
@@ -45,37 +52,44 @@
       {
         "name": "Linear regression",
         "level": "have",
-        "about": "Estimates how a numeric outcome changes as one or more predictors change, holding the others constant."
+        "about": "Estimates how a numeric outcome changes as one or more predictors change, holding the others constant.",
+        "skill": "Regression and multilevel modeling"
       },
       {
         "name": "Logistic regression",
         "level": "have",
-        "about": "Models the odds of a yes-or-no outcome as predictors change."
+        "about": "Models the odds of a yes-or-no outcome as predictors change.",
+        "skill": "Regression and multilevel modeling"
       },
       {
         "name": "Ordinal regression",
         "level": "have",
-        "about": "Models an outcome with ordered categories, such as strongly disagree to strongly agree, without treating the steps as equal."
+        "about": "Models an outcome with ordered categories, such as strongly disagree to strongly agree, without treating the steps as equal.",
+        "skill": "Regression and multilevel modeling"
       },
       {
         "name": "Negative-binomial regression",
         "level": "have",
-        "about": "Models counts, such as the number of risky events, when the counts vary more than a simple count model allows."
+        "about": "Models counts, such as the number of risky events, when the counts vary more than a simple count model allows.",
+        "skill": "Regression and multilevel modeling"
       },
       {
         "name": "Forward stepwise regression",
         "level": "have",
-        "about": "Builds a model by adding predictors one at a time, keeping each only if it improves the fit."
+        "about": "Builds a model by adding predictors one at a time, keeping each only if it improves the fit.",
+        "skill": "Regression and multilevel modeling"
       },
       {
         "name": "Mixed-effects logistic regression",
         "level": "have",
-        "about": "Models a yes-or-no outcome when the same people or groups contribute several observations."
+        "about": "Models a yes-or-no outcome when the same people or groups contribute several observations.",
+        "skill": "Regression and multilevel modeling"
       },
       {
         "name": "Dominance and all-subsets analysis",
         "level": "have",
-        "about": "Compares predictors by fitting every possible combination and measuring how much each one adds to explaining the outcome."
+        "about": "Compares predictors by fitting every possible combination and measuring how much each one adds to explaining the outcome.",
+        "skill": "Mediation and moderation"
       }
     ]
   },
@@ -85,27 +99,32 @@
       {
         "name": "Multilevel (mixed-effects) models",
         "level": "have",
-        "about": "Models data that come in clusters, such as repeated answers from one person or students in one class, using random effects."
+        "about": "Models data that come in clusters, such as repeated answers from one person or students in one class, using random effects.",
+        "skill": "Regression and multilevel modeling"
       },
       {
         "name": "Person-mean centering",
         "level": "have",
-        "about": "Splits each person's score into their own average and their ups and downs around it, so within-person and between-person effects separate."
+        "about": "Splits each person's score into their own average and their ups and downs around it, so within-person and between-person effects separate.",
+        "skill": "Regression and multilevel modeling"
       },
       {
         "name": "Lagged predictors and week effects",
         "level": "have",
-        "about": "Uses an earlier time point to predict the next one, and adds a term for each week to absorb shifts shared by everyone."
+        "about": "Uses an earlier time point to predict the next one, and adds a term for each week to absorb shifts shared by everyone.",
+        "skill": "Longitudinal and repeated-measures design"
       },
       {
         "name": "Diary and experience-sampling analysis",
         "level": "have",
-        "about": "Analyzes short surveys that people answer many times over days or weeks, to study how things change within a person."
+        "about": "Analyzes short surveys that people answer many times over days or weeks, to study how things change within a person.",
+        "skill": "Longitudinal and repeated-measures design"
       },
       {
         "name": "Latent growth models",
         "level": "developing",
-        "about": "Models how scores change over time, with each person having their own starting level and rate of change."
+        "about": "Models how scores change over time, with each person having their own starting level and rate of change.",
+        "skill": "Structural equation modeling"
       }
     ]
   },
@@ -115,27 +134,32 @@
       {
         "name": "Moderation and interactions",
         "level": "have",
-        "about": "Tests whether the effect of one variable gets stronger or weaker depending on another."
+        "about": "Tests whether the effect of one variable gets stronger or weaker depending on another.",
+        "skill": "Mediation and moderation"
       },
       {
         "name": "Causal mediation (ACME)",
         "level": "have",
-        "about": "Estimates how much of an effect passes through a middle step, called the average causal mediation effect."
+        "about": "Estimates how much of an effect passes through a middle step, called the average causal mediation effect.",
+        "skill": "Mediation and moderation"
       },
       {
         "name": "Multilevel mediation",
         "level": "have",
-        "about": "Tests a middle step when the data are clustered, separating effects within people from effects between people."
+        "about": "Tests a middle step when the data are clustered, separating effects within people from effects between people.",
+        "skill": "Mediation and moderation"
       },
       {
         "name": "Mediated moderation",
         "level": "have",
-        "about": "Tests whether a middle step explains why an effect is stronger for some people than for others."
+        "about": "Tests whether a middle step explains why an effect is stronger for some people than for others.",
+        "skill": "Mediation and moderation"
       },
       {
         "name": "Subgroup analysis",
         "level": "have",
-        "about": "Compares an outcome, or a relationship, across groups of people to see whether it holds in each one."
+        "about": "Compares an outcome, or a relationship, across groups of people to see whether it holds in each one.",
+        "skill": "Subgroup and group-difference analysis"
       }
     ]
   },
@@ -145,30 +169,32 @@
       {
         "name": "Randomized experiments",
         "level": "have",
-        "about": "Assigns people to conditions by chance, so differences in outcomes can be traced to the condition."
+        "about": "Assigns people to conditions by chance, so differences in outcomes can be traced to the condition.",
+        "skill": "Experimental design"
       },
       {
         "name": "Propensity-score matching",
         "level": "have",
-        "about": "Pairs treated and untreated people who look alike on recorded traits, so they can be compared more fairly when assignment was not random."
+        "about": "Pairs treated and untreated people who look alike on recorded traits, so they can be compared more fairly when assignment was not random.",
+        "skill": "Causal and quasi-experimental methods"
       },
       {
         "name": "Difference-in-differences",
         "level": "have",
         "about": "Compares the before-and-after change in a treated group with the change in a comparison group.",
-        "mine": "I have used it in the structure of randomized before-and-after studies, not on observational data."
+        "skill": "Causal and quasi-experimental methods"
       },
       {
         "name": "Regression discontinuity",
         "level": "have",
         "about": "Compares people just above and just below a cutoff to estimate the effect of being past it.",
-        "mine": "I used it on CSUN student records at the 15-unit load cutoff, then followed it with propensity-score matching."
+        "skill": "Causal and quasi-experimental methods"
       },
       {
         "name": "Instrumental variables",
         "level": "developing",
         "about": "Uses a factor that moves the treatment but affects the outcome only through it, to estimate a causal effect when assignment was not random.",
-        "mine": "I learned it in graduate coursework."
+        "skill": "Causal and quasi-experimental methods"
       }
     ]
   },
@@ -178,32 +204,38 @@
       {
         "name": "Exploratory factor analysis",
         "level": "have",
-        "about": "Looks for how many underlying ideas a set of questions captures, and lets the data suggest the groupings."
+        "about": "Looks for how many underlying ideas a set of questions captures, and lets the data suggest the groupings.",
+        "skill": "Scale development and psychometrics"
       },
       {
         "name": "Confirmatory factor analysis",
         "level": "have",
-        "about": "Tests whether a set of questions groups into the underlying ideas a theory predicts, and how well that structure fits."
+        "about": "Tests whether a set of questions groups into the underlying ideas a theory predicts, and how well that structure fits.",
+        "skill": "Scale development and psychometrics"
       },
       {
         "name": "Reliability and validity testing",
         "level": "have",
-        "about": "Checks whether a measure gives consistent results and whether it captures what it claims to capture."
+        "about": "Checks whether a measure gives consistent results and whether it captures what it claims to capture.",
+        "skill": "Scale development and psychometrics"
       },
       {
         "name": "Structural equation and path models",
         "level": "have",
-        "about": "Tests a whole network of relationships among measured and unmeasured variables at once, and checks how well it fits."
+        "about": "Tests a whole network of relationships among measured and unmeasured variables at once, and checks how well it fits.",
+        "skill": "Structural equation modeling"
       },
       {
         "name": "Multi-group models",
         "level": "developing",
-        "about": "Tests whether a measurement or path model works the same way across groups."
+        "about": "Tests whether a measurement or path model works the same way across groups.",
+        "skill": "Structural equation modeling"
       },
       {
         "name": "Latent profile analysis",
         "level": "developing",
-        "about": "Finds hidden subgroups of people who share a pattern across several measures."
+        "about": "Finds hidden subgroups of people who share a pattern across several measures.",
+        "skill": "Latent profile analysis"
       }
     ]
   },
@@ -213,32 +245,38 @@
       {
         "name": "Power and sensitivity analysis",
         "level": "have",
-        "about": "Estimates how many people a study needs to detect an effect of a given size, or which effect sizes a finished study could detect."
+        "about": "Estimates how many people a study needs to detect an effect of a given size, or which effect sizes a finished study could detect.",
+        "skill": "Power and sensitivity analysis"
       },
       {
         "name": "Specification-curve analysis",
         "level": "have",
-        "about": "Runs every reasonable version of an analysis and shows how the result changes across them."
+        "about": "Runs every reasonable version of an analysis and shows how the result changes across them.",
+        "skill": "Robustness checks"
       },
       {
         "name": "Bonferroni and Tukey corrections",
         "level": "have",
-        "about": "Adjust significance tests when many comparisons are made, so false positives stay under control."
+        "about": "Adjust significance tests when many comparisons are made, so false positives stay under control.",
+        "skill": "Robustness checks"
       },
       {
         "name": "Variance inflation checks",
         "level": "have",
-        "about": "Check whether predictors overlap so much that a regression's estimates become unstable."
+        "about": "Check whether predictors overlap so much that a regression's estimates become unstable.",
+        "skill": "Robustness checks"
       },
       {
         "name": "Intent-to-treat analysis",
         "level": "have",
-        "about": "Analyzes people in the group they were assigned to, even if they did not follow it, which keeps random assignment intact."
+        "about": "Analyzes people in the group they were assigned to, even if they did not follow it, which keeps random assignment intact.",
+        "skill": "Robustness checks"
       },
       {
         "name": "Blind outcome rating",
         "level": "have",
-        "about": "Has judges score work without knowing which condition produced it."
+        "about": "Has judges score work without knowing which condition produced it.",
+        "skill": "Blind outcome rating"
       }
     ]
   },
@@ -248,12 +286,14 @@
       {
         "name": "Bayes factors",
         "level": "have",
-        "about": "Express how strongly the data favor one hypothesis over another, including evidence for no effect."
+        "about": "Express how strongly the data favor one hypothesis over another, including evidence for no effect.",
+        "skill": "Bayesian inference"
       },
       {
         "name": "Bayesian t-tests",
         "level": "have",
-        "about": "Compare two group averages with a Bayes factor, which can show support for no difference."
+        "about": "Compare two group averages with a Bayes factor, which can show support for no difference.",
+        "skill": "Bayesian inference"
       }
     ]
   },
@@ -263,22 +303,26 @@
       {
         "name": "Dictionary-based text analysis (LIWC)",
         "level": "have",
-        "about": "Counts words from fixed lists, such as emotion or social words, to measure what a piece of writing is about."
+        "about": "Counts words from fixed lists, such as emotion or social words, to measure what a piece of writing is about.",
+        "skill": "Text analysis with dictionaries"
       },
       {
         "name": "Text-similarity metrics",
         "level": "have",
-        "about": "Score how alike two texts are, for example by shared words (Jaccard, Sørensen-Dice) or word-count vectors (cosine)."
+        "about": "Score how alike two texts are, for example by shared words (Jaccard, Sørensen-Dice) or word-count vectors (cosine).",
+        "skill": "Text analysis with dictionaries"
       },
       {
         "name": "TF-IDF and bag of words",
         "level": "developing",
-        "about": "Turn text into word counts. TF-IDF gives more weight to words that set one document apart from the others."
+        "about": "Turn text into word counts. TF-IDF gives more weight to words that set one document apart from the others.",
+        "skill": "Modern text analysis"
       },
       {
         "name": "Topic models and embeddings",
         "level": "developing",
-        "about": "Find themes across many documents, or turn meaning into numbers so similar texts sit close together."
+        "about": "Find themes across many documents, or turn meaning into numbers so similar texts sit close together.",
+        "skill": "Modern text analysis"
       }
     ]
   },
@@ -288,32 +332,38 @@
       {
         "name": "Classification trees",
         "level": "developing",
-        "about": "Predict a category by splitting cases through a series of yes-or-no questions about their features."
+        "about": "Predict a category by splitting cases through a series of yes-or-no questions about their features.",
+        "skill": "Machine learning and prediction"
       },
       {
         "name": "Support vector machines",
         "level": "developing",
-        "about": "Predict a category by finding the boundary that best separates the groups of cases."
+        "about": "Predict a category by finding the boundary that best separates the groups of cases.",
+        "skill": "Machine learning and prediction"
       },
       {
         "name": "Nearest neighbors",
         "level": "developing",
-        "about": "Predict a case's category from the categories of the most similar cases."
+        "about": "Predict a case's category from the categories of the most similar cases.",
+        "skill": "Machine learning and prediction"
       },
       {
         "name": "Naive Bayes",
         "level": "developing",
-        "about": "Predict a category by combining the odds from each feature, assuming the features act independently."
+        "about": "Predict a category by combining the odds from each feature, assuming the features act independently.",
+        "skill": "Machine learning and prediction"
       },
       {
         "name": "Cross-validation",
         "level": "developing",
-        "about": "Test a model on data it was not trained on, by repeatedly holding out part of the data."
+        "about": "Test a model on data it was not trained on, by repeatedly holding out part of the data.",
+        "skill": "Machine learning and prediction"
       },
       {
         "name": "ROC curves and confusion matrices",
         "level": "developing",
-        "about": "Show how often a classifier is right and in what ways it is wrong, across different cutoffs."
+        "about": "Show how often a classifier is right and in what ways it is wrong, across different cutoffs.",
+        "skill": "Machine learning and prediction"
       }
     ]
   },
@@ -323,22 +373,26 @@
       {
         "name": "Pooled raw-data analysis",
         "level": "have",
-        "about": "Combines the raw data from several studies into one model, rather than averaging published results."
+        "about": "Combines the raw data from several studies into one model, rather than averaging published results.",
+        "skill": "Cross-study data integration"
       },
       {
         "name": "Data harmonization",
         "level": "have",
-        "about": "Matches measures, codes, and formats across studies so the data can be combined."
+        "about": "Matches measures, codes, and formats across studies so the data can be combined.",
+        "skill": "Cross-study data integration"
       },
       {
         "name": "Geospatial mapping",
         "level": "developing",
-        "about": "Maps data tied to places to see how outcomes vary by location."
+        "about": "Maps data tied to places to see how outcomes vary by location.",
+        "skill": "Geospatial analysis"
       },
       {
         "name": "Cost-benefit analysis",
         "level": "developing",
-        "about": "Compares what a program costs with the value of what it produces."
+        "about": "Compares what a program costs with the value of what it produces.",
+        "skill": "Economic and cost-benefit analysis"
       }
     ]
   }
