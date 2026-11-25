@@ -171,8 +171,7 @@ const nSoft = skills.length - nHard;
     }
   </dl>
 
-  <p class="hint">Each skill gives a short definition, its other names, and what it covers. Open "How I used it" to see the work behind it.</p>
-  <button type="button" class="openall" data-openall aria-pressed="false">Show all “How I used it” notes</button>
+  <p class="hint">Each skill gives a short definition, its other names, and what it covers. "How I used it" describes the work behind it.</p>
 
   <p class="count" aria-live="polite" data-count>Showing all {skills.length} skills.</p>
   <button type="button" class="area all rst" data-reset disabled>Show all skills</button>
@@ -202,10 +201,10 @@ const nSoft = skills.length - nHard;
                 {s.includes?.length ? <p class="meta"><span class="lbl">Skill encompasses</span>{s.includes.join('; ')}</p> : null}
               </div>
               <div class="right">
-                <details class="used">
-                  <summary>How I used it</summary>
+                <div class="used">
+                  <h4 class="used-h">How I used it</h4>
                   <p class="proof">{s.proof}</p>
-                </details>
+                </div>
                 <p class="ev">
                   <span class="ev-h">Where it shows up</span>
                   {(s.evidence ?? []).length ? (
@@ -274,13 +273,6 @@ const nSoft = skills.length - nHard;
       if (state.year !== 'all') bits.push(state.year);
       count.textContent = (shown === total ? `Showing all ${total} skills.` : `Showing ${shown} of ${total} skills`) + (bits.length && shown !== total ? ` (${bits.join(', ')}).` : shown !== total ? '.' : '');
     };
-    const openAll = root.querySelector<HTMLButtonElement>('[data-openall]');
-    openAll?.addEventListener('click', () => {
-      const on = openAll.getAttribute('aria-pressed') !== 'true';
-      openAll.setAttribute('aria-pressed', String(on));
-      openAll.textContent = on ? 'Hide all “How I used it” notes' : 'Show all “How I used it” notes';
-      root.querySelectorAll<HTMLDetailsElement>('details.used').forEach((x) => { x.open = on; });
-    });
 
     root.querySelectorAll<HTMLButtonElement>('[data-filter]').forEach((b) => b.addEventListener('click', () => { state.level = b.dataset.filter ?? 'all'; apply(); }));
     root.querySelectorAll<HTMLButtonElement>('[data-type]').forEach((b) => b.addEventListener('click', () => { state.type = b.dataset.type ?? 'all'; apply(); }));
@@ -316,12 +308,12 @@ const nSoft = skills.length - nHard;
   .tile a:hover, .tile a:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
   .tile.dim a { opacity: 0.25; }
   .chip { flex: none; display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 7px; background: var(--c); color: #fff; }
-  .chip-s { display: grid; width: 4.2rem; height: 4.2rem; border-radius: 13px; }
+  .chip-s { display: grid; width: 3.8rem; height: 3.8rem; border-radius: 12px; }
   .chip-s :global(svg) { width: 62%; height: 62%; }
   .head { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 0.2rem 0.9rem; align-content: start; }
   .head h3 { margin: 0; font-size: 1.5rem; line-height: 1.15; align-self: end; }
   .head .level { grid-column: 2; align-self: start; }
-  @media (min-width: 760px) { .head { grid-template-columns: auto 1fr; gap: 0.3rem 1.1rem; } .head .level { grid-column: 2; } .head h3 { font-size: 1.9rem; line-height: 1.12; } .chip-s { grid-row: 1 / span 2; width: 6rem; height: 6rem; border-radius: 18px; } }
+  @media (min-width: 760px) { .head { grid-template-columns: auto 1fr; gap: 0.3rem 1.1rem; } .head .level { grid-column: 2; } .head h3 { font-size: 1.9rem; line-height: 1.12; } .chip-s { grid-row: 1 / span 2; width: 5rem; height: 5rem; border-radius: 15px; } }
   .tname { min-width: 0; overflow-wrap: anywhere; }
   .tl { display: grid; gap: 3px; max-width: 54rem; }
   .tl-head, .tl-row { display: grid; grid-template-columns: 8.5rem repeat(14, minmax(0, 1fr)); gap: 3px; align-items: center; }
@@ -355,12 +347,9 @@ const nSoft = skills.length - nHard;
   .def { margin: 0; line-height: 1.55; }
   .meta { margin: 0.55rem 0 0; font-size: 0.92rem; line-height: 1.5; color: var(--muted); }
   .used { margin: 0.7rem 0 0; }
-  .used summary { display: inline-block; cursor: pointer; font-family: var(--display); font-size: 0.88rem; font-weight: 600; color: var(--ink); padding: 0.25rem 0.7rem; border: 1.5px solid var(--rule); border-radius: 6px 6px 0 0; border-bottom-color: transparent; background: var(--wash); }
-  .used summary:hover { border-color: var(--muted); }
-  .used summary:focus-visible { outline: 3px solid var(--steel); outline-offset: 2px; }
-  .used:not([open]) summary { border-radius: 6px; border-bottom-color: var(--rule); background: transparent; }
-  .used .proof { margin: 0; padding: 0.7rem 0.9rem; border: 1.5px solid var(--rule); border-radius: 0 8px 8px 8px; background: var(--wash); font-size: 0.97rem; }
-  .openall { margin-top: 0.6rem; }
+  .used-h { margin: 0 0 0.35rem; font-family: var(--display); font-size: 0.95rem; font-weight: 600; color: var(--ink); }
+  .used { padding: 0.8rem 1rem 0.9rem; border: 1.5px solid var(--rule); border-radius: 10px; background: var(--wash); }
+  .used .proof { margin: 0; font-size: 0.97rem; }
   .filters {
     display: flex;
     flex-wrap: wrap;
