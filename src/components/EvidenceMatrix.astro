@@ -96,10 +96,11 @@ const nSoft = skills.length - nHard;
     <ul class="grid" aria-label="All skills">
       {skills.map((s) => (
         <li class={`tile a${gi(s.group)} ${s.level}`} data-tile={`s-${slug(s.name)}`}>
-          <a href={`${fullPath}#s-${slug(s.name)}`} aria-label={`${s.name}, ${s.group}, ${labelOf[s.level]}`}>
+          <a href={`${fullPath}#s-${slug(s.name)}`} aria-label={`${s.name}, ${s.group}, ${labelOf[s.level]}`} aria-describedby={s.definition ? `tt-${slug(s.name)}` : undefined}>
             <span class="chip"><SkillIcon name={s.icon ?? 'spark'} size={20} /></span>
             <span class="tname">{s.name}</span>
           </a>
+          {s.definition && <span class="tip" role="tooltip" id={`tt-${slug(s.name)}`}>{s.definition}</span>}
         </li>
       ))}
     </ul>
@@ -237,6 +238,17 @@ const nSoft = skills.length - nHard;
     const count = root.querySelector<HTMLElement>('[data-count]')!;
     const select = root.querySelector<HTMLSelectElement>('[data-field]');
     const overview = root.dataset.part === 'overview';
+    root.querySelectorAll<HTMLElement>('.tile').forEach((li) => {
+      const tip = li.querySelector<HTMLElement>('.tip');
+      if (!tip) return;
+      const place = () => {
+        tip.classList.remove('flip');
+        const r = tip.getBoundingClientRect();
+        if (r.right > window.innerWidth - 8) tip.classList.add('flip');
+      };
+      li.addEventListener('mouseenter', place);
+      li.addEventListener('focusin', place);
+    });
     const go = (q: Record<string, string>) => { const u = new URLSearchParams(q).toString(); location.href = `${root.dataset.full}${u ? '?' + u : ''}`; };
     const resets = root.querySelectorAll<HTMLButtonElement>('[data-reset]');
     const state = { level: 'all', type: 'all', field: 'all', area: 'all', year: 'all' };
@@ -307,6 +319,10 @@ const nSoft = skills.length - nHard;
   .tile.developing a { border-style: dashed; background: transparent; }
   .tile a:hover, .tile a:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
   .tile.dim a { opacity: 0.25; }
+  .tile { position: relative; }
+  .tile .tip { position: absolute; left: 0; top: calc(100% + 0.4rem); z-index: 6; width: max-content; max-width: min(19rem, 78vw); padding: 0.6rem 0.8rem; background: var(--ink); color: var(--paper); border-radius: 6px; font-family: var(--display); font-weight: 400; font-size: 0.88rem; line-height: 1.4; display: none; pointer-events: none; }
+  .tile .tip.flip { left: auto; right: 0; }
+  .tile:hover .tip, .tile:focus-within .tip { display: block; }
   .chip { flex: none; display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 7px; background: var(--c); color: #fff; }
   .chip-s { display: grid; width: 3.8rem; height: 3.8rem; border-radius: 12px; }
   .chip-s :global(svg) { width: 62%; height: 62%; }
