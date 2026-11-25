@@ -59,7 +59,8 @@ const sections = order.map((id) =>
       </p>
       <p class="meta small muted">
         Updated {fmtDate(updated)}.
-        <button type="button" class="print" data-print>Print or save as PDF</button>
+        <a class="print" href={href('/Matthew_Leitao_Resume.pdf')}>Download resume (PDF)</a>
+        <a class="print" href={href('/Matthew_Leitao_CV.pdf')}>Download full CV (PDF)</a>
       </p>
     </header>
 
@@ -192,9 +193,11 @@ const sections = order.map((id) =>
           </ul>
         </section>
 
-        <section class="block">
-          <p class="small">
-            <a href={href("/Matthew_Leitao_CV_Resume.pdf")}>Download the CV/Resume as a PDF</a>, current as of {fmtDate(updated)}.
+        <section class="block" id="downloads">
+          <h2>Download</h2>
+          <p>
+            <a href={href('/Matthew_Leitao_Resume.pdf')}>Resume (2 pages, PDF)</a> for roles outside academia, and
+            <a href={href('/Matthew_Leitao_CV.pdf')}>full CV (PDF)</a> with every paper, talk and poster. Both are current as of {fmtDate(updated)}.
           </p>
         </section>
       </div>
@@ -203,8 +206,7 @@ const sections = order.map((id) =>
 </Base>
 
 <script>
-  document.querySelector('[data-print]')?.addEventListener('click', () => window.print());
-
+  
   // Open every folded list before printing so the printout is the whole CV.
   const folds = () => document.querySelectorAll<HTMLDetailsElement>('details.fold');
   let wasClosed: HTMLDetailsElement[] = [];

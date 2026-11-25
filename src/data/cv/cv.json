@@ -4,7 +4,7 @@
   "changes": [
     {
       "date": "2026-11-24",
-      "text": "Renamed the page CV/Resume. Ended the NIH position on Oct 30, 2026 and added detail to it. Added lab management and institutional research detail, corrected the GRE service entry, added skills, and replaced the download placeholder with a PDF."
+      "text": "Renamed the page CV/Resume. Ended the NIH position on Oct 30, 2026 and added detail to it. Added lab management and institutional research detail, corrected the GRE service entry, and added skills. Replaced the download placeholder with a two-page resume PDF and a full CV PDF, both checked against my resume and writing guides."
     },
     {
       "date": "2026-10-15",
@@ -50,7 +50,7 @@
           "lines": [
             "Social and Behavioral Research Branch (principal investigator: Susan Persky)",
             "Managed six projects, including a ghrelin-related pharmacology randomized controlled trial under FDA oversight.",
-            "Led the design of a protocol, now at ethics review, for a 2 x 3 vignette experiment on how a standard result, a geneticist's review or an AI review changes trust in a genetic risk result, with power set at half my dissertation effect (d = 0.115).",
+            "Led the design of a 2 x 3 vignette experiment on trust in a genetic risk result: a standard result, a geneticist's review, or an AI review. The protocol reached ethics review, with power set at half my dissertation effect (d = 0.115).",
             "Analyzed data from the pharmacology trial's virtual reality buffet simulation and first-authored the paper in the Journal of Medical Extended Reality.",
             "Taught Introduction to R and Introduction to Quarto to colleagues."
           ]
@@ -263,7 +263,7 @@
           "org": "Office of Institutional Research, California State University, Northridge",
           "lines": [
             "Merged, cleaned and analyzed campus-wide data on more than 100,000 students to learn how student traits and choices relate to academic outcomes.",
-            "Compared how first-year unit load relates to GPA, retention and graduation for student groups, including athletes, Pell-eligible students, and students served by disability services, including Deaf students.",
+            "Compared how first-year unit load relates to GPA, retention and graduation across student groups. Groups included athletes, Pell-eligible students, and students served by disability services, including Deaf students.",
             "Wrote and presented internal reports on the findings to university administration.",
             "Built Tableau worksheets and dashboards that administrators, department chairs and deans used, refreshed each semester.",
             "Prepared manuscripts based on the reports for publication."
@@ -681,8 +681,12 @@
         },
         {
           "when": "",
-          "title": "Evidence for making the GRE optional: with another graduate student, built a database on how useful the GRE was in recruitment and interviews and presented it to faculty and administrators. The program then made it optional.",
-          "org": "Georgetown University"
+          "title": "Evidence for making the GRE optional",
+          "org": "Georgetown University",
+          "lines": [
+            "With another graduate student, built a database on how useful the GRE was in recruitment and interviews.",
+            "Presented it to faculty and administrators. The program then made the GRE optional."
+          ]
         }
       ]
     },

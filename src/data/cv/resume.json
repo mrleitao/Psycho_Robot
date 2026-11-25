@@ -1,0 +1,91 @@
+{
+  "name": "Matthew Leitao",
+  "title": "Behavioral Scientist and Quantitative Researcher",
+  "contact": ["mrleitao@me.com", "linkedin.com/in/mrleitao", "mrleitao.github.io/Psycho_Robot"],
+  "summary": "Behavioral scientist with 13+ years of research experience and a PhD from Georgetown. Designs and analyzes randomized experiments, surveys and longitudinal studies on how people trust and use AI. Analyzes student-outcome data for universities, with dashboards used by administrators.",
+  "experience": [
+    {
+      "org": "National Human Genome Research Institute, National Institutes of Health",
+      "role": "Postdoctoral Researcher (IRTA), Social and Behavioral Research Branch",
+      "when": "Oct 2024 to Oct 2026",
+      "bullets": [
+        "Managed six research projects, including a ghrelin-related pharmacology randomized controlled trial under FDA oversight.",
+        "Analyzed data from the trial's virtual reality buffet simulation and first-authored the paper in the Journal of Medical Extended Reality.",
+        "Led the design of a 2 x 3 vignette experiment on how a standard result, a geneticist's review or an AI review changes trust in a genetic risk result.",
+        "Taught Introduction to R and Introduction to Quarto to colleagues."
+      ]
+    },
+    {
+      "org": "Georgetown University",
+      "role": "Doctoral Researcher and Instructor",
+      "when": "2019 to 2024",
+      "bullets": [
+        "Designed and ran six preregistered studies on trust in medical AI, including a 15-day daily-diary study with random assignment to AI or doctor advice.",
+        "Co-led generative AI experiments on how people collaborate with AI at work, with business-school collaborators; the paper is under review.",
+        "Managed five research assistants across six or seven concurrent projects.",
+        "Taught Psychology of Technology as instructor of record and received the 2023 Graduate Student Teaching Award.",
+        "Coordinated the department research pool, where participant yield rose 50% over the prior year."
+      ]
+    },
+    {
+      "org": "Georgetown University, Office of Assessment and Decision Support",
+      "role": "Institutional Research Fellow",
+      "when": "2021",
+      "bullets": [
+        "Analyzed class size and instructor time by student rank, faculty type, ethnicity and gender, and presented initial findings.",
+        "Used multilevel modeling to evaluate longitudinal student outcomes and trajectories.",
+        "Built the evidence on how useful the GRE was in recruitment and interviews, and presented it to faculty and administrators. The program then made the GRE optional."
+      ]
+    },
+    {
+      "org": "California State University, Northridge, Office of Institutional Research",
+      "role": "Data Analyst",
+      "when": "May 2018 to Aug 2019",
+      "bullets": [
+        "Merged, cleaned and analyzed campus-wide records on more than 100,000 students to learn how student choices relate to academic outcomes.",
+        "Compared how first-year unit load relates to GPA, retention and graduation for athletes, Pell-eligible students and students served by disability services.",
+        "Built Tableau dashboards that administrators, chairs and deans used, and presented the findings to university administration."
+      ]
+    },
+    {
+      "org": "California State University, Northridge, Applied Social Psychology Lab",
+      "role": "Graduate Researcher and Lab Coordinator",
+      "when": "2017 to 2019",
+      "bullets": [
+        "Coordinated the lab and trained 14 lab assistants.",
+        "Wrote and defended a preregistered thesis on obedience to computer authority."
+      ]
+    },
+    {
+      "org": "University of California, Riverside, OBSERVE Lab",
+      "role": "Lab Manager and Research Assistant",
+      "when": "2014 to 2017",
+      "bullets": [
+        "Managed the schedules and reviews of 15 research assistants.",
+        "Wrote Excel macros and Praat scripts to process speech data."
+      ]
+    }
+  ],
+  "publications": [
+    "<strong>Leitao, M. R.</strong>, Farokhnia, M., Leggio, L., &amp; Persky, S. (2026). Experiences and behavior during a virtual reality buffet simulation: A secondary analysis of a ghrelin-related pharmacology randomized controlled trial. <em>Journal of Medical Extended Reality</em>.",
+    "<strong>Leitao, M. R.</strong>, Proulx, J. D. E., &amp; Kushlev, K. (2024). Smartphones undermine social connectedness more in men than women: A mini mega-analysis. <em>Technology, Mind, and Behavior, 5</em>(1).",
+    "Logg, J. M.†, <strong>Leitao, M. R.</strong>†, &amp; Ulu, C. The cost of generative AI collaboration strategies to the psychological experience of work. Under review. † Co-first authors."
+  ],
+  "education": [
+    {"degree": "Ph.D., Psychology (Human Development and Public Policy)", "org": "Georgetown University", "when": "2024"},
+    {"degree": "M.P.P., Public Policy", "org": "Georgetown University", "when": "2021"},
+    {"degree": "M.A., General Experimental Psychology", "org": "California State University, Northridge", "when": "2019"},
+    {"degree": "B.A., Psychology", "org": "University of California, Riverside", "when": "2015"}
+  ],
+  "skills": [
+    ["Statistics and programming", "R and RStudio, SPSS, Stata, Mplus, Jamovi, JASP, Python, SQL"],
+    ["Data and survey tools", "Tableau, Qualtrics, Prolific, CloudResearch, Mechanical Turk, SONA, Quarto, Excel"],
+    ["Methods", "Randomized experiments, survey design, daily-diary studies, multilevel and longitudinal modeling, causal inference, mixed methods, preregistration"]
+  ],
+  "honors": [
+    "Graduate Student Teaching Award, Georgetown University (2023)",
+    "Fellow, Summer Institute in Social and Personality Psychology (2023)",
+    "Donald Butler Quantitative Research Award, California State University, Northridge (2019)",
+    "Cofounder, Georgetown Initiative for Open Science (2022 to 2024)"
+  ]
+}
