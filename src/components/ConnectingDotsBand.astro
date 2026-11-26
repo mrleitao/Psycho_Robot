@@ -66,12 +66,12 @@ const src = `${href('/graphics/connecting-dots.html')}?embed=1&theme=${theme}`;
 <style>
   connecting-dots-band { position: absolute; inset: 0; display: block; pointer-events: none; }
   .ui { pointer-events: auto; }
-  .tower { position: absolute; z-index: -1; inset: 0; width: 100%; height: 100%; border: 0; background: transparent; pointer-events: none; }
+  .tower { position: absolute; z-index: -1; top: 0; bottom: 0; left: 38%; width: 62%; height: 100%; -webkit-mask-image: linear-gradient(to right, transparent, #000 22%); mask-image: linear-gradient(to right, transparent, #000 22%); border: 0; background: transparent; pointer-events: none; }
   .ui { position: absolute; left: 0; right: 0; bottom: 14px; z-index: 1; max-width: 1040px; margin-inline: auto; padding-inline: clamp(16px, 4vw, 32px); display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1rem; }
   .cap { margin: 0; font: 500 0.85rem/1.4 var(--display); color: var(--muted); background: var(--paper); padding: 4px 10px; border-radius: 4px; }
   .pause { min-height: 44px; padding: 4px 14px; font: 500 0.85rem/1.4 var(--display); background: var(--paper); border: 1px solid var(--muted); border-radius: 4px; color: var(--ink); cursor: pointer; }
   .pause:hover:not(:disabled) { background: var(--wash); }
   .pause:focus-visible { outline: 3px solid var(--coral); outline-offset: 3px; }
   .pause:disabled { cursor: default; opacity: 0.8; }
-  @media (max-width: 700px) { .tower { inset: auto 0 64px 0; height: 300px; } }
+  @media (max-width: 700px) { .tower { inset: auto 0 64px 0; width: 100%; height: 300px; -webkit-mask-image: none; mask-image: none; } }
 </style>
