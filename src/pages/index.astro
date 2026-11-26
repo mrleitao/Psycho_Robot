@@ -86,11 +86,12 @@ const asks = [
     <div class="wrap hero-grid">
       <div class="hero-copy">
         <p class="kicker">Matthew Leitao, behavioral scientist</p>
-        <h1>Data-driven decisions. Thorough understanding of behavior.</h1>
+        <h1>I design experiments and turn messy human data into answers.</h1>
+        <p class="offer">Data-driven decisions, backed by a thorough understanding of behavior.</p>
         <p class="lede">
-          I design experiments and turn messy human data into answers, so decisions rest on evidence about what people
-          do and why. I am a behavioral scientist with a PhD from Georgetown, 13+ years of research, and a recent
-          postdoc at the National Institutes of Health. I report what the data support, including the null results.
+          I am a behavioral scientist with a PhD from Georgetown and 13+ years of research. I recently finished a postdoc
+          at the National Institutes of Health. I study how people decide whether to trust AI, and I report what the
+          data support, including the null results.
         </p>
         <p class="cta">
           <a class="btn primary" href={href('/skills/')}>See my skills</a>
@@ -311,7 +312,8 @@ const asks = [
   .kicker { font-family: var(--display); font-weight: 600; font-size: 1rem; color: var(--deep); margin: 0 0 1rem; }
   :global([data-theme='dark']) .kicker, .kicker { color: var(--muted); }
   .hero h1 { font-size: clamp(2.4rem, 5vw, 4rem); line-height: 1.04; letter-spacing: -0.03em; max-width: 18ch; }
-  .hero .lede { margin-top: 1.4rem; max-width: 34rem; }
+  .hero .offer { margin: 1.1rem 0 0; max-width: 30rem; font-family: var(--display); font-size: clamp(1.15rem, 2vw, 1.4rem); font-weight: 500; line-height: 1.3; color: var(--ink); }
+  .hero .lede { margin-top: 1.1rem; max-width: 34rem; }
   .cta { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1.8rem 0 0; }
   .btn { font-family: var(--display); font-weight: 600; font-size: 1rem; padding: 0.7rem 1.2rem; border-radius: 8px; border: 2px solid var(--ink); color: var(--ink); text-decoration: none; }
   .btn:hover { color: var(--ink); background: var(--wash); }
