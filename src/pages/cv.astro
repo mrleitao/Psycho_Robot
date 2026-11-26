@@ -68,14 +68,13 @@ const sections = order.map((id) =>
           <li><a href="#resume">Resume</a></li>
           <li><a href="#cv-full">Full CV</a></li>
           {sections.map((s) => <li class="sub"><a href={`#${s.id}`}>{s.title}</a></li>)}
-          <li><a href="#changes">Recent changes</a></li>
         </ul>
       </nav>
 
       <div class="body">
         <section id="resume" class="block" aria-labelledby="resume-h">
           <h2 id="resume-h">Resume</h2>
-          <p class="summary">{resume.summary}</p>
+          <p class="summary">{resume.summaryWeb ?? resume.summary}</p>
           <ol class="rows timeline">
             {
               resume.experience.map((x) => (
@@ -126,7 +125,7 @@ const sections = order.map((id) =>
 
               {s.kind === 'entries' && (
                 <details class="fold" open={!s.collapsed}>
-                  <summary>{s.count} entries</summary>
+                  <summary>{s.count} {s.count === 1 ? 'entry' : 'entries'}</summary>
                   <ul class="rows entries">
                     {s.items.map((e) => (
                       <li>
@@ -150,7 +149,7 @@ const sections = order.map((id) =>
 
               {s.kind === 'html' && (
                 <details class="fold" open={!s.collapsed}>
-                  <summary>{s.count} entries</summary>
+                  <summary>{s.count} {s.count === 1 ? 'entry' : 'entries'}</summary>
                   <ul class="rows">
                     {s.items.map((item) => (
                       <li>
@@ -187,20 +186,6 @@ const sections = order.map((id) =>
             </section>
           ))
         }
-
-        <section id="changes" class="block" aria-labelledby="changes-h">
-          <h2 id="changes-h">Recent changes</h2>
-          <ul class="changes">
-            {
-              cv.changes.map((c) => (
-                <li>
-                  <span class="when">{fmtDate(c.date)}</span>
-                  <span>{c.text}</span>
-                </li>
-              ))
-            }
-          </ul>
-        </section>
 
         <section class="block" id="downloads">
           <h2>Download</h2>
@@ -330,8 +315,7 @@ const sections = order.map((id) =>
   @media (min-width: 960px) {
     .index li.sub {
       margin-left: 0.4rem;
-      padding-left: 0.8rem;
-      border-left: 2px solid var(--rule);
+      padding-left: 0.4rem;
     }
   }
 
@@ -455,12 +439,12 @@ const sections = order.map((id) =>
     margin-bottom: 0.25rem;
   }
 
-  .fold[open] > summary {
-    display: none;
+  .fold > summary::before {
+    content: 'Show ';
   }
 
-  .fold:not([open]) > summary::after {
-    content: ' (select to show)';
+  .fold[open] > summary::before {
+    content: 'Hide ';
   }
 
   .groups {
@@ -478,31 +462,9 @@ const sections = order.map((id) =>
     font-size: 1rem;
   }
 
-  .changes {
-    list-style: none;
-    margin: 0.5rem 0 0;
-    padding: 0;
-    display: grid;
-    gap: 0.6rem;
-  }
-
-  .changes li {
-    display: grid;
-    gap: 0.1rem 1.5rem;
-    font-size: 0.98rem;
-  }
-
-  @media (min-width: 640px) {
-    .changes li {
-      grid-template-columns: 11rem minmax(0, 1fr);
-    }
-  }
-
   @media print {
     .index,
-    .print,
-    .changes,
-    #changes {
+    .print {
       display: none !important;
     }
 
