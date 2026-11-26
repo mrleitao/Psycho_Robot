@@ -22,48 +22,70 @@ import { href } from '../utils/url';
   <div class="wrap">
 
     <section class="section ways">
-      <dl>
-        <div>
-          <dt>Email</dt>
-          <dd><a href="mailto:mrleitao@me.com">mrleitao@me.com</a></dd>
-        </div>
+      <div class="primary">
+        <p class="label">Email</p>
+        <p class="big"><a href="mailto:mrleitao@me.com">mrleitao@me.com</a></p>
+        <p class="hint">
+          Email is the best way to reach me. Tell me a bit about the question or the role, and what you would like to
+          decide or learn.
+        </p>
+      </div>
+      <dl class="others">
         <div>
           <dt>LinkedIn</dt>
           <dd><a href="https://www.linkedin.com/in/mrleitao/">linkedin.com/in/mrleitao</a></dd>
+          <dd class="hint">Best for professional introductions.</dd>
         </div>
         <div>
           <dt>Code</dt>
           <dd><a href="https://github.com/mrleitao">github.com/mrleitao</a></dd>
-        </div>
-        <div>
-          <dt>CV/Resume</dt>
-          <dd><a href={href('/cv/')}>Read the CV/Resume</a></dd>
+          <dd class="hint">Analysis code and project files.</dd>
         </div>
       </dl>
+    </section>
+
+    <section class="section open">
+      <h2>What I am open to</h2>
+      <dl class="kinds">
+        <div>
+          <dt>Roles</dt>
+          <dd>Behavioral science, decision science, human-AI interaction research, and research program management.</dd>
+        </div>
+        <div>
+          <dt>Collaborations</dt>
+          <dd>Studies on how people trust AI, use their phones, and make decisions, from design through analysis.</dd>
+        </div>
+        <div>
+          <dt>Consultations</dt>
+          <dd>Study design, analysis plans, and explaining results so that decision makers can act on them.</dd>
+        </div>
+        <div>
+          <dt>Conversations</dt>
+          <dd>Questions about my papers, my data, or how people behave around technology.</dd>
+        </div>
+      </dl>
+      <p class="cvline">Looking for the full record? <a href={href('/cv/')}>Read the CV/Resume</a>.</p>
     </section>
   </div>
 </Base>
 
 <style>
-  .ct-hero { position: relative; isolation: isolate; overflow: hidden; min-height: clamp(400px, 38vw, 440px); padding-bottom: 64px; }
+  .ct-hero { position: relative; isolation: isolate; overflow: hidden; min-height: clamp(460px, 40vw, 500px); padding-bottom: 64px; }
   .ways { margin-top: 24px; }
   .head-copy { position: relative; isolation: isolate; max-width: 34rem; }
   .head-copy::before { content: ''; position: absolute; inset: -40px -40px; z-index: -1; background: radial-gradient(ellipse at center, var(--paper) 40%, transparent 74%); opacity: 0.9; pointer-events: none; }
   @media (max-width: 700px) { .ct-hero { min-height: 0; padding-bottom: 510px; } }
-  .ways dl {
-    margin: 0;
-    display: grid;
-    gap: 1.25rem;
-  }
-
-  dt {
-    font-family: var(--display);
-    color: var(--muted);
-    font-size: 0.95rem;
-  }
-
-  dd {
-    margin: 0.1rem 0 0;
-    font-size: 1.35rem;
-  }
+  .primary .label { margin: 0; font-family: var(--display); color: var(--muted); font-size: 0.95rem; }
+  .primary .big { margin: 0.1rem 0 0; font-size: clamp(1.9rem, 4vw, 2.6rem); line-height: 1.15; }
+  .hint { margin: 0.4rem 0 0; max-width: 34rem; color: var(--muted); font-size: 1rem; line-height: 1.5; }
+  .others { margin: 1.75rem 0 0; display: grid; gap: 1.25rem; }
+  dt { font-family: var(--display); color: var(--muted); font-size: 0.95rem; }
+  dd { margin: 0.1rem 0 0; font-size: 1.35rem; }
+  dd.hint { font-size: 1rem; margin-top: 0.2rem; }
+  .open h2 { margin: 0 0 1.25rem; }
+  .kinds { margin: 0; display: grid; gap: 1.25rem 3rem; max-width: 52rem; }
+  @media (min-width: 760px) { .kinds { grid-template-columns: 1fr 1fr; } }
+  .kinds dt { color: var(--ink); font-size: 1.15rem; font-weight: 600; }
+  .kinds dd { font-size: 1.05rem; line-height: 1.5; color: var(--muted); }
+  .cvline { margin: 1.75rem 0 0; color: var(--muted); }
 </style>
