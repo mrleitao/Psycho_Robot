@@ -67,7 +67,7 @@ const sections = order.map((id) =>
         <ul>
           <li><a href="#resume">Resume</a></li>
           <li><a href="#cv-full">Full CV</a></li>
-          {sections.map((s) => <li><a href={`#${s.id}`}>{s.title}</a></li>)}
+          {sections.map((s) => <li class="sub"><a href={`#${s.id}`}>{s.title}</a></li>)}
           <li><a href="#changes">Recent changes</a></li>
         </ul>
       </nav>
@@ -324,6 +324,14 @@ const sections = order.map((id) =>
       display: grid;
       gap: 0.3rem;
       font-size: 0.92rem;
+    }
+  }
+
+  @media (min-width: 960px) {
+    .index li.sub {
+      margin-left: 0.4rem;
+      padding-left: 0.8rem;
+      border-left: 2px solid var(--rule);
     }
   }
 
