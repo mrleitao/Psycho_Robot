@@ -3,9 +3,9 @@ import { href } from '../utils/url';
 const src = `${href('/graphics/territory-discovery.html')}?embed=1&theme=auto`;
 ---
 <territory-band>
-  <iframe class="map" src={src} title="Animated illustration of a route uncovering an imagined landscape" aria-hidden="true" tabindex="-1"></iframe>
+  <iframe class="map" src={src} title="Animated illustration of the scientific method as a route from asking a question to making a decision" aria-hidden="true" tabindex="-1"></iframe>
   <div class="ui">
-    <p class="cap">An imagined landscape, not a map of real places or data.</p>
+    <p class="cap">A simplified path from question to decision, not a fixed sequence for every study.</p>
     <button class="pause" type="button" aria-pressed="false" disabled>Loading animation</button>
   </div>
 </territory-band>
@@ -70,7 +70,7 @@ const src = `${href('/graphics/territory-discovery.html')}?embed=1&theme=auto`;
 <style>
   territory-band { position: absolute; inset: 0; display: block; pointer-events: none; }
   .ui { pointer-events: auto; }
-  .map { position: absolute; z-index: -1; top: 0; bottom: 0; left: 26%; width: 66%; height: 100%; border: 0; background: transparent; pointer-events: none; }
+  .map { position: absolute; z-index: -1; top: 0; bottom: 0; left: 0; width: 100%; height: 100%; border: 0; background: transparent; pointer-events: none; }
   .ui { position: absolute; left: 0; right: 0; bottom: 14px; z-index: 1; max-width: 1040px; margin-inline: auto; padding-inline: clamp(16px, 4vw, 32px); display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1rem; }
   .cap { margin: 0; font: 500 0.85rem/1.4 var(--display); color: var(--muted); background: var(--paper); padding: 4px 10px; border-radius: 4px; }
   .pause { min-height: 44px; padding: 4px 14px; font: 500 0.85rem/1.4 var(--display); background: var(--paper); border: 1px solid var(--muted); border-radius: 4px; color: var(--ink); cursor: pointer; }
