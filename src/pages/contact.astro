@@ -1,17 +1,25 @@
 ---
 import Base from '../layouts/Base.astro';
+import DeskMessagesBand from '../components/DeskMessagesBand.astro';
 import { href } from '../utils/url';
 ---
 
 <Base title="Contact" description="How to reach Matthew Leitao about behavioral science, decision science and human-AI research roles.">
+  <section class="ct-hero">
+    <DeskMessagesBand />
+    <div class="wrap">
+      <header class="page-head">
+        <div class="head-copy">
+          <h1>Contact</h1>
+          <p class="lede">
+            I'm looking for roles in behavioral science, decision science, human-AI interaction research and research
+            program management.
+          </p>
+        </div>
+      </header>
+    </div>
+  </section>
   <div class="wrap">
-    <header class="page-head">
-      <h1>Contact</h1>
-      <p class="lede">
-        I'm looking for roles in behavioral science, decision science, human-AI interaction research and research
-        program management.
-      </p>
-    </header>
 
     <section class="section ways">
       <dl>
@@ -37,6 +45,10 @@ import { href } from '../utils/url';
 </Base>
 
 <style>
+  .ct-hero { position: relative; isolation: isolate; overflow: hidden; min-height: clamp(440px, 44vw, 520px); padding-bottom: 70px; }
+  .head-copy { position: relative; isolation: isolate; max-width: 34rem; }
+  .head-copy::before { content: ''; position: absolute; inset: -40px -40px; z-index: -1; background: radial-gradient(ellipse at center, var(--paper) 40%, transparent 74%); opacity: 0.9; pointer-events: none; }
+  @media (max-width: 700px) { .ct-hero { min-height: 0; padding-bottom: 510px; } }
   .ways dl {
     margin: 0;
     display: grid;
