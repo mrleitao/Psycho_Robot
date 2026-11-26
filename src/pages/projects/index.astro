@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import ConnectingDotsBand from '../../components/ConnectingDotsBand.astro';
 import { href } from '../../utils/url';
 
 const projects = [
@@ -89,13 +90,20 @@ const projects = [
   title="Projects"
   description="Research I have led or contributed to, with my role and the status of each project."
 >
+  <section class="pj-hero">
+    <ConnectingDotsBand />
+    <div class="wrap">
+      <header class="page-head">
+        <div class="head-copy">
+          <h1>Projects</h1>
+          <p class="lede">
+            Research I have led or contributed to. Each row shows my role and where the work stands.
+          </p>
+        </div>
+      </header>
+    </div>
+  </section>
   <div class="wrap">
-    <header class="page-head">
-      <h1>Projects</h1>
-      <p class="lede">
-        Research I have led or contributed to. Each row shows my role and where the work stands.
-      </p>
-    </header>
 
     <ul class="rows projects">
       {
@@ -123,6 +131,10 @@ const projects = [
 </Base>
 
 <style>
+  .pj-hero { position: relative; isolation: isolate; overflow: hidden; min-height: clamp(340px, 36vw, 400px); padding-bottom: 70px; }
+  .head-copy { position: relative; isolation: isolate; max-width: 34rem; }
+  .head-copy::before { content: ''; position: absolute; inset: -40px -40px; z-index: -1; background: radial-gradient(ellipse at center, var(--paper) 40%, transparent 74%); opacity: 0.9; pointer-events: none; }
+  @media (max-width: 700px) { .pj-hero { min-height: 0; padding-bottom: 380px; } }
   .projects {
     margin-top: clamp(32px, 5vw, 56px);
   }
